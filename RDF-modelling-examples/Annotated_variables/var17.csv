@@ -1,0 +1,2 @@
+Number,Variable,description,hasObjectOfInterest,objectOfInterestURI,hasProperty,hasPropertyURI,hasMatrix,MatrixURI,hasConstraint,ConstraintURI,constrain1,hasContext,ContextURI
+17,Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content),The amount of docosahexaenoic acid relative to dry weight in an individual.,docosahexaenoic acid,http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C68345,relative dry weight,http://purl.obolibrary.org/obo/TO_0000633,individual,http://www.ebi.ac.uk/efo/EFO_0000542,,,,,

@@ -1,0 +1,2 @@
+Number,Variable,description,hasObjectOfInterest,objectOfInterestURI,hasProperty,hasPropertyURI,hasMatrix,MatrixURI,hasConstraint,ConstraintURI,constrain1,hasContext,ContextURI
+4,Atmospheric boundary layer heights,Identification of height-range above valley floor influenced by boundary layer air/free troposphere.,valley floor,https://example.org/valley_floor,height-range,http://sweetontology.net/propSpaceHeight/HeightRange,Boundary Layer/Free Troposphere,http://sweetontology.net/realmAtmo/FreeTroposphere,,,,,

@@ -1,0 +1,2 @@
+Number,Variable,description,hasObjectOfInterest,objectOfInterestURI,hasProperty,hasPropertyURI,hasMatrix,MatrixURI,hasConstraint,ConstraintURI,constrain1,hasContext,ContextURI
+2,Air daily maximum temperature,"Temperature of the air in a height of 1.7 meter, daily maximum",air,http://purl.obolibrary.org/obo/ENVO_00002005,Temperature ,http://ecoinformatics.org/oboe/oboe.1.2/oboe-characteristics.owl#Temperature,,,height,http://www.ontology-of-units-of-measure.org/resource/om-2/Height,air,daily maximum air temperature,http://purl.obolibrary.org/obo/ECOSIM_TAMX

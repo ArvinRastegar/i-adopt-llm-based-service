@@ -1,0 +1,2 @@
+Number,Variable,description,hasObjectOfInterest,objectOfInterestURI,hasProperty,hasPropertyURI,hasMatrix,MatrixURI,hasConstraint,ConstraintURI,constrain1,hasContext,ContextURI
+5,Atmosphere_optical_thickness_due_to_particulate_organic_matter_ambient_aerosol,,Aerosol,http://purl.bioontology.org/ontology/SNOMEDCT/64242006,Optical Thickness,http://sweetontology.net/propSpaceThickness/OpticalThickness,Atmosphere,http://purl.bioontology.org/ontology/SNOMEDCT/304607008,,,,Path of Radiation,http://www.example.org/path_of_radition

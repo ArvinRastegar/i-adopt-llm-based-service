@@ -1,0 +1,132 @@
+prefixes:
+  rml: http://w3id.org/rml/
+  foaf: http://xmlns.com/foaf/0.1/
+  xsd: http://www.w3.org/2001/XMLSchema#
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  dc: http://purl.org/dc/elements/1.1/
+  dct: http://purl.org/dc/terms/
+  rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+  iadopt: https://w3id.org/iadopt/ont/
+  skos: http://www.w3.org/2004/02/skos/core#
+  ex: https://example.org/ex/
+
+mappings:
+
+  objectOfInterest:
+    sources:
+      - [Annotated_Variables/var4.csv~csv]
+    s: $(objectOfInterestURI)
+    po:
+      - [a, skos:Concept]
+      - [a, iadopt:Entity]
+      - [skos:prefLabel, $(hasObjectOfInterest)]
+
+  properties:
+    sources:
+      - [Annotated_Variables/var4.csv~csv]
+    s: $(hasPropertyURI)
+    po:
+      - [a, skos:Concept]
+      - [a, iadopt:Property]
+      - [skos:prefLabel, $(hasProperty)]
+
+  matrix:
+    sources:
+      - [Annotated_Variables/var4.csv~csv]
+    s: $(MatrixURI)
+    po:
+      - [a, skos:Concept,]
+      - [a, iadopt:Entity]
+      - [skos:prefLabel, $(hasMatrix)]
+
+  constraints:
+    sources:
+      - [Annotated_Variables/var4.csv~csv]
+    s: $(ConstraintURI)
+    po:
+      - [a, iadopt:Constraint]
+      - [skos:prefLabel, $(hasConstraint)]
+      - predicates: iadopt:constrains
+        objects: ## Joins using refrencing Object maps
+        - mapping: objectOfInterest
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(hasObjectOfInterest),s]
+              - [str2, $(constrain1),o]
+
+  context:
+    sources:
+      - [Annotated_Variables/var4.csv~csv]
+    s: $(ContextURI)
+    po:
+      - [a, skos:Concept]
+      - [a, iadopt:Entity]
+      - [skos:prefLabel, $(hasContext)]
+  
+  variable:
+    sources:
+      - [Annotated_Variables/var4.csv~csv]
+    s: https://example-variable.org/ex/$(Number)
+    po:
+      - [a, skos:Concept,]
+      - [a, iadopt:Variable]
+      - [skos:prefLabel, $(Variable)]
+      - [dc:description, $(description)]
+      - [dc:creator, https://orcid.org/0000-0003-0593-2598~iri]
+      - [dc:created, "2024-09-22",xsd:date]
+
+      ## Inserting matrix
+      - predicates: iadopt:hasMatrix
+        objects: ## Joins using refrencing Object maps
+        - mapping: matrix
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(hasMatrix),s]
+              - [str2, $(hasMatrix),o]
+
+      ## Inserting Object of Interest
+      - predicates: iadopt:hasObjectOfInterest
+        objects: ## Joins using refrencing Object maps
+        - mapping: objectOfInterest
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(hasObjectOfInterest),s]
+              - [str2, $(hasObjectOfInterest),o]
+
+      ## Inserting Property
+      - predicates: iadopt:hasProperty
+        objects: ## Joins using refrencing Object maps
+        - mapping: properties
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(hasProperty),s]
+              - [str2, $(hasProperty),o]
+
+      ## constraints
+      - predicates: iadopt:hasConstraint
+        objects: ## Joins using refrencing Object maps
+        - mapping: constraints
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(hasConstraint),s]
+              - [str2, $(hasConstraint),o]
+
+      ## Context
+      - predicates: iadopt:hasContextObject
+        objects: ## Joins using refrencing Object maps
+        - mapping: context
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(hasContext),s]
+              - [str2, $(hasContext),o]
+
+      
+
+
+ 

@@ -1,0 +1,2 @@
+Number,Variable,description,hasObjectOfInterest,objectOfInterestURI,hasProperty,hasPropertyURI,hasMatrix,MatrixURI,hasConstraint,ConstraintURI,constrain1,hasContext,ContextURI
+3,Cloud cover,The amount of cloudiness or clear sky at a study site.,sky,https://example.org/ex/sky,cloudiness,https://example.org/cloudiness,study site,http://purl.bioontology.org/ontology/LNC/MTHU054795,,,,,
