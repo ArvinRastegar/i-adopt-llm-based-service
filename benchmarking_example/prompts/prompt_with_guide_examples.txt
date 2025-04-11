@@ -1,0 +1,256 @@
+You are a knowledge engineer and a climate change scientist. I need you to model a climate change variable using the I-ADOPT framework. A variable is usually the result of a sensor measurement or of a laboratory analysis on a sample. The task is to generate Turtle code with a description of the variable according to the I-ADOPT ontology. 
+
+Step-by-step guide for Minting new Variables
+The first step in identifying suitable variable descriptions should always be a search, e.g., using the I-ADOPT Catalogue of Terminologies. However, sometimes this does not yield proper results and new variable descriptions have to be created. Before you start creating new variable descriptions, please make sure that you have the means to also publish those descriptions, so others can make use of them as well. If you do not have access to a terminology provider yourself, please consider contacting providers relevant to your field.
+The guide below is the result of various workshops for modeling variables during the lifespan of the I-ADOPT WG. It is not intended as a compulsory specification, but summarizes the experiences of the I-ADOPT WG and gives newcomers a starting point in how to model variables. The following steps will be illustrated by reusing the running example of "concentration of endosulfan sulfate in wet flesh of ostrea edulis".
+1.	Understand
+A clear understanding of the phenomena that your variable should describe is essential. Either you have the domain expertise or you need to have a domain expert at your side.
+2.	Analyze
+Identify what components are needed to describe your observation. Components are reusable atomic parts of the variable description. Ask yourself the question: Could this component be a meaningful part of other variable descriptions as well? If the answer is yes, you most likely found a new component. If not, you probably need to split it up even more.
+Example
+[concentration] of [endosulfan sulfate] in [wet flesh] of [ostrea eduli]
+3.	Generalize
+The identified components are often only specialized variations of more generic concepts. Try to find more general concepts that describe each component. Such concepts can include one of the below examples and others like “method”, “condition”, or “unit”. For now, also multiple such concepts are possible.
+ Example
+[concentration] -> (Property Quantity Kind) of [endosulfan sulfate] -> (Substance Chemical Compound) in [wet flesh] -> (Part of Organism) of [ostrea edulis] -> (Species Taxon)
+4.	Check Existing Patterns
+The I-ADOPT WG has prepared a collection of Variable Design Patterns in a Github repository. Check whether any of those patterns can be applied to your variable description.
+•	Apply the Pattern
+If you could find a matching pattern, replace the abstract concepts of the pattern with the specialized components identified in Step 2. This will already result in a proper variable description including roles and relations, now please proceed with step 11.
+5.	Look at Associated Data
+Values within the dataset to be described can give important hints for the further analysis. First and foremost is the distinction into quantitative and qualitative values.
+•	Quantitative values are expressed by one or multiple numbers and often include a unit of measure.
+•	Qualitative values are, in general, text-literals and may draw from a specific vocabulary.
+The unit of measure or the vocabulary used for the values of a variable will help to narrow down the list of possible properties in the next step.
+Example
+ Values of “concentration of endosulfan sulfate in wet flesh of ostrea edulis” are measured, e.g., in micrograms per kilogram.
+6.	Identify the Property
+The Property is a generalized characteristic expressed by the value and is sometimes also called Quantity Kind. If the Property is not known, it may be deduced from the unit (e.g., using I-ADOPT's Unit-to-Property Lookup) or the vocabulary used to define possible values.
+Example
+[concentration] -> (Property) of [endosulfan sulfate] in [wet flesh] of [ostrea eduli]
+7.	Identify the Object of Interest
+The Object of Interest is one of the entities involved in the observation. In particular, it is the Entity whose Property is observed.
+Example
+[concentration] of [endosulfan sulfate] -> (Object of Interest) in [wet flesh] of [ostrea eduli]
+8.	Identify the Matrix (if available)
+If the Object of Interest is embedded in or a particular part of another Entity, that Entity is the Matrix of the observation. Note that not every observation necessarily contains a Matrix.
+Example
+[concentration] of [endosulfan sulfate] in [wet flesh] -> (Matrix) of [ostrea eduli]
+9.	Identify the Context Object(s)
+Context Objects are all other Entities needed to describe the Variable and provide essential contextual information to comprehensively describe the observation.
+Example
+[concentration] of [endosulfan sulfate] in [wet flesh] of [ostrea eduli] -> (Context Object)
+10.	Further Decompose Entities (if possible)
+Revisit the identified Entities (Object of Interest, Matrix, and Context Object(s)) once again. Check whether it is possible to further decompose them into more general concepts and Constraints that confines their scope in this particular scenario.
+Example
+[concentration] of [endosulfan sulfate] in [wet flesh] -> (wet) -> (flesh) of [ostrea eduli]
+11.	Annotate with Concepts
+Describe each component with a concept from a commonly available terminology. You may consult the I-ADOPT Catalogue of Terminologies to find suitable terminologies. It lists terminologies for the classes defined in I-ADOPT. Terminologies for Entities are not further distinguished as they may appear in different roles depending on the Variable.
+Example
+[concentration] -> (nerc:S06/current/S0600045) of [endosulfan sulfate] -> (nerc:S27/current/CS003625/) in [wet] -> (obo:PATO_00001832) [flesh] -> (nerc:S12/current/S1214/) of [ostrea edulis] -> (worms:140658)
+12.	Label the Variable
+Think about the use of two labels - a preferred and an alternative one.
+The preferred one should be the one used in your community, but make sure that you and the community fully agree on the meaning.
+The alternative label should contain all components of the variable and follow a consistent grammar common to other variables either by you or within the same terminology.
+Example
+[ [Property] -> (concentration) of [Constraint] [Object of Interest] -> (endosulfan sulfate) in [Constraint] -> (wet) [Matrix] -> (flesh) of [Constraint] [Context Object] -> (ostrea edulis) ] -> concentration of endosulfan sulfate in wet flesh of ostrea edulis
+13.	Create the Variable Concept
+Mint a IRI for the Variable and attach the previously identified components according to the I-ADOPT ontology (iop:hasProperty, iop:hasObjectOfInterest, iop:hasMatrix, iop:hasContextObject, iop:hasConstraint).
+14.	Add further Associations (optional)
+Beyond the concepts provided by I-ADOPT, further information might be needed to describe the full extent of the variable. You can use other vocabularies to attach additional associations as well.
+
+See the following examples: 
+
+example 1:
+
+input variable: aphids incidence in an agricultural experimental plot
+
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+iadopt:Variable
+  rdfs:label "Variable" ;
+  a owl:Class .
+  
+envthes:30326
+  iadopt:hasProperty :incidence ;
+  iadopt:hasMatrix :agricultural_experimental_plot ;
+  skos:prefLabel "aphids incidence in an agricultural experimental plot"@en ;
+  a iadopt:Variable, skos:Concept ;
+  skos:inScheme envthes: ;
+  iadopt:hasObjectOfInterest :aphids .  
+
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasMatrix
+  rdfs:subPropertyOf iadopt:hasContextObject ;
+  rdfs:comment "A Variable might have an Entity in which the ObjectOfInterest is contained." ;
+  rdfs:label "hasMatrix" .
+  
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+
+:incidence a iadopt:Property ;
+	rdfs:label "Incidence" ;
+	rdfs:comment "The relative frequency of occurrence of something." .
+	
+:agricultural_experimental_plot a iadopt:Entity  ;
+	rdfs:label "agricultural experimental plot" ;
+	rdfs:comment "A site within which an agricultural experimental process is conducted" .
+	
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+ 
+:aphids a iadopt:Entity  ;
+	rdfs:label "Aphids" ;
+	rdfs:comment "" .
+```
+
+Example 2:
+ 
+input variable: area of slope 4-8% arable land of catchment
+
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+iadopt:Variable
+  rdfs:label "Variable" ;
+  a owl:Class .
+
+envthes:30220  
+  a iadopt:Variable, skos:Concept ;
+  iadopt:hasObjectOfInterest :arable_land ;
+  iadopt:hasProperty :area ;  
+  iadopt:hasContextObject :catchment ;
+  skos:inScheme envthes: ;
+  iadopt:hasConstraint :4_8percentage_slope  ;  
+  skos:prefLabel "area of slope 4-8% arable land of catchment"@en .
+
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+  
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasContextObject
+  rdfs:comment "A Variable has an Entity that provides additional background information regarding the ObjectOfInterest." ;
+  rdfs:label "hasContextObject" .
+
+iadopt:hasConstraint
+  rdfs:comment "A Variable has a Constraint, that confines an Entity involved in the observation." ;
+  rdfs:label "hasConstraint" .  
+   
+:arable_land a iadopt:Entity  ;
+	rdfs:label "arable land" ;
+	rdfs:comment "Land which is regularly manipulated by human activities, such as plowing or tilling, in order to grow crops." .  
+
+:catchment a iadopt:Entity,skos:Concept  ;
+	rdfs:label "catchment"@en;
+	rdfs:comment "the action of collecting water, especially the collection of rainfall over a natural drainage area" .
+	
+:area a iadopt:Property,skos:Concept ;
+	rdfs:label "area" ;
+	rdfs:comment "The extent of a 2-dimensional surface enclosed within a boundary." .
+  
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+   
+:4_8percentage_slope a iadopt:Constraint, skos:Concept ;
+	skos:prefLabel "4-8% slope"@en .
+```
+
+example 3
+
+input variable: concentration of endosulfane sulfate in wet flesh of ostrea edulis
+  
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+envthes:30209 a skos:Concept ;
+  iadopt:hasMatrix :flesh ;  
+  skos:inScheme envthes: ;
+  skos:prefLabel "concentration of endosulfane sulfate in wet flesh of ostrea edulis"@en ;
+  iadopt:hasProperty :concentration ;  
+  iadopt:hasContextObject :ostrea_edulis_linnaeus ;
+  iadopt:hasConstraint :wet ;
+  iadopt:hasObjectOfInterest :endosulfan_sulfate.
+
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasMatrix
+  rdfs:subPropertyOf iadopt:hasContextObject ;
+  rdfs:comment "A Variable might have an Entity in which the ObjectOfInterest is contained." ;
+  rdfs:label "hasMatrix" .
+
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+
+iadopt:hasContextObject
+  rdfs:comment "A Variable has an Entity that provides additional background information regarding the ObjectOfInterest." ;
+  rdfs:label "hasContextObject" .
+
+iadopt:hasConstraint
+  rdfs:comment "A Variable has a Constraint, that confines an Entity involved in the observation." ;
+  rdfs:label "hasConstraint" .
+  
+:flesh a iadopt:Entity, skos:Concept ; 
+	rdfs:label "flesh"@en;
+	skos:definition "The soft-body parts of an animal."@en .
+	
+:ostrea_edulis_linnaeus a iadopt:Entity	;
+	rdfs:label "Ostrea edulis Linnaeus" .
+
+:wet a iadopt:Constraint ;
+	rdfs:label "wet" ;
+	skos:definition "A wetness quality inhering in a bearer by virtue of the bearer's being covered by a liquid." .
+	
+:endosulfan_sulfate a iadopt:Entity, skos:Concept;
+	skos:prefLabel "endosulfan sulfate"@en . 
+
+:concentration a skos:Concept ;
+  skos:prefLabel "concentration"@en .   
+
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+```
+
+model the following variable:
+
+input variable: {variable}.
+description: {description}.

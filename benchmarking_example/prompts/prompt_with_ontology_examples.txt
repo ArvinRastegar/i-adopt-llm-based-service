@@ -1,0 +1,397 @@
+You are a knowledge engineer and a climate change scientist. I need you to model a climate change variable using the I-ADOPT framework. A variable is usually the result of a sensor measurement or of a laboratory analysis on a sample. The task is to generate Turtle code with a description of the variable according to the I-ADOPT ontology. 
+I-ADOPT ontology in Turtle:
+
+```
+@prefix : <https://w3id.org/iadopt/ont#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://w3id.org/iadopt/ont> .
+
+<https://w3id.org/iadopt/ont> rdf:type owl:Ontology ;
+                               owl:versionIRI <https://w3id.org/iadopt/ont/0.9.1> ;
+                               <http://omv.ontoware.org/2005/05/ontology#conformsToKnowledgeRepresentationParadigm> <https://www.isibang.ac.in/ns/mod/index.html#DescriptionLogics> ;
+                               <http://omv.ontoware.org/2005/05/ontology#designedForOntologyTask> "semantically precise description and mapping of variables" ;
+                               <http://omv.ontoware.org/2005/05/ontology#hasFormalityLevel> <https://www.isibang.ac.in/ns/mod/index.html#Schema> ;
+                               <http://omv.ontoware.org/2005/05/ontology#hasOntologyLanguage> <https://www.isibang.ac.in/ns/mod/index.html#OWL-DL> ;
+                               <http://omv.ontoware.org/2005/05/ontology#hasOntologySyntax> <https://www.isibang.ac.in/ns/mod/index.html#OWL/XML> ;
+                               <http://omv.ontoware.org/2005/05/ontology#usedOntologyEngineeringMethodology> <https://www.isibang.ac.in/ns/mod/index.html#MethOntology> ;
+                               <http://omv.ontoware.org/2005/05/ontology#usedOntologyEngineeringTool> "https://www.isibang.ac.in/ns/mod/index.html#Protege" ;
+                               <http://purl.org/dc/terms/abstract> "The I-ADOPT Framework ontology provides machine-readable variable descriptions in which the components are mapped to FAIR vocabulary terms." ;
+                               <http://purl.org/dc/terms/contributor> "John Graybeal, Stanford University, School of Medicine, USA, ORCID: 0000-0001-6875-5360" ,
+                                                                      "Robert Huber, University Bremen, Germany" ,
+                                                                      "Simon J D Cox , CSIRO Land and Water, Australia; ORCID: 0000-0002-3884-3420" ;
+                               <http://purl.org/dc/terms/created> "October 15, 2021" ;
+                               <http://purl.org/dc/terms/creator> "Alison Pamment, National Centre for Atmospheric Science / Centre for Environmental Data Analysis, STFC Rutherford Appleton Laboratory, UK, ORCID: 0000-0001-5040-4626" ,
+                                                                  "Anusuriya Devaraju, Terrestrial Ecosystem Research Network (TERN), University of Queensland, Australia, ORCID: 0000-0003-0870-3192" ,
+                                                                  "Barbara Magagna, Environment Agency Austria, ORCID: 0000-0003-2195-3997" ,
+                                                                  "Gwenaelle Moncoiffe, National Oceanography Centre, British Oceanographic Data Centre, UK, ORCID: 0000-0001-6559-4178" ,
+                                                                  "Maria Stoica, University of Colorado, Boulder , ORCID: 0000-0002-6612-3439" ,
+                                                                  "Sirko Schindler, Institute of Data Science, German Aerospace Center (DLR), ORCID: 0000-0002-0964-4457" ;
+                               <http://purl.org/dc/terms/language> <http://lexvo.org/id/iso639-3/eng> ;
+                               <http://purl.org/dc/terms/license> "CC BY 4.0" ;
+                               <http://purl.org/dc/terms/title> "I-ADOPT Framework ontology" ;
+                               rdfs:label "I-ADOPT Framework ontology" ;
+                               owl:versionInfo "0.9.1" ;
+                               <http://www.w3.org/ns/dcat#keyword> "observable property" ,
+                                                                   "variable" ;
+                               <http://xmlns.com/foaf/0.1/primaryTopic> "Entity" ,
+                                                                        "Property" ,
+                                                                        "Variable" .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://omv.ontoware.org/2005/05/ontology#conformsToKnowledgeRepresentationParadigm
+<http://omv.ontoware.org/2005/05/ontology#conformsToKnowledgeRepresentationParadigm> rdf:type owl:AnnotationProperty .
+
+
+###  http://omv.ontoware.org/2005/05/ontology#designedForOntologyTask
+<http://omv.ontoware.org/2005/05/ontology#designedForOntologyTask> rdf:type owl:AnnotationProperty .
+
+
+###  http://omv.ontoware.org/2005/05/ontology#hasFormalityLevel
+<http://omv.ontoware.org/2005/05/ontology#hasFormalityLevel> rdf:type owl:AnnotationProperty .
+
+
+###  http://omv.ontoware.org/2005/05/ontology#hasOntologyLanguage
+<http://omv.ontoware.org/2005/05/ontology#hasOntologyLanguage> rdf:type owl:AnnotationProperty .
+
+
+###  http://omv.ontoware.org/2005/05/ontology#hasOntologySyntax
+<http://omv.ontoware.org/2005/05/ontology#hasOntologySyntax> rdf:type owl:AnnotationProperty .
+
+
+###  http://omv.ontoware.org/2005/05/ontology#usedOntologyEngineeringMethodology
+<http://omv.ontoware.org/2005/05/ontology#usedOntologyEngineeringMethodology> rdf:type owl:AnnotationProperty .
+
+
+###  http://omv.ontoware.org/2005/05/ontology#usedOntologyEngineeringTool
+<http://omv.ontoware.org/2005/05/ontology#usedOntologyEngineeringTool> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/abstract
+<http://purl.org/dc/terms/abstract> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/contributor
+<http://purl.org/dc/terms/contributor> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/created
+<http://purl.org/dc/terms/created> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/creator
+<http://purl.org/dc/terms/creator> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/language
+<http://purl.org/dc/terms/language> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/license
+<http://purl.org/dc/terms/license> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/title
+<http://purl.org/dc/terms/title> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/ns/dcat#keyword
+<http://www.w3.org/ns/dcat#keyword> rdf:type owl:AnnotationProperty .
+
+
+###  http://xmlns.com/foaf/0.1/primaryTopic
+<http://xmlns.com/foaf/0.1/primaryTopic> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://w3id.org/iadopt/ont/constrains
+<https://w3id.org/iadopt/ont/constrains> rdf:type owl:ObjectProperty ;
+                                         rdfs:domain <https://w3id.org/iadopt/ont/Constraint> ;
+                                         rdfs:range <https://w3id.org/iadopt/ont/Entity> ;
+                                         rdfs:comment "A Constraint constrains an Entity having a role in the Variable description." ;
+                                         rdfs:label "constrains" .
+
+
+###  https://w3id.org/iadopt/ont/hasConstraint
+<https://w3id.org/iadopt/ont/hasConstraint> rdf:type owl:ObjectProperty ;
+                                            rdfs:domain <https://w3id.org/iadopt/ont/Variable> ;
+                                            rdfs:range <https://w3id.org/iadopt/ont/Constraint> ;
+                                            rdfs:comment "A Variable has a Constraint, that confines an Entity involved in the observation." ;
+                                            rdfs:label "hasConstraint" .
+
+
+###  https://w3id.org/iadopt/ont/hasContextObject
+<https://w3id.org/iadopt/ont/hasContextObject> rdf:type owl:ObjectProperty ;
+                                               rdfs:domain <https://w3id.org/iadopt/ont/Variable> ;
+                                               rdfs:range <https://w3id.org/iadopt/ont/Entity> ;
+                                               rdfs:comment "A Variable has an Entity that provides additional background information regarding the ObjectOfInterest." ;
+                                               rdfs:label "hasContextObject" .
+
+
+###  https://w3id.org/iadopt/ont/hasMatrix
+<https://w3id.org/iadopt/ont/hasMatrix> rdf:type owl:ObjectProperty ;
+                                        rdfs:subPropertyOf <https://w3id.org/iadopt/ont/hasContextObject> ;
+                                        rdfs:domain <https://w3id.org/iadopt/ont/Variable> ;
+                                        rdfs:range <https://w3id.org/iadopt/ont/Entity> ;
+                                        rdfs:comment "A Variable might have an Entity in which the ObjectOfInterest is contained." ;
+                                        rdfs:label "hasMatrix" .
+
+
+###  https://w3id.org/iadopt/ont/hasObjectOfInterest
+<https://w3id.org/iadopt/ont/hasObjectOfInterest> rdf:type owl:ObjectProperty ;
+                                                  rdfs:domain <https://w3id.org/iadopt/ont/Variable> ;
+                                                  rdfs:range <https://w3id.org/iadopt/ont/Entity> ;
+                                                  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+                                                  rdfs:label "hasObjectOfInterest" .
+
+
+###  https://w3id.org/iadopt/ont/hasProperty
+<https://w3id.org/iadopt/ont/hasProperty> rdf:type owl:ObjectProperty ;
+                                          rdfs:domain <https://w3id.org/iadopt/ont/Variable> ;
+                                          rdfs:range <https://w3id.org/iadopt/ont/Property> ;
+                                          rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+                                          rdfs:label "hasProperty" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://w3id.org/iadopt/ont/Constraint
+<https://w3id.org/iadopt/ont/Constraint> rdf:type owl:Class ;
+                                         rdfs:comment "A Constraint limits the scope of the observation and confines the context to a particular state. It describes properties of the involved entities that are relevant to the particular observation." ;
+                                         rdfs:label "Constraint" .
+
+
+###  https://w3id.org/iadopt/ont/Entity
+<https://w3id.org/iadopt/ont/Entity> rdf:type owl:Class ;
+                                     rdfs:comment "An object or process that has a role in an observation. An Entity may play one of the following roles: ObjectOfInterest, ContextObject, Matrix. Whether the involvement of a particular entity is meaningful enough to include in the variable description depends on the specific context." ;
+                                     rdfs:label "Entity" .
+
+
+###  https://w3id.org/iadopt/ont/Property
+<https://w3id.org/iadopt/ont/Property> rdf:type owl:Class ;
+                                       rdfs:comment "A type of a characteristic of the ObjectOfInterest." ;
+                                       rdfs:label "Property" .
+
+
+###  https://w3id.org/iadopt/ont/Variable
+<https://w3id.org/iadopt/ont/Variable> rdf:type owl:Class ;
+                                       owl:equivalentClass [ rdf:type owl:Restriction ;
+                                                             owl:onProperty <https://w3id.org/iadopt/ont/hasObjectOfInterest> ;
+                                                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                             owl:onClass <https://w3id.org/iadopt/ont/Entity>
+                                                           ] ,
+                                                           [ rdf:type owl:Restriction ;
+                                                             owl:onProperty <https://w3id.org/iadopt/ont/hasProperty> ;
+                                                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                             owl:onClass <https://w3id.org/iadopt/ont/Property>
+                                                           ] ;
+                                       rdfs:comment "A description of something observed or derived, minimally consisting of  an ObjectOfInterest and its Property." ;
+                                       rdfs:label "Variable" .
+```
+
+See the following examples: 
+
+example 1:
+
+input variable: aphids incidence in an agricultural experimental plot
+
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+iadopt:Variable
+  rdfs:label "Variable" ;
+  a owl:Class .
+  
+envthes:30326
+  iadopt:hasProperty :incidence ;
+  iadopt:hasMatrix :agricultural_experimental_plot ;
+  skos:prefLabel "aphids incidence in an agricultural experimental plot"@en ;
+  a iadopt:Variable, skos:Concept ;
+  skos:inScheme envthes: ;
+  iadopt:hasObjectOfInterest :aphids .  
+
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasMatrix
+  rdfs:subPropertyOf iadopt:hasContextObject ;
+  rdfs:comment "A Variable might have an Entity in which the ObjectOfInterest is contained." ;
+  rdfs:label "hasMatrix" .
+  
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+
+:incidence a iadopt:Property ;
+	rdfs:label "Incidence" ;
+	rdfs:comment "The relative frequency of occurrence of something." .
+	
+:agricultural_experimental_plot a iadopt:Entity  ;
+	rdfs:label "agricultural experimental plot" ;
+	rdfs:comment "A site within which an agricultural experimental process is conducted" .
+	
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+ 
+:aphids a iadopt:Entity  ;
+	rdfs:label "Aphids" ;
+	rdfs:comment "" .
+```
+
+Example 2:
+ 
+input variable: area of slope 4-8% arable land of catchment
+
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+iadopt:Variable
+  rdfs:label "Variable" ;
+  a owl:Class .
+
+envthes:30220  
+  a iadopt:Variable, skos:Concept ;
+  iadopt:hasObjectOfInterest :arable_land ;
+  iadopt:hasProperty :area ;  
+  iadopt:hasContextObject :catchment ;
+  skos:inScheme envthes: ;
+  iadopt:hasConstraint :4_8percentage_slope  ;  
+  skos:prefLabel "area of slope 4-8% arable land of catchment"@en .
+
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+  
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasContextObject
+  rdfs:comment "A Variable has an Entity that provides additional background information regarding the ObjectOfInterest." ;
+  rdfs:label "hasContextObject" .
+
+iadopt:hasConstraint
+  rdfs:comment "A Variable has a Constraint, that confines an Entity involved in the observation." ;
+  rdfs:label "hasConstraint" .  
+   
+:arable_land a iadopt:Entity  ;
+	rdfs:label "arable land" ;
+	rdfs:comment "Land which is regularly manipulated by human activities, such as plowing or tilling, in order to grow crops." .  
+
+:catchment a iadopt:Entity,skos:Concept  ;
+	rdfs:label "catchment"@en;
+	rdfs:comment "the action of collecting water, especially the collection of rainfall over a natural drainage area" .
+	
+:area a iadopt:Property,skos:Concept ;
+	rdfs:label "area" ;
+	rdfs:comment "The extent of a 2-dimensional surface enclosed within a boundary." .
+  
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+   
+:4_8percentage_slope a iadopt:Constraint, skos:Concept ;
+	skos:prefLabel "4-8% slope"@en .
+```
+
+example 3
+
+input variable: concentration of endosulfane sulfate in wet flesh of ostrea edulis
+  
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+envthes:30209 a skos:Concept ;
+  iadopt:hasMatrix :flesh ;  
+  skos:inScheme envthes: ;
+  skos:prefLabel "concentration of endosulfane sulfate in wet flesh of ostrea edulis"@en ;
+  iadopt:hasProperty :concentration ;  
+  iadopt:hasContextObject :ostrea_edulis_linnaeus ;
+  iadopt:hasConstraint :wet ;
+  iadopt:hasObjectOfInterest :endosulfan_sulfate.
+
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasMatrix
+  rdfs:subPropertyOf iadopt:hasContextObject ;
+  rdfs:comment "A Variable might have an Entity in which the ObjectOfInterest is contained." ;
+  rdfs:label "hasMatrix" .
+
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+
+iadopt:hasContextObject
+  rdfs:comment "A Variable has an Entity that provides additional background information regarding the ObjectOfInterest." ;
+  rdfs:label "hasContextObject" .
+
+iadopt:hasConstraint
+  rdfs:comment "A Variable has a Constraint, that confines an Entity involved in the observation." ;
+  rdfs:label "hasConstraint" .
+  
+:flesh a iadopt:Entity, skos:Concept ; 
+	rdfs:label "flesh"@en;
+	skos:definition "The soft-body parts of an animal."@en .
+	
+:ostrea_edulis_linnaeus a iadopt:Entity	;
+	rdfs:label "Ostrea edulis Linnaeus" .
+
+:wet a iadopt:Constraint ;
+	rdfs:label "wet" ;
+	skos:definition "A wetness quality inhering in a bearer by virtue of the bearer's being covered by a liquid." .
+	
+:endosulfan_sulfate a iadopt:Entity, skos:Concept;
+	skos:prefLabel "endosulfan sulfate"@en . 
+
+:concentration a skos:Concept ;
+  skos:prefLabel "concentration"@en .   
+
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+```
+
+model the following variable:
+
+input variable: {variable}.
+description: {description}.
