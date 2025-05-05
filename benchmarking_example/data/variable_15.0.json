@@ -1,0 +1,16 @@
+{
+  "Provided Variable Name": "Foraminifera, planktic, size",
+  "Definition": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "Property (Label)": "size",
+  "ObjectOfInterest (Label)": "foraminfers",
+  "Matrix (Label)": "sediment",
+  "constraint": [
+    "planctonic",
+    "surface"
+  ],
+  "Constraint component": [
+    "foraminfers",
+    "sediment"
+  ],
+  "Applicable units of measure": "µm"
+}

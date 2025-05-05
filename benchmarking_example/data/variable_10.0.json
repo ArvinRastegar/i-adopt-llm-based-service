@@ -1,0 +1,16 @@
+{
+  "Provided Variable Name": "Peak ground acceleration",
+  "Definition": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "Statistical Modifier": "maximum",
+  "Property (Label)": "acceleration",
+  "ObjectOfInterest (Label)": "ground",
+  "constraint": [
+    "surface",
+    "during seismic events"
+  ],
+  "Constraint component": [
+    "ground",
+    "acceleration"
+  ],
+  "Applicable units of measure": "m s-2"
+}

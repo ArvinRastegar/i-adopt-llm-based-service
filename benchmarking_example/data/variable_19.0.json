@@ -1,0 +1,21 @@
+{
+  "Provided Variable Name": "Weight specific-ingestion Carbon rate at 15 °C",
+  "Definition": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "Property (Label)": "mass flow rate",
+  "ObjectOfInterest (Label)": "Carbon",
+  "Matrix (Label)": "organism",
+  "Matrix (System)": "organism",
+  "constraint": [
+    "dry",
+    "weight-specific",
+    "due to ingestion",
+    "at 15°C temperature",
+    "at non-limiting conditions"
+  ],
+  "Constraint component": [
+    "body",
+    "mass flow rate",
+    "Carbon"
+  ],
+  "Applicable units of measure": "μg mg-1h-1"
+}

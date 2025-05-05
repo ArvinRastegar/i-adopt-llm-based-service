@@ -1,0 +1,11 @@
+{
+  "Provided Variable Name": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
+  "Definition": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.",
+  "Property (Label)": "optical depth",
+  "ObjectOfInterest (Label)": "organic matter",
+  "Matrix (Label)": "aerosol particle",
+  "ContextObject (Label)": "atmosphere",
+  "constraint": "at 550 nm wavelength",
+  "Constraint component": "optical depth",
+  "Applicable units of measure": "dimensionless"
+}

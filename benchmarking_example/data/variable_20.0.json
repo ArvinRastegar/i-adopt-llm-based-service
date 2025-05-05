@@ -1,0 +1,10 @@
+{
+  "Provided Variable Name": "Concentration of DDT impacted by industry",
+  "Definition": "Concentration of DDT in a given year at a site impacted by industry.",
+  "Property (Label)": "mass fraction",
+  "ObjectOfInterest (Label)": "DDT",
+  "Matrix (Label)": "soil",
+  "constraint": "impacted by industry",
+  "Constraint component": "soil",
+  "Applicable units of measure": "ng g-1"
+}

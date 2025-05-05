@@ -1,0 +1,8 @@
+{
+  "Provided Variable Name": "Electron density in the solar wind",
+  "Definition": "Density (particle per cm3) of electrons measured in the Solar Wind.",
+  "Property (Label)": "volumetric number density",
+  "ObjectOfInterest (Label)": "electron",
+  "Matrix (Label)": "solar wind",
+  "Applicable units of measure": "cm-3"
+}

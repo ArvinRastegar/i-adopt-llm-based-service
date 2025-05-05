@@ -1,0 +1,8 @@
+{
+  "Provided Variable Name": "Coarse woody debris abundance",
+  "Definition": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)",
+  "Property (Label)": "area fraction",
+  "ObjectOfInterest (Label)": "coarse woody debris",
+  "Matrix (Label)": "ground",
+  "Applicable units of measure": "m2 ha-1"
+}

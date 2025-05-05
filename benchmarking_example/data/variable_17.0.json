@@ -1,0 +1,11 @@
+{
+  "Provided Variable Name": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
+  "Definition": "The amount of docosahexaenoic acid relative to dry weight in an individual.",
+  "Property (Label)": "mass fraction",
+  "ObjectOfInterest (Label)": "docosahexaenoic acid",
+  "Matrix (Label)": "organism",
+  "Matrix (System)": "organism",
+  "constraint": "dry",
+  "Constraint component": "body",
+  "Applicable units of measure": "µg µg-1"
+}

@@ -1,0 +1,10 @@
+{
+  "Provided Variable Name": "Foliage projective cover in the lower canopy strata",
+  "Definition": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.",
+  "Property (Label)": "area fraction",
+  "ObjectOfInterest (Label)": "foliage",
+  "Matrix (Label)": "ground",
+  "constraint": "lower canopy strata",
+  "Constraint component": "foliage",
+  "Applicable units of measure": "dimensionless"
+}

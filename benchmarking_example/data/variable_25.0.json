@@ -1,0 +1,8 @@
+{
+  "Provided Variable Name": "Dynamic shear viscosity of polystyrene PS042",
+  "Definition": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+  "Property (Label)": "shear viscosity",
+  "ObjectOfInterest (Label)": "polystyrene",
+  "constraint": "dynamic",
+  "Constraint component": "shear viscosity"
+}
