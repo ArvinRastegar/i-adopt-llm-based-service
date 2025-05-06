@@ -1,0 +1,15 @@
+{
+  "Provided Variable Name": "Resting systolic blood pressure",
+  "Definition": "Resting blood pressure systolic/diastolic in millimeters of mercury (mmHg)",
+  "Property (Label)": "pressure",
+  "ObjectOfInterest (Label)": "blood",
+  "Matrix (Label)": "human",
+  "constraint": [
+    "systolic",
+    "resting"
+  ],
+  "Constraint component": [
+    "pressure",
+    "human"
+  ]
+}

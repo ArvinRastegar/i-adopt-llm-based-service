@@ -4,7 +4,6 @@
   "Property (Label)": "mass fraction",
   "ObjectOfInterest (Label)": "docosahexaenoic acid",
   "Matrix (Label)": "organism",
-  "Matrix (System)": "organism",
   "constraint": "dry",
   "Constraint component": "body",
   "Applicable units of measure": "µg µg-1"

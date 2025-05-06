@@ -1,38 +1,38 @@
-Reference to the turtle file,Provided Variable Name,Definition,Statistical Modifier,Property (Label),ObjectOfInterest (Label),ObjectOfInterest (system),Matrix (Label),Matrix (System),ContextObject (Label),constraint,Constraint component,Applicable units of measure
-1,Electron density in the solar wind,Density (particle per cm3) of electrons measured in the Solar Wind.,,volumetric number density,electron,,solar wind,,,,,cm-3
-2,Air daily maximum temperature,"Temperature of the air in a height of 1.7 meter, daily maximum",maximum,temperature,air,,atmosphere,,,daily,maximum,Celsius
-,,,,,,,,,,"1,7 m aboveground",air,
-3,Cloud cover,"The amount of sky estimated to be covered by all cloud types (total cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",,area fraction,cloud,,atmosphere,,,,,unitless (okta)
-4,Atmospheric boundary layer height defined by temperature inversion,Atmospheric boundary layer height defined by temperature inversion.,,height,atmospheric boundary layer,,atmosphere,,,defined by temperature inversion,atmospheric boundary layer,m
-,,,,,,,,,,above the valley floor,height,
-5,Atmosphere optical thickness of particulate organic matter ambient aerosol,Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.,,optical depth,organic matter,,aerosol particle,,atmosphere,at 550 nm wavelength,optical depth,dimensionless
-7,Maximum trunk char height,Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360° sweep at each sampling location.,maximum,height,char,,tree trunk,,,aboveground,height,
-8,Coarse woody debris abundance,CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X),,area fraction,coarse woody debris,,ground,,,,,m2 ha-1
-9,Foliage projective cover in the lower canopy strata,The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.,,area fraction,foliage,,ground,,,lower canopy strata,foliage,dimensionless
-10,Peak ground acceleration,"Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",maximum,acceleration,ground,,,,,surface,ground,m s-2
-,,,,,,,,,,during seismic events,acceleration,
-14,Feral-free enclosure area,The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b,,area,enclosure,,,,,free of feral,enclosure,m2
-15,"Foraminifera, planktic, size","Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",,size,foraminfers,,sediment,,,planctonic,foraminfers,µm
-,,,,,,,,,,surface,sediment,
-16,Standard metabolic rate in mg of Oxygen per hour,"The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",,mass flow rate,oxygen,,organism,animal,,ectotherm,animal,mg h-1
-,,,,,,,,,,due to metabolism,mass flow rate,
-,,,,,,,,,,non-active,animal,
-,,,,,,,,,,non-stressed,animal,
-17,Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content),The amount of docosahexaenoic acid relative to dry weight in an individual.,,mass fraction,docosahexaenoic acid,,organism,organism,,dry,body,µg µg-1
-18,Biological sex,Biological sex [female | male | intersex | unknown],,biological sex,organism,,,,,,,
-19,Weight specific-ingestion Carbon rate at 15 °C,The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1,,mass flow rate,Carbon,,organism,organism,,dry,body,μg mg-1h-1
-,,,,,,,,,,weight-specific,mass flow rate,
-,,,,,,,,,,due to ingestion,mass flow rate,
-,,,,,,,,,,at 15°C temperature,mass flow rate,
-,,,,,,,,,,at non-limiting conditions,Carbon,
-20,Concentration of DDT impacted by industry,Concentration of DDT in a given year at a site impacted by industry.,,mass fraction,DDT,,soil,,,impacted by industry,soil,ng g-1
-21,Resting systolic blood pressure,Resting blood pressure systolic/diastolic in millimeters of mercury (mmHg),,pressure,blood,,human,,,systolic,pressure,
-,,,,,,,,,,resting,human,
-22,Current smoking status,Smoking status current of a patient,,smoking status,patient,,,,,current,smoking status,
-25,Dynamic shear viscosity of polystyrene PS042,Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.,,shear viscosity,polystyrene,,,,,dynamic,shear viscosity,
-26,Sheet resistance of layer of gold,The sheet resistance of a 5-nanometer-thick layer of gold.,,sheet resistance,gold,,,,,5 nm thick layer,gold,
-27,Mass concentration of isobutylene,Mass concentration of isobutylene in chloroform.,,mass concentration,isobutylene,,chloroform,,,,,g l-1
-28,Overnight stays in 3-star hotel near the sea shore,Number of nights in a 3-star hotel near the sea shore,,count,overnight stay,,hotel,,,3 star,hotel,
-,,,,,,,,,,near the sea shore,hotel,
-29,Nervosity feelings,"In the past 30 days, how often did you feel nervous?",,frequency,nervosity feeling,,person,,,during last 30 days,frequency,
-30,Date of last PCR-test,date of last COVID-19 PCR test performed by a certified laboratory,latest,date,COVID-19 PCR test,,person,,,performed by a certified laboratory,COVID-19 PCR test,
+Reference to the turtle file,Provided Variable Name,Definition,Statistical Modifier,Property (Label),ObjectOfInterest (Label),ObjectOfInterest (system),Matrix (Label),ContextObject (Label),constraint,Constraint component,Applicable units of measure
+1,Electron density in the solar wind,Density (particle per cm3) of electrons measured in the Solar Wind.,,volumetric number density,electron,,solar wind,,,,cm-3
+2,Air daily maximum temperature,"Temperature of the air in a height of 1.7 meter, daily maximum",maximum,temperature,air,,atmosphere,,daily,maximum,Celsius
+,,,,,,,,,"1,7 m aboveground",air,
+3,Cloud cover,"The amount of sky estimated to be covered by all cloud types (total cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",,area fraction,cloud,,atmosphere,,,,unitless (okta)
+4,Atmospheric boundary layer height defined by temperature inversion,Atmospheric boundary layer height defined by temperature inversion.,,height,atmospheric boundary layer,,atmosphere,,defined by temperature inversion,atmospheric boundary layer,m
+,,,,,,,,,above the valley floor,height,
+5,Atmosphere optical thickness of particulate organic matter ambient aerosol,Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.,,optical depth,organic matter,,aerosol particle,atmosphere,at 550 nm wavelength,optical depth,dimensionless
+7,Maximum trunk char height,Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360° sweep at each sampling location.,maximum,height,char,,tree trunk,,aboveground,height,
+8,Coarse woody debris abundance,CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X),,area fraction,coarse woody debris,,ground,,,,m2 ha-1
+9,Foliage projective cover in the lower canopy strata,The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.,,area fraction,foliage,,ground,,lower canopy strata,foliage,dimensionless
+10,Peak ground acceleration,"Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",maximum,acceleration,ground,,,,surface,ground,m s-2
+,,,,,,,,,during seismic events,acceleration,
+14,Feral-free enclosure area,The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b,,area,enclosure,,,,free of feral,enclosure,m2
+15,"Foraminifera, planktic, size","Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",,size,foraminfers,,sediment,,planctonic,foraminfers,µm
+,,,,,,,,,surface,sediment,
+16,Standard metabolic rate in mg of Oxygen per hour,"The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",,mass flow rate,oxygen,,organism,,ectotherm,animal,mg h-1
+,,,,,,,,,due to metabolism,mass flow rate,
+,,,,,,,,,non-active,animal,
+,,,,,,,,,non-stressed,animal,
+17,Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content),The amount of docosahexaenoic acid relative to dry weight in an individual.,,mass fraction,docosahexaenoic acid,,organism,,dry,body,µg µg-1
+18,Biological sex,Biological sex [female | male | intersex | unknown],,biological sex,organism,,,,,,
+19,Weight specific-ingestion Carbon rate at 15 °C,The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1,,mass flow rate,Carbon,,organism,,dry,body,μg mg-1h-1
+,,,,,,,,,weight-specific,mass flow rate,
+,,,,,,,,,due to ingestion,mass flow rate,
+,,,,,,,,,at 15°C temperature,mass flow rate,
+,,,,,,,,,at non-limiting conditions,Carbon,
+20,Concentration of DDT impacted by industry,Concentration of DDT in a given year at a site impacted by industry.,,mass fraction,DDT,,soil,,impacted by industry,soil,ng g-1
+21,Resting systolic blood pressure,Resting blood pressure systolic/diastolic in millimeters of mercury (mmHg),,pressure,blood,,human,,systolic,pressure,
+,,,,,,,,,resting,human,
+22,Current smoking status,Smoking status current of a patient,,smoking status,patient,,,,current,smoking status,
+25,Dynamic shear viscosity of polystyrene PS042,Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.,,shear viscosity,polystyrene,,,,dynamic,shear viscosity,
+26,Sheet resistance of layer of gold,The sheet resistance of a 5-nanometer-thick layer of gold.,,sheet resistance,gold,,,,5 nm thick layer,gold,
+27,Mass concentration of isobutylene,Mass concentration of isobutylene in chloroform.,,mass concentration,isobutylene,,chloroform,,,,g l-1
+28,Overnight stays in 3-star hotel near the sea shore,Number of nights in a 3-star hotel near the sea shore,,count,overnight stay,,hotel,,3 star,hotel,
+,,,,,,,,,near the sea shore,hotel,
+29,Nervosity feelings,"In the past 30 days, how often did you feel nervous?",,frequency,nervosity feeling,,person,,during last 30 days,frequency,
+30,Date of last PCR-test,date of last COVID-19 PCR test performed by a certified laboratory,latest,date,COVID-19 PCR test,,person,,performed by a certified laboratory,COVID-19 PCR test,

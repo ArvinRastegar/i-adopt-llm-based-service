@@ -4,7 +4,6 @@
   "Property (Label)": "mass flow rate",
   "ObjectOfInterest (Label)": "Carbon",
   "Matrix (Label)": "organism",
-  "Matrix (System)": "organism",
   "constraint": [
     "dry",
     "weight-specific",
