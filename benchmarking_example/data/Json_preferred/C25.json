@@ -1,0 +1,11 @@
+{
+  "label": "Dynamic shear viscosity of polystyrene PS042",
+  "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+  "hasProperty": "shear viscosity",
+  "hasObjectOfInterest": "polystyrene",
+  "hasConstraint": {
+    "dynamic": {
+      "constrains": "shear viscosity"
+    }
+  }
+}

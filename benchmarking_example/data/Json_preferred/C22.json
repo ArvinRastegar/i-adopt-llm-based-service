@@ -1,0 +1,11 @@
+{
+  "label": "Current smoking status",
+  "comment": "Smoking status current of a patient",
+  "hasProperty": "smoking status",
+  "hasObjectOfInterest": "patient",
+  "hasConstraint": {
+    "current": {
+      "constrains": "smoking status"
+    }
+  }
+}

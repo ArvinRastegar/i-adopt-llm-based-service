@@ -1,9 +1,0 @@
-{
-  "Provided Variable Name": "Feral-free enclosure area",
-  "Definition": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
-  "Property (Label)": "area",
-  "ObjectOfInterest (Label)": "enclosure",
-  "constraint": "free of feral",
-  "Constraint component": "enclosure",
-  "Applicable units of measure": "m2"
-}

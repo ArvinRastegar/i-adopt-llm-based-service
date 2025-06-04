@@ -1,8 +1,0 @@
-{
-  "Provided Variable Name": "Sheet resistance of layer of gold",
-  "Definition": "The sheet resistance of a 5-nanometer-thick layer of gold.",
-  "Property (Label)": "sheet resistance",
-  "ObjectOfInterest (Label)": "gold",
-  "constraint": "5 nm thick layer",
-  "Constraint component": "gold"
-}

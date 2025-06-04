@@ -1,9 +1,0 @@
-{
-  "Provided Variable Name": "Nervosity feelings",
-  "Definition": "In the past 30 days, how often did you feel nervous?",
-  "Property (Label)": "frequency",
-  "ObjectOfInterest (Label)": "nervosity feeling",
-  "Matrix (Label)": "person",
-  "constraint": "during last 30 days",
-  "Constraint component": "frequency"
-}

@@ -1,0 +1,10 @@
+{
+  "label": "Strike of bedding",
+  "comment": "Geographic azimuth (relative to true north) at a point observation location, of a horizontal line contained in a sedimentary rock bedding surface. The bedding surface must not be horizontal; the azimuth is reported such that the dip direction of the inclined bedding is to the right when facing in the azimuth direction.",
+  "hasProperty": "azimuth",
+  "hasObjectOfInterest": {
+    "SymmetricSystem": "line of intersection",
+    "hasPart": ["bedding plane", "horizontal plane"]
+  },
+  "hasMatrix": "sedimentary bedrock"
+}

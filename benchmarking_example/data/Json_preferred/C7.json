@@ -1,0 +1,13 @@
+{
+  "label": "Maximum trunk char height",
+  "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360° sweep at each sampling location.",
+  "hasProperty": "height",
+  "hasMatrix": "tree trunk",
+  "hasStatisticalModifier": "maximum",
+  "hasObjectOfInterest": "char",
+  "hasConstraint": {
+    "aboveground": {
+      "constrains": "height"
+    }
+  }
+}

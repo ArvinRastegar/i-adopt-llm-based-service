@@ -1,0 +1,15 @@
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": {
+    "surface": {
+      "constrains": "ground"
+    },
+    "during seismic events": {
+      "constrains": "acceleration"
+    }
+  }
+}

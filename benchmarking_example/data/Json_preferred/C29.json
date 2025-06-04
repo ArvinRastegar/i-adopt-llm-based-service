@@ -1,0 +1,12 @@
+{
+  "label": "Nervosity feelings",
+  "comment": "In the past 30 days, how often did you feel nervous?",
+  "hasProperty": "frequency",
+  "hasMatrix": "person",
+  "hasObjectOfInterest": "nervosity feeling",
+  "hasConstraint": {
+    "during last 30 days": {
+      "constrains": "frequency"
+    }
+  }
+}

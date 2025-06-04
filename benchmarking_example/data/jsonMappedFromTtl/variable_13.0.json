@@ -1,0 +1,13 @@
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosytem habitat types and helps to measure the degree of connection of EUNIS habitats within a landsacpe, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": {"nearest neighbour": {
+    "constrains": "hasTarget: habitat patch"
+  }}
+}

@@ -1,38 +1,50 @@
-Reference to the turtle file,Provided Variable Name,Definition,Statistical Modifier,Property (Label),ObjectOfInterest (Label),ObjectOfInterest (system),Matrix (Label),ContextObject (Label),constraint,Constraint component,Applicable units of measure
-1,Electron density in the solar wind,Density (particle per cm3) of electrons measured in the Solar Wind.,,volumetric number density,electron,,solar wind,,,,cm-3
-2,Air daily maximum temperature,"Temperature of the air in a height of 1.7 meter, daily maximum",maximum,temperature,air,,atmosphere,,daily,maximum,Celsius
-,,,,,,,,,"1,7 m aboveground",air,
-3,Cloud cover,"The amount of sky estimated to be covered by all cloud types (total cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",,area fraction,cloud,,atmosphere,,,,unitless (okta)
-4,Atmospheric boundary layer height defined by temperature inversion,Atmospheric boundary layer height defined by temperature inversion.,,height,atmospheric boundary layer,,atmosphere,,defined by temperature inversion,atmospheric boundary layer,m
-,,,,,,,,,above the valley floor,height,
-5,Atmosphere optical thickness of particulate organic matter ambient aerosol,Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.,,optical depth,organic matter,,aerosol particle,atmosphere,at 550 nm wavelength,optical depth,dimensionless
-7,Maximum trunk char height,Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360° sweep at each sampling location.,maximum,height,char,,tree trunk,,aboveground,height,
-8,Coarse woody debris abundance,CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X),,area fraction,coarse woody debris,,ground,,,,m2 ha-1
-9,Foliage projective cover in the lower canopy strata,The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.,,area fraction,foliage,,ground,,lower canopy strata,foliage,dimensionless
-10,Peak ground acceleration,"Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",maximum,acceleration,ground,,,,surface,ground,m s-2
-,,,,,,,,,during seismic events,acceleration,
-14,Feral-free enclosure area,The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b,,area,enclosure,,,,free of feral,enclosure,m2
-15,"Foraminifera, planktic, size","Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",,size,foraminfers,,sediment,,planctonic,foraminfers,µm
-,,,,,,,,,surface,sediment,
-16,Standard metabolic rate in mg of Oxygen per hour,"The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",,mass flow rate,oxygen,,organism,,ectotherm,animal,mg h-1
-,,,,,,,,,due to metabolism,mass flow rate,
-,,,,,,,,,non-active,animal,
-,,,,,,,,,non-stressed,animal,
-17,Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content),The amount of docosahexaenoic acid relative to dry weight in an individual.,,mass fraction,docosahexaenoic acid,,organism,,dry,body,µg µg-1
-18,Biological sex,Biological sex [female | male | intersex | unknown],,biological sex,organism,,,,,,
-19,Weight specific-ingestion Carbon rate at 15 °C,The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1,,mass flow rate,Carbon,,organism,,dry,body,μg mg-1h-1
-,,,,,,,,,weight-specific,mass flow rate,
-,,,,,,,,,due to ingestion,mass flow rate,
-,,,,,,,,,at 15°C temperature,mass flow rate,
-,,,,,,,,,at non-limiting conditions,Carbon,
-20,Concentration of DDT impacted by industry,Concentration of DDT in a given year at a site impacted by industry.,,mass fraction,DDT,,soil,,impacted by industry,soil,ng g-1
-21,Resting systolic blood pressure,Resting blood pressure systolic/diastolic in millimeters of mercury (mmHg),,pressure,blood,,human,,systolic,pressure,
-,,,,,,,,,resting,human,
-22,Current smoking status,Smoking status current of a patient,,smoking status,patient,,,,current,smoking status,
-25,Dynamic shear viscosity of polystyrene PS042,Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.,,shear viscosity,polystyrene,,,,dynamic,shear viscosity,
-26,Sheet resistance of layer of gold,The sheet resistance of a 5-nanometer-thick layer of gold.,,sheet resistance,gold,,,,5 nm thick layer,gold,
-27,Mass concentration of isobutylene,Mass concentration of isobutylene in chloroform.,,mass concentration,isobutylene,,chloroform,,,,g l-1
-28,Overnight stays in 3-star hotel near the sea shore,Number of nights in a 3-star hotel near the sea shore,,count,overnight stay,,hotel,,3 star,hotel,
-,,,,,,,,,near the sea shore,hotel,
-29,Nervosity feelings,"In the past 30 days, how often did you feel nervous?",,frequency,nervosity feeling,,person,,during last 30 days,frequency,
-30,Date of last PCR-test,date of last COVID-19 PCR test performed by a certified laboratory,latest,date,COVID-19 PCR test,,person,,performed by a certified laboratory,COVID-19 PCR test,
+Reference to the turtle file,Provided Variable Name,Definition,Statistical Modifier,Property (Label),ObjectOfInterest (Label),Matrix (Label),ContextObject (Label),constraint,Constrained component,Applicable units of measure,Reference to issue,Reference to visualized variable,,,,,,,,,
+1,Electron density in the solar wind,Density (particle per cm3) of electrons measured in the Solar Wind.,,volumetric number density,electron,solar wind,,,,cm-3,issue 18,1,,,,,,,,,
+2,Air daily maximum temperature,"Temperature of the air in a height of 1.7 meter, daily maximum",maximum,temperature,air,atmosphere,,daily,maximum,Celsius,issue 19,2,,,,,,,,,
+,,,,,,,,"1,7 m aboveground",air,,,,,,,,,,,,
+3,Cloud cover,"The amount of sky estimated to be covered by all cloud types (total cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",,area fraction,cloud,atmosphere,,,,unitless (okta),issue 20,3,,,,,,,,,
+4,Atmospheric boundary layer height defined by temperature inversion,Atmospheric boundary layer height defined by temperature inversion.,,height,atmospheric boundary layer,atmosphere,,defined by temperature inversion,atmospheric boundary layer,m,issue 21,4,,,,,,,,,
+,,,,,,,,above the valley floor,height,,,,,,,,,,,,
+5,Atmosphere optical thickness of particulate organic matter ambient aerosol,Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.,,optical depth,organic matter,aerosol particle,atmosphere,at 550 nm wavelength,optical depth,dimensionless,issue 22,5,,,,,,,,,
+6,Mass_flux_of_carbon_into_soil_from_vegetation_due_to_senescence,"In accordance with common usage in geophysical disciplines, ""flux"" implies per unit area, called ""flux density"" in physics. ""Vegetation"" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase ""due_to_"" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term ""senescence"" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",,mass flux,carbon,AsymmetricSystem: from vegetation to soil,,due to senescence,mass flux,kg m-2 s-1,issue 23,6,,,,,,,,,
+,,,,,,hasSource: vegetation,,,,,,,,,,,,,,,
+,,,,,,hasTarget: soil,,,,,,,,,,,,,,,
+7,Maximum trunk char height,Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360° sweep at each sampling location.,maximum,height,char,tree trunk,,aboveground,height,cm,issue 24,7,,,,,,,,,
+8,Coarse woody debris abundance,CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X),,area fraction,coarse woody debris,ground,,,,m2 ha-1,issue 25,8,,,,,,,,,
+9,Foliage projective cover in the lower canopy strata,The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.,,area fraction,foliage,ground,,lower canopy strata,foliage,dimensionless,issue 26,9,,,,,,,,,
+10,Peak ground acceleration,"Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",maximum,acceleration,ground,,,surface,ground,m s-2,issue 27,10,,,,,,,,,
+,,,,,,,,during seismic events,acceleration,,,,,,,,,,,,
+11,Strike of bedding,"Geographic azimuth (relative to true north) at a point observation location, of a horizontal line contained in a sedimentary rock bedding surface. The bedding surface must not be horizontal; the azimuth is reported such that the dip direction of the inclined bedding is to the right when facing in the azimuth direction.",,azimuth,SymmetricSystem: line of intersection,sedimentary bedrock,,,,degree,issue 28,11,,,,,,,,,
+,,,,,hasPart: bedding plane,,,,,,,,,,,,,,,,
+,,,,,hasPart: horizontal plane,,,,,,,,,,,,,,,,
+12,Probability of occurrence of habitat ,,,probability,habitat,,,,,,issue 29,12,,,,,,,,,
+13,Distance to nearest neighbour habitat patch,"This variable is part of the EBV Connectivity of terrestrial ecosytem habitat types and helps to measure the degree of connection of EUNIS habitats within a landsacpe, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",,distance,AsymmetricSystem: habitat patch system,,,nearest neighbour,hasTarget: habitat patch,m,issue 30,13,,,,,,,,,
+,,,,,hasSource: habitat patch,,,,,,,,,,,,,,,,
+,,,,,hasTarget: habitat patch,,,,,,,,,,,,,,,,
+14,Feral-free enclosure area,The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b,,area,enclosure,,,free of feral,enclosure,m2,issue 31,14,,,,,,,,,
+15,"Foraminifera, planktic, size","Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",,size,foraminfers,sediment,,planctonic,foraminfers,µm,issue 32,15,,,,,,,,,
+,,,,,,,,surface,sediment,,,,,,,,,,,,
+16,Standard metabolic rate in mg of Oxygen per hour,"The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",,mass flow rate,oxygen,organism,,ectotherm,animal,mg h-1,issue 33,16,,,,,,,,,
+,,,,,,,,due to metabolism,mass flow rate,,,,,,,,,,,,
+,,,,,,,,non-active,animal,,,,,,,,,,,,
+,,,,,,,,non-stressed,animal,,,,,,,,,,,,
+17,Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content),The amount of docosahexaenoic acid relative to dry weight in an individual.,,mass fraction,docosahexaenoic acid,organism,,dry,body,µg µg-1,issue 34,17,,,,,,,,,
+18,Biological sex,Biological sex [female | male | intersex | unknown],,biological sex,organism,,,,,,issue 35,18,,,,,,,,,
+19,Weight specific-ingestion Carbon rate at 15 °C,The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1,,mass flow rate,Carbon,organism,,dry,body,μg mg-1h-1,issue 36,19,,,,,,,,,
+,,,,,,,,weight-specific,mass flow rate,,,,,,,,,,,,
+,,,,,,,,due to ingestion,mass flow rate,,,,,,,,,,,,
+,,,,,,,,at 15°C temperature,mass flow rate,,,,,,,,,,,,
+,,,,,,,,at non-limiting conditions,Carbon,,,,,,,,,,,,
+20,Concentration of DDT impacted by industry,Concentration of DDT in a given year at a site impacted by industry.,,mass fraction,DDT,soil,,impacted by industry,soil,ng g-1,issue 37,20,,,,,,,,,
+21,Resting systolic blood pressure,Resting blood pressure systolic/diastolic in millimeters of mercury (mmHg),,pressure,blood,human,,systolic,pressure,,issue 38,21,,,,,,,,,
+,,,,,,,,resting,human,,,,,,,,,,,,
+22,Current smoking status,Smoking status current of a patient,,smoking status,patient,,,current,smoking status,,issue 39,22,,,,,,,,,
+23,dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area,"Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.",,mass per area,nanomaterial particle,,cell surface,entering the cell,nanomaterial particle,µg µm-2,issue 40,23,,,,,,,,,TRUE
+24,dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area,"Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.",,number per area,nanomaterial particle,,cell surface,entering the cell,nanomaterial particle, µm-2,issue 41,24,,,,,,,,,TRUE
+25,Dynamic shear viscosity of polystyrene PS042,Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.,,shear viscosity,polystyrene,,,dynamic,shear viscosity,,issue 42,25,,,,,,,,,
+26,Sheet resistance of layer of gold,The sheet resistance of a 5-nanometer-thick layer of gold.,,sheet resistance,gold,,,5 nm thick layer,gold,,issue 43,26,,,,,,,,,
+27,Mass concentration of isobutylene,Mass concentration of isobutylene in chloroform.,,mass concentration,isobutylene,chloroform,,,,g l-1,issue 44,27,,,,,,,,,
+28,Overnight stays in 3-star hotel near the sea shore,Number of nights in a 3-star hotel near the sea shore,,count,overnight stay,hotel,,3 star,hotel,,issue 45,28,,,,,,,,,
+,,,,,,,,near the sea shore,hotel,,,,,,,,,,,,
+29,Nervosity feelings,"In the past 30 days, how often did you feel nervous?",,frequency,nervosity feeling,person,,during last 30 days,frequency,,issue 46,29,,,,,,,,,
+30,Date of last PCR-test,date of last COVID-19 PCR test performed by a certified laboratory,latest,date,COVID-19 PCR test,person,,performed by a certified laboratory,COVID-19 PCR test,,issue 47,30,,,,,,,,,

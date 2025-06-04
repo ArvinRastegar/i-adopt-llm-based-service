@@ -1,8 +1,0 @@
-{
-  "Provided Variable Name": "Current smoking status",
-  "Definition": "Smoking status current of a patient",
-  "Property (Label)": "smoking status",
-  "ObjectOfInterest (Label)": "patient",
-  "constraint": "current",
-  "Constraint component": "smoking status"
-}

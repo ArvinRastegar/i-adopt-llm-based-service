@@ -1,0 +1,6 @@
+{
+  "label": "Biological sex",
+  "comment": "Biological sex [female | male | intersex | unknown]",
+  "hasProperty": "biological sex",
+  "hasObjectOfInterest": "organism"
+}

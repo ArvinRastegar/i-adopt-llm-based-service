@@ -1,0 +1,7 @@
+{
+  "label": "Mass concentration of isobutylene in chloroform",
+  "comment": "Mass concentration of isobutylene in chloroform.",
+  "hasProperty": "mass concentration",
+  "hasMatrix": "chloroform",
+  "hasObjectOfInterest": "isobutylene"
+}
