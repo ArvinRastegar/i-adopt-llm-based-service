@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  /* ------------------------------------------------------------------ */
+  /*  REQUIRED – minimal information the LLM must always deliver        */
+  /* ------------------------------------------------------------------ */
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  /* ------------------------------------------------------------------ */
+  /*  FIELD DEFINITIONS                                                 */
+  /* ------------------------------------------------------------------ */
+  "properties": {
+    /* plain strings --------------------------------------------------- */
+    "label":   { "type": "string", "description": "Variable name." },
+    "comment": { "type": "string", "description": "Definition / description." },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. ‘distance’, ‘temperature’)."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. ‘maximum’, ‘latest’)."
+    },
+
+    /* entity OR system anywhere a “thing” can occur ------------------- */
+    "hasMatrix":        { "$ref": "#/$defs/entityOrSystem" },
+    "hasObjectOfInterest": { "$ref": "#/$defs/entityOrSystem" },
+    "hasContextObject":   { "$ref": "#/$defs/entityOrSystem" },
+
+    /* map of constraints ---------------------------------------------- */
+    "hasConstraint": {
+      "type": "object",
+      "description": "Dictionary of constraint → constrained-thing pairs.",
+      "patternProperties": {
+        "^.*$": {                 /* any constraint label */
+          "type": "object",
+          "required": ["constrains"],
+          "properties": {
+            "constrains": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  /* ------------------------------------------------------------------ */
+  /*  No unexpected top-level keys                                       */
+  /* ------------------------------------------------------------------ */
+  "additionalProperties": false,
+
+  /* ------------------------------------------------------------------ */
+  /*  REUSABLE DEFINITION: entity *or* (a)symmetric system               */
+  /* ------------------------------------------------------------------ */
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+
+        /* asymmetric system */
+        {
+          "type": "object",
+          "required": ["AsymmetricSystem", "hasSource", "hasTarget"],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+
+        /* symmetric system */
+        {
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

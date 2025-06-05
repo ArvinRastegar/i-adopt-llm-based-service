@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label":   { "type": "string", "description": "Variable name." },
+    "comment": { "type": "string", "description": "Definition / description." },
+
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+
+    "hasMatrix":           { "$ref": "#/$defs/entityOrSystem" },
+    "hasObjectOfInterest": { "$ref": "#/$defs/entityOrSystem" },
+    "hasContextObject":    { "$ref": "#/$defs/entityOrSystem" },
+
+    "hasConstraint": {
+      "type": "object",
+      "description": "Dictionary of constraint → constrained-thing pairs.",
+      "patternProperties": {
+        "^.*$": {
+          "type": "object",
+          "required": ["constrains"],
+          "properties": {
+            "constrains": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": ["AsymmetricSystem", "hasSource", "hasTarget"],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
