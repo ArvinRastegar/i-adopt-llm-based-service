@@ -50,72 +50,99 @@ def _collapse_issue(url: str) -> str:
     return f"issue {m.group(1)}" if m else url
 
 
+# Helper: serialise an entity *or* system node
+def _entity_representation(g: Graph, node: URIRef | None) -> str | Dict[str, Any] | None:
+    """Return either a plain label or a dict describing a (a)symmetric system."""
+    if node is None:
+        return None
+
+    if (node, RDF.type, IOP.AsymmetricSystem) in g:
+        return {
+            "AsymmetricSystem": _label(g, node),
+            "hasSource": _label(g, g.value(node, IOP.hasSource)),
+            "hasTarget": _label(g, g.value(node, IOP.hasTarget)),
+        }
+
+    if (node, RDF.type, IOP.SymmetricSystem) in g:
+        return {
+            "SymmetricSystem": _label(g, node),
+            "hasPart": _list_labels(g, list(g.objects(node, IOP.hasPart))),
+        }
+
+    # plain entity
+    return _label(g, node)
+
+
 # --------------------------------------------------------------------------- #
-# 4️⃣  Core RDF→JSON mapping (unchanged API from v2)
+# 4️⃣  Core RDF→JSON mapping                                    #
 # --------------------------------------------------------------------------- #
 def parse_variable(ttl: str) -> Dict[str, Any]:
     g = Graph()
     g.parse(data=ttl, format="turtle")
 
-    root_candidates = list(g.subjects(RDF.type, IOP.Variable))
-    if not root_candidates:
-        raise ValueError("No iop:Variable in supplied Turtle")
-    root: URIRef = root_candidates[0]
+    # locate the Variable root
+    roots = list(g.subjects(RDF.type, IOP.Variable))
+    if not roots:
+        raise ValueError("No iop:Variable found")
+    root = roots[0]
 
     j: Dict[str, Any] = {
         "label": _label(g, root),
         "comment": str(g.value(root, RDFS_NS.comment, default="")).strip() or None,
     }
 
-    # simple links
-    for p, k in [
-        (IOP.hasProperty, "hasProperty"),
+    # -- simple scalar field --------------------------------------------------
+    if prop := g.value(root, IOP.hasProperty):
+        j["hasProperty"] = _label(g, prop)
+
+    # -- links that may be entity *or* system --------------------------------
+    for predicate, key in [
         (IOP.hasMatrix, "hasMatrix"),
-        (IOP.hasStatisticalModifier, "hasStatisticalModifier"),
+        (IOP.hasObjectOfInterest, "hasObjectOfInterest"),
         (IOP.hasContextObject, "hasContextObject"),
     ]:
-        if o := g.value(root, p):
-            j[k] = _label(g, o)
+        if node := g.value(root, predicate):
+            j[key] = _entity_representation(g, node)
 
-    # object of interest
-    ooi = g.value(root, IOP.hasObjectOfInterest)
-    if ooi:
-        if (ooi, RDF.type, IOP.AsymmetricSystem) in g:
-            j["hasObjectOfInterest"] = {
-                "AsymmetricSystem": _label(g, ooi),
-                "hasSource": _label(g, g.value(ooi, IOP.hasSource)),
-                "hasTarget": _label(g, g.value(ooi, IOP.hasTarget)),
-            }
-        elif (ooi, RDF.type, IOP.SymmetricSystem) in g:
-            j["hasObjectOfInterest"] = {
-                "SymmetricSystem": _label(g, ooi),
-                "hasPart": _list_labels(g, list(g.objects(ooi, IOP.hasPart))),
-            }
-        else:
-            j["hasObjectOfInterest"] = _label(g, ooi)
+    # statistical modifier stays scalar
+    if mod := g.value(root, IOP.hasStatisticalModifier):
+        j["hasStatisticalModifier"] = _label(g, mod)
 
-    # constraints
-    c_nodes = list(g.objects(root, IOP.hasConstraint))
-    if c_nodes:
+    # -- constraints ----------------------------------------------------------
+    constraints = list(g.objects(root, IOP.hasConstraint))
+    if constraints:
         cdict: Dict[str, Dict[str, str]] = {}
-        for c in c_nodes:
+        # Object-of-interest *or* matrix system for prefix resolution
+        ooi_node = g.value(root, IOP.hasObjectOfInterest)
+        matrix_node = g.value(root, IOP.hasMatrix)
+        for c in constraints:
             cname = _label(g, c)
-            targ = g.value(c, IOP.constrains)
-            targ_lbl = _label(g, targ)
-            if ooi and (ooi, IOP.hasTarget, targ) in g:
-                targ_lbl = f"hasTarget: {targ_lbl}"
-            elif ooi and (ooi, IOP.hasSource, targ) in g:
-                targ_lbl = f"hasSource: {targ_lbl}"
-            cdict[cname] = {"constrains": targ_lbl}
+            constrained = g.value(c, IOP.constrains)
+            target_lbl = _label(g, constrained)
+
+            # prepend context info when the constrained entity
+            # matches a source/target part of *either* system
+            for sys_node, prefix in [
+                (ooi_node, "has"),
+                (matrix_node, "has"),
+            ]:
+                if sys_node and (sys_node, IOP.hasTarget, constrained) in g:
+                    target_lbl = f"hasTarget: {target_lbl}"
+                    break
+                if sys_node and (sys_node, IOP.hasSource, constrained) in g:
+                    target_lbl = f"hasSource: {target_lbl}"
+                    break
+
+            cdict[cname] = {"constrains": target_lbl}
         j["hasConstraint"] = cdict
 
-    # optional issue link
-    for pred, obj in g.predicate_objects(root):
-        if str(pred).split("#")[-1] == "issue":
-            j["issue"] = _collapse_issue(str(obj))
+    # optional issue
+    for p, o in g.predicate_objects(root):
+        if str(p).split("#")[-1] == "issue":
+            j["issue"] = _collapse_issue(str(o))
             break
 
-    # prune None values
+    # prune nulls
     return {k: v for k, v in j.items() if v is not None}
 
 
@@ -156,8 +183,37 @@ def main() -> None:
 
 
 # --------------------------------------------------------------------------- #
-# 7️⃣  Built-in test-suite (unchanged from v2 except for path independence)
+# 7️⃣  Built-in test-suite
 # --------------------------------------------------------------------------- #
+# Minimal unit-test covering an asymmetric *matrix*
+class TestMatrixSystem(unittest.TestCase):
+    TTL_MATRIX_SYS = textwrap.dedent(
+        """
+        @prefix ex: <http://example.org/> .
+        @prefix iop: <https://w3id.org/iadopt/ont/> .
+        @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+        ex:V a iop:Variable ;
+             rdfs:label "Mass flux C" ;
+             iop:hasProperty ex:P ;
+             iop:hasMatrix ex:Mat .
+        ex:P   a iop:Property ; rdfs:label "mass flux" .
+        ex:Mat a iop:Entity, iop:System, iop:AsymmetricSystem ;
+              rdfs:label "veg→soil" ;
+              iop:hasSource ex:Veg ;
+              iop:hasTarget ex:Soil .
+        ex:Veg a iop:Entity ; rdfs:label "vegetation" .
+        ex:Soil a iop:Entity ; rdfs:label "soil" .
+    """
+    )
+
+    def test_matrix_as_system(self):
+        d = parse_variable(self.TTL_MATRIX_SYS)
+        self.assertIsInstance(d["hasMatrix"], dict)
+        self.assertEqual(d["hasMatrix"]["AsymmetricSystem"], "veg→soil")
+        self.assertEqual(d["hasMatrix"]["hasSource"], "vegetation")
+        self.assertEqual(d["hasMatrix"]["hasTarget"], "soil")
+
+
 class TestMapping(unittest.TestCase):
     """Covers every branch."""
 

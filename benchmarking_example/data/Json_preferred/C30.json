@@ -3,8 +3,8 @@
   "comment": "date of last COVID-19 PCR test performed by a certified laboratory",
   "hasProperty": "date",
   "hasMatrix": "person",
-  "hasStatisticalModifier": "latest",
   "hasObjectOfInterest": "COVID-19 PCR test",
+  "hasStatisticalModifier": "latest",
   "hasConstraint": {
     "performed by a certified laboratory": {
       "constrains": "COVID-19 PCR test"

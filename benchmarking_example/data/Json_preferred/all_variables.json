@@ -1,0 +1,377 @@
+[
+  {
+    "label": "Electron density in the solar wind",
+    "comment": "Density (particle per cm3) of electrons measured in the Solar Wind.",
+    "hasProperty": "volumetric number density",
+    "hasMatrix": "solar wind",
+    "hasObjectOfInterest": "electron"
+  },
+  {
+    "label": "Air daily maximum temperature",
+    "comment": "Temperature of the air in a height of 1.7 meter, daily maximum",
+    "hasProperty": "temperature",
+    "hasMatrix": "atmosphere",
+    "hasObjectOfInterest": "air",
+    "hasStatisticalModifier": "maximum",
+    "hasConstraint": {
+      "daily": {
+        "constrains": "maximum"
+      },
+      "1,7 m aboveground": {
+        "constrains": "air"
+      }
+    }
+  },
+  {
+    "label": "Cloud cover",
+    "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",
+    "hasProperty": "area fraction",
+    "hasMatrix": "atmosphere",
+    "hasObjectOfInterest": "cloud"
+  },
+  {
+    "label": "Atmospheric boundary layer height defined by temperature inversion",
+    "comment": "Atmospheric boundary layer height defined by temperature inversion.",
+    "hasProperty": "height",
+    "hasMatrix": "atmosphere",
+    "hasObjectOfInterest": "atmospheric boundary layer",
+    "hasConstraint": {
+      "defined by temperature inversion": {
+        "constrains": "atmospheric boundary layer"
+      },
+      "above the valley floor": {
+        "constrains": "height"
+      }
+    }
+  },
+  {
+    "label": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
+    "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.",
+    "hasProperty": "optical depth",
+    "hasMatrix": "aerosol particle",
+    "hasObjectOfInterest": "organic matter",
+    "hasContextObject": "atmosphere",
+    "hasConstraint": {
+      "at 550nm wavelength": {
+        "constrains": "optical depth"
+      }
+    }
+  },
+  {
+    "label": "Mass flux of carbon into soil from vegetation due to senescence",
+    "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+    "hasProperty": "mass flux",
+    "hasMatrix": {
+      "AsymmetricSystem": "from vegetation to soil",
+      "hasSource": "vegetation",
+      "hasTarget": "soil"
+    },
+    "hasObjectOfInterest": "carbon",
+    "hasConstraint": {
+      "due to senescence": {
+        "constrains": "mass flux"
+      }
+    }
+  },
+  {
+    "label": "Maximum trunk char height",
+    "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360° sweep at each sampling location.",
+    "hasProperty": "height",
+    "hasMatrix": "tree trunk",
+    "hasObjectOfInterest": "char",
+    "hasStatisticalModifier": "maximum",
+    "hasConstraint": {
+      "aboveground": {
+        "constrains": "height"
+      }
+    }
+  },
+  {
+    "label": "Coarse woody debris abundance",
+    "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)",
+    "hasProperty": "area fraction",
+    "hasMatrix": "ground",
+    "hasObjectOfInterest": "coarse woody debris"
+  },
+  {
+    "label": "Foliage projective cover in the lower canopy strata",
+    "comment": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.",
+    "hasProperty": "area fraction",
+    "hasMatrix": "ground",
+    "hasObjectOfInterest": "foliage",
+    "hasConstraint": {
+      "lower canopy strata": {
+        "constrains": "foliage"
+      }
+    }
+  },
+  {
+    "label": "Peak ground acceleration",
+    "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+    "hasProperty": "acceleration",
+    "hasObjectOfInterest": "ground",
+    "hasStatisticalModifier": "maximum",
+    "hasConstraint": {
+      "surface": {
+        "constrains": "ground"
+      },
+      "during seismic events": {
+        "constrains": "acceleration"
+      }
+    }
+  },
+  {
+    "label": "Strike of bedding",
+    "comment": "Geographic azimuth (relative to true north) at a point observation location, of a horizontal line contained in a sedimentary rock bedding surface. The bedding surface must not be horizontal; the azimuth is reported such that the dip direction of the inclined bedding is to the right when facing in the azimuth direction.",
+    "hasProperty": "azimuth",
+    "hasMatrix": "sedimentary bedrock",
+    "hasObjectOfInterest": {
+      "SymmetricSystem": "line of intersection",
+      "hasPart": [
+        "bedding plane",
+        "horizontal plane"
+      ]
+    }
+  },
+  {
+    "label": "Probablity of occurence of habitat",
+    "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+    "hasProperty": "probability ",
+    "hasObjectOfInterest": "habitat"
+  },
+  {
+    "label": "Distance to nearest neighbour habitat patch",
+    "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+    "hasProperty": "distance",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "habitat patch system",
+      "hasSource": "habitat patch",
+      "hasTarget": "habitat patch"
+    },
+    "hasConstraint": {
+      "nearest neighbour": {
+        "constrains": "hasTarget: habitat patch"
+      }
+    }
+  },
+  {
+    "label": "Feral-free enclosure area",
+    "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+    "hasProperty": "area",
+    "hasObjectOfInterest": "enclosure",
+    "hasConstraint": {
+      "free of feral": {
+        "constrains": "enclosure"
+      }
+    }
+  },
+  {
+    "label": "Foraminifera, planktic, size",
+    "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+    "hasProperty": "size",
+    "hasMatrix": "sediment",
+    "hasObjectOfInterest": "foraminfers",
+    "hasConstraint": {
+      "planctonic": {
+        "constrains": "foraminfers"
+      },
+      "surface": {
+        "constrains": "sediment"
+      }
+    }
+  },
+  {
+    "label": "Standard metabolic rate in mg of Oxygen per hour",
+    "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
+    "hasProperty": "mass flow rate",
+    "hasMatrix": "organism",
+    "hasObjectOfInterest": "oxygen",
+    "hasConstraint": {
+      "ectotherm": {
+        "constrains": "organism"
+      },
+      "due to metabolism": {
+        "constrains": "mass flow rate"
+      },
+      "non-stressed": {
+        "constrains": "organism"
+      },
+      "non-active": {
+        "constrains": "organism"
+      }
+    }
+  },
+  {
+    "label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
+    "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.",
+    "hasProperty": "mass fraction",
+    "hasMatrix": "organism",
+    "hasObjectOfInterest": "docosahexaenoic acid",
+    "hasConstraint": {
+      "dry": {
+        "constrains": "organism"
+      }
+    }
+  },
+  {
+    "label": "Biological sex",
+    "comment": "Biological sex [female | male | intersex | unknown]",
+    "hasProperty": "biological sex",
+    "hasObjectOfInterest": "organism"
+  },
+  {
+    "label": "Weight specific-ingestion Carbon rate at 15 °C",
+    "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+    "hasProperty": "mass flow rate",
+    "hasMatrix": "organism",
+    "hasObjectOfInterest": "Carbon",
+    "hasConstraint": {
+      "weight-specific": {
+        "constrains": "mass flow rate"
+      },
+      "dry": {
+        "constrains": "organism"
+      },
+      "at non-limiting conditions": {
+        "constrains": "Carbon"
+      },
+      "at 15°C temperature": {
+        "constrains": "mass flow rate"
+      },
+      "due to ingestion": {
+        "constrains": "mass flow rate"
+      }
+    }
+  },
+  {
+    "label": "Concentration of DDT impacted by industry",
+    "comment": "Concentration of DDT in a given year at a site impacted by industry.",
+    "hasProperty": "mass fraction",
+    "hasMatrix": "soil",
+    "hasObjectOfInterest": "DDT",
+    "hasConstraint": {
+      "impacted by industry": {
+        "constrains": "soil"
+      }
+    }
+  },
+  {
+    "label": "Resting systolic blood pressure",
+    "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)",
+    "hasProperty": "pressure",
+    "hasMatrix": "human",
+    "hasObjectOfInterest": "blood",
+    "hasConstraint": {
+      "resting": {
+        "constrains": "human"
+      },
+      "systolic": {
+        "constrains": "pressure"
+      }
+    }
+  },
+  {
+    "label": "Current smoking status",
+    "comment": "Smoking status current of a patient",
+    "hasProperty": "smoking status",
+    "hasObjectOfInterest": "patient",
+    "hasConstraint": {
+      "current": {
+        "constrains": "smoking status"
+      }
+    }
+  },
+  {
+    "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area",
+    "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.",
+    "hasProperty": "mass per area",
+    "hasMatrix": "cell surface",
+    "hasObjectOfInterest": "nanomaterial particle",
+    "hasConstraint": {
+      "entering the cell": {
+        "constrains": "nanomaterial particle"
+      }
+    }
+  },
+  {
+    "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area",
+    "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.",
+    "hasProperty": "number per area",
+    "hasMatrix": "cell surface",
+    "hasObjectOfInterest": "nanomaterial particle",
+    "hasConstraint": {
+      "entering the cell": {
+        "constrains": "nanomaterial particle"
+      }
+    }
+  },
+  {
+    "label": "Dynamic shear viscosity of polystyrene PS042",
+    "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+    "hasProperty": "shear viscosity",
+    "hasObjectOfInterest": "polystyrene",
+    "hasConstraint": {
+      "dynamic": {
+        "constrains": "shear viscosity"
+      }
+    }
+  },
+  {
+    "label": "Sheet resistance of layer of gold",
+    "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.",
+    "hasProperty": "sheet resistance",
+    "hasObjectOfInterest": "gold",
+    "hasConstraint": {
+      "5 nm thick layer": {
+        "constrains": "gold"
+      }
+    }
+  },
+  {
+    "label": "Mass concentration of isobutylene in chloroform",
+    "comment": "Mass concentration of isobutylene in chloroform.",
+    "hasProperty": "mass concentration",
+    "hasMatrix": "chloroform",
+    "hasObjectOfInterest": "isobutylene"
+  },
+  {
+    "label": "Overnight stays in 3-star hotel near the sea shore",
+    "comment": "Number of nights in a 3-star hotel near the sea shore",
+    "hasProperty": "count",
+    "hasMatrix": "hotel",
+    "hasObjectOfInterest": "overnight stay",
+    "hasConstraint": {
+      "near the sea shore": {
+        "constrains": "hotel"
+      },
+      "3 star": {
+        "constrains": "hotel"
+      }
+    }
+  },
+  {
+    "label": "Nervosity feelings",
+    "comment": "In the past 30 days, how often did you feel nervous?",
+    "hasProperty": "frequency",
+    "hasMatrix": "person",
+    "hasObjectOfInterest": "nervosity feeling",
+    "hasConstraint": {
+      "during last 30 days": {
+        "constrains": "frequency"
+      }
+    }
+  },
+  {
+    "label": "Date of last PCR-test",
+    "comment": "date of last COVID-19 PCR test performed by a certified laboratory",
+    "hasProperty": "date",
+    "hasMatrix": "person",
+    "hasObjectOfInterest": "COVID-19 PCR test",
+    "hasStatisticalModifier": "latest",
+    "hasConstraint": {
+      "performed by a certified laboratory": {
+        "constrains": "COVID-19 PCR test"
+      }
+    }
+  }
+]

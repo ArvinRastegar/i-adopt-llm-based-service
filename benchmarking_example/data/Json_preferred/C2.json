@@ -3,8 +3,8 @@
   "comment": "Temperature of the air in a height of 1.7 meter, daily maximum",
   "hasProperty": "temperature",
   "hasMatrix": "atmosphere",
-  "hasStatisticalModifier": "maximum",
   "hasObjectOfInterest": "air",
+  "hasStatisticalModifier": "maximum",
   "hasConstraint": {
     "daily": {
       "constrains": "maximum"
