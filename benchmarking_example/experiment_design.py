@@ -23,6 +23,7 @@ from typing import Any, Dict, List, Set, Tuple
 import pandas as pd
 from openai import BadRequestError, OpenAI
 from sentence_transformers import SentenceTransformer, util
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # from jsonschema import validate, ValidationError
 
@@ -409,24 +410,70 @@ def atoms(rec: Dict[str, Any], mode: str) -> Set[str]:
 
 
 # --------------------------------------------------------------------------- #
-# 8 ▪ Evaluation loop
+# 8 ▪ Evaluation loop  (returns list[dict] instead of writing files)
 # --------------------------------------------------------------------------- #
+def _run_one(
+    model: str,
+    gt: Dict[str, Any],
+    examples: List[Dict[str, Any]],
+    debug_chars: int,
+) -> Dict[str, Any]:
+    """
+    Worker executed in a background thread.
+
+    Returns
+    -------
+    dict   A single “row” for the final dataframe or {} if the call failed.
+    """
+    prompt = build_prompt(gt["label"], gt["comment"], examples)
+    pred = call_llm_loose(model, prompt, exp_label=gt["label"], exp_comment=gt["comment"])
+
+    logging.info(  # verbose dev-log
+        "· %s | %s\nprompt>>> %.{}s …\nparsed=%s".format(debug_chars),
+        gt["label"],
+        model,
+        prompt,
+        json.dumps(pred)[:debug_chars],
+    )
+
+    # ---------------------- metric calc (unchanged) -------------------------
+    metrics: Dict[str, float] = {}
+    for close in (False, True):
+        tp = fp = fn = 0
+        for key in ONTO_KEYS:
+            gt_val = gt.get(key, [] if key == "hasConstraint" else "")
+            pred_val = pred.get(key, [] if key == "hasConstraint" else "")
+            if key == "hasConstraint":
+                tpi, fpi, fni, _ = confusion_constraints(gt_val, pred_val, close)
+            else:
+                tpi, fpi, fni, _ = confusion(gt_val, pred_val, close)
+            tp += tpi
+            fp += fpi
+            fn += fni
+        prec, rec, f1 = prf(tp, fp, fn)
+        tag = "close" if close else "exact"
+        metrics |= {f"P_{tag}": round(prec, 3), f"R_{tag}": round(rec, 3), f"F_{tag}": round(f1, 3)}
+
+    for mode in ("both", "concept", "text"):
+        metrics[f"J_{mode}"] = round(jaccard(atoms(gt, mode), atoms(pred, mode)), 3)
+
+    return {"Variable": gt["label"], "Model": model, **metrics}
+
+
 def evaluate(
     data_dir: pathlib.Path,
     shot_mode: int,
     max_vars: int = 10,
     models: List[str] | None = None,
     debug_chars: int = 500,
-) -> None:
-    """
-    Run benchmark and export Excel.  Extra dev-flags:
-      • max_vars  – stop after N variables (quick debug)
-      • models    – run only this subset of models
-    """
+    workers: int = 16,
+) -> List[Dict[str, Any]]:
+
     models = models or MODEL_NAMES
     examples = load_examples(shot_mode)
-    rows: List[Dict[str, Any]] = []
+    tasks = []
 
+    # ---------- enumerate (variable, model) pairs --------------------------
     for v_idx, gt_path in enumerate(sorted(data_dir.glob("*.json")), 1):
         if max_vars and v_idx > max_vars:
             break
@@ -436,48 +483,20 @@ def evaluate(
             logging.info(f"Skip {gt['label']} (in-prompt example)")
             continue
 
-        for model in models:
-            prompt = build_prompt(gt["label"], gt["comment"], examples)
-            pred = call_llm_loose(model, prompt, exp_label=gt["label"], exp_comment=gt["comment"])
-            # --- verbose dev log ------------------------------------------ #
-            logging.info(
-                "· %s | %s\nprompt>>> %.{}s …\nparsed=%s".format(debug_chars),
-                gt["label"],
-                model,
-                prompt,
-                json.dumps(pred)[:debug_chars],
-            )
+        for m in models:
+            tasks.append((m, gt))
 
-            metrics: Dict[str, float] = {}
-            for close in (False, True):
-                tp = fp = fn = 0
-                for key in ONTO_KEYS:
-                    gt_val = gt.get(key, [] if key == "hasConstraint" else "")
-                    pred_val = pred.get(key, [] if key == "hasConstraint" else "")
-                    if key == "hasConstraint":
-                        tpi, fpi, fni, _ = confusion_constraints(gt_val, pred_val, close)
-                    else:
-                        tpi, fpi, fni, _ = confusion(gt_val, pred_val, close)
-                    tp += tpi
-                    fp += fpi
-                    fn += fni
-                prec, rec, f1 = prf(tp, fp, fn)
-                tag = "close" if close else "exact"
-                metrics |= {f"P_{tag}": round(prec, 3), f"R_{tag}": round(rec, 3), f"F_{tag}": round(f1, 3)}
+    rows: list[dict] = []
 
-            for mode in ("both", "concept", "text"):
-                metrics[f"J_{mode}"] = round(jaccard(atoms(gt, mode), atoms(pred, mode)), 3)
+    # ------------------ parallel execution ---------------------------------
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futs = [pool.submit(_run_one, m, g, examples, debug_chars) for m, g in tasks]
+        for f in as_completed(futs):
+            res = f.result()
+            if res:
+                rows.append(res)
 
-            rows.append({"Variable": gt["label"], "Model": model, **metrics})
-
-    df = pd.DataFrame(rows)
-    summary = df.groupby("Model").mean(numeric_only=True).round(3).reset_index()
-
-    out_xlsx = OUTBOOK_DIR / f"iadopt_metrics_{datetime.now():%Y%m%d}.xlsx"
-    with pd.ExcelWriter(out_xlsx, engine="openpyxl") as wr:
-        summary.to_excel(wr, sheet_name="summary", index=False)
-        df.to_excel(wr, sheet_name="per_variable", index=False)
-    logging.info(f"✓ Results saved → {out_xlsx.resolve()}")
+    return rows  # <-- caller handles aggregation / XLSX
 
 
 # --------------------------------------------------------------------------- #
@@ -485,14 +504,42 @@ def evaluate(
 # --------------------------------------------------------------------------- #
 def main() -> None:
     """CLI entry."""
-    parser = argparse.ArgumentParser(description="I-ADOPT LLM benchmark")
+    parser = argparse.ArgumentParser(description="I-ADOPT LLM benchmark – now parallel & multi-shot")
     parser.add_argument("--data-dir", type=pathlib.Path, default=DATA_DIR, help="Folder with ground-truth JSON files")
-    parser.add_argument("--shot", choices=[0, 1, 3], type=int, default=0, help="Prompting mode: 0/1/3-shot")
-    parser.add_argument("--max-vars", type=int, dest="max_vars", help="debug: limit #variables")
-    parser.add_argument("--only-model", action="append", help="debug: one model")
+    parser.add_argument(
+        "--shot",
+        type=int,
+        choices=[0, 1, 3],
+        default=None,  # ← if omitted: run 0-,1-,3-shot
+        help="Prompting mode (0/1/3). " "Omit to run **all three**.",
+    )
+    parser.add_argument("--max-vars", type=int, default=10, help="Debug: limit #variables")  # ← default 10
+    parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
+    parser.add_argument("--workers", type=int, default=16, help="Parallel requests")  # ← default 8
     args = parser.parse_args()
 
-    evaluate(args.data_dir, args.shot)
+    # ------------------------------------------------------------------ run
+    shots = [args.shot] if args.shot is not None else [0, 1, 3]
+    all_rows: list[dict] = []
+
+    for s in shots:
+        rows = evaluate(
+            args.data_dir, shot_mode=s, max_vars=args.max_vars, models=args.only_model, workers=args.workers
+        )
+        for r in rows:  # tag each row with the approach used
+            r["Shot"] = s
+        all_rows.extend(rows)
+
+    # ------------- single Excel containing *all* shot-settings ----------
+    df = pd.DataFrame(all_rows)
+    summary = df.groupby(["Model", "Shot"]).mean(numeric_only=True).round(3).reset_index()
+    # ← aggregate over all shots
+
+    out_xlsx = OUTBOOK_DIR / f"iadopt_metrics_{datetime.now():%Y%m%d}.xlsx"
+    with pd.ExcelWriter(out_xlsx, engine="openpyxl") as wr:
+        summary.to_excel(wr, sheet_name="summary", index=False)
+        df.to_excel(wr, sheet_name="per_variable", index=False)
+    logging.info(f"✓ Results saved → {out_xlsx.resolve()}")
 
 
 if __name__ == "__main__":
