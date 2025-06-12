@@ -1,0 +1,3 @@
+2025-06-12 14:20:18,840 | INFO | Logging to /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_outputs/iadopt_run_20250612_142018.log
+2025-06-12 14:20:18,885 | INFO | Use pytorch device_name: mps
+2025-06-12 14:20:18,885 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2

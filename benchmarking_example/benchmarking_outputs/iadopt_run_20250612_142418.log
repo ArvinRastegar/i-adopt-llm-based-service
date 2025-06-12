@@ -1,0 +1,20 @@
+2025-06-12 14:24:18,165 | INFO | Logging to /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_outputs/iadopt_run_20250612_142418.log
+2025-06-12 14:24:18,206 | INFO | Use pytorch device_name: mps
+2025-06-12 14:24:18,206 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-12 14:24:21,739 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-12 14:24:25,305 | INFO | · Electron density in the solar wind | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Electron density in the solar wind", "comment": "Density (particle per cm3) of electrons measured in the Solar Wind.", "hasProperty": "density", "hasObjectOfInterest": "electron", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-12 14:24:25,535 | INFO | ✓ Results saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_metrics_20250612.xlsx
