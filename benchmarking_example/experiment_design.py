@@ -34,6 +34,7 @@ SCHEMA_PATH = "/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benc
 DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred"
 ONE_SHOT_DIR = DATA_DIR / "one_shot"
 THREE_SHOT_DIR = DATA_DIR / "three_shot"
+FIVE_SHOT_DIR = DATA_DIR / "five_shot"
 OUTBOOK_DIR = SCRIPT_DIR / "benchmarking_outputs"
 OUTBOOK_DIR.mkdir(exist_ok=True)
 LOG_FILE = OUTBOOK_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
@@ -54,13 +55,13 @@ LOG_FILE = OUTBOOK_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
 # ]
 
 MODEL_NAMES = [
-    # "openai/gpt-4o",
-    # "openai/gpt-4o-mini",
+    "openai/gpt-4o",
+    "openai/gpt-4o-mini",
     "openai/gpt-4.1",
-    # "openai/gpt-4.1-mini",
+    "openai/gpt-4.1-mini",
     "meta-llama/Llama-3.1-8B-Instruct",
-    # "Qwen/Qwen3-8B",
-    # "deepseek/deepseek-r1-0528-qwen3-8b",
+    "Qwen/Qwen3-8B",
+    "deepseek/deepseek-r1-0528-qwen3-8b",
     "google/gemma-2-9b-it",
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-32b",
@@ -166,21 +167,20 @@ def build_prompt(label: str, comment: str, examples: List[Dict[str, Any]] | None
 
 def load_examples(n: int) -> List[Dict[str, Any]]:
     """
-    Load n illustrative JSON examples from the prepared folders.
-
-    Parameters
-    ----------
-    n : {0,1,3}
-        Number of examples to load.
-
-    Returns
-    -------
-    list[dict]
-        Example objects read from disk (may be empty).
+    Return n illustrative JSON examples (0, 1, 3 or 5).
     """
     if n == 0:
         return []
-    folder = ONE_SHOT_DIR if n == 1 else THREE_SHOT_DIR
+
+    if n == 1:
+        folder = ONE_SHOT_DIR
+    elif n == 3:
+        folder = THREE_SHOT_DIR
+    elif n == 5:
+        folder = FIVE_SHOT_DIR  # ← new branch
+    else:
+        raise ValueError("shot must be 0, 1, 3 or 5")
+
     paths = sorted(folder.glob("*.json"))
     return [json.load(open(p)) for p in paths[:n]]
 
@@ -463,7 +463,7 @@ def _run_one(
 def evaluate(
     data_dir: pathlib.Path,
     shot_mode: int,
-    max_vars: int = 10,
+    max_vars: int = 30,
     models: List[str] | None = None,
     debug_chars: int = 500,
     workers: int = 16,
@@ -509,17 +509,19 @@ def main() -> None:
     parser.add_argument(
         "--shot",
         type=int,
-        choices=[0, 1, 3],
-        default=None,  # ← if omitted: run 0-,1-,3-shot
-        help="Prompting mode (0/1/3). " "Omit to run **all three**.",
+        choices=[0, 1, 3, 5],  # ← added 5
+        default=None,  # omit → run all four
+        help="Prompting mode (0 / 1 / 3 / 5). " "If omitted, all four modes are executed.",
     )
-    parser.add_argument("--max-vars", type=int, default=10, help="Debug: limit #variables")  # ← default 10
+    parser.add_argument("--max-vars", type=int, default=30, help="Debug: limit #variables")  # ← default 10
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
     parser.add_argument("--workers", type=int, default=16, help="Parallel requests")  # ← default 8
     args = parser.parse_args()
 
     # ------------------------------------------------------------------ run
-    shots = [args.shot] if args.shot is not None else [0, 1, 3]
+    # run all requested shot modes
+    shots = [args.shot] if args.shot is not None else [0, 1, 3, 5]
+
     all_rows: list[dict] = []
 
     for s in shots:
