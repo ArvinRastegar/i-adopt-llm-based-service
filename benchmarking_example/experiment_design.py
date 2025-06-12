@@ -21,9 +21,10 @@ from pathlib import Path
 from datetime import datetime
 from typing import Any, Dict, List, Set, Tuple
 import pandas as pd
-from openai import BadRequestError, OpenAI
+from openai import OpenAI, OpenAIError, APIStatusError
 from sentence_transformers import SentenceTransformer, util
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import httpx
 
 # from jsonschema import validate, ValidationError
 
@@ -203,20 +204,24 @@ def extract_json(text: str) -> Dict[str, Any]:
 
 
 def call_model(model: str, prompt: str) -> str:
-    """
-    Low-level OpenRouter call. Returns raw assistant text or "" on HTTP-error.
-    """
     try:
         resp = client.chat.completions.create(
             model=model,
             temperature=0,
             extra_headers={"X-Title": "IADOPT-bench"},
             messages=[{"role": "user", "content": prompt}],
+            timeout=30,  # network timeout
         )
         return resp.choices[0].message.content
-    except BadRequestError as e:
-        logging.error(f"{model}: {e}")
-        return ""
+
+    except APIStatusError as e:  # non-2xx JSON error
+        logging.warning(f"{model}: HTTP {e.status_code} – {e.body!s}")
+    except (OpenAIError, httpx.HTTPError) as e:  # network / SDK issues
+        logging.warning(f"{model}: transport error – {e!r}")
+    except json.JSONDecodeError as e:  # just in case
+        logging.warning(f"{model}: invalid JSON payload – {e!r}")
+
+    return ""  # uniform “failure” sentinel
 
 
 def coerce_for_eval(rec: Dict[str, Any]) -> Dict[str, Any]:
@@ -425,39 +430,43 @@ def _run_one(
     -------
     dict   A single “row” for the final dataframe or {} if the call failed.
     """
-    prompt = build_prompt(gt["label"], gt["comment"], examples)
-    pred = call_llm_loose(model, prompt, exp_label=gt["label"], exp_comment=gt["comment"])
+    try:
+        prompt = build_prompt(gt["label"], gt["comment"], examples)
+        pred = call_llm_loose(model, prompt, exp_label=gt["label"], exp_comment=gt["comment"])
 
-    logging.info(  # verbose dev-log
-        "· %s | %s\nprompt>>> %.{}s …\nparsed=%s".format(debug_chars),
-        gt["label"],
-        model,
-        prompt,
-        json.dumps(pred)[:debug_chars],
-    )
+        logging.info(  # verbose dev-log
+            "· %s | %s\nprompt>>> %.{}s …\nparsed=%s".format(debug_chars),
+            gt["label"],
+            model,
+            prompt,
+            json.dumps(pred)[:debug_chars],
+        )
 
-    # ---------------------- metric calc (unchanged) -------------------------
-    metrics: Dict[str, float] = {}
-    for close in (False, True):
-        tp = fp = fn = 0
-        for key in ONTO_KEYS:
-            gt_val = gt.get(key, [] if key == "hasConstraint" else "")
-            pred_val = pred.get(key, [] if key == "hasConstraint" else "")
-            if key == "hasConstraint":
-                tpi, fpi, fni, _ = confusion_constraints(gt_val, pred_val, close)
-            else:
-                tpi, fpi, fni, _ = confusion(gt_val, pred_val, close)
-            tp += tpi
-            fp += fpi
-            fn += fni
-        prec, rec, f1 = prf(tp, fp, fn)
-        tag = "close" if close else "exact"
-        metrics |= {f"P_{tag}": round(prec, 3), f"R_{tag}": round(rec, 3), f"F_{tag}": round(f1, 3)}
+        # ---------------------- metric calc (unchanged) -------------------------
+        metrics: Dict[str, float] = {}
+        for close in (False, True):
+            tp = fp = fn = 0
+            for key in ONTO_KEYS:
+                gt_val = gt.get(key, [] if key == "hasConstraint" else "")
+                pred_val = pred.get(key, [] if key == "hasConstraint" else "")
+                if key == "hasConstraint":
+                    tpi, fpi, fni, _ = confusion_constraints(gt_val, pred_val, close)
+                else:
+                    tpi, fpi, fni, _ = confusion(gt_val, pred_val, close)
+                tp += tpi
+                fp += fpi
+                fn += fni
+            prec, rec, f1 = prf(tp, fp, fn)
+            tag = "close" if close else "exact"
+            metrics |= {f"P_{tag}": round(prec, 3), f"R_{tag}": round(rec, 3), f"F_{tag}": round(f1, 3)}
 
-    for mode in ("both", "concept", "text"):
-        metrics[f"J_{mode}"] = round(jaccard(atoms(gt, mode), atoms(pred, mode)), 3)
+        for mode in ("both", "concept", "text"):
+            metrics[f"J_{mode}"] = round(jaccard(atoms(gt, mode), atoms(pred, mode)), 3)
 
-    return {"Variable": gt["label"], "Model": model, **metrics}
+        return {"Variable": gt["label"], "Model": model, **metrics}
+    except Exception as e:
+        logging.error(f"{model} | {gt['label']}: worker crashed – {e!r}")
+        return {}
 
 
 def evaluate(
@@ -466,7 +475,7 @@ def evaluate(
     max_vars: int = 30,
     models: List[str] | None = None,
     debug_chars: int = 500,
-    workers: int = 16,
+    workers: int = 8,
 ) -> List[Dict[str, Any]]:
 
     models = models or MODEL_NAMES
@@ -515,7 +524,7 @@ def main() -> None:
     )
     parser.add_argument("--max-vars", type=int, default=30, help="Debug: limit #variables")  # ← default 10
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
-    parser.add_argument("--workers", type=int, default=16, help="Parallel requests")  # ← default 8
+    parser.add_argument("--workers", type=int, default=8, help="Parallel requests")  # ← default 8
     args = parser.parse_args()
 
     # ------------------------------------------------------------------ run
