@@ -4,9 +4,10 @@
   "hasProperty": "mass per area",
   "hasMatrix": "cell surface",
   "hasObjectOfInterest": "nanomaterial particle",
-  "hasConstraint": {
-    "entering the cell": {
-      "constrains": "nanomaterial particle"
+  "hasConstraint": [
+    {
+      "label": "entering the cell",
+      "on": "nanomaterial particle"
     }
-  }
+  ]
 }

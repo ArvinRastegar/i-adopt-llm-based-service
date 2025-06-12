@@ -5,9 +5,10 @@
   "hasMatrix": "aerosol particle",
   "hasObjectOfInterest": "organic matter",
   "hasContextObject": "atmosphere",
-  "hasConstraint": {
-    "at 550nm wavelength": {
-      "constrains": "optical depth"
+  "hasConstraint": [
+    {
+      "label": "at 550nm wavelength",
+      "on": "optical depth"
     }
-  }
+  ]
 }

@@ -13,14 +13,16 @@
     "hasMatrix": "atmosphere",
     "hasObjectOfInterest": "air",
     "hasStatisticalModifier": "maximum",
-    "hasConstraint": {
-      "daily": {
-        "constrains": "maximum"
+    "hasConstraint": [
+      {
+        "label": "daily",
+        "on": "maximum"
       },
-      "1,7 m aboveground": {
-        "constrains": "air"
+      {
+        "label": "1,7 m aboveground",
+        "on": "air"
       }
-    }
+    ]
   },
   {
     "label": "Cloud cover",
@@ -35,14 +37,16 @@
     "hasProperty": "height",
     "hasMatrix": "atmosphere",
     "hasObjectOfInterest": "atmospheric boundary layer",
-    "hasConstraint": {
-      "defined by temperature inversion": {
-        "constrains": "atmospheric boundary layer"
+    "hasConstraint": [
+      {
+        "label": "defined by temperature inversion",
+        "on": "atmospheric boundary layer"
       },
-      "above the valley floor": {
-        "constrains": "height"
+      {
+        "label": "above the valley floor",
+        "on": "height"
       }
-    }
+    ]
   },
   {
     "label": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
@@ -51,11 +55,12 @@
     "hasMatrix": "aerosol particle",
     "hasObjectOfInterest": "organic matter",
     "hasContextObject": "atmosphere",
-    "hasConstraint": {
-      "at 550nm wavelength": {
-        "constrains": "optical depth"
+    "hasConstraint": [
+      {
+        "label": "at 550nm wavelength",
+        "on": "optical depth"
       }
-    }
+    ]
   },
   {
     "label": "Mass flux of carbon into soil from vegetation due to senescence",
@@ -67,11 +72,12 @@
       "hasTarget": "soil"
     },
     "hasObjectOfInterest": "carbon",
-    "hasConstraint": {
-      "due to senescence": {
-        "constrains": "mass flux"
+    "hasConstraint": [
+      {
+        "label": "due to senescence",
+        "on": "mass flux"
       }
-    }
+    ]
   },
   {
     "label": "Maximum trunk char height",
@@ -80,11 +86,12 @@
     "hasMatrix": "tree trunk",
     "hasObjectOfInterest": "char",
     "hasStatisticalModifier": "maximum",
-    "hasConstraint": {
-      "aboveground": {
-        "constrains": "height"
+    "hasConstraint": [
+      {
+        "label": "aboveground",
+        "on": "height"
       }
-    }
+    ]
   },
   {
     "label": "Coarse woody debris abundance",
@@ -99,11 +106,12 @@
     "hasProperty": "area fraction",
     "hasMatrix": "ground",
     "hasObjectOfInterest": "foliage",
-    "hasConstraint": {
-      "lower canopy strata": {
-        "constrains": "foliage"
+    "hasConstraint": [
+      {
+        "label": "lower canopy strata",
+        "on": "foliage"
       }
-    }
+    ]
   },
   {
     "label": "Peak ground acceleration",
@@ -111,14 +119,16 @@
     "hasProperty": "acceleration",
     "hasObjectOfInterest": "ground",
     "hasStatisticalModifier": "maximum",
-    "hasConstraint": {
-      "surface": {
-        "constrains": "ground"
+    "hasConstraint": [
+      {
+        "label": "surface",
+        "on": "ground"
       },
-      "during seismic events": {
-        "constrains": "acceleration"
+      {
+        "label": "during seismic events",
+        "on": "acceleration"
       }
-    }
+    ]
   },
   {
     "label": "Strike of bedding",
@@ -148,22 +158,24 @@
       "hasSource": "habitat patch",
       "hasTarget": "habitat patch"
     },
-    "hasConstraint": {
-      "nearest neighbour": {
-        "constrains": "hasTarget: habitat patch"
+    "hasConstraint": [
+      {
+        "label": "nearest neighbour",
+        "on": "hasTarget: habitat patch"
       }
-    }
+    ]
   },
   {
     "label": "Feral-free enclosure area",
     "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
     "hasProperty": "area",
     "hasObjectOfInterest": "enclosure",
-    "hasConstraint": {
-      "free of feral": {
-        "constrains": "enclosure"
+    "hasConstraint": [
+      {
+        "label": "free of feral",
+        "on": "enclosure"
       }
-    }
+    ]
   },
   {
     "label": "Foraminifera, planktic, size",
@@ -171,14 +183,16 @@
     "hasProperty": "size",
     "hasMatrix": "sediment",
     "hasObjectOfInterest": "foraminfers",
-    "hasConstraint": {
-      "planctonic": {
-        "constrains": "foraminfers"
+    "hasConstraint": [
+      {
+        "label": "planctonic",
+        "on": "foraminfers"
       },
-      "surface": {
-        "constrains": "sediment"
+      {
+        "label": "surface",
+        "on": "sediment"
       }
-    }
+    ]
   },
   {
     "label": "Standard metabolic rate in mg of Oxygen per hour",
@@ -186,20 +200,24 @@
     "hasProperty": "mass flow rate",
     "hasMatrix": "organism",
     "hasObjectOfInterest": "oxygen",
-    "hasConstraint": {
-      "ectotherm": {
-        "constrains": "organism"
+    "hasConstraint": [
+      {
+        "label": "ectotherm",
+        "on": "organism"
       },
-      "due to metabolism": {
-        "constrains": "mass flow rate"
+      {
+        "label": "due to metabolism",
+        "on": "mass flow rate"
       },
-      "non-stressed": {
-        "constrains": "organism"
+      {
+        "label": "non-stressed",
+        "on": "organism"
       },
-      "non-active": {
-        "constrains": "organism"
+      {
+        "label": "non-active",
+        "on": "organism"
       }
-    }
+    ]
   },
   {
     "label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
@@ -207,11 +225,12 @@
     "hasProperty": "mass fraction",
     "hasMatrix": "organism",
     "hasObjectOfInterest": "docosahexaenoic acid",
-    "hasConstraint": {
-      "dry": {
-        "constrains": "organism"
+    "hasConstraint": [
+      {
+        "label": "dry",
+        "on": "organism"
       }
-    }
+    ]
   },
   {
     "label": "Biological sex",
@@ -225,23 +244,28 @@
     "hasProperty": "mass flow rate",
     "hasMatrix": "organism",
     "hasObjectOfInterest": "Carbon",
-    "hasConstraint": {
-      "weight-specific": {
-        "constrains": "mass flow rate"
+    "hasConstraint": [
+      {
+        "label": "weight-specific",
+        "on": "mass flow rate"
       },
-      "dry": {
-        "constrains": "organism"
+      {
+        "label": "dry",
+        "on": "organism"
       },
-      "at non-limiting conditions": {
-        "constrains": "Carbon"
+      {
+        "label": "at non-limiting conditions",
+        "on": "Carbon"
       },
-      "at 15°C temperature": {
-        "constrains": "mass flow rate"
+      {
+        "label": "at 15°C temperature",
+        "on": "mass flow rate"
       },
-      "due to ingestion": {
-        "constrains": "mass flow rate"
+      {
+        "label": "due to ingestion",
+        "on": "mass flow rate"
       }
-    }
+    ]
   },
   {
     "label": "Concentration of DDT impacted by industry",
@@ -249,11 +273,12 @@
     "hasProperty": "mass fraction",
     "hasMatrix": "soil",
     "hasObjectOfInterest": "DDT",
-    "hasConstraint": {
-      "impacted by industry": {
-        "constrains": "soil"
+    "hasConstraint": [
+      {
+        "label": "impacted by industry",
+        "on": "soil"
       }
-    }
+    ]
   },
   {
     "label": "Resting systolic blood pressure",
@@ -261,25 +286,28 @@
     "hasProperty": "pressure",
     "hasMatrix": "human",
     "hasObjectOfInterest": "blood",
-    "hasConstraint": {
-      "resting": {
-        "constrains": "human"
+    "hasConstraint": [
+      {
+        "label": "resting",
+        "on": "human"
       },
-      "systolic": {
-        "constrains": "pressure"
+      {
+        "label": "systolic",
+        "on": "pressure"
       }
-    }
+    ]
   },
   {
     "label": "Current smoking status",
     "comment": "Smoking status current of a patient",
     "hasProperty": "smoking status",
     "hasObjectOfInterest": "patient",
-    "hasConstraint": {
-      "current": {
-        "constrains": "smoking status"
+    "hasConstraint": [
+      {
+        "label": "current",
+        "on": "smoking status"
       }
-    }
+    ]
   },
   {
     "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area",
@@ -287,11 +315,12 @@
     "hasProperty": "mass per area",
     "hasMatrix": "cell surface",
     "hasObjectOfInterest": "nanomaterial particle",
-    "hasConstraint": {
-      "entering the cell": {
-        "constrains": "nanomaterial particle"
+    "hasConstraint": [
+      {
+        "label": "entering the cell",
+        "on": "nanomaterial particle"
       }
-    }
+    ]
   },
   {
     "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area",
@@ -299,33 +328,36 @@
     "hasProperty": "number per area",
     "hasMatrix": "cell surface",
     "hasObjectOfInterest": "nanomaterial particle",
-    "hasConstraint": {
-      "entering the cell": {
-        "constrains": "nanomaterial particle"
+    "hasConstraint": [
+      {
+        "label": "entering the cell",
+        "on": "nanomaterial particle"
       }
-    }
+    ]
   },
   {
     "label": "Dynamic shear viscosity of polystyrene PS042",
     "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
     "hasProperty": "shear viscosity",
     "hasObjectOfInterest": "polystyrene",
-    "hasConstraint": {
-      "dynamic": {
-        "constrains": "shear viscosity"
+    "hasConstraint": [
+      {
+        "label": "dynamic",
+        "on": "shear viscosity"
       }
-    }
+    ]
   },
   {
     "label": "Sheet resistance of layer of gold",
     "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.",
     "hasProperty": "sheet resistance",
     "hasObjectOfInterest": "gold",
-    "hasConstraint": {
-      "5 nm thick layer": {
-        "constrains": "gold"
+    "hasConstraint": [
+      {
+        "label": "5 nm thick layer",
+        "on": "gold"
       }
-    }
+    ]
   },
   {
     "label": "Mass concentration of isobutylene in chloroform",
@@ -340,14 +372,16 @@
     "hasProperty": "count",
     "hasMatrix": "hotel",
     "hasObjectOfInterest": "overnight stay",
-    "hasConstraint": {
-      "near the sea shore": {
-        "constrains": "hotel"
+    "hasConstraint": [
+      {
+        "label": "near the sea shore",
+        "on": "hotel"
       },
-      "3 star": {
-        "constrains": "hotel"
+      {
+        "label": "3 star",
+        "on": "hotel"
       }
-    }
+    ]
   },
   {
     "label": "Nervosity feelings",
@@ -355,11 +389,12 @@
     "hasProperty": "frequency",
     "hasMatrix": "person",
     "hasObjectOfInterest": "nervosity feeling",
-    "hasConstraint": {
-      "during last 30 days": {
-        "constrains": "frequency"
+    "hasConstraint": [
+      {
+        "label": "during last 30 days",
+        "on": "frequency"
       }
-    }
+    ]
   },
   {
     "label": "Date of last PCR-test",
@@ -368,10 +403,11 @@
     "hasMatrix": "person",
     "hasObjectOfInterest": "COVID-19 PCR test",
     "hasStatisticalModifier": "latest",
-    "hasConstraint": {
-      "performed by a certified laboratory": {
-        "constrains": "COVID-19 PCR test"
+    "hasConstraint": [
+      {
+        "label": "performed by a certified laboratory",
+        "on": "COVID-19 PCR test"
       }
-    }
+    ]
   }
 ]

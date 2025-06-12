@@ -4,12 +4,14 @@
   "hasProperty": "height",
   "hasMatrix": "atmosphere",
   "hasObjectOfInterest": "atmospheric boundary layer",
-  "hasConstraint": {
-    "defined by temperature inversion": {
-      "constrains": "atmospheric boundary layer"
+  "hasConstraint": [
+    {
+      "label": "defined by temperature inversion",
+      "on": "atmospheric boundary layer"
     },
-    "above the valley floor": {
-      "constrains": "height"
+    {
+      "label": "above the valley floor",
+      "on": "height"
     }
-  }
+  ]
 }

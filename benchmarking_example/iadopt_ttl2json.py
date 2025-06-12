@@ -111,21 +111,19 @@ def parse_variable(ttl: str) -> Dict[str, Any]:
     # -- constraints ----------------------------------------------------------
     constraints = list(g.objects(root, IOP.hasConstraint))
     if constraints:
-        cdict: Dict[str, Dict[str, str]] = {}
+        clist: List[Dict[str, str]] = []
         # Object-of-interest *or* matrix system for prefix resolution
         ooi_node = g.value(root, IOP.hasObjectOfInterest)
         matrix_node = g.value(root, IOP.hasMatrix)
+
         for c in constraints:
             cname = _label(g, c)
             constrained = g.value(c, IOP.constrains)
             target_lbl = _label(g, constrained)
 
-            # prepend context info when the constrained entity
-            # matches a source/target part of *either* system
-            for sys_node, prefix in [
-                (ooi_node, "has"),
-                (matrix_node, "has"),
-            ]:
+            # if this constrained node is a source/target of either system,
+            # prepend that context to the label
+            for sys_node in (ooi_node, matrix_node):
                 if sys_node and (sys_node, IOP.hasTarget, constrained) in g:
                     target_lbl = f"hasTarget: {target_lbl}"
                     break
@@ -133,8 +131,9 @@ def parse_variable(ttl: str) -> Dict[str, Any]:
                     target_lbl = f"hasSource: {target_lbl}"
                     break
 
-            cdict[cname] = {"constrains": target_lbl}
-        j["hasConstraint"] = cdict
+            clist.append({"label": cname, "on": target_lbl})
+
+        j["hasConstraint"] = clist
 
     # optional issue
     for p, o in g.predicate_objects(root):
@@ -265,7 +264,13 @@ class TestMapping(unittest.TestCase):
     def test_asymmetric_system_mapping(self):
         d = parse_variable(self.TTL_ASYM)
         self.assertIn("hasConstraint", d)
-        self.assertTrue(d["hasConstraint"]["nearest"]["constrains"].startswith("hasTarget:"))
+        constraints = d["hasConstraint"]
+        self.assertIsInstance(constraints, list)
+        # find the one with label "nearest"
+        c = next((item for item in constraints if item.get("label") == "nearest"), None)
+        self.assertIsNotNone(c, "should find a constraint with label 'nearest'")
+        # and assert its `on` value starts with the hasTarget prefix
+        self.assertTrue(c["on"].startswith("hasTarget:"), f"unexpected on: {c['on']}")
         self.assertEqual(d["hasObjectOfInterest"]["AsymmetricSystem"], "patch system")
 
 

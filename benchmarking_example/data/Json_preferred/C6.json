@@ -8,9 +8,10 @@
     "hasTarget": "soil"
   },
   "hasObjectOfInterest": "carbon",
-  "hasConstraint": {
-    "due to senescence": {
-      "constrains": "mass flux"
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
     }
-  }
+  ]
 }

@@ -4,12 +4,14 @@
   "hasProperty": "acceleration",
   "hasObjectOfInterest": "ground",
   "hasStatisticalModifier": "maximum",
-  "hasConstraint": {
-    "surface": {
-      "constrains": "ground"
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
     },
-    "during seismic events": {
-      "constrains": "acceleration"
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
     }
-  }
+  ]
 }

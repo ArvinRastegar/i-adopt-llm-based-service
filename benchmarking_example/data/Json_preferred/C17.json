@@ -4,9 +4,10 @@
   "hasProperty": "mass fraction",
   "hasMatrix": "organism",
   "hasObjectOfInterest": "docosahexaenoic acid",
-  "hasConstraint": {
-    "dry": {
-      "constrains": "organism"
+  "hasConstraint": [
+    {
+      "label": "dry",
+      "on": "organism"
     }
-  }
+  ]
 }

@@ -3,9 +3,10 @@
   "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.",
   "hasProperty": "sheet resistance",
   "hasObjectOfInterest": "gold",
-  "hasConstraint": {
-    "5 nm thick layer": {
-      "constrains": "gold"
+  "hasConstraint": [
+    {
+      "label": "5 nm thick layer",
+      "on": "gold"
     }
-  }
+  ]
 }

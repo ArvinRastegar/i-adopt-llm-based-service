@@ -4,9 +4,10 @@
   "hasProperty": "frequency",
   "hasMatrix": "person",
   "hasObjectOfInterest": "nervosity feeling",
-  "hasConstraint": {
-    "during last 30 days": {
-      "constrains": "frequency"
+  "hasConstraint": [
+    {
+      "label": "during last 30 days",
+      "on": "frequency"
     }
-  }
+  ]
 }

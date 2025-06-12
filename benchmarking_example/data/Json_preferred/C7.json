@@ -5,9 +5,10 @@
   "hasMatrix": "tree trunk",
   "hasObjectOfInterest": "char",
   "hasStatisticalModifier": "maximum",
-  "hasConstraint": {
-    "aboveground": {
-      "constrains": "height"
+  "hasConstraint": [
+    {
+      "label": "aboveground",
+      "on": "height"
     }
-  }
+  ]
 }

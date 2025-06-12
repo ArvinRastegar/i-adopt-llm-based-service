@@ -4,12 +4,14 @@
   "hasProperty": "size",
   "hasMatrix": "sediment",
   "hasObjectOfInterest": "foraminfers",
-  "hasConstraint": {
-    "planctonic": {
-      "constrains": "foraminfers"
+  "hasConstraint": [
+    {
+      "label": "planctonic",
+      "on": "foraminfers"
     },
-    "surface": {
-      "constrains": "sediment"
+    {
+      "label": "surface",
+      "on": "sediment"
     }
-  }
+  ]
 }

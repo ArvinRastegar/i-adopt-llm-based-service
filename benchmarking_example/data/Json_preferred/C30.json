@@ -5,9 +5,10 @@
   "hasMatrix": "person",
   "hasObjectOfInterest": "COVID-19 PCR test",
   "hasStatisticalModifier": "latest",
-  "hasConstraint": {
-    "performed by a certified laboratory": {
-      "constrains": "COVID-19 PCR test"
+  "hasConstraint": [
+    {
+      "label": "performed by a certified laboratory",
+      "on": "COVID-19 PCR test"
     }
-  }
+  ]
 }

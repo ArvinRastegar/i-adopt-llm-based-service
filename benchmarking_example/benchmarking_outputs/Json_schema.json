@@ -5,66 +5,65 @@
   "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
   "type": "object",
 
-  /* ------------------------------------------------------------------ */
-  /*  REQUIRED – minimal information the LLM must always deliver        */
-  /* ------------------------------------------------------------------ */
   "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
 
-  /* ------------------------------------------------------------------ */
-  /*  FIELD DEFINITIONS                                                 */
-  /* ------------------------------------------------------------------ */
   "properties": {
-    /* plain strings --------------------------------------------------- */
-    "label":   { "type": "string", "description": "Variable name." },
-    "comment": { "type": "string", "description": "Definition / description." },
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
     "hasProperty": {
       "type": "string",
-      "description": "Property being observed (e.g. ‘distance’, ‘temperature’)."
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
     },
     "hasStatisticalModifier": {
       "type": "string",
-      "description": "Statistical qualifier (e.g. ‘maximum’, ‘latest’)."
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
     },
-
-    /* entity OR system anywhere a “thing” can occur ------------------- */
-    "hasMatrix":        { "$ref": "#/$defs/entityOrSystem" },
-    "hasObjectOfInterest": { "$ref": "#/$defs/entityOrSystem" },
-    "hasContextObject":   { "$ref": "#/$defs/entityOrSystem" },
-
-    /* map of constraints ---------------------------------------------- */
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
     "hasConstraint": {
-      "type": "object",
-      "description": "Dictionary of constraint → constrained-thing pairs.",
-      "patternProperties": {
-        "^.*$": {                 /* any constraint label */
-          "type": "object",
-          "required": ["constrains"],
-          "properties": {
-            "constrains": { "type": "string" }
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
           },
-          "additionalProperties": false
-        }
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
       },
-      "additionalProperties": false
+      "minItems": 1
     }
   },
 
-  /* ------------------------------------------------------------------ */
-  /*  No unexpected top-level keys                                       */
-  /* ------------------------------------------------------------------ */
   "additionalProperties": false,
 
-  /* ------------------------------------------------------------------ */
-  /*  REUSABLE DEFINITION: entity *or* (a)symmetric system               */
-  /* ------------------------------------------------------------------ */
   "$defs": {
     "entityOrSystem": {
       "description": "Either a simple label or a structured system.",
       "oneOf": [
         { "type": "string" },
-
-        /* asymmetric system */
         {
+          "$comment": "Asymmetric system",
           "type": "object",
           "required": ["AsymmetricSystem", "hasSource", "hasTarget"],
           "properties": {
@@ -74,9 +73,8 @@
           },
           "additionalProperties": false
         },
-
-        /* symmetric system */
         {
+          "$comment": "Symmetric system",
           "type": "object",
           "required": ["SymmetricSystem", "hasPart"],
           "properties": {

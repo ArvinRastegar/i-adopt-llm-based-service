@@ -4,12 +4,14 @@
   "hasProperty": "count",
   "hasMatrix": "hotel",
   "hasObjectOfInterest": "overnight stay",
-  "hasConstraint": {
-    "near the sea shore": {
-      "constrains": "hotel"
+  "hasConstraint": [
+    {
+      "label": "near the sea shore",
+      "on": "hotel"
     },
-    "3 star": {
-      "constrains": "hotel"
+    {
+      "label": "3 star",
+      "on": "hotel"
     }
-  }
+  ]
 }

@@ -4,12 +4,14 @@
   "hasProperty": "pressure",
   "hasMatrix": "human",
   "hasObjectOfInterest": "blood",
-  "hasConstraint": {
-    "resting": {
-      "constrains": "human"
+  "hasConstraint": [
+    {
+      "label": "resting",
+      "on": "human"
     },
-    "systolic": {
-      "constrains": "pressure"
+    {
+      "label": "systolic",
+      "on": "pressure"
     }
-  }
+  ]
 }

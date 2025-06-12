@@ -4,9 +4,10 @@
   "hasProperty": "area fraction",
   "hasMatrix": "ground",
   "hasObjectOfInterest": "foliage",
-  "hasConstraint": {
-    "lower canopy strata": {
-      "constrains": "foliage"
+  "hasConstraint": [
+    {
+      "label": "lower canopy strata",
+      "on": "foliage"
     }
-  }
+  ]
 }

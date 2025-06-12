@@ -3,9 +3,10 @@
   "comment": "Smoking status current of a patient",
   "hasProperty": "smoking status",
   "hasObjectOfInterest": "patient",
-  "hasConstraint": {
-    "current": {
-      "constrains": "smoking status"
+  "hasConstraint": [
+    {
+      "label": "current",
+      "on": "smoking status"
     }
-  }
+  ]
 }

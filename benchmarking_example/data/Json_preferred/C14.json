@@ -3,9 +3,10 @@
   "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
   "hasProperty": "area",
   "hasObjectOfInterest": "enclosure",
-  "hasConstraint": {
-    "free of feral": {
-      "constrains": "enclosure"
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
     }
-  }
+  ]
 }

@@ -4,9 +4,10 @@
   "hasProperty": "mass fraction",
   "hasMatrix": "soil",
   "hasObjectOfInterest": "DDT",
-  "hasConstraint": {
-    "impacted by industry": {
-      "constrains": "soil"
+  "hasConstraint": [
+    {
+      "label": "impacted by industry",
+      "on": "soil"
     }
-  }
+  ]
 }

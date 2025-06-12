@@ -4,21 +4,26 @@
   "hasProperty": "mass flow rate",
   "hasMatrix": "organism",
   "hasObjectOfInterest": "Carbon",
-  "hasConstraint": {
-    "weight-specific": {
-      "constrains": "mass flow rate"
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
     },
-    "dry": {
-      "constrains": "organism"
+    {
+      "label": "dry",
+      "on": "organism"
     },
-    "at non-limiting conditions": {
-      "constrains": "Carbon"
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
     },
-    "at 15°C temperature": {
-      "constrains": "mass flow rate"
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
     },
-    "due to ingestion": {
-      "constrains": "mass flow rate"
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
     }
-  }
+  ]
 }

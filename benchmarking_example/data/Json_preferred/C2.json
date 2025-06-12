@@ -5,12 +5,14 @@
   "hasMatrix": "atmosphere",
   "hasObjectOfInterest": "air",
   "hasStatisticalModifier": "maximum",
-  "hasConstraint": {
-    "daily": {
-      "constrains": "maximum"
+  "hasConstraint": [
+    {
+      "label": "daily",
+      "on": "maximum"
     },
-    "1,7 m aboveground": {
-      "constrains": "air"
+    {
+      "label": "1,7 m aboveground",
+      "on": "air"
     }
-  }
+  ]
 }

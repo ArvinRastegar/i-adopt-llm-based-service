@@ -7,9 +7,10 @@
     "hasSource": "habitat patch",
     "hasTarget": "habitat patch"
   },
-  "hasConstraint": {
-    "nearest neighbour": {
-      "constrains": "hasTarget: habitat patch"
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
     }
-  }
+  ]
 }
