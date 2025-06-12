@@ -1,7 +1,0 @@
-{
-  "label": "Electron density in the solar wind",
-  "comment": "Density (particle per cm3) of electrons measured in the Solar Wind.",
-  "hasProperty": "volumetric number density",
-  "hasObjectOfInterest": "electron",
-  "hasMatrix": "solar wind"
-}
