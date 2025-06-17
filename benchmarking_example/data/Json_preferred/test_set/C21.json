@@ -1,0 +1,17 @@
+{
+  "label": "Resting systolic blood pressure",
+  "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)",
+  "hasProperty": "pressure",
+  "hasMatrix": "human",
+  "hasObjectOfInterest": "blood",
+  "hasConstraint": [
+    {
+      "label": "resting",
+      "on": "human"
+    },
+    {
+      "label": "systolic",
+      "on": "pressure"
+    }
+  ]
+}

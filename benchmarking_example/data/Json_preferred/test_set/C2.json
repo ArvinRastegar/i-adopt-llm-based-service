@@ -1,0 +1,18 @@
+{
+  "label": "Air daily maximum temperature",
+  "comment": "Temperature of the air in a height of 1.7 meter, daily maximum",
+  "hasProperty": "temperature",
+  "hasMatrix": "atmosphere",
+  "hasObjectOfInterest": "air",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "daily",
+      "on": "maximum"
+    },
+    {
+      "label": "1,7 m aboveground",
+      "on": "air"
+    }
+  ]
+}

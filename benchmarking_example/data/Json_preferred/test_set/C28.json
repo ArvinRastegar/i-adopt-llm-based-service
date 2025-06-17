@@ -1,0 +1,17 @@
+{
+  "label": "Overnight stays in 3-star hotel near the sea shore",
+  "comment": "Number of nights in a 3-star hotel near the sea shore",
+  "hasProperty": "count",
+  "hasMatrix": "hotel",
+  "hasObjectOfInterest": "overnight stay",
+  "hasConstraint": [
+    {
+      "label": "near the sea shore",
+      "on": "hotel"
+    },
+    {
+      "label": "3 star",
+      "on": "hotel"
+    }
+  ]
+}

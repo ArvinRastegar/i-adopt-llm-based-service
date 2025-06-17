@@ -1,0 +1,17 @@
+{
+  "label": "Atmospheric boundary layer height defined by temperature inversion",
+  "comment": "Atmospheric boundary layer height defined by temperature inversion.",
+  "hasProperty": "height",
+  "hasMatrix": "atmosphere",
+  "hasObjectOfInterest": "atmospheric boundary layer",
+  "hasConstraint": [
+    {
+      "label": "defined by temperature inversion",
+      "on": "atmospheric boundary layer"
+    },
+    {
+      "label": "above the valley floor",
+      "on": "height"
+    }
+  ]
+}

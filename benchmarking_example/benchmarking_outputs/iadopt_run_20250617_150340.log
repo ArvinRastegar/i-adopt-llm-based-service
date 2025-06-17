@@ -1,0 +1,2415 @@
+2025-06-17 15:03:40,246 | INFO | Logging to /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_outputs/iadopt_run_20250617_150340.log
+2025-06-17 15:03:40,305 | INFO | Use pytorch device_name: mps
+2025-06-17 15:03:40,305 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-17 15:03:42,954 | INFO | Skip Electron density in the solar wind (in-prompt example)
+2025-06-17 15:03:42,954 | INFO | Skip Strike of bedding (in-prompt example)
+2025-06-17 15:03:42,954 | INFO | Skip Distance to nearest neighbour habitat patch (in-prompt example)
+2025-06-17 15:03:42,956 | INFO | Skip Weight specific-ingestion Carbon rate at 15 °C (in-prompt example)
+2025-06-17 15:03:42,958 | INFO | Skip Mass flux of carbon into soil from vegetation due to senescence (in-prompt example)
+2025-06-17 15:03:43,482 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:43,497 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:43,498 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:43,625 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:43,717 | INFO | · Peak ground acceleration | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Peak ground acceleration", "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.", "hasProperty": "acceleration", "hasMatrix": "earth surface", "hasObjectOfInterest": "seismic event", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:03:43,849 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:44,001 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:44,230 | INFO | · Peak ground acceleration | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Peak ground acceleration", "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.", "hasProperty": "acceleration", "hasStatisticalModifier": "peak", "hasObjectOfInterest": "earth surface", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:03:44,310 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:44,418 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:44,563 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:44,813 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:44,955 | INFO | google/gemma-2-9b-it: label changed → forcing back to GT
+2025-06-17 15:03:44,955 | INFO | · Probablity of occurence of habitat | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Probablity of occurence of habitat", "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats", "hasProperty": "probability of occurrence", "hasObjectOfInterest": "EUNIS habitat", "hasMatrix": {"AsymmetricS
+2025-06-17 15:03:46,265 | INFO | · Probablity of occurence of habitat | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Probablity of occurence of habitat", "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats", "hasProperty": "probability of occurrence", "hasMatrix": "EUNIS habitats", "hasObjectOfInterest": "habitat", "
+2025-06-17 15:03:46,738 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:46,893 | INFO | · Probablity of occurence of habitat | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Probablity of occurence of habitat", "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats", "hasProperty": "probability of occurrence", "hasObjectOfInterest": "EUNIS habitat", "hasConstraint": [{"label"
+2025-06-17 15:03:46,913 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:47,053 | INFO | · Peak ground acceleration | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Peak ground acceleration", "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.", "hasProperty": "acceleration", "hasStatisticalModifier": "peak", "hasMatrix": {"AsymmetricSystem": "earth surface", "hasSource": "earth surface", "hasTarget": "earth surface"}, "hasObjectOfInterest": "earth", "hasConstraint": [{"label": "when facing seismic events", "on": "earth"}, {"label": "like earthquakes", "on": "earth"}], "hasContextObject": ""}
+2025-06-17 15:03:47,631 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:47,788 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:48,653 | INFO | · Feral-free enclosure area | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Feral-free enclosure area", "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b", "hasProperty": "area", "hasMatrix": "enclosure", "hasObjectOfInterest": "feral", "hasConstraint": [], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:03:48,675 | INFO | · Feral-free enclosure area | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Feral-free enclosure area", "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b", "hasProperty": "area", "hasObjectOfInterest": "feral-free enclosure", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:03:49,089 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:49,486 | INFO | · Feral-free enclosure area | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Feral-free enclosure area", "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b", "hasProperty": "area", "hasObjectOfInterest": "enclosure", "hasConstraint": [{"label": "feral-free", "on": "enclosure"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:03:49,707 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:50,825 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:51,688 | INFO | · Peak ground acceleration | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Peak ground acceleration", "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.", "hasProperty": "acceleration", "hasObjectOfInterest": "ground", "hasConstraint": [{"label": "seismic event", "on": "earth surface"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:03:54,379 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:56,884 | INFO | · Peak ground acceleration | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Peak ground acceleration", "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.", "hasProperty": "acceleration", "hasObjectOfInterest": "ground", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:03:57,288 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:58,384 | INFO | deepseek/deepseek-r1-distill-qwen-14b: label changed → forcing back to GT
+2025-06-17 15:03:58,385 | INFO | · Probablity of occurence of habitat | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Probablity of occurence of habitat", "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats", "hasProperty": "probability", "hasObjectOfInterest": {"AsymmetricSystem": "habitat occurrence", "hasSource": "
+2025-06-17 15:03:58,843 | INFO | · Foraminifera, planktic, size | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foraminifera, planktic, size", "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730", "hasProperty": "size", "hasMatrix": "surface sediments", "hasObjectOfInterest": "planktic foraminifera", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:03:59,779 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:03:59,796 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:00,168 | INFO | deepseek/deepseek-r1-distill-qwen-32b: label changed → forcing back to GT
+2025-06-17 15:04:00,168 | INFO | · Probablity of occurence of habitat | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Probablity of occurence of habitat", "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats", "hasProperty": "probability", "hasObjectOfInterest": "habitat", "hasConstraint": [{"label": "grid cell", "on":
+2025-06-17 15:04:00,484 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:00,782 | INFO | · Foraminifera, planktic, size | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foraminifera, planktic, size", "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730", "hasProperty": "size", "hasObjectOfInterest": "foraminifera", "hasMatrix": "surface sediment", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:00,789 | INFO | · Foraminifera, planktic, size | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foraminifera, planktic, size", "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730", "hasProperty": "size", "hasMatrix": "surface sediments", "hasObjectOfInterest": "planktic foraminifers", "hasConstraint": [], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:04:01,407 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:01,520 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:01,862 | INFO | · Feral-free enclosure area | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Feral-free enclosure area", "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b", "hasProperty": "area", "hasObjectOfInterest": "enclosure", "hasConstraint": [{"label": "feral-free", "on": "enclosure"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:02,361 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:04,127 | INFO | · Standard metabolic rate in mg of Oxygen per hour | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Standard metabolic rate in mg of Oxygen per hour", "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.", "hasProperty": "metabolic rate", "hasObjectOfInterest": "Oxygen", "hasConstraint": [{"label": "standard (non-active, non-stressed)", "on": "metabolic rate"}, {"label": "per hour", "on": "metabolic rate"}, {"label": "in mg", "on": "Oxygen"}], "hasStatis
+2025-06-17 15:04:06,035 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:07,030 | INFO | · Foraminifera, planktic, size | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foraminifera, planktic, size", "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730", "hasProperty": "size", "hasObjectOfInterest": "Foraminifera", "hasConstraint": [{"label": "planktic", "on": "Foraminifera"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:07,756 | INFO | · Standard metabolic rate in mg of Oxygen per hour | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Standard metabolic rate in mg of Oxygen per hour", "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.", "hasProperty": "mass flow rate", "hasMatrix": "ectotherm animal", "hasObjectOfInterest": "Oxygen", "hasConstraint": [{"label": "in mg/h", "on": "mass flow rate"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:04:08,583 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:08,596 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:09,052 | INFO | · Standard metabolic rate in mg of Oxygen per hour | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Standard metabolic rate in mg of Oxygen per hour", "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.", "hasProperty": "mass flow rate", "hasObjectOfInterest": "Oxygen", "hasConstraint": [{"label": "standard", "on": "mass flow rate"}, {"label": "baseline", "on": "mass flow rate"}, {"label": "non-active", "on": "mass flow rate"}, {"label": "non-stressed",
+2025-06-17 15:04:10,836 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:12,914 | INFO | · Peak ground acceleration | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Peak ground acceleration", "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.", "hasProperty": "acceleration", "hasStatisticalModifier": "peak", "hasObjectOfInterest": "ground", "hasMatrix": "earth surface", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:13,298 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:15,631 | INFO | · Foraminifera, planktic, size | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foraminifera, planktic, size", "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730", "hasProperty": "size", "hasMatrix": "surface sediments", "hasObjectOfInterest": "planktic foraminifers", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:16,282 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:17,710 | INFO | · Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content) | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)", "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.", "hasProperty": "content", "hasObjectOfInterest": "docosahexaenoic acid", "hasConstraint": [{"label": "per dry weight", "on": "content"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:19,766 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:20,109 | INFO | · Standard metabolic rate in mg of Oxygen per hour | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Standard metabolic rate in mg of Oxygen per hour", "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.", "hasProperty": "metabolic rate", "hasConstraint": [{"label": "baseline", "on": "metabolic rate"}], "hasObjectOfInterest": "oxygen", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:21,115 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:22,623 | INFO | · Feral-free enclosure area | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Feral-free enclosure area", "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b", "hasProperty": "area", "hasObjectOfInterest": "enclosure", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:22,918 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:23,186 | INFO | · Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content) | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)", "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.", "hasProperty": "mass fraction", "hasMatrix": "individual", "hasObjectOfInterest": "docosahexaenoic acid", "hasStatisticalModifier": "per dry weight", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:23,759 | INFO | · Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content) | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)", "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.", "hasProperty": "content", "hasStatisticalModifier": "relative", "hasMatrix": "individual", "hasObjectOfInterest": "docosahexaenoic acid", "hasConstraint": [{"label": "per dry weight", "on": "individual"}], "hasContextObject": ""}
+2025-06-17 15:04:24,509 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:24,764 | INFO | · Standard metabolic rate in mg of Oxygen per hour | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Standard metabolic rate in mg of Oxygen per hour", "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.", "hasProperty": "mass flow rate", "hasObjectOfInterest": "oxygen", "hasConstraint": [{"label": "per hour", "on": "mass flow rate"}, {"label": "milligrams", "on": "oxygen"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:24,949 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:25,490 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:25,942 | INFO | · Biological sex | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Biological sex", "comment": "Biological sex [female | male | intersex | unknown]", "hasProperty": "biological sex", "hasObjectOfInterest": "organism", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:27,479 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:28,143 | INFO | · Biological sex | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Biological sex", "comment": "Biological sex [female | male | intersex | unknown]", "hasProperty": "sex", "hasMatrix": "organism", "hasObjectOfInterest": "biological sex", "hasConstraint": [], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:04:29,208 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:33,581 | INFO | · Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content) | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)", "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.", "hasProperty": "mass fraction", "hasStatisticalModifier": "per dry weight", "hasObjectOfInterest": "docosahexaenoic acid", "hasConstraint": [{"label": "per dry weight", "on": "mass fraction"}], "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:34,000 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:34,230 | INFO | · Biological sex | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Biological sex", "comment": "Biological sex [female | male | intersex | unknown]", "hasProperty": "categorical", "hasObjectOfInterest": "organism", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:35,945 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:37,895 | INFO | · Foraminifera, planktic, size | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foraminifera, planktic, size", "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730", "hasProperty": "size", "hasObjectOfInterest": "foraminifera", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:40,398 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:40,968 | INFO | · Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content) | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)", "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.", "hasProperty": "content", "hasMatrix": "biological tissue", "hasObjectOfInterest": "docosahexaenoic acid", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:41,766 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:42,626 | INFO | deepseek/deepseek-r1-distill-qwen-14b: comment changed → forcing back to GT
+2025-06-17 15:04:42,627 | INFO | · Biological sex | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Biological sex", "comment": "Biological sex [female | male | intersex | unknown]", "hasProperty": "biological sex", "hasObjectOfInterest": "organism", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:43,043 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:43,159 | INFO | · Air daily maximum temperature | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Air daily maximum temperature", "comment": "Temperature of the air in a height of 1.7 meter, daily maximum", "hasProperty": "temperature", "hasStatisticalModifier": "maximum", "hasMatrix": "air", "hasObjectOfInterest": "air", "hasConstraint": [{"label": "at 1.7 meter height", "on": "air"}, {"label": "daily", "on": "maximum"}], "hasContextObject": ""}
+2025-06-17 15:04:44,039 | INFO | · Feral-free enclosure area | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Feral-free enclosure area", "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b", "hasProperty": "area", "hasObjectOfInterest": "enclosure", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:44,139 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:44,366 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:44,566 | INFO | · Air daily maximum temperature | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Air daily maximum temperature", "comment": "Temperature of the air in a height of 1.7 meter, daily maximum", "hasProperty": "temperature", "hasObjectOfInterest": "air", "hasMatrix": "atmosphere", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:04:44,693 | INFO | · Air daily maximum temperature | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Air daily maximum temperature", "comment": "Temperature of the air in a height of 1.7 meter, daily maximum", "hasProperty": "temperature", "hasMatrix": "atmosphere", "hasObjectOfInterest": "air", "hasConstraint": [{"label": "daily", "on": "hasTarget: air"}, {"label": "maximum", "on": "temperature"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:04:45,253 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:45,682 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:47,957 | INFO | · Standard metabolic rate in mg of Oxygen per hour | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Standard metabolic rate in mg of Oxygen per hour", "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.", "hasProperty": "oxygen consumption rate", "hasObjectOfInterest": "oxygen", "hasMatrix": "animal", "hasConstraint": [{"label": "baseline", "on": "oxygen consumption rate"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:04:52,689 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:53,477 | INFO | · Air daily maximum temperature | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Air daily maximum temperature", "comment": "Temperature of the air in a height of 1.7 meter, daily maximum", "hasProperty": "temperature", "hasObjectOfInterest": "air", "hasConstraint": [{"label": "daily", "on": "temperature"}, {"label": "maximum", "on": "temperature"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:54,254 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:54,444 | INFO | · Concentration of DDT impacted by industry | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Concentration of DDT impacted by industry", "comment": "Concentration of DDT in a given year at a site impacted by industry.", "hasProperty": "concentration", "hasObjectOfInterest": "DDT", "hasConstraint": [{"label": "in a given year", "on": "concentration"}, {"label": "at a site impacted by industry", "on": "concentration"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:04:56,025 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:57,567 | INFO | · Concentration of DDT impacted by industry | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Concentration of DDT impacted by industry", "comment": "Concentration of DDT in a given year at a site impacted by industry.", "hasProperty": "concentration", "hasStatisticalModifier": "annual", "hasMatrix": {"AsymmetricSystem": "industry impact", "hasSource": "industry", "hasTarget": "site"}, "hasObjectOfInterest": "DDT", "hasConstraint": [{"label": "impacted by industry", "on": "hasTarget: site"}], "hasContextObject": ""}
+2025-06-17 15:04:58,006 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:04:58,280 | INFO | · Concentration of DDT impacted by industry | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Concentration of DDT impacted by industry", "comment": "Concentration of DDT in a given year at a site impacted by industry.", "hasProperty": "concentration", "hasMatrix": {"AsymmetricSystem": "industry impact site", "hasSource": "industry", "hasTarget": "site"}, "hasObjectOfInterest": "DDT", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:00,139 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:03,961 | INFO | · Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content) | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)", "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.", "hasProperty": "mass fraction", "hasObjectOfInterest": "docosahexaenoic acid", "hasConstraint": [{"label": "per dry weight", "on": "mass fraction"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:04,134 | INFO | · Biological sex | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Biological sex", "comment": "Biological sex [female | male | intersex | unknown]", "hasProperty": "sex", "hasObjectOfInterest": "organism", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:04,433 | INFO | · Air daily maximum temperature | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Air daily maximum temperature", "comment": "Temperature of the air in a height of 1.7 meter, daily maximum", "hasProperty": "temperature", "hasMatrix": {"SymmetricSystem": "height", "hasPart": ["air", "1.7 meters"]}, "hasObjectOfInterest": "temperature", "hasConstraint": [{"label": "daily maximum", "on": "temperature"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:05:04,556 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:05,156 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:05,272 | INFO | · Resting systolic blood pressure | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Resting systolic blood pressure", "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)", "hasProperty": "systolic blood pressure", "hasObjectOfInterest": "blood", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:05,327 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:06,158 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:07,173 | INFO | · Concentration of DDT impacted by industry | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Concentration of DDT impacted by industry", "comment": "Concentration of DDT in a given year at a site impacted by industry.", "hasProperty": "concentration", "hasObjectOfInterest": "DDT", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:07,336 | INFO | · Resting systolic blood pressure | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Resting systolic blood pressure", "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)", "hasProperty": "systolic blood pressure", "hasStatisticalModifier": "resting", "hasMatrix": "blood pressure", "hasObjectOfInterest": "blood", "hasConstraint": [{"label": "resting", "on": "systolic blood pressure"}], "hasContextObject": ""}
+2025-06-17 15:05:07,537 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:07,721 | INFO | · Resting systolic blood pressure | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Resting systolic blood pressure", "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)", "hasProperty": "systolic blood pressure", "hasObjectOfInterest": "blood pressure", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:08,143 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:08,184 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:08,452 | INFO | · Probablity of occurence of habitat | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Probablity of occurence of habitat", "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats", "hasProperty": "probability", "hasObjectOfInterest": "habitat", "hasStatisticalModifier": "", "hasMatrix": "",
+2025-06-17 15:05:08,909 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:09,257 | INFO | · Current smoking status | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Current smoking status", "comment": "Smoking status current of a patient", "hasProperty": "smoking status", "hasObjectOfInterest": "patient", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:09,631 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:10,576 | INFO | · Current smoking status | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Current smoking status", "comment": "Smoking status current of a patient", "hasProperty": "status", "hasObjectOfInterest": {"AsymmetricSystem": "patient status", "hasSource": "patient", "hasTarget": "patient"}, "hasConstraint": [], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:11,698 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:12,867 | INFO | · Resting systolic blood pressure | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Resting systolic blood pressure", "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)", "hasProperty": "blood pressure systolic", "hasMatrix": "resting state", "hasObjectOfInterest": "blood pressure", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:12,903 | INFO | · Biological sex | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Biological sex", "comment": "Biological sex [female | male | intersex | unknown]", "hasProperty": "sex", "hasObjectOfInterest": "sex", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:13,289 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:13,464 | INFO | · Current smoking status | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Current smoking status", "comment": "Smoking status current of a patient", "hasProperty": "smoking status", "hasObjectOfInterest": "patient", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:13,636 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:16,307 | INFO | · Concentration of DDT impacted by industry | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Concentration of DDT impacted by industry", "comment": "Concentration of DDT in a given year at a site impacted by industry.", "hasProperty": "concentration", "hasMatrix": {"AsymmetricSystem": "exposure system", "hasSource": "industry", "hasTarget": "site"}, "hasObjectOfInterest": "DDT", "hasConstraint": [{"label": "annual", "on": "concentration"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:05:16,861 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:17,481 | INFO | · Resting systolic blood pressure | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Resting systolic blood pressure", "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)", "hasProperty": "blood pressure", "hasObjectOfInterest": "blood", "hasConstraint": [{"label": "resting", "on": "blood"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:17,767 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:18,165 | INFO | · Air daily maximum temperature | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Air daily maximum temperature", "comment": "Temperature of the air in a height of 1.7 meter, daily maximum", "hasProperty": "temperature", "hasObjectOfInterest": "air", "hasStatisticalModifier": "maximum", "hasConstraint": [{"label": "daily maximum", "on": "temperature"}], "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:18,441 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of
+2025-06-17 15:05:18,939 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:19,061 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:19,420 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of
+2025-06-17 15:05:20,183 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:20,648 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of
+2025-06-17 15:05:21,448 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:21,518 | INFO | · Current smoking status | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Current smoking status", "comment": "Smoking status current of a patient", "hasProperty": "smoking status", "hasObjectOfInterest": "patient", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:22,594 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:23,521 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:24,801 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distr
+2025-06-17 15:05:27,141 | INFO | deepseek/deepseek-r1-distill-qwen-14b: label changed → forcing back to GT
+2025-06-17 15:05:27,141 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of
+2025-06-17 15:05:27,304 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:28,142 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:29,851 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distr
+2025-06-17 15:05:30,228 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:30,612 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distr
+2025-06-17 15:05:31,421 | INFO | · Concentration of DDT impacted by industry | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Concentration of DDT impacted by industry", "comment": "Concentration of DDT in a given year at a site impacted by industry.", "hasProperty": "concentration", "hasObjectOfInterest": "DDT", "hasConstraint": [{"label": "annual measurement", "on": "concentration"}, {"label": "impacted by industrial activity", "on": "concentration"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:31,792 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:32,208 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:35,034 | INFO | · Current smoking status | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Current smoking status", "comment": "Smoking status current of a patient", "hasProperty": "smoking status", "hasObjectOfInterest": "patient", "hasConstraint": [{"label": "current", "on": "smoking status"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:35,705 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:36,403 | INFO | · Dynamic shear viscosity of polystyrene PS042 | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Dynamic shear viscosity of polystyrene PS042", "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.", "hasProperty": "dynamic shear viscosity", "hasObjectOfInterest": "polystyrene PS042", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:37,093 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:39,201 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of
+2025-06-17 15:05:40,160 | INFO | · Dynamic shear viscosity of polystyrene PS042 | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Dynamic shear viscosity of polystyrene PS042", "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.", "hasProperty": "shear viscosity", "hasStatisticalModifier": "dynamic", "hasMatrix": {"AsymmetricSystem": "polystyrene", "hasSource": "PS042", "hasTarget": "polystyrene"}, "hasObjectOfInterest": "polystyrene", "hasConstraint": [{"label": "under DIN 51810-1 conditions", "on": "polystyrene"}], "hasContextObject": ""}
+2025-06-17 15:05:40,197 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:40,244 | INFO | · Current smoking status | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Current smoking status", "comment": "Smoking status current of a patient", "hasProperty": "smoking status", "hasObjectOfInterest": "patient", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:40,606 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:40,841 | INFO | · Dynamic shear viscosity of polystyrene PS042 | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Dynamic shear viscosity of polystyrene PS042", "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.", "hasProperty": "dynamic shear viscosity", "hasMatrix": "polystyrene PS042", "hasObjectOfInterest": "viscosity", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:41,413 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:41,435 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:44,715 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distr
+2025-06-17 15:05:45,522 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:46,192 | INFO | · Sheet resistance of layer of gold | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Sheet resistance of layer of gold", "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.", "hasProperty": "sheet resistance", "hasObjectOfInterest": "gold", "hasConstraint": [{"label": "5-nanometer-thick", "on": "layer of gold"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:47,208 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:47,461 | INFO | · Resting systolic blood pressure | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Resting systolic blood pressure", "comment": "Resting blood pressure systolic in millimeters of mercury (mmHg)", "hasProperty": "systolic pressure", "hasObjectOfInterest": "blood", "hasMatrix": "cardiovascular system", "hasConstraint": [{"label": "resting", "on": "blood pressure"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:05:48,235 | INFO | · Sheet resistance of layer of gold | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Sheet resistance of layer of gold", "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.", "hasProperty": "sheet resistance", "hasStatisticalModifier": "", "hasMatrix": "gold", "hasObjectOfInterest": "layer", "hasConstraint": [], "hasContextObject": ""}
+2025-06-17 15:05:48,292 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:48,560 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:48,767 | INFO | · Sheet resistance of layer of gold | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Sheet resistance of layer of gold", "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.", "hasProperty": "sheet resistance", "hasMatrix": "layer of gold", "hasObjectOfInterest": "gold", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:49,019 | INFO | · Dynamic shear viscosity of polystyrene PS042 | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Dynamic shear viscosity of polystyrene PS042", "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.", "hasProperty": "shear viscosity", "hasObjectOfInterest": "polystyrene", "hasConstraint": [{"label": "dynamic", "on": "shear viscosity"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:49,273 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:49,800 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:50,641 | INFO | · Dynamic shear viscosity of polystyrene PS042 | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Dynamic shear viscosity of polystyrene PS042", "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.", "hasProperty": "viscosity", "hasObjectOfInterest": "polystyrene PS042", "hasConstraint": [{"label": "testing conditions", "on": "polystyrene PS042"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:05:51,183 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:53,883 | INFO | · Mass concentration of isobutylene in chloroform | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Mass concentration of isobutylene in chloroform", "comment": "Mass concentration of isobutylene in chloroform.", "hasProperty": "mass concentration", "hasMatrix": "chloroform", "hasObjectOfInterest": "isobutylene", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:54,381 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:55,754 | INFO | · Mass concentration of isobutylene in chloroform | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Mass concentration of isobutylene in chloroform", "comment": "Mass concentration of isobutylene in chloroform.", "hasProperty": "mass concentration", "hasStatisticalModifier": "", "hasMatrix": "", "hasObjectOfInterest": "", "hasContextObject": "", "hasConstraint": [{"label": "", "on": ""}]}
+2025-06-17 15:05:56,040 | INFO | · Sheet resistance of layer of gold | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Sheet resistance of layer of gold", "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.", "hasProperty": "resistance", "hasObjectOfInterest": "gold layer", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:56,404 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:56,519 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:56,601 | INFO | · Mass concentration of isobutylene in chloroform | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Mass concentration of isobutylene in chloroform", "comment": "Mass concentration of isobutylene in chloroform.", "hasProperty": "mass concentration", "hasMatrix": "chloroform", "hasObjectOfInterest": "isobutylene", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:05:57,244 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:58,176 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distr
+2025-06-17 15:05:58,845 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:05:59,636 | INFO | · Sheet resistance of layer of gold | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Sheet resistance of layer of gold", "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.", "hasProperty": "sheet resistance", "hasObjectOfInterest": "gold layer", "hasConstraint": [{"label": "5-nanometer-thick", "on": "hasObjectOfInterest: gold layer"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:00,137 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:00,983 | INFO | · Overnight stays in 3-star hotel near the sea shore | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Overnight stays in 3-star hotel near the sea shore", "comment": "Number of nights in a 3-star hotel near the sea shore", "hasProperty": "number of nights", "hasObjectOfInterest": {"AsymmetricSystem": "hotel location system", "hasSource": "3-star hotel", "hasTarget": "sea shore"}, "hasConstraint": [{"label": "near", "on": "hasTarget: sea shore"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:01,440 | INFO | · Mass concentration of isobutylene in chloroform | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Mass concentration of isobutylene in chloroform", "comment": "Mass concentration of isobutylene in chloroform.", "hasProperty": "mass concentration", "hasObjectOfInterest": "isobutylene", "hasConstraint": [], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:02,497 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:02,757 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:03,986 | INFO | · Overnight stays in 3-star hotel near the sea shore | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Overnight stays in 3-star hotel near the sea shore", "comment": "Number of nights in a 3-star hotel near the sea shore", "hasProperty": "number of nights", "hasMatrix": "3-star hotel near the sea shore", "hasObjectOfInterest": "hotel stay", "hasConstraint": [{"label": "near the sea shore", "on": "hasMatrix: 3-star hotel near the sea shore"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:06:04,429 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:04,642 | INFO | · Overnight stays in 3-star hotel near the sea shore | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Overnight stays in 3-star hotel near the sea shore", "comment": "Number of nights in a 3-star hotel near the sea shore", "hasProperty": "number of nights", "hasMatrix": "3-star hotel", "hasObjectOfInterest": "tourist", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:05,855 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:07,002 | INFO | · Mass concentration of isobutylene in chloroform | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Mass concentration of isobutylene in chloroform", "comment": "Mass concentration of isobutylene in chloroform.", "hasProperty": "mass concentration", "hasObjectOfInterest": {"SymmetricSystem": "mixture", "hasPart": ["isobutylene", "chloroform"]}, "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:12,075 | INFO | · Dynamic shear viscosity of polystyrene PS042 | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Dynamic shear viscosity of polystyrene PS042", "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.", "hasProperty": "dynamic shear viscosity", "hasObjectOfInterest": "polystyrene PS042", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:12,120 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of
+2025-06-17 15:06:12,666 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:12,919 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:13,192 | INFO | · Nervosity feelings | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Nervosity feelings", "comment": "In the past 30 days, how often did you feel nervous?", "hasProperty": "frequency", "hasObjectOfInterest": "nervousness", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:14,174 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:14,498 | INFO | · Nervosity feelings | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Nervosity feelings", "comment": "In the past 30 days, how often did you feel nervous?", "hasProperty": "frequency", "hasStatisticalModifier": "in the past 30 days", "hasMatrix": "human feelings", "hasObjectOfInterest": "nervousness", "hasContextObject": "human", "hasConstraint": [{"label": "self-reported", "on": "Nervosity feelings"}]}
+2025-06-17 15:06:14,792 | INFO | · dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area", "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distr
+2025-06-17 15:06:14,909 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:15,112 | INFO | · Nervosity feelings | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Nervosity feelings", "comment": "In the past 30 days, how often did you feel nervous?", "hasProperty": "frequency", "hasObjectOfInterest": "feelings", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:15,560 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:16,990 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:17,150 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:20,471 | INFO | · Nervosity feelings | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Nervosity feelings", "comment": "In the past 30 days, how often did you feel nervous?", "hasProperty": "frequency", "hasObjectOfInterest": "nervosity feelings", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:20,954 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:24,649 | INFO | · Mass concentration of isobutylene in chloroform | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Mass concentration of isobutylene in chloroform", "comment": "Mass concentration of isobutylene in chloroform.", "hasProperty": "mass concentration", "hasObjectOfInterest": "isobutylene", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:25,208 | INFO | · Cloud cover | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Cloud cover", "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.", "hasProperty": "fractional area coverage", "hasObjectOfInterest": "cloud", "hasStatisticalModi
+2025-06-17 15:06:25,389 | INFO | · Overnight stays in 3-star hotel near the sea shore | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Overnight stays in 3-star hotel near the sea shore", "comment": "Number of nights in a 3-star hotel near the sea shore", "hasProperty": "count", "hasObjectOfInterest": "stay", "hasConstraint": [{"label": "3-star hotel", "on": "hasObjectOfInterest: stay"}, {"label": "near the sea shore", "on": "hasObjectOfInterest: stay"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:25,750 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:25,836 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:26,070 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:26,161 | INFO | · Cloud cover | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Cloud cover", "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.", "hasProperty": "cloud amount", "hasObjectOfInterest": "sky", "hasStatisticalModifier": "", "ha
+2025-06-17 15:06:26,817 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:27,306 | INFO | · Overnight stays in 3-star hotel near the sea shore | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Overnight stays in 3-star hotel near the sea shore", "comment": "Number of nights in a 3-star hotel near the sea shore", "hasProperty": "count", "hasObjectOfInterest": "3-star hotel near the sea shore", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:27,634 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:27,755 | INFO | · Cloud cover | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Cloud cover", "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.", "hasProperty": "cloud amount", "hasMatrix": "atmosphere", "hasObjectOfInterest": "cloud", "has
+2025-06-17 15:06:27,893 | INFO | · Overnight stays in 3-star hotel near the sea shore | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Overnight stays in 3-star hotel near the sea shore", "comment": "Number of nights in a 3-star hotel near the sea shore", "hasProperty": "count", "hasObjectOfInterest": "3-star hotel near the sea shore", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:28,215 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:28,432 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:28,812 | INFO | · Date of last PCR-test | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Date of last PCR-test", "comment": "date of last COVID-19 PCR test performed by a certified laboratory", "hasProperty": "date", "hasStatisticalModifier": "last", "hasObjectOfInterest": "COVID-19 PCR test", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:29,596 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:30,629 | INFO | · Date of last PCR-test | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Date of last PCR-test", "comment": "date of last COVID-19 PCR test performed by a certified laboratory", "hasProperty": "date", "hasMatrix": "PCR test", "hasObjectOfInterest": "COVID-19", "hasConstraint": [{"label": "last", "on": "PCR test"}], "hasStatisticalModifier": "", "hasContextObject": ""}
+2025-06-17 15:06:31,042 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:31,218 | INFO | · Date of last PCR-test | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Date of last PCR-test", "comment": "date of last COVID-19 PCR test performed by a certified laboratory", "hasProperty": "date", "hasObjectOfInterest": "COVID-19 PCR test", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:31,449 | INFO | · Cloud cover | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Cloud cover", "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.", "hasProperty": "cloud amount", "hasObjectOfInterest": "cloud", "hasStatisticalModifier": "", "
+2025-06-17 15:06:31,729 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:32,453 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:35,978 | INFO | · Cloud cover | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Cloud cover", "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.", "hasProperty": "amount", "hasObjectOfInterest": "cloud", "hasStatisticalModifier": "", "hasMat
+2025-06-17 15:06:36,429 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:37,304 | INFO | · Atmospheric boundary layer height defined by temperature inversion | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmospheric boundary layer height defined by temperature inversion", "comment": "Atmospheric boundary layer height defined by temperature inversion.", "hasProperty": "height", "hasObjectOfInterest": "atmospheric boundary layer", "hasConstraint": [{"label": "defined by temperature inversion", "on": "atmospheric boundary layer"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:37,734 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:38,440 | INFO | · Atmospheric boundary layer height defined by temperature inversion | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmospheric boundary layer height defined by temperature inversion", "comment": "Atmospheric boundary layer height defined by temperature inversion.", "hasProperty": "temperature inversion", "hasStatisticalModifier": "", "hasMatrix": "", "hasObjectOfInterest": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:39,313 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:40,590 | INFO | · Date of last PCR-test | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Date of last PCR-test", "comment": "date of last COVID-19 PCR test performed by a certified laboratory", "hasProperty": "date", "hasObjectOfInterest": {"SymmetricSystem": "PCR test system", "hasPart": ["PCR test", "certified laboratory"]}, "hasConstraint": [{"label": "last", "on": "PCR test system"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:41,000 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:41,182 | INFO | · Atmospheric boundary layer height defined by temperature inversion | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmospheric boundary layer height defined by temperature inversion", "comment": "Atmospheric boundary layer height defined by temperature inversion.", "hasProperty": "height", "hasMatrix": "atmosphere", "hasObjectOfInterest": "temperature inversion", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:42,796 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:46,217 | INFO | · Nervosity feelings | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Nervosity feelings", "comment": "In the past 30 days, how often did you feel nervous?", "hasProperty": "frequency", "hasObjectOfInterest": "nervous feelings", "hasConstraint": [{"label": "past 30 days", "on": "nervous feelings"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:46,616 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:46,805 | INFO | · Nervosity feelings | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Nervosity feelings", "comment": "In the past 30 days, how often did you feel nervous?", "hasProperty": "frequency", "hasObjectOfInterest": "nervous feeling", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:47,003 | INFO | · Sheet resistance of layer of gold | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Sheet resistance of layer of gold", "comment": "The sheet resistance of a 5-nanometer-thick layer of gold.", "hasProperty": "sheet resistance", "hasObjectOfInterest": "gold", "hasConstraint": [{"label": "5-nanometer-thick", "on": "layer"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:06:47,629 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:47,632 | INFO | · Date of last PCR-test | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Date of last PCR-test", "comment": "date of last COVID-19 PCR test performed by a certified laboratory", "hasProperty": "date", "hasObjectOfInterest": "PCR-test", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:48,002 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:48,258 | INFO | · Atmosphere optical thickness of particulate organic matter ambient aerosol | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmosphere optical thickness of particulate organic matter ambient aerosol", "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.", "hasProperty": "optical thickness", "hasMatrix": "atmosphere", "hasObjectOfInterest": "particulate organic matter", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:48,438 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:48,613 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:48,735 | INFO | · Atmosphere optical thickness of particulate organic matter ambient aerosol | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmosphere optical thickness of particulate organic matter ambient aerosol", "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.", "hasProperty": "optical thickness", "hasStatisticalModifier": "", "hasMatrix": "", "hasObjectOfInterest": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:48,817 | INFO | · Atmosphere optical thickness of particulate organic matter ambient aerosol | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmosphere optical thickness of particulate organic matter ambient aerosol", "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.", "hasProperty": "optical thickness", "hasObjectOfInterest": "particulate organic matter", "hasMatrix": "atmosphere", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:48,867 | INFO | · Cloud cover | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Cloud cover", "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.", "hasProperty": "cloud amount", "hasObjectOfInterest": "cloud", "hasStatisticalModifier": "", "
+2025-06-17 15:06:49,144 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:49,342 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:49,421 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:50,342 | INFO | · Maximum trunk char height | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Maximum trunk char height", "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360\u00b0 sweep at each sampling location.", "hasProperty": "height", "hasStatisticalModifier": "maximum", "hasObjectOfInterest": "trunk", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:51,071 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:52,088 | INFO | · Maximum trunk char height | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Maximum trunk char height", "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360\u00b0 sweep at each sampling location.", "hasProperty": "trunk char height", "hasMatrix": "community", "hasObjectOfInterest": "tree trunk", "hasConstraint": [{"label": "maximum", "on": "trunk char height"}], "hasStatis
+2025-06-17 15:06:53,123 | INFO | · Atmospheric boundary layer height defined by temperature inversion | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmospheric boundary layer height defined by temperature inversion", "comment": "Atmospheric boundary layer height defined by temperature inversion.", "hasProperty": "boundary layer height", "hasObjectOfInterest": {"AsymmetricSystem": "atmospheric boundary layer system", "hasSource": "atmospheric boundary layer", "hasTarget": "temperature inversion"}, "hasConstraint": [{"label": "due to temperature inversion", "on": "boundary layer height"}], "hasStatisticalModifier": "", "hasMatrix":
+2025-06-17 15:06:53,515 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:53,528 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:53,774 | INFO | · Maximum trunk char height | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Maximum trunk char height", "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360\u00b0 sweep at each sampling location.", "hasProperty": "height", "hasObjectOfInterest": "tree trunk", "hasMatrix": "tree community", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:55,025 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:56,445 | INFO | · Atmospheric boundary layer height defined by temperature inversion | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmospheric boundary layer height defined by temperature inversion", "comment": "Atmospheric boundary layer height defined by temperature inversion.", "hasProperty": "height", "hasObjectOfInterest": {"SymmetricSystem": "atmospheric boundary layer", "hasPart": ["atmospheric boundary layer", "temperature inversion"]}, "hasConstraint": [{"label": "temperature inversion", "on": "hasObjectOfInterest: atmospheric boundary layer"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextO
+2025-06-17 15:06:56,855 | INFO | · Atmosphere optical thickness of particulate organic matter ambient aerosol | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmosphere optical thickness of particulate organic matter ambient aerosol", "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.", "hasProperty": "optical thickness", "hasMatrix": "atmosphere", "hasObjectOfInterest": "particulate organic matter", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:56,957 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:57,373 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:06:58,874 | INFO | · Coarse woody debris abundance | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Coarse woody debris abundance", "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)", "hasProperty": "abundance", "hasObjectOfInterest": "coarse woody debris", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:06:59,050 | INFO | · Atmosphere optical thickness of particulate organic matter ambient aerosol | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmosphere optical thickness of particulate organic matter ambient aerosol", "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.", "hasProperty": "optical thickness", "hasObjectOfInterest": "particulate organic matter", "hasConstraint": [{"label": "at 550nm", "on": "hasProperty: optical thickness"}, {"label": "ambient conditions", "on": "hasProperty: optical thickness"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextO
+2025-06-17 15:06:59,866 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:00,962 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:02,797 | INFO | · Coarse woody debris abundance | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Coarse woody debris abundance", "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)", "hasProperty": "abundance", "hasStatisticalModifier": "per hectare", "hasMatrix": "plots/transects", "hasObjectOfInterest": "coarse woody debris", "hasConstraint": [], "hasContextObject": ""}
+2025-06-17 15:07:03,160 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:03,488 | INFO | · Coarse woody debris abundance | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Coarse woody debris abundance", "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)", "hasProperty": "area", "hasMatrix": "forest floor", "hasObjectOfInterest": "coarse woody debris", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:07:04,158 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:06,187 | INFO | · Maximum trunk char height | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Maximum trunk char height", "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360\u00b0 sweep at each sampling location.", "hasProperty": "height", "hasObjectOfInterest": "trunk", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:07:06,459 | INFO | · Maximum trunk char height | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Maximum trunk char height", "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360\u00b0 sweep at each sampling location.", "hasProperty": "height", "hasObjectOfInterest": {"SymmetricSystem": "trunk", "hasPart": ["tree"]}, "hasConstraint": [{"label": "360\u00b0 sweep", "on": "sampling location"}], "h
+2025-06-17 15:07:06,972 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:08,089 | INFO | · Foliage projective cover in the lower canopy strata | openai/gpt-4.1
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foliage projective cover in the lower canopy strata", "comment": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.", "hasProperty": "projective cover", "hasObjectOfInterest": "foliage", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:07:08,408 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:09,148 | INFO | · Date of last PCR-test | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Date of last PCR-test", "comment": "date of last COVID-19 PCR test performed by a certified laboratory", "hasProperty": "date", "hasObjectOfInterest": "COVID-19 test", "hasStatisticalModifier": "last", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:07:10,170 | INFO | · Coarse woody debris abundance | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Coarse woody debris abundance", "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)", "hasProperty": "abundance", "hasConstraint": [{"label": "per hectare", "on": "abundance"}, {"label": "formula-based calculation", "on": "abundance"}], "hasObjectOfInterest": "coarse woody debris"
+2025-06-17 15:07:10,486 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:10,600 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:10,662 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:10,750 | INFO | · Foliage projective cover in the lower canopy strata | google/gemma-2-9b-it
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foliage projective cover in the lower canopy strata", "comment": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.", "hasProperty": "projective cover", "hasObjectOfInterest": "foliage", "hasMatrix": "canopy strata", "hasStatisticalModifier": "", "hasContextObject": "", "hasConstraint":
+2025-06-17 15:07:11,414 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:11,904 | INFO | · Foliage projective cover in the lower canopy strata | meta-llama/Llama-3.1-8B-Instruct
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foliage projective cover in the lower canopy strata", "comment": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.", "hasProperty": "proportion", "hasMatrix": "canopy", "hasObjectOfInterest": "foliage", "hasConstraint": [{"label": "in lower canopy strata", "on": "foliage"}], "hasStatis
+2025-06-17 15:07:12,343 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 15:07:16,817 | INFO | · Foliage projective cover in the lower canopy strata | deepseek/deepseek-r1-distill-qwen-14b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foliage projective cover in the lower canopy strata", "comment": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.", "hasProperty": "projective cover", "hasObjectOfInterest": "foliage", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:07:21,983 | INFO | · Foliage projective cover in the lower canopy strata | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foliage projective cover in the lower canopy strata", "comment": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.", "hasProperty": "cover", "hasMatrix": "lower canopy strata", "hasObjectOfInterest": "foliage", "hasConstraint": [{"label": "percentage", "on": "cover"}], "hasStatisticalM
+2025-06-17 15:07:27,633 | INFO | · Atmospheric boundary layer height defined by temperature inversion | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmospheric boundary layer height defined by temperature inversion", "comment": "Atmospheric boundary layer height defined by temperature inversion.", "hasProperty": "height", "hasObjectOfInterest": "atmospheric boundary layer", "hasConstraint": [{"label": "temperature inversion", "on": "height"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": ""}
+2025-06-17 15:07:36,623 | INFO | · Atmosphere optical thickness of particulate organic matter ambient aerosol | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Atmosphere optical thickness of particulate organic matter ambient aerosol", "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.", "hasProperty": "optical thickness", "hasObjectOfInterest": "particulate organic matter ambient aerosol", "hasMatrix": "atmosphere", "hasConstraint": [{"label": "at 550nm", "on": "optical thickness"}, {"label": "under ambient conditions", "on": "optical thickness"}], "hasStatisticalModifier": "", "hasCo
+2025-06-17 15:07:47,945 | INFO | · Coarse woody debris abundance | deepseek/deepseek-r1-distill-qwen-32b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Coarse woody debris abundance", "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)", "hasProperty": "abundance", "hasObjectOfInterest": "coarse woody debris", "hasConstraint": [{"label": "per hectare", "on": "abundance"}], "hasStatisticalModifier": "", "hasMatrix": "", "hasContex
+2025-06-17 15:07:50,505 | INFO | deepseek/deepseek-r1-0528-qwen3-8b: comment changed → forcing back to GT
+2025-06-17 15:07:50,506 | INFO | · Maximum trunk char height | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Maximum trunk char height", "comment": "Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360\u00b0 sweep at each sampling location.", "hasProperty": "height", "hasObjectOfInterest": "trunk char", "hasStatisticalModifier": "maximum", "hasMatrix": "community", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:07:56,064 | INFO | · Coarse woody debris abundance | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Coarse woody debris abundance", "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)", "hasProperty": "abundance", "hasObjectOfInterest": "coarse woody debris", "hasConstraint": [{"label": "scaled to hectare", "on": "abundance"}], "hasStatisticalModifier": "", "hasMatrix": "", "has
+2025-06-17 15:08:05,614 | INFO | · Foliage projective cover in the lower canopy strata | deepseek/deepseek-r1-0528-qwen3-8b
+prompt>>> You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/sc …
+parsed={"label": "Foliage projective cover in the lower canopy strata", "comment": "The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.", "hasProperty": "projective cover", "hasObjectOfInterest": "foliage", "hasStatisticalModifier": "", "hasMatrix": "", "hasContextObject": "", "hasConstraint": []}
+2025-06-17 15:08:05,745 | INFO | ✓ Results saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_metrics_20250617.xlsx

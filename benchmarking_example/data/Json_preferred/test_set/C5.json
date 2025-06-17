@@ -1,0 +1,14 @@
+{
+  "label": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
+  "comment": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.",
+  "hasProperty": "optical depth",
+  "hasMatrix": "aerosol particle",
+  "hasObjectOfInterest": "organic matter",
+  "hasContextObject": "atmosphere",
+  "hasConstraint": [
+    {
+      "label": "at 550nm wavelength",
+      "on": "optical depth"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-experiment_design.py • 2025-06-12
+experiment_design.py
 ===========================
 
 End-to-end benchmark of *LLM-powered* I-ADOPT decomposition.
@@ -31,11 +31,11 @@ import httpx
 
 # ----- static config -------------------------------------------------------- #
 SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
-SCHEMA_PATH = "/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_outputs/Json_schema.json"
-DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred"
-ONE_SHOT_DIR = DATA_DIR / "one_shot"
-THREE_SHOT_DIR = DATA_DIR / "three_shot"
-FIVE_SHOT_DIR = DATA_DIR / "five_shot"
+SCHEMA_PATH = SCRIPT_DIR / "benchmarking_example/data/Json_schema.json"
+DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "test_set"
+ONE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/one_shot"
+THREE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/three_shot"
+FIVE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/five_shot"
 OUTBOOK_DIR = SCRIPT_DIR / "benchmarking_outputs"
 OUTBOOK_DIR.mkdir(exist_ok=True)
 LOG_FILE = OUTBOOK_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
@@ -56,12 +56,12 @@ LOG_FILE = OUTBOOK_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
 # ]
 
 MODEL_NAMES = [
-    "openai/gpt-4o",
-    "openai/gpt-4o-mini",
+    # "openai/gpt-4o",
+    # "openai/gpt-4o-mini",
     "openai/gpt-4.1",
-    "openai/gpt-4.1-mini",
+    # "openai/gpt-4.1-mini",
     "meta-llama/Llama-3.1-8B-Instruct",
-    "Qwen/Qwen3-8B",
+    # "Qwen/Qwen3-8B",
     "deepseek/deepseek-r1-0528-qwen3-8b",
     "google/gemma-2-9b-it",
     "deepseek/deepseek-r1-distill-qwen-14b",
@@ -207,7 +207,7 @@ def call_model(model: str, prompt: str) -> str:
     try:
         resp = client.chat.completions.create(
             model=model,
-            temperature=0,
+            temperature=0.5,
             extra_headers={"X-Title": "IADOPT-bench"},
             messages=[{"role": "user", "content": prompt}],
             timeout=30,  # network timeout

@@ -1,0 +1,13 @@
+{
+  "label": "Concentration of DDT impacted by industry",
+  "comment": "Concentration of DDT in a given year at a site impacted by industry.",
+  "hasProperty": "mass fraction",
+  "hasMatrix": "soil",
+  "hasObjectOfInterest": "DDT",
+  "hasConstraint": [
+    {
+      "label": "impacted by industry",
+      "on": "soil"
+    }
+  ]
+}
