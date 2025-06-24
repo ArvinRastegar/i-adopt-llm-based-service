@@ -31,7 +31,7 @@ import httpx
 
 # ----- static config -------------------------------------------------------- #
 SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
-SCHEMA_PATH = SCRIPT_DIR / "benchmarking_example/data/Json_schema.json"
+SCHEMA_PATH = SCRIPT_DIR / "data" / "Json_schema.json"
 DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "test_set"
 ONE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/one_shot"
 THREE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/three_shot"
@@ -112,11 +112,6 @@ embed_model = SentenceTransformer(EMBED_MODEL_NAME)
 # --------------------------------------------------------------------------- #
 # 2 ▪ Prompt helpers
 # --------------------------------------------------------------------------- #
-
-SCHEMA_PATH = Path(
-    "/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/"
-    "benchmarking_example/benchmarking_outputs/Json_schema.json"
-)
 _SCHEMA_TEXT = SCHEMA_PATH.read_text(encoding="utf-8").strip()
 
 _SYSTEM_RULES = textwrap.dedent(
@@ -524,7 +519,7 @@ def main() -> None:
     )
     parser.add_argument("--max-vars", type=int, default=30, help="Debug: limit #variables")  # ← default 10
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
-    parser.add_argument("--workers", type=int, default=8, help="Parallel requests")  # ← default 8
+    parser.add_argument("--workers", type=int, default=10, help="Parallel requests")  # ← default 8
     args = parser.parse_args()
 
     # ------------------------------------------------------------------ run
@@ -543,13 +538,24 @@ def main() -> None:
 
     # ------------- single Excel containing *all* shot-settings ----------
     df = pd.DataFrame(all_rows)
-    summary = df.groupby(["Model", "Shot"]).mean(numeric_only=True).round(3).reset_index()
-    # ← aggregate over all shots
+
+    # Sort *per‑variable* sheet by F_exact so that the highest‑scoring
+    # decompositions appear first.  Missing values fall to the bottom.
+    df_sorted = df.sort_values(by="F_exact", ascending=False)
+
+    # Compute summary metrics and sort by the same key (descending)
+    summary = (
+        df.groupby(["Model", "Shot"])
+        .mean(numeric_only=True)
+        .round(3)
+        .reset_index()
+        .sort_values(by="F_exact", ascending=False)
+    )
 
     out_xlsx = OUTBOOK_DIR / f"iadopt_metrics_{datetime.now():%Y%m%d}.xlsx"
     with pd.ExcelWriter(out_xlsx, engine="openpyxl") as wr:
         summary.to_excel(wr, sheet_name="summary", index=False)
-        df.to_excel(wr, sheet_name="per_variable", index=False)
+        df_sorted.to_excel(wr, sheet_name="per_variable", index=False)
     logging.info(f"✓ Results saved → {out_xlsx.resolve()}")
 
 

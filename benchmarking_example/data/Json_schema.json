@@ -65,7 +65,13 @@
         {
           "$comment": "Asymmetric system",
           "type": "object",
-          "required": ["AsymmetricSystem", "hasSource", "hasTarget"],
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
           "properties": {
             "AsymmetricSystem": { "type": "string" },
             "hasSource":        { "type": "string" },
