@@ -226,6 +226,33 @@ def coerce_for_eval(rec: Dict[str, Any]) -> Dict[str, Any]:
     return rec
 
 
+# def call_llm_schema_safe(model: str, prompt: str, exp_label: str, exp_comment: str) -> Dict[str, Any]:
+#     """
+#     Call *model* (≤MAX_RETRY) until the JSON passes schema validation.
+#     The returned dict is *forced* to have the expected label & comment.
+#     """
+#     for attempt in range(1, MAX_RETRY + 1):
+#         raw = call_model(model, prompt)
+#         if not raw:
+#             break
+#         try:
+#             data = extract_json(raw)
+#             validate(data, SCHEMA_OBJ)
+#             # ── enforce identical label & comment ───────────────────────────
+#             if data.get("label") != exp_label:
+#                 logging.warning(f"{model}: overwrote label “{data.get('label')}”")
+#             if data.get("comment") != exp_comment:
+#                 logging.warning(f"{model}: overwrote comment")
+#             data["label"] = exp_label
+#             data["comment"] = exp_comment
+#             return data
+#         except (json.JSONDecodeError, ValidationError) as err:
+#             logging.warning(f"{model}: schema fail {attempt}/{MAX_RETRY}: {err}")
+#             time.sleep(1)
+#     logging.error(f"{model}: gave up after {MAX_RETRY} retries")
+#     return {}
+
+
 def call_llm_loose(model: str, prompt: str, exp_label: str, exp_comment: str) -> Dict[str, Any]:
     """
     Call *model* once and return the JSON we can parse.
@@ -435,6 +462,9 @@ _PRINTED_PROMPTS: set[tuple[int, str]] = set()  # (shot_mode, variable label)
 _PROMPT_LOCK = Lock()
 
 
+# --------------------------------------------------------------------------- #
+# 8 ▪ Evaluation loop  (returns list[dict] instead of writing files)
+# --------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------- #
 # 9 ▪ Evaluation worker  (returns {"_rows": [...]})
 # --------------------------------------------------------------------------- #
@@ -648,41 +678,6 @@ def main() -> None:
         df.to_excel(wr, sheet_name="all_rows", index=False)
 
     logging.info("✓ Results saved → %s", out_xlsx.resolve())
-
-    # ------------------------------------------------------------------ #
-    # NEW: wide “prompt × model” matrix of F-exact scores
-    # ------------------------------------------------------------------ #
-    #
-    # • One row  = one prompt (identified by Variable + Shot)
-    # • One col  = one model
-    # • Cell     = F_exact   (blank if that model/shot/variable combo
-    #                         was not evaluated, e.g. because the
-    #                         variable was used as an in-context example)
-    #
-    # Result is saved as a **separate file** so the original
-    # Excel workbook and the log file remain untouched.
-    #
-    # ────────────────────────────────────────────────────────────────────
-    df_exact = df[df["Metric"] == "exact"].copy()
-
-    # Combine shot & variable to make the row labels unique and readable.
-    df_exact["Prompt"] = df_exact["Shot"].astype(str) + "-shot | " + df_exact["Variable"]
-
-    f_matrix = (
-        df_exact.pivot_table(
-            index="Prompt",  # rows
-            columns="Model",  # cols
-            values="F",  # cell value
-            aggfunc="first",  # there is only one F per combo
-        )
-        .sort_index()
-        .round(3)
-    )
-
-    out_matrix = OUTBOOK_DIR / f"iadopt_Fexact_matrix_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
-    f_matrix.to_excel(out_matrix, sheet_name="F_exact_matrix")
-
-    logging.info("✓ F-exact matrix saved → %s", out_matrix.resolve())
 
 
 if __name__ == "__main__":
