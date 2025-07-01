@@ -33,6 +33,8 @@ import pandas as pd
 from openai import APIStatusError, OpenAI, OpenAIError
 from sentence_transformers import SentenceTransformer, util
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from collections import Counter
+
 
 # from jsonschema import validate, ValidationError
 
@@ -44,33 +46,37 @@ ONE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/one_shot"
 THREE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/three_shot"
 FIVE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/five_shot"
 
-OUTBOOK_DIR = SCRIPT_DIR / "benchmarking_outputs"
-OUTBOOK_DIR.mkdir(exist_ok=True)
-LOG_FILE = OUTBOOK_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
+LOG_DIR = SCRIPT_DIR / "benchmarking_logs"
+LOG_DIR.mkdir(exist_ok=True)
+LOG_FILE = LOG_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
 
 MODEL_NAMES = [
     # "openai/gpt-4o",
     # "openai/gpt-4o-mini",
     "openai/gpt-4.1",
-    # "openai/gpt-4.1-mini",
-    "meta-llama/llama-3.3-8b-instruct",
-    "qwen/qwen3-8b",
+    # "meta-llama/llama-3.3-8b-instruct",
+    # "qwen/qwen3-8b",
+    "microsoft/phi-4",
+    # "microsoft/phi-4-reasoning",
+    # "open-orca/mistral-7b-openorca",
     "deepseek/deepseek-r1-0528-qwen3-8b",
     "google/gemini-2.0-flash-001",
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-32b",
     "qwen/qwen-2.5-7b-instruct",
-    "qwen/qwen3-0.6b-04-28",
-    "qwen/qwen3-1.7b",
-    "qwen/qwen3-4b",
+    "qwen/qwen-2.5-coder-32b-instruct",
+    # "qwen/qwen3-0.6b-04-28",
+    # "qwen/qwen3-1.7b",
+    # "qwen/qwen3-4b",
     "qwen/qwen3-14b",
     "qwen/qwen3-30b-a3b",
     "qwen/qwen3-32b",
-    "meta-llama/llama-guard-4-12b",
-    "openai/o3-pro",
+    # "meta-llama/llama-guard-4-12b",
+    "perplexity/sonar-reasoning-pro",
     "google/gemini-2.5-pro",
     "meta-llama/llama-4-maverick-17b-128e-instruct",
     "anthropic/claude-4-sonnet-20250522",
+    # "intel/neural-chat-7b",
 ]
 
 
@@ -95,7 +101,7 @@ ONTO_KEYS = [
 # --------------------------------------------------------------------------- #
 # 1 ▪ Logging & external clients
 # --------------------------------------------------------------------------- #
-# ─── LOGGING: console  +  file --- everything duplicated -──────────────────── #
+# ─── LOGGING: console  + 2 file handlers ────────────────────────────── #
 log_fmt = "%(asctime)s | %(levelname)s | %(message)s"
 logging.basicConfig(
     level=logging.INFO,
@@ -105,7 +111,15 @@ logging.basicConfig(
         logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8"),
     ],
 )
+
+PREPROC_LOG_FILE = LOG_DIR / f"iadopt_preprocess_{datetime.now():%Y%m%d_%H%M%S}.log"
+_preproc_logger = logging.getLogger("preprocess")
+_preproc_logger.setLevel(logging.INFO)
+_preproc_logger.addHandler(logging.FileHandler(PREPROC_LOG_FILE, mode="w", encoding="utf-8"))
+
 logging.info(f"Logging to {LOG_FILE.resolve()}")
+logging.info(f"Pre-processing log → {PREPROC_LOG_FILE.resolve()}")
+
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -180,14 +194,16 @@ def load_examples(n: int) -> List[Dict[str, Any]]:
 # 3 ▪ LLM invocation with schema validation / retry
 # --------------------------------------------------------------------------- #
 # SCHEMA_OBJ = json.load(open(SCHEMA_PATH))
+_JSON_FENCE_RE = re.compile(r"```(?:json)?", re.MULTILINE)
+_JSON_BLOCK_RE = re.compile(r"\{.*\}", re.DOTALL)
 
 
 def extract_json(text: str) -> Dict[str, Any]:
     """
     Strip code fences and parse the first JSON object found.
     """
-    cleaned = re.sub(r"```(?:json)?", "", text).strip()
-    match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+    cleaned = _JSON_FENCE_RE.sub("", text).strip()
+    match = _JSON_BLOCK_RE.search(cleaned)
     if not match:
         raise json.JSONDecodeError("No JSON block found", cleaned, 0)
     return json.loads(match.group(0))
@@ -214,45 +230,94 @@ def call_model(model: str, prompt: str) -> str:
     return ""  # uniform “failure” sentinel
 
 
-def coerce_for_eval(rec: Dict[str, Any]) -> Dict[str, Any]:
-    """Guarantee that *every* ONTO_KEY exists with the right baseline type."""
+def coerce_for_eval(rec: Dict[str, Any], fixes: dict) -> Dict[str, Any]:
+    """
+    Ensure every ONTO key exists with the right type.
+    Record all corrections in *fixes* (dict mutated in place).
+    """
     rec = dict(rec)
-    for k in ONTO_KEYS:
-        if k not in rec:
-            rec[k] = [] if k == "hasConstraint" else ""
-    # common hallucination: property given as {"label": "..."}
-    if isinstance(rec["hasProperty"], dict):
+
+    # ---- missing / extra keys -----------------------------------------
+    fixes["missing_keys"] = [k for k in ONTO_KEYS if k not in rec]
+    fixes["extra_keys"] = [k for k in rec.keys() if k not in {"label", "comment", *ONTO_KEYS}]
+
+    for k in fixes["missing_keys"]:
+        rec[k] = [] if k == "hasConstraint" else ""
+
+    # ---- hasProperty came as a dict -----------------------------------
+    if isinstance(rec.get("hasProperty"), dict):
+        fixes["coerced_property_dict"] = True
+        fixes["orig_hasProperty"] = rec["hasProperty"]  # keep full dict
         rec["hasProperty"] = rec["hasProperty"].get("label", "")
+    else:
+        fixes["coerced_property_dict"] = False
+
     return rec
 
 
 def call_llm_loose(model: str, prompt: str, exp_label: str, exp_comment: str) -> Dict[str, Any]:
     """
-    Call *model* once and return the JSON we can parse.
+    Invoke *model*, capture its raw reply, coerce it into a dict that respects
+    the schema, and **log every fix-up** (with context) to the preprocess logger.
 
-    • No json-schema validation.
-    • If we cannot parse anything → return {}.
-    • label / comment are overwritten with the expected ground-truth values.
+    The function never raises. It returns either a clean dict (possibly empty)
+    or {}, which upstream treats as a blank prediction.
     """
     raw = call_model(model, prompt)
-    if not raw:  # model failed (HTTP 4xx/5xx etc.)
-        return {}
+    fixes: dict[str, Any] = {
+        "model": model,
+        "variable": exp_label,
+        "non_json_prefix": False,
+        "non_json_suffix": False,
+        "unparsable_json": False,
+        "label_overwritten": False,
+        "comment_overwritten": False,
+        "coerced_property_dict": False,  # filled in coerce_for_eval
+        "missing_keys": [],
+        "extra_keys": [],
+    }
 
+    # ---- detect stray text before / after JSON ------------------------
+    if raw:
+        pre = raw.split("{", 1)[0]
+        post = raw.rsplit("}", 1)[-1] if "}" in raw else ""
+        if pre.strip():
+            fixes["non_json_prefix"] = True
+            fixes["prefix_text"] = pre.strip()[:200]  # first 200 chars
+        if post.strip():
+            fixes["non_json_suffix"] = True
+            fixes["suffix_text"] = post.strip()[:200]
+
+    # ---- try to isolate a JSON object ---------------------------------
     try:
-        data = extract_json(raw)
+        data = extract_json(raw or "")
     except json.JSONDecodeError:
-        logging.warning(f"{model}: could not parse JSON – using empty dict")
-        return {}
+        fixes["unparsable_json"] = True
+        fixes["raw_excerpt"] = (raw or "")[:400]  # help debugging
+        _preproc_logger.info("%s", json.dumps(fixes, ensure_ascii=False))
+        return {}  # nothing usable
 
-    # ── enforce the fixed fields ────────────────────────────────────────────
-    if data.get("label") != exp_label:
-        logging.info(f"{model}: label changed → forcing back to GT")
-        data["label"] = exp_label
-    if data.get("comment") != exp_comment:
-        logging.info(f"{model}: comment changed → forcing back to GT")
-        data["comment"] = exp_comment
+    # ---- preserve original label/comment for logging ------------------
+    orig_label = data.get("label")
+    orig_comment = data.get("comment")
 
-    return coerce_for_eval(data)
+    # ---- force ground-truth label / comment ---------------------------
+    if orig_label != exp_label:
+        fixes["label_overwritten"] = True
+        fixes["orig_label"] = orig_label
+    if orig_comment != exp_comment:
+        fixes["comment_overwritten"] = True
+        fixes["orig_comment"] = (orig_comment or "")[:400]
+    data["label"] = exp_label
+    data["comment"] = exp_comment
+
+    # ---- key coercions & sanitisation ---------------------------------
+    data = coerce_for_eval(data, fixes=fixes)
+
+    # ---- write the row (only enlarged when flags ≠ False) -------------
+    _preproc_logger.info("%s", json.dumps(fixes, ensure_ascii=False))
+
+    return data
 
 
 # --------------------------------------------------------------------------- #
@@ -591,7 +656,7 @@ def main() -> None:
     )
     parser.add_argument("--max-vars", type=int, default=30, help="Debug: limit number of variables")
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
-    parser.add_argument("--workers", type=int, default=10, help="Parallel requests")
+    parser.add_argument("--workers", type=int, default=256, help="Parallel requests")
     args = parser.parse_args()
 
     # ---------------- run requested shot modes ---------------------------
@@ -617,9 +682,9 @@ def main() -> None:
 
     # --------- wide summary with exact & close side-by-side ------------------
     def pick(rowset: pd.DataFrame, col: str, metric: str):
-        """Return the (first) value of *col* where Metric == metric, else nan."""
+        """Return the mean value of *col* where Metric == metric, else nan."""
         sub = rowset.loc[rowset["Metric"] == metric, col]
-        return sub.iloc[0] if not sub.empty else float("nan")
+        return sub.mean() if not sub.empty else float("nan")
 
     summary_rows = []
     for (model, shot), grp in df.groupby(["Model", "Shot"]):
@@ -627,12 +692,12 @@ def main() -> None:
             {
                 "Model": model,
                 "Shot": shot,
-                "P_exact": pick(grp, "P", "exact"),
-                "R_exact": pick(grp, "R", "exact"),
                 "F_exact": pick(grp, "F", "exact"),
-                "P_close": pick(grp, "P", "close"),
-                "R_close": pick(grp, "R", "close"),
                 "F_close": pick(grp, "F", "close"),
+                "P_exact": pick(grp, "P", "exact"),
+                "P_close": pick(grp, "P", "close"),
+                "R_exact": pick(grp, "R", "exact"),
+                "R_close": pick(grp, "R", "close"),
                 "J_both": pick(grp, "J_both", "exact"),  # the J's are identical on both rows
                 "J_concept": pick(grp, "J_concept", "exact"),
                 "J_text": pick(grp, "J_text", "exact"),
@@ -651,38 +716,66 @@ def main() -> None:
 
     # ------------------------------------------------------------------ #
     # NEW: wide “prompt × model” matrix of F-exact scores
+    #      • Top rows  →  mean F-exact for each prompt type (0-, 1-, 3-, 5-shot)
+    #      • Below     →  individual prompt rows  ( "<shot>-shot | <variable>" )
+    #      • Columns   →  models, ordered (descending) by their overall mean
     # ------------------------------------------------------------------ #
-    #
-    # • One row  = one prompt (identified by Variable + Shot)
-    # • One col  = one model
-    # • Cell     = F_exact   (blank if that model/shot/variable combo
-    #                         was not evaluated, e.g. because the
-    #                         variable was used as an in-context example)
-    #
-    # Result is saved as a **separate file** so the original
-    # Excel workbook and the log file remain untouched.
-    #
-    # ────────────────────────────────────────────────────────────────────
     df_exact = df[df["Metric"] == "exact"].copy()
 
-    # Combine shot & variable to make the row labels unique and readable.
+    # ---------- build the individual-prompt slice -----------------------
     df_exact["Prompt"] = df_exact["Shot"].astype(str) + "-shot | " + df_exact["Variable"]
+    prompt_matrix = df_exact.pivot_table(index="Prompt", columns="Model", values="F", aggfunc="first").round(3)
 
-    f_matrix = (
-        df_exact.pivot_table(
-            index="Prompt",  # rows
-            columns="Model",  # cols
-            values="F",  # cell value
-            aggfunc="first",  # there is only one F per combo
-        )
-        .sort_index()
-        .round(3)
-    )
+    # ---------- build the mean-per-shot slice ---------------------------
+    shot_mean = df_exact.pivot_table(index="Shot", columns="Model", values="F", aggfunc="mean").round(3)
+    # Give the means readable row labels that will sort as 0-, 1-, 3-, 5-shot
+    shot_mean.index = shot_mean.index.map(lambda s: f"{int(s)}-shot | MEAN")
+    shot_mean = shot_mean.sort_index(key=lambda s: s.str.extract(r"(\d+)").astype(int)[0])
+
+    # ---------- decide one global column order --------------------------
+    # Use the *overall* mean F-exact (across *all* prompts) to rank models.
+    overall_means = pd.concat([shot_mean, prompt_matrix]).mean(axis=0)
+    col_order = overall_means.sort_values(ascending=False).index.tolist()
+
+    # Apply the ordering
+    shot_mean = shot_mean[col_order]
+    prompt_matrix = prompt_matrix[col_order]
+
+    # ---------- stitch the two parts together ---------------------------
+    f_matrix = pd.concat([shot_mean, prompt_matrix])
 
     out_matrix = OUTBOOK_DIR / f"iadopt_Fexact_matrix_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
     f_matrix.to_excel(out_matrix, sheet_name="F_exact_matrix")
 
     logging.info("✓ F-exact matrix saved → %s", out_matrix.resolve())
+    # ------------------------------------------------------------------ #
+    # append a one-shot summary to the preprocess log  -------------
+    # ------------------------------------------------------------------ #
+    counter = Counter()
+    with PREPROC_LOG_FILE.open("r", encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line or line.startswith("===="):  # skip summary if re-run
+                continue
+            rec = json.loads(line)
+            counter["rows"] += 1
+            for flag in (
+                "non_json_prefix",
+                "non_json_suffix",
+                "unparsable_json",
+                "label_overwritten",
+                "comment_overwritten",
+                "coerced_property_dict",
+            ):
+                counter[flag] += bool(rec.get(flag))
+            counter["missing_keys"] += len(rec.get("missing_keys", []))
+            counter["extra_keys"] += len(rec.get("extra_keys", []))
+
+    summary_lines = ["", "===== SUMMARY ====="] + [f"{k}: {v}" for k, v in counter.items()]
+    with PREPROC_LOG_FILE.open("a", encoding="utf-8") as fh:
+        fh.write("\n".join(summary_lines) + "\n")
+
+    logging.info("✓ Pre-processing log saved → %s", PREPROC_LOG_FILE.resolve())
 
 
 if __name__ == "__main__":
