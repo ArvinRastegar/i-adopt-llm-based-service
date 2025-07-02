@@ -1,0 +1,1819 @@
+2025-07-02 16:58:40,834 | INFO | Logging to /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_run_20250702_165840.log
+2025-07-02 16:58:40,834 | INFO | Pre-processing log → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_preprocess_20250702_165840.log
+2025-07-02 16:58:40,882 | INFO | Use pytorch device_name: mps
+2025-07-02 16:58:40,882 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-07-02 16:58:43,140 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Peak ground acceleration
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Peak ground acceleration
+comment: Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-02 16:58:43,141 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Probablity of occurence of habitat
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Probablity of occurence of habitat
+comment: Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-02 16:58:43,141 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Feral-free enclosure area
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Feral-free enclosure area
+comment: The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-02 16:58:43,767 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:43,844 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:43,870 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:43,967 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:43,988 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:43,996 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:43,998 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,083 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,088 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,106 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,112 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,150 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,155 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,191 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,213 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,222 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,224 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,278 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,297 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,379 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,417 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,421 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,448 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,468 | INFO | {"model": "google/gemini-2.0-flash-001", "variable": "Peak ground acceleration", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:58:44,469 | INFO | MODEL   | google/gemini-2.0-flash-001         | shot=3 | Peak ground acceleration
+2025-07-02 16:58:44,469 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:44,469 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:44,470 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:44,480 | INFO | {"model": "openai/gpt-4.1", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:44,480 | INFO | MODEL   | openai/gpt-4.1                      | shot=3 | Peak ground acceleration
+2025-07-02 16:58:44,480 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:44,480 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:44,480 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:44,504 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,586 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,619 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:44,624 | INFO | {"model": "openai/gpt-4.1", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:44,624 | INFO | MODEL   | openai/gpt-4.1                      | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:44,624 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:44,624 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "feral-free enclosure",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:44,624 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:44,753 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:44,753 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:44,799 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:44,908 | INFO | {"model": "microsoft/phi-4", "variable": "Probablity of occurence of habitat", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:58:44,908 | INFO | MODEL   | microsoft/phi-4                     | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:58:44,908 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:58:44,908 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:44,908 | INFO | EXACT CONFUSION | TP=2.000 FP=0.000 FN=0.000 TN=4.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 0.0, 1.0)}
+2025-07-02 16:58:44,908 | INFO | CLOSE CONFUSION | TP=2.000 FP=0.000 FN=0.000 TN=4.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 0.0, 1.0)}
+2025-07-02 16:58:44,937 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:44,937 | INFO | MODEL   | meta-llama/llama-4-maverick-17b-128e-instruct | shot=3 | Peak ground acceleration
+2025-07-02 16:58:44,937 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:44,937 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:44,937 | INFO | EXACT CONFUSION | TP=2.000 FP=0.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-02 16:58:44,980 | INFO | CLOSE CONFUSION | TP=2.000 FP=0.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-02 16:58:44,982 | INFO | {"model": "google/gemini-2.0-flash-001", "variable": "Feral-free enclosure area", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:58:44,982 | INFO | MODEL   | google/gemini-2.0-flash-001         | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:44,982 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:44,982 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "enclosure"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:44,982 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:45,037 | INFO | CLOSE CONFUSION | TP=3.000 FP=0.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (1.0, 0.0, 0.0, 0.0)}
+2025-07-02 16:58:45,067 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:45,102 | INFO | {"model": "google/gemini-2.0-flash-001", "variable": "Probablity of occurence of habitat", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:58:45,103 | INFO | MODEL   | google/gemini-2.0-flash-001         | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:58:45,103 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:58:45,103 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "of occurence",
+      "on": "habitat"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:45,103 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:45,103 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:45,141 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:45,300 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:45,336 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:45,409 | INFO | {"model": "microsoft/phi-4", "variable": "Peak ground acceleration", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:58:45,410 | INFO | MODEL   | microsoft/phi-4                     | shot=3 | Peak ground acceleration
+2025-07-02 16:58:45,410 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:45,410 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:45,410 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=2.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:45,446 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.000 FN=2.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:45,808 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:45,828 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:45,940 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:45,940 | INFO | MODEL   | meta-llama/llama-4-maverick-17b-128e-instruct | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:58:45,940 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:58:45,940 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability of occurrence",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "over 1 year",
+      "on": "probability of occurrence"
+    },
+    {
+      "label": "within 100x100m grid cells",
+      "on": "habitat"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:45,941 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:45,982 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:46,292 | INFO | {"model": "microsoft/phi-4", "variable": "Feral-free enclosure area", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:58:46,294 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:46,294 | INFO | MODEL   | microsoft/phi-4                     | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:46,294 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:46,295 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:46,295 | INFO | EXACT CONFUSION | TP=2.000 FP=0.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:46,295 | INFO | CLOSE CONFUSION | TP=2.000 FP=0.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:46,914 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:46,914 | INFO | MODEL   | meta-llama/llama-4-maverick-17b-128e-instruct | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:46,915 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:46,915 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "feral-free enclosure",
+  "hasConstraint": [
+    {
+      "label": "total",
+      "on": "area"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:46,915 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:46,925 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:46,993 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:47,326 | INFO | {"model": "deepseek/deepseek-r1-distill-qwen-32b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:47,327 | INFO | MODEL   | deepseek/deepseek-r1-distill-qwen-32b | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:47,327 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:47,327 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "enclosure"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:47,327 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:47,359 | INFO | CLOSE CONFUSION | TP=3.000 FP=0.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (1.0, 0.0, 0.0, 0.0)}
+2025-07-02 16:58:47,514 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:47,554 | INFO | {"model": "deepseek/deepseek-r1-distill-qwen-32b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:47,555 | INFO | MODEL   | deepseek/deepseek-r1-distill-qwen-32b | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:58:47,555 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:58:47,555 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "grid cell of 100x100 m",
+      "on": "habitat"
+    },
+    {
+      "label": "over 1 year",
+      "on": "probability"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:47,555 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:47,555 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:47,575 | INFO | {"model": "anthropic/claude-4-sonnet-20250522", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:47,575 | INFO | MODEL   | anthropic/claude-4-sonnet-20250522  | shot=3 | Peak ground acceleration
+2025-07-02 16:58:47,575 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:47,576 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-02 16:58:47,576 | INFO | EXACT CONFUSION | TP=2.500 FP=2.000 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-02 16:58:47,653 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-02 16:58:47,940 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-02 16:58:48,574 | INFO | {"model": "deepseek/deepseek-r1-distill-qwen-14b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:48,574 | INFO | MODEL   | deepseek/deepseek-r1-distill-qwen-14b | shot=3 | Peak ground acceleration
+2025-07-02 16:58:48,575 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:48,575 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:48,575 | INFO | EXACT CONFUSION | TP=2.000 FP=0.000 FN=2.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:48,575 | INFO | CLOSE CONFUSION | TP=2.000 FP=0.000 FN=2.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:48,660 | INFO | {"model": "anthropic/claude-4-sonnet-20250522", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:48,661 | INFO | MODEL   | anthropic/claude-4-sonnet-20250522  | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:48,661 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:48,661 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "enclosure"
+    },
+    {
+      "label": "total",
+      "on": "area"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:48,661 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:48,739 | INFO | CLOSE CONFUSION | TP=3.000 FP=0.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (1.0, 0.0, 0.0, 0.0)}
+2025-07-02 16:58:49,459 | INFO | {"model": "deepseek/deepseek-r1-distill-qwen-14b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:49,459 | INFO | MODEL   | deepseek/deepseek-r1-distill-qwen-14b | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:49,460 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:49,460 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "area",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:49,460 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:49,498 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:50,425 | INFO | {"model": "openai/gpt-4.1", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:50,426 | INFO | MODEL   | openai/gpt-4.1                      | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:58:50,426 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:58:50,426 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability of occurrence",
+  "hasObjectOfInterest": "EUNIS habitat",
+  "hasConstraint": [
+    {
+      "label": "within grid cell of 100x100 m",
+      "on": "EUNIS habitat"
+    },
+    {
+      "label": "across the EU",
+      "on": "EUNIS habitat"
+    },
+    {
+      "label": "over 1 year time",
+      "on": "probability of occurrence"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:50,426 | INFO | EXACT CONFUSION | TP=0.000 FP=3.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:50,493 | INFO | CLOSE CONFUSION | TP=0.000 FP=3.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:50,682 | INFO | {"model": "anthropic/claude-4-sonnet-20250522", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:50,682 | INFO | MODEL   | anthropic/claude-4-sonnet-20250522  | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:58:50,682 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:58:50,683 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "of occurrence",
+      "on": "probability"
+    },
+    {
+      "label": "EUNIS type",
+      "on": "habitat"
+    },
+    {
+      "label": "within 100x100 m grid cells",
+      "on": "habitat"
+    },
+    {
+      "label": "across EU",
+      "on": "habitat"
+    },
+    {
+      "label": "over 1 year time",
+      "on": "probability"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:50,683 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:50,683 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:52,032 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:52,032 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:52,032 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:52,033 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "feral-free enclosure",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:52,033 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:52,094 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:53,434 | INFO | {"model": "deepseek/deepseek-r1-distill-qwen-32b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:53,435 | INFO | MODEL   | deepseek/deepseek-r1-distill-qwen-32b | shot=3 | Peak ground acceleration
+2025-07-02 16:58:53,435 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:53,435 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "earth surface system",
+    "hasSource": "earth surface",
+    "hasTarget": "earth surface"
+  },
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    },
+    {
+      "label": "ground",
+      "on": "earth surface"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:53,435 | INFO | EXACT CONFUSION | TP=1.000 FP=1.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-02 16:58:53,593 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:54,193 | INFO | {"model": "qwen/qwen3-14b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:54,194 | INFO | MODEL   | qwen/qwen3-14b                      | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:54,194 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:54,194 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "feral-free enclosure",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:54,194 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:54,232 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:55,322 | INFO | {"model": "qwen/qwen3-30b-a3b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:55,323 | INFO | MODEL   | qwen/qwen3-30b-a3b                  | shot=3 | Feral-free enclosure area
+2025-07-02 16:58:55,323 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:58:55,323 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "feral-free enclosure",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:55,323 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:55,360 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:55,637 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:55,637 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Peak ground acceleration
+2025-07-02 16:58:55,638 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:55,638 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:55,638 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:55,694 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:55,877 | INFO | {"model": "qwen/qwen3-14b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:58:55,877 | INFO | MODEL   | qwen/qwen3-14b                      | shot=3 | Peak ground acceleration
+2025-07-02 16:58:55,878 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:55,878 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "peak",
+  "hasConstraint": [
+    {
+      "label": "earth surface",
+      "on": "hasObjectOfInterest: ground"
+    },
+    {
+      "label": "seismic events",
+      "on": "hasProperty: acceleration"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:58:55,878 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:56,079 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:58:56,558 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-02 16:58:56,558 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Peak ground acceleration
+2025-07-02 16:58:56,559 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:56,559 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-02 16:58:56,559 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:56,597 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:58:56,642 | INFO | {"model": "google/gemini-2.5-pro", "variable": "Peak ground acceleration", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:58:56,643 | INFO | MODEL   | google/gemini-2.5-pro               | shot=3 | Peak ground acceleration
+2025-07-02 16:58:56,643 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:58:56,643 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "during seismic event",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-02 16:58:56,643 | INFO | EXACT CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-02 16:58:56,720 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-02 16:59:00,292 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:59:00,292 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:59:00,292 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:59:00,292 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "occurrence",
+      "on": "habitat"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:00,292 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:00,293 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:00,350 | INFO | {"model": "google/gemini-2.5-pro", "variable": "Probablity of occurence of habitat", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:59:00,350 | INFO | MODEL   | google/gemini-2.5-pro               | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:59:00,350 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:59:00,351 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability of occurrence",
+  "hasObjectOfInterest": "habitat",
+  "hasMatrix": "grid cell",
+  "hasConstraint": [
+    {
+      "label": "EUNIS",
+      "on": "habitat"
+    },
+    {
+      "label": "contiguous",
+      "on": "grid cell"
+    },
+    {
+      "label": "100x100 m",
+      "on": "grid cell"
+    },
+    {
+      "label": "over 1 year",
+      "on": "probability of occurrence"
+    },
+    {
+      "label": "across the EU",
+      "on": "probability of occurrence"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:00,351 | INFO | EXACT CONFUSION | TP=1.000 FP=3.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:00,425 | INFO | CLOSE CONFUSION | TP=1.000 FP=3.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:00,741 | INFO | {"model": "qwen/qwen3-30b-a3b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:59:00,742 | INFO | MODEL   | qwen/qwen3-30b-a3b                  | shot=3 | Peak ground acceleration
+2025-07-02 16:59:00,742 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-02 16:59:00,742 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    },
+    {
+      "label": "seismic",
+      "on": "earth surface"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:00,742 | INFO | EXACT CONFUSION | TP=1.000 FP=1.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-02 16:59:00,815 | INFO | {"model": "deepseek/deepseek-r1-distill-qwen-14b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:59:00,815 | INFO | MODEL   | deepseek/deepseek-r1-distill-qwen-14b | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:59:00,815 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:59:00,815 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "100x100 m",
+      "on": "spatial unit"
+    },
+    {
+      "label": "contiguous",
+      "on": "spatial unit"
+    },
+    {
+      "label": "yearly",
+      "on": "temporal extent"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:00,815 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:00,815 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:00,864 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:02,836 | INFO | {"model": "google/gemini-2.5-pro", "variable": "Feral-free enclosure area", "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-02 16:59:02,837 | INFO | MODEL   | google/gemini-2.5-pro               | shot=3 | Feral-free enclosure area
+2025-07-02 16:59:02,837 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:59:02,837 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "enclosure"
+    },
+    {
+      "label": "total",
+      "on": "area"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:02,837 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:02,946 | INFO | CLOSE CONFUSION | TP=3.000 FP=0.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (1.0, 0.0, 0.0, 0.0)}
+2025-07-02 16:59:04,697 | INFO | {"model": "qwen/qwen3-32b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:59:04,698 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Feral-free enclosure area
+2025-07-02 16:59:04,698 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-02 16:59:04,698 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasStatisticalModifier": "total",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "hasObjectOfInterest: enclosure"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:04,699 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-02 16:59:04,768 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:10,559 | INFO | {"model": "qwen/qwen3-14b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:59:10,561 | INFO | MODEL   | qwen/qwen3-14b                      | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:59:10,561 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:59:10,561 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "grid cell 100x100 m",
+      "on": "probability"
+    },
+    {
+      "label": "annual",
+      "on": "probability"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:10,561 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:10,561 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:14,623 | INFO | {"model": "qwen/qwen3-30b-a3b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix"], "extra_keys": []}
+2025-07-02 16:59:14,623 | INFO | MODEL   | qwen/qwen3-30b-a3b                  | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:59:14,623 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:59:14,623 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "EUNIS habitat",
+  "hasConstraint": [
+    {
+      "label": "contiguous spatial units",
+      "on": "hasContextObject"
+    },
+    {
+      "label": "grid cells of 100x100 m",
+      "on": "hasContextObject"
+    },
+    {
+      "label": "across the EU",
+      "on": "hasContextObject"
+    },
+    {
+      "label": "over 1 year time",
+      "on": "hasContextObject"
+    }
+  ],
+  "hasContextObject": "contiguous spatial units",
+  "hasStatisticalModifier": "",
+  "hasMatrix": ""
+}
+2025-07-02 16:59:14,623 | INFO | EXACT CONFUSION | TP=1.000 FP=3.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:14,703 | INFO | CLOSE CONFUSION | TP=1.000 FP=3.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:20,739 | INFO | {"model": "qwen/qwen3-32b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-02 16:59:20,740 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Probablity of occurence of habitat
+2025-07-02 16:59:20,741 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-02 16:59:20,741 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasMatrix": "grid cell",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "100x100 m",
+      "on": "grid cell"
+    },
+    {
+      "label": "across EU",
+      "on": "grid cell"
+    },
+    {
+      "label": "over 1 year",
+      "on": "probability"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-02 16:59:20,741 | INFO | EXACT CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:20,741 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-02 16:59:20,856 | INFO | ✓ Results saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_metrics_20250702_165920.xlsx
+2025-07-02 16:59:20,868 | INFO | ✓ F-exact matrix saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_Fexact_matrix_20250702_165920.xlsx
+2025-07-02 16:59:20,869 | INFO | ✓ Pre-processing log saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_preprocess_20250702_165840.log

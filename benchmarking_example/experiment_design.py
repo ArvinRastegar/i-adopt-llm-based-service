@@ -63,8 +63,8 @@ MODEL_NAMES = [
     "google/gemini-2.0-flash-001",
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-32b",
-    "qwen/qwen-2.5-7b-instruct",
-    "qwen/qwen-2.5-coder-32b-instruct",
+    # "qwen/qwen-2.5-7b-instruct",
+    # "qwen/qwen-2.5-coder-32b-instruct",
     # "qwen/qwen3-0.6b-04-28",
     # "qwen/qwen3-1.7b",
     # "qwen/qwen3-4b",
@@ -72,7 +72,7 @@ MODEL_NAMES = [
     "qwen/qwen3-30b-a3b",
     "qwen/qwen3-32b",
     # "meta-llama/llama-guard-4-12b",
-    "perplexity/sonar-reasoning-pro",
+    # "perplexity/sonar-reasoning-pro",
     "google/gemini-2.5-pro",
     "meta-llama/llama-4-maverick-17b-128e-instruct",
     "anthropic/claude-4-sonnet-20250522",
@@ -213,7 +213,7 @@ def call_model(model: str, prompt: str) -> str:
     try:
         resp = client.chat.completions.create(
             model=model,
-            temperature=0.5,
+            temperature=0,
             extra_headers={"X-Title": "IADOPT-bench"},
             messages=[{"role": "user", "content": prompt}],
             timeout=30,  # network timeout
@@ -292,10 +292,11 @@ def call_llm_loose(model: str, prompt: str, exp_label: str, exp_comment: str) ->
     try:
         data = extract_json(raw or "")
     except json.JSONDecodeError:
+        # -------- keep the entire LLM response ------------------
         fixes["unparsable_json"] = True
-        fixes["raw_excerpt"] = (raw or "")[:400]  # help debugging
+        fixes["raw_llm_output"] = raw  # full text
         _preproc_logger.info("%s", json.dumps(fixes, ensure_ascii=False))
-        return {}  # nothing usable
+        return {}  # give up – blank pred
 
     # ---- preserve original label/comment for logging ------------------
     orig_label = data.get("label")
@@ -656,7 +657,7 @@ def main() -> None:
     )
     parser.add_argument("--max-vars", type=int, default=30, help="Debug: limit number of variables")
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
-    parser.add_argument("--workers", type=int, default=256, help="Parallel requests")
+    parser.add_argument("--workers", type=int, default=32, help="Parallel requests")
     args = parser.parse_args()
 
     # ---------------- run requested shot modes ---------------------------
