@@ -73,7 +73,7 @@ MODEL_NAMES = [
     "qwen/qwen3-32b",
     # "meta-llama/llama-guard-4-12b",
     # "perplexity/sonar-reasoning-pro",
-    "google/gemini-2.5-pro",
+    # "google/gemini-2.5-pro",
     "meta-llama/llama-4-maverick-17b-128e-instruct",
     "anthropic/claude-4-sonnet-20250522",
     # "intel/neural-chat-7b",
@@ -745,10 +745,31 @@ def main() -> None:
     # ---------- stitch the two parts together ---------------------------
     f_matrix = pd.concat([shot_mean, prompt_matrix])
 
-    out_matrix = OUTBOOK_DIR / f"iadopt_Fexact_matrix_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
-    f_matrix.to_excel(out_matrix, sheet_name="F_exact_matrix")
+    # ---------- build the flattened ranking -----------------------------
+    # • drop NaNs (pairs that were not evaluated)
+    # • keep Prompt & Model as separate columns (handy for filtering)
+    # • sort descending so the best combo is 1st
+    flat = (
+        f_matrix.stack(dropna=True)
+        .rename("F_exact")  # column name for the value
+        .reset_index()  # columns: Prompt, Model, F_exact
+        .sort_values("F_exact", ascending=False)
+    )
 
-    logging.info("✓ F-exact matrix saved → %s", out_matrix.resolve())
+    out_matrix = OUTBOOK_DIR / f"iadopt_Fexact_matrix_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
+    with pd.ExcelWriter(out_matrix, engine="openpyxl") as wr:
+        # original wide matrix (unchanged)
+        f_matrix.to_excel(wr, sheet_name="F_exact_matrix")
+
+        # new sheet – one row per combination, best first
+        #       A            B              C
+        # 1  Prompt     Model        F_exact
+        # 2  0-shot\|…  openai/…        0.94
+        # 3  1-shot\|…  google/…        0.91
+        flat.to_excel(wr, sheet_name="best_pairs", index=False)
+
+    logging.info("✓ F-exact matrix & ranking saved → %s", out_matrix.resolve())
+
     # ------------------------------------------------------------------ #
     # append a one-shot summary to the preprocess log  -------------
     # ------------------------------------------------------------------ #
