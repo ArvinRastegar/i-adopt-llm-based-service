@@ -56,11 +56,11 @@ MODEL_NAMES = [
     "openai/gpt-4.1",
     # "meta-llama/llama-3.3-8b-instruct",
     # "qwen/qwen3-8b",
-    "microsoft/phi-4",
+    # "microsoft/phi-4",
     # "microsoft/phi-4-reasoning",
     # "open-orca/mistral-7b-openorca",
     "deepseek/deepseek-r1-0528-qwen3-8b",
-    "google/gemini-2.0-flash-001",
+    # "google/gemini-2.0-flash-001",
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-32b",
     # "qwen/qwen-2.5-7b-instruct",
@@ -75,7 +75,7 @@ MODEL_NAMES = [
     # "perplexity/sonar-reasoning-pro",
     # "google/gemini-2.5-pro",
     "meta-llama/llama-4-maverick-17b-128e-instruct",
-    "anthropic/claude-4-sonnet-20250522",
+    # "anthropic/claude-4-sonnet-20250522",
     # "intel/neural-chat-7b",
 ]
 
