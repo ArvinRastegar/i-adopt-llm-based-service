@@ -746,27 +746,27 @@ def main() -> None:
     f_matrix = pd.concat([shot_mean, prompt_matrix])
 
     # ---------- build the flattened ranking -----------------------------
-    # • drop NaNs (pairs that were not evaluated)
-    # • keep Prompt & Model as separate columns (handy for filtering)
-    # • sort descending so the best combo is 1st
-    flat = (
-        f_matrix.stack(dropna=True)
-        .rename("F_exact")  # column name for the value
-        .reset_index()  # columns: Prompt, Model, F_exact
+    # ❶  aggregate on (Shot, Model)  → one score per prompt-type & model
+    best_pairs = (
+        df_exact.groupby(["Shot", "Model"], as_index=False)["F"]  # one row = one variable
+        .mean()  # mean F-exact across *all* variables
+        .rename(columns={"F": "F_exact"})
         .sort_values("F_exact", ascending=False)
     )
+    # prettify the shot column (e.g. 0 → "0-shot")
+    best_pairs["Prompt"] = best_pairs["Shot"].astype(int).astype(str) + "-shot"
+    best_pairs = best_pairs[["Prompt", "Model", "F_exact"]]
 
     out_matrix = OUTBOOK_DIR / f"iadopt_Fexact_matrix_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
     with pd.ExcelWriter(out_matrix, engine="openpyxl") as wr:
         # original wide matrix (unchanged)
         f_matrix.to_excel(wr, sheet_name="F_exact_matrix")
-
-        # new sheet – one row per combination, best first
-        #       A            B              C
-        # 1  Prompt     Model        F_exact
-        # 2  0-shot\|…  openai/…        0.94
-        # 3  1-shot\|…  google/…        0.91
-        flat.to_excel(wr, sheet_name="best_pairs", index=False)
+        # new sheet – one row per Shot × Model pair, best first
+        #       A        B              C
+        # 1  Prompt   Model        F_exact
+        # 2  0-shot   openai/…        0.94
+        # 3  1-shot   google/…        0.91
+        best_pairs.to_excel(wr, sheet_name="best_pairs", index=False)
 
     logging.info("✓ F-exact matrix & ranking saved → %s", out_matrix.resolve())
 
