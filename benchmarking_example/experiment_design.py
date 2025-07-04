@@ -213,7 +213,7 @@ def call_model(model: str, prompt: str) -> str:
     try:
         resp = client.chat.completions.create(
             model=model,
-            temperature=0,
+            temperature=0.5,
             extra_headers={"X-Title": "IADOPT-bench"},
             messages=[{"role": "user", "content": prompt}],
             timeout=30,  # network timeout
