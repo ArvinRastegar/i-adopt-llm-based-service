@@ -42,9 +42,11 @@ from collections import Counter
 SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
 SCHEMA_PATH = SCRIPT_DIR / "data" / "Json_schema.json"
 DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "test_set"
+# DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "random_splits" / "0" / "test_set"
 ONE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/one_shot"
 THREE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/three_shot"
 FIVE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/five_shot"
+# FIVE_SHOT_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "random_splits" / "4" / "five_shot"
 
 LOG_DIR = SCRIPT_DIR / "benchmarking_logs"
 LOG_DIR.mkdir(exist_ok=True)
@@ -215,7 +217,16 @@ def call_model(model: str, prompt: str) -> str:
             model=model,
             temperature=0.5,
             extra_headers={"X-Title": "IADOPT-bench"},
-            messages=[{"role": "user", "content": prompt}],
+            # extra_body={
+            #     "provider": {
+            #         "quantizations": [
+            #             "fp8", "int8"
+            #         ]
+            #     }
+            # },
+            messages=[
+                # {"role": "system","content": "/no_think"}, # disables reasoning in qwen3
+                {"role": "user", "content": prompt}],
             timeout=30,  # network timeout
         )
         return resp.choices[0].message.content
@@ -557,6 +568,10 @@ def _run_one(
             j_concept = jaccard(atoms(gt, "concept"), atoms(pred, "concept"))
             j_text = jaccard(atoms(gt, "text"), atoms(pred, "text"))
 
+            # example: {'hasStatisticalModifier_TP': 0, 'hasStatisticalModifier_FP': 0, ...}
+            per_key_unwrapped = {key+"_"+metric:per_key[key][i] for key in per_key 
+            for i,metric in enumerate(["TP", "FP", "FN", "TN"])} 
+            
             rows.append(
                 {
                     "Variable": gt["label"],
@@ -573,6 +588,7 @@ def _run_one(
                     "J_both": round(j_both, 3),
                     "J_concept": round(j_concept, 3),
                     "J_text": round(j_text, 3),
+                    **per_key_unwrapped
                 }
             )
 
@@ -689,6 +705,33 @@ def main() -> None:
 
     summary_rows = []
     for (model, shot), grp in df.groupby(["Model", "Shot"]):
+
+        # example: {'hasStatisticalModifier_F_exact': 0, 'hasStatisticalModifier_F_close': 0, ...}
+        per_key_metrics = {}
+        for key in ONTO_KEYS:
+            sub = grp.loc[grp["Metric"] == "exact", key+"_"+"TP"]
+            tp_tot_exact = sub.sum() if not sub.empty else float("nan")
+            sub = grp.loc[grp["Metric"] == "exact", key+"_"+"FP"]
+            fp_tot_exact = sub.sum() if not sub.empty else float("nan")
+            sub = grp.loc[grp["Metric"] == "exact", key+"_"+"FN"]
+            fn_tot_exact = sub.sum() if not sub.empty else float("nan")
+            prec_exact, rec_exact, f1_exact = prf(tp_tot_exact, fp_tot_exact, fn_tot_exact)
+
+            sub = grp.loc[grp["Metric"] == "close", key+"_"+"TP"]
+            tp_tot_close = sub.sum() if not sub.empty else float("nan")
+            sub = grp.loc[grp["Metric"] == "close", key+"_"+"FP"]
+            fp_tot_close = sub.sum() if not sub.empty else float("nan")
+            sub = grp.loc[grp["Metric"] == "close", key+"_"+"FN"]
+            fn_tot_close = sub.sum() if not sub.empty else float("nan")
+            prec_close, rec_close, f1_close = prf(tp_tot_close, fp_tot_close, fn_tot_close)
+
+            per_key_metrics[key+"_"+"F_exact"] = f1_exact
+            per_key_metrics[key+"_"+"F_close"] = f1_close
+            per_key_metrics[key+"_"+"P_exact"] = prec_exact
+            per_key_metrics[key+"_"+"P_close"] = prec_close
+            per_key_metrics[key+"_"+"R_exact"] = rec_exact
+            per_key_metrics[key+"_"+"R_close"] = rec_close
+
         summary_rows.append(
             {
                 "Model": model,
@@ -702,6 +745,7 @@ def main() -> None:
                 "J_both": pick(grp, "J_both", "exact"),  # the J's are identical on both rows
                 "J_concept": pick(grp, "J_concept", "exact"),
                 "J_text": pick(grp, "J_text", "exact"),
+                **per_key_metrics
             }
         )
 
