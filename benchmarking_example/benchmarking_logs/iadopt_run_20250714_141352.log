@@ -1,0 +1,1523 @@
+2025-07-14 14:13:52,227 | INFO | Logging to /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_run_20250714_141352.log
+2025-07-14 14:13:52,227 | INFO | Pre-processing log → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_preprocess_20250714_141352.log
+2025-07-14 14:13:52,278 | INFO | Use pytorch device_name: mps
+2025-07-14 14:13:52,278 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-07-14 14:13:54,320 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Peak ground acceleration
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Peak ground acceleration
+comment: Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-14 14:13:54,321 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Probablity of occurence of habitat
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Probablity of occurence of habitat
+comment: Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-14 14:13:54,322 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Feral-free enclosure area
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Feral-free enclosure area
+comment: The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-14 14:13:54,322 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Foraminifera, planktic, size
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Foraminifera, planktic, size
+comment: Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-14 14:13:54,323 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Standard metabolic rate in mg of Oxygen per hour
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem"
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Standard metabolic rate in mg of Oxygen per hour
+comment: The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-14 14:13:55,073 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,103 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,103 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,158 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,159 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,226 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,254 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,264 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,426 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,438 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,488 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,501 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,524 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:13:55,546 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:14:00,866 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-14 14:14:06,742 | INFO | {"model": "qwen/qwen3-32b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:06,742 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Feral-free enclosure area
+2025-07-14 14:14:06,743 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-14 14:14:06,743 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "feral-free enclosure",
+  "hasConstraint": [
+    {
+      "label": "total",
+      "on": "area"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:06,743 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=1.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:14:07,089 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:14:13,540 | INFO | {"model": "qwen/qwen3-32b", "variable": "Foraminifera, planktic, size", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-14 14:14:13,541 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Foraminifera, planktic, size
+2025-07-14 14:14:13,541 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Foraminifera, planktic, size",
+  "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "hasProperty": "size",
+  "hasMatrix": "sediment",
+  "hasObjectOfInterest": "foraminfers",
+  "hasConstraint": [
+    {
+      "label": "planctonic",
+      "on": "foraminfers"
+    },
+    {
+      "label": "surface",
+      "on": "sediment"
+    }
+  ]
+}
+2025-07-14 14:14:13,541 | INFO | PREDICTED    JSON:
+{
+  "label": "Foraminifera, planktic, size",
+  "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "hasProperty": "size",
+  "hasObjectOfInterest": "planktic foraminifers",
+  "hasMatrix": "surface sediment",
+  "hasStatisticalModifier": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-14 14:14:13,541 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:14:13,716 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:14:15,746 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-14 14:14:15,746 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Peak ground acceleration
+2025-07-14 14:14:15,746 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-14 14:14:15,746 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-14 14:14:15,746 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:14:15,815 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:14:18,250 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:18,250 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Peak ground acceleration
+2025-07-14 14:14:18,251 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-14 14:14:18,251 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:18,251 | INFO | EXACT CONFUSION | TP=1.000 FP=1.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-14 14:14:18,357 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-14 14:14:19,916 | INFO | {"model": "qwen/qwen3-32b", "variable": "Standard metabolic rate in mg of Oxygen per hour", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:19,917 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Standard metabolic rate in mg of Oxygen per hour
+2025-07-14 14:14:19,917 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Standard metabolic rate in mg of Oxygen per hour",
+  "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "oxygen",
+  "hasConstraint": [
+    {
+      "label": "ectotherm",
+      "on": "organism"
+    },
+    {
+      "label": "due to metabolism",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "non-stressed",
+      "on": "organism"
+    },
+    {
+      "label": "non-active",
+      "on": "organism"
+    }
+  ]
+}
+2025-07-14 14:14:19,918 | INFO | PREDICTED    JSON:
+{
+  "label": "Standard metabolic rate in mg of Oxygen per hour",
+  "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "ectotherm",
+  "hasObjectOfInterest": "Oxygen",
+  "hasConstraint": [
+    {
+      "label": "standard",
+      "on": "metabolic rate"
+    },
+    {
+      "label": "non-active",
+      "on": "ectotherm"
+    },
+    {
+      "label": "non-stressed",
+      "on": "ectotherm"
+    },
+    {
+      "label": "per hour",
+      "on": "mass flow rate"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:19,918 | INFO | EXACT CONFUSION | TP=2.000 FP=1.750 FN=0.250 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.75, 0.25, 0.0)}
+2025-07-14 14:14:20,262 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:14:25,062 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-14 14:14:25,063 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Probablity of occurence of habitat
+2025-07-14 14:14:25,064 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-14 14:14:25,064 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasObjectOfInterest": "habitat",
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-14 14:14:25,064 | INFO | EXACT CONFUSION | TP=2.000 FP=0.000 FN=0.000 TN=4.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 0.0, 1.0)}
+2025-07-14 14:14:25,064 | INFO | CLOSE CONFUSION | TP=2.000 FP=0.000 FN=0.000 TN=4.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 0.0, 1.0)}
+2025-07-14 14:14:29,472 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:29,472 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Feral-free enclosure area
+2025-07-14 14:14:29,473 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-14 14:14:29,473 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "enclosure"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:29,473 | INFO | EXACT CONFUSION | TP=2.000 FP=1.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:14:29,570 | INFO | CLOSE CONFUSION | TP=3.000 FP=0.000 FN=0.000 TN=3.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (1.0, 0.0, 0.0, 0.0)}
+2025-07-14 14:14:30,311 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Standard metabolic rate in mg of Oxygen per hour", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:30,312 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Standard metabolic rate in mg of Oxygen per hour
+2025-07-14 14:14:30,312 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Standard metabolic rate in mg of Oxygen per hour",
+  "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "oxygen",
+  "hasConstraint": [
+    {
+      "label": "ectotherm",
+      "on": "organism"
+    },
+    {
+      "label": "due to metabolism",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "non-stressed",
+      "on": "organism"
+    },
+    {
+      "label": "non-active",
+      "on": "organism"
+    }
+  ]
+}
+2025-07-14 14:14:30,312 | INFO | PREDICTED    JSON:
+{
+  "label": "Standard metabolic rate in mg of Oxygen per hour",
+  "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
+  "hasProperty": "oxygen consumption",
+  "hasObjectOfInterest": "oxygen",
+  "hasConstraint": [
+    {
+      "label": "non-active",
+      "on": "oxygen consumption"
+    },
+    {
+      "label": "non-stressed",
+      "on": "oxygen consumption"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:30,312 | INFO | EXACT CONFUSION | TP=1.000 FP=1.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 1, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-14 14:14:30,454 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 1, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-14 14:14:38,160 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Foraminifera, planktic, size", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:38,161 | INFO | MODEL   | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | Foraminifera, planktic, size
+2025-07-14 14:14:38,162 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Foraminifera, planktic, size",
+  "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "hasProperty": "size",
+  "hasMatrix": "sediment",
+  "hasObjectOfInterest": "foraminfers",
+  "hasConstraint": [
+    {
+      "label": "planctonic",
+      "on": "foraminfers"
+    },
+    {
+      "label": "surface",
+      "on": "sediment"
+    }
+  ]
+}
+2025-07-14 14:14:38,162 | INFO | PREDICTED    JSON:
+{
+  "label": "Foraminifera, planktic, size",
+  "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "hasProperty": "size",
+  "hasObjectOfInterest": "foraminifera",
+  "hasConstraint": [
+    {
+      "label": "planktic",
+      "on": "foraminifera"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:38,162 | INFO | EXACT CONFUSION | TP=1.000 FP=1.000 FN=2.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 1, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:14:38,371 | INFO | CLOSE CONFUSION | TP=1.000 FP=1.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 1, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-14 14:14:45,367 | INFO | {"model": "openai/o3-pro", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:45,368 | INFO | MODEL   | openai/o3-pro                       | shot=3 | Feral-free enclosure area
+2025-07-14 14:14:45,368 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-14 14:14:45,368 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasStatisticalModifier": "total",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "enclosure"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:45,368 | INFO | EXACT CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:14:45,464 | INFO | CLOSE CONFUSION | TP=3.000 FP=1.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (1.0, 0.0, 0.0, 0.0)}
+2025-07-14 14:14:45,902 | INFO | {"model": "qwen/qwen3-32b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:14:45,902 | INFO | MODEL   | qwen/qwen3-32b                      | shot=3 | Probablity of occurence of habitat
+2025-07-14 14:14:45,902 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-14 14:14:45,902 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability",
+  "hasMatrix": "grid cell",
+  "hasObjectOfInterest": "habitat",
+  "hasConstraint": [
+    {
+      "label": "occurrence",
+      "on": "hasObjectOfInterest: habitat"
+    },
+    {
+      "label": "spatial unit: 100x100 m grid cell",
+      "on": "hasMatrix: grid cell"
+    },
+    {
+      "label": "temporal extent: 1 year",
+      "on": "hasProperty: probability"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:14:45,903 | INFO | EXACT CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:14:45,903 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:15:01,098 | INFO | {"model": "openai/o3-pro", "variable": "Foraminifera, planktic, size", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:15:01,098 | INFO | MODEL   | openai/o3-pro                       | shot=3 | Foraminifera, planktic, size
+2025-07-14 14:15:01,098 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Foraminifera, planktic, size",
+  "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "hasProperty": "size",
+  "hasMatrix": "sediment",
+  "hasObjectOfInterest": "foraminfers",
+  "hasConstraint": [
+    {
+      "label": "planctonic",
+      "on": "foraminfers"
+    },
+    {
+      "label": "surface",
+      "on": "sediment"
+    }
+  ]
+}
+2025-07-14 14:15:01,098 | INFO | PREDICTED    JSON:
+{
+  "label": "Foraminifera, planktic, size",
+  "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "hasProperty": "size",
+  "hasMatrix": "surface sediments",
+  "hasObjectOfInterest": "foraminifers",
+  "hasConstraint": [
+    {
+      "label": "planktic",
+      "on": "foraminifers"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:15:01,098 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:15:01,305 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-14 14:15:26,961 | INFO | {"model": "openai/o3-pro", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasConstraint"], "extra_keys": []}
+2025-07-14 14:15:26,963 | INFO | MODEL   | openai/o3-pro                       | shot=3 | Peak ground acceleration
+2025-07-14 14:15:26,963 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-14 14:15:26,964 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "ground",
+  "hasContextObject": "seismic event",
+  "hasMatrix": "",
+  "hasConstraint": []
+}
+2025-07-14 14:15:26,964 | INFO | EXACT CONFUSION | TP=2.000 FP=2.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:15:27,273 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-14 14:15:34,597 | INFO | {"model": "openai/o3-pro", "variable": "Standard metabolic rate in mg of Oxygen per hour", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-14 14:15:34,598 | INFO | MODEL   | openai/o3-pro                       | shot=3 | Standard metabolic rate in mg of Oxygen per hour
+2025-07-14 14:15:34,598 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Standard metabolic rate in mg of Oxygen per hour",
+  "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "oxygen",
+  "hasConstraint": [
+    {
+      "label": "ectotherm",
+      "on": "organism"
+    },
+    {
+      "label": "due to metabolism",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "non-stressed",
+      "on": "organism"
+    },
+    {
+      "label": "non-active",
+      "on": "organism"
+    }
+  ]
+}
+2025-07-14 14:15:34,598 | INFO | PREDICTED    JSON:
+{
+  "label": "Standard metabolic rate in mg of Oxygen per hour",
+  "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "oxygen",
+  "hasConstraint": [
+    {
+      "label": "standard (baseline) conditions",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "non-active",
+      "on": "organism"
+    },
+    {
+      "label": "non-stressed",
+      "on": "organism"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-14 14:15:34,598 | INFO | EXACT CONFUSION | TP=3.250 FP=0.500 FN=0.250 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (1, 0, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.25, 0.5, 0.25, 0.0)}
+2025-07-14 14:15:34,898 | INFO | CLOSE CONFUSION | TP=3.250 FP=0.500 FN=0.250 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (1, 0, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.25, 0.5, 0.25, 0.0)}
+2025-07-14 14:15:57,371 | INFO | {"model": "openai/o3-pro", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix"], "extra_keys": []}
+2025-07-14 14:15:57,372 | INFO | MODEL   | openai/o3-pro                       | shot=3 | Probablity of occurence of habitat
+2025-07-14 14:15:57,372 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "probability ",
+  "hasObjectOfInterest": "habitat"
+}
+2025-07-14 14:15:57,372 | INFO | PREDICTED    JSON:
+{
+  "label": "Probablity of occurence of habitat",
+  "comment": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "hasProperty": "occurrence",
+  "hasStatisticalModifier": "probability",
+  "hasObjectOfInterest": "EUNIS habitat",
+  "hasContextObject": "100x100 m grid cell",
+  "hasConstraint": [
+    {
+      "label": "in 100x100 m grid cells",
+      "on": "hasContextObject: 100x100 m grid cell"
+    },
+    {
+      "label": "across EU",
+      "on": "hasContextObject: 100x100 m grid cell"
+    },
+    {
+      "label": "over 1 year period",
+      "on": "hasProperty: occurrence"
+    }
+  ],
+  "hasMatrix": ""
+}
+2025-07-14 14:15:57,372 | INFO | EXACT CONFUSION | TP=0.000 FP=5.000 FN=0.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:15:57,460 | INFO | CLOSE CONFUSION | TP=0.000 FP=5.000 FN=0.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-14 14:15:57,568 | INFO | ✓ Results saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_metrics_20250714_141557.xlsx
+2025-07-14 14:15:57,579 | INFO | ✓ F-exact matrix & ranking saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_Fexact_matrix_20250714_141557.xlsx
+2025-07-14 14:15:57,580 | INFO | ✓ Pre-processing log saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_preprocess_20250714_141352.log

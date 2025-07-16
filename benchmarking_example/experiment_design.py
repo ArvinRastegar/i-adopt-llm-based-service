@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-"""
-experiment_design.py
-===========================
-
-End-to-end benchmark of *LLM-powered* I-ADOPT decomposition.
-
-Run
-
-    python experiment_design.py --help
-
-for CLI options.
-"""
-
 # --------------------------------------------------------------------------- #
 # 0 ▪ Imports & constants
 # --------------------------------------------------------------------------- #
@@ -55,23 +42,26 @@ LOG_FILE = LOG_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
 MODEL_NAMES = [
     # "openai/gpt-4o",
     # "openai/gpt-4o-mini",
-    "openai/gpt-4.1",
+    # "openai/gpt-4.1",
     # "meta-llama/llama-3.3-8b-instruct",
     # "qwen/qwen3-8b",
     # "microsoft/phi-4",
     # "microsoft/phi-4-reasoning",
     # "open-orca/mistral-7b-openorca",
     "deepseek/deepseek-r1-0528-qwen3-8b",
+    "deepseek/deepseek-r1-0528",
+    "deepseek/deepseek-chat-v3-0324",
+    "qwen/qwen3-235b-a22b",
     # "google/gemini-2.0-flash-001",
-    "deepseek/deepseek-r1-distill-qwen-14b",
-    "deepseek/deepseek-r1-distill-qwen-32b",
-    # "qwen/qwen-2.5-7b-instruct",
+    # "deepseek/deepseek-r1-distill-qwen-14b",
+    # "deepseek/deepseek-r1-distill-qwen-32b",
+    # "qwen/qwen-2.5-32b-instruct",
     # "qwen/qwen-2.5-coder-32b-instruct",
     # "qwen/qwen3-0.6b-04-28",
     # "qwen/qwen3-1.7b",
     # "qwen/qwen3-4b",
-    "qwen/qwen3-14b",
-    "qwen/qwen3-30b-a3b",
+    # "qwen/qwen3-14b",
+    # "qwen/qwen3-30b-a3b",
     "qwen/qwen3-32b",
     # "meta-llama/llama-guard-4-12b",
     # "perplexity/sonar-reasoning-pro",
@@ -79,12 +69,12 @@ MODEL_NAMES = [
     "meta-llama/llama-4-maverick-17b-128e-instruct",
     # "anthropic/claude-4-sonnet-20250522",
     # "intel/neural-chat-7b",
+    # "openai/o3-pro",
 ]
 
 
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
 
-EXACT_THR = 0.90  # Levenshtein threshold for “exact”
 CLOSE_THR = 0.90  # cosine threshold for “close”
 MAX_RETRY = 1  # schema-retry attempts
 
@@ -216,7 +206,7 @@ def call_model(model: str, prompt: str) -> str:
         resp = client.chat.completions.create(
             model=model,
             temperature=0.5,
-            extra_headers={"X-Title": "IADOPT-bench"},
+            # extra_headers={"X-Title": "IADOPT-bench"},
             # extra_body={
             #     "provider": {
             #         "quantizations": [
@@ -225,8 +215,9 @@ def call_model(model: str, prompt: str) -> str:
             #     }
             # },
             messages=[
-                # {"role": "system","content": "/no_think"}, # disables reasoning in qwen3
-                {"role": "user", "content": prompt}],
+                # {"role": "system", "content": "/no_think"},  # disables reasoning in qwen3
+                {"role": "user", "content": prompt},
+            ],
             timeout=30,  # network timeout
         )
         return resp.choices[0].message.content
@@ -569,9 +560,12 @@ def _run_one(
             j_text = jaccard(atoms(gt, "text"), atoms(pred, "text"))
 
             # example: {'hasStatisticalModifier_TP': 0, 'hasStatisticalModifier_FP': 0, ...}
-            per_key_unwrapped = {key+"_"+metric:per_key[key][i] for key in per_key 
-            for i,metric in enumerate(["TP", "FP", "FN", "TN"])} 
-            
+            per_key_unwrapped = {
+                key + "_" + metric: per_key[key][i]
+                for key in per_key
+                for i, metric in enumerate(["TP", "FP", "FN", "TN"])
+            }
+
             rows.append(
                 {
                     "Variable": gt["label"],
@@ -588,7 +582,7 @@ def _run_one(
                     "J_both": round(j_both, 3),
                     "J_concept": round(j_concept, 3),
                     "J_text": round(j_text, 3),
-                    **per_key_unwrapped
+                    **per_key_unwrapped,
                 }
             )
 
@@ -709,28 +703,28 @@ def main() -> None:
         # example: {'hasStatisticalModifier_F_exact': 0, 'hasStatisticalModifier_F_close': 0, ...}
         per_key_metrics = {}
         for key in ONTO_KEYS:
-            sub = grp.loc[grp["Metric"] == "exact", key+"_"+"TP"]
+            sub = grp.loc[grp["Metric"] == "exact", key + "_" + "TP"]
             tp_tot_exact = sub.sum() if not sub.empty else float("nan")
-            sub = grp.loc[grp["Metric"] == "exact", key+"_"+"FP"]
+            sub = grp.loc[grp["Metric"] == "exact", key + "_" + "FP"]
             fp_tot_exact = sub.sum() if not sub.empty else float("nan")
-            sub = grp.loc[grp["Metric"] == "exact", key+"_"+"FN"]
+            sub = grp.loc[grp["Metric"] == "exact", key + "_" + "FN"]
             fn_tot_exact = sub.sum() if not sub.empty else float("nan")
             prec_exact, rec_exact, f1_exact = prf(tp_tot_exact, fp_tot_exact, fn_tot_exact)
 
-            sub = grp.loc[grp["Metric"] == "close", key+"_"+"TP"]
+            sub = grp.loc[grp["Metric"] == "close", key + "_" + "TP"]
             tp_tot_close = sub.sum() if not sub.empty else float("nan")
-            sub = grp.loc[grp["Metric"] == "close", key+"_"+"FP"]
+            sub = grp.loc[grp["Metric"] == "close", key + "_" + "FP"]
             fp_tot_close = sub.sum() if not sub.empty else float("nan")
-            sub = grp.loc[grp["Metric"] == "close", key+"_"+"FN"]
+            sub = grp.loc[grp["Metric"] == "close", key + "_" + "FN"]
             fn_tot_close = sub.sum() if not sub.empty else float("nan")
             prec_close, rec_close, f1_close = prf(tp_tot_close, fp_tot_close, fn_tot_close)
 
-            per_key_metrics[key+"_"+"F_exact"] = f1_exact
-            per_key_metrics[key+"_"+"F_close"] = f1_close
-            per_key_metrics[key+"_"+"P_exact"] = prec_exact
-            per_key_metrics[key+"_"+"P_close"] = prec_close
-            per_key_metrics[key+"_"+"R_exact"] = rec_exact
-            per_key_metrics[key+"_"+"R_close"] = rec_close
+            per_key_metrics[key + "_" + "F_exact"] = f1_exact
+            per_key_metrics[key + "_" + "F_close"] = f1_close
+            per_key_metrics[key + "_" + "P_exact"] = prec_exact
+            per_key_metrics[key + "_" + "P_close"] = prec_close
+            per_key_metrics[key + "_" + "R_exact"] = rec_exact
+            per_key_metrics[key + "_" + "R_close"] = rec_close
 
         summary_rows.append(
             {
@@ -745,7 +739,7 @@ def main() -> None:
                 "J_both": pick(grp, "J_both", "exact"),  # the J's are identical on both rows
                 "J_concept": pick(grp, "J_concept", "exact"),
                 "J_text": pick(grp, "J_text", "exact"),
-                **per_key_metrics
+                **per_key_metrics,
             }
         )
 

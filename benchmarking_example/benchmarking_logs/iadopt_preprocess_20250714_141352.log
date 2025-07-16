@@ -1,0 +1,26 @@
+{"model": "qwen/qwen3-32b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+{"model": "qwen/qwen3-32b", "variable": "Foraminifera, planktic, size", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject", "hasConstraint"], "extra_keys": []}
+{"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+{"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+{"model": "qwen/qwen3-32b", "variable": "Standard metabolic rate in mg of Oxygen per hour", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+{"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+{"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+{"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Standard metabolic rate in mg of Oxygen per hour", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+{"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Foraminifera, planktic, size", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+{"model": "openai/o3-pro", "variable": "Feral-free enclosure area", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+{"model": "qwen/qwen3-32b", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+{"model": "openai/o3-pro", "variable": "Foraminifera, planktic, size", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+{"model": "openai/o3-pro", "variable": "Peak ground acceleration", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasConstraint"], "extra_keys": []}
+{"model": "openai/o3-pro", "variable": "Standard metabolic rate in mg of Oxygen per hour", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+{"model": "openai/o3-pro", "variable": "Probablity of occurence of habitat", "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix"], "extra_keys": []}
+
+===== SUMMARY =====
+rows: 15
+non_json_prefix: 0
+non_json_suffix: 0
+unparsable_json: 0
+label_overwritten: 0
+comment_overwritten: 0
+coerced_property_dict: 0
+missing_keys: 38
+extra_keys: 0
