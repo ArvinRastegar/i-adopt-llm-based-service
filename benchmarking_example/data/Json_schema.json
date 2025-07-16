@@ -25,13 +25,16 @@
       "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
     },
     "hasMatrix": {
-      "$ref": "#/$defs/entityOrSystem"
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
     },
     "hasObjectOfInterest": {
-      "$ref": "#/$defs/entityOrSystem"
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
     },
     "hasContextObject": {
-      "$ref": "#/$defs/entityOrSystem"
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
     },
     "hasConstraint": {
       "type": "array",
@@ -42,11 +45,11 @@
         "properties": {
           "label": {
             "type": "string",
-            "description": "Constraint label (e.g. 'nearest neighbour', 'daily')."
+            "description": "Constraint label."
           },
           "on": {
             "type": "string",
-            "description": "What the constraint applies to (e.g. 'hasTarget: habitat patch')."
+            "description": "What the constraint applies to."
           }
         },
         "additionalProperties": false
