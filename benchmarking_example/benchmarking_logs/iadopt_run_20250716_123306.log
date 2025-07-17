@@ -1,0 +1,2612 @@
+2025-07-16 12:33:06,552 | INFO | Logging to /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_run_20250716_123306.log
+2025-07-16 12:33:06,552 | INFO | Pre-processing log → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_preprocess_20250716_123306.log
+2025-07-16 12:33:06,596 | INFO | Use pytorch device_name: mps
+2025-07-16 12:33:06,596 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-07-16 12:33:08,891 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=0 | Peak ground acceleration
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Variable to decompose
+label: Peak ground acceleration
+comment: Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-16 12:33:09,553 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:09,685 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:09,686 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:09,716 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:09,804 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:09,805 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:09,951 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:09,952 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:10,272 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:10,579 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:10,680 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:33:10,842 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```", "suffix_text": "```"}
+2025-07-16 12:33:11,109 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:33:11,331 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:11,584 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:11,692 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:33:12,016 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:12,073 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```", "suffix_text": "```"}
+2025-07-16 12:33:12,073 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=0 | T=0.00 | Peak ground acceleration
+2025-07-16 12:33:12,073 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:33:12,073 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasMatrix": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "seismic event",
+      "on": "observation"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:33:12,073 | INFO | EXACT CONFUSION | TP=3.000 FP=1.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:33:12,195 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": [], "prefix_text": "```", "suffix_text": "```"}
+2025-07-16 12:33:12,195 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=0 | T=0.50 | Peak ground acceleration
+2025-07-16 12:33:12,195 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:33:12,195 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:33:12,195 | INFO | EXACT CONFUSION | TP=2.000 FP=0.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:33:12,253 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:12,377 | INFO | CLOSE CONFUSION | TP=3.000 FP=1.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:33:12,377 | INFO | CLOSE CONFUSION | TP=2.000 FP=0.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:33:13,556 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:33:13,810 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:14,128 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:33:14,129 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=0 | T=0.50 | Peak ground acceleration
+2025-07-16 12:33:14,129 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:33:14,129 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "seismic events",
+      "on": "hasObjectOfInterest"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:33:14,129 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:33:14,390 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:33:18,747 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:33:19,158 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:19,167 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:19,334 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:20,423 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:33:20,423 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=0 | T=0.00 | Peak ground acceleration
+2025-07-16 12:33:20,423 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:33:20,423 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasContextObject": "seismic events",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "measurement"
+    }
+  ]
+}
+2025-07-16 12:33:20,423 | INFO | EXACT CONFUSION | TP=2.000 FP=3.500 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:33:20,583 | INFO | CLOSE CONFUSION | TP=2.000 FP=3.500 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:33:23,530 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasConstraint"], "extra_keys": []}
+2025-07-16 12:33:23,531 | INFO | MODEL | qwen/qwen3-32b                      | shot=0 | T=0.00 | Peak ground acceleration
+2025-07-16 12:33:23,531 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:33:23,531 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "Earth's surface",
+  "hasObjectOfInterest": "Earth's surface",
+  "hasContextObject": "Seismic event",
+  "hasConstraint": []
+}
+2025-07-16 12:33:23,531 | INFO | EXACT CONFUSION | TP=1.000 FP=4.000 FN=1.000 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:33:23,629 | INFO | CLOSE CONFUSION | TP=1.000 FP=4.000 FN=1.000 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:33:28,104 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasConstraint"], "extra_keys": []}
+2025-07-16 12:33:28,106 | INFO | MODEL | qwen/qwen3-32b                      | shot=0 | T=0.50 | Peak ground acceleration
+2025-07-16 12:33:28,106 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:33:28,106 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "Earth's surface",
+  "hasObjectOfInterest": "Earth's surface",
+  "hasContextObject": "Seismic event",
+  "hasConstraint": []
+}
+2025-07-16 12:33:28,106 | INFO | EXACT CONFUSION | TP=1.000 FP=4.000 FN=1.000 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:33:28,190 | INFO | CLOSE CONFUSION | TP=1.000 FP=4.000 FN=1.000 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:33:48,256 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:33:49,258 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:33:58,314 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:33:59,326 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:34:06,238 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:34:06,825 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasConstraint"], "extra_keys": []}
+2025-07-16 12:34:08,002 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:34:16,295 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:34:21,587 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:34:22,221 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:34:31,122 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:34:31,122 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=0 | T=0.00 | Peak ground acceleration
+2025-07-16 12:34:31,122 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:34:31,123 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "Earth surface",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "Earth",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:34:31,123 | INFO | EXACT CONFUSION | TP=1.000 FP=3.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:34:31,391 | INFO | CLOSE CONFUSION | TP=1.000 FP=3.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:34:40,174 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:34:40,176 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=0 | T=0.50 | Peak ground acceleration
+2025-07-16 12:34:40,176 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:34:40,176 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "peak value",
+      "on": "hasProperty"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:34:40,176 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:34:40,321 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:35:06,716 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:35:06,718 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=0 | T=0.50 | Peak ground acceleration
+2025-07-16 12:35:06,718 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:35:06,718 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "earth surface",
+  "hasContextObject": "seismic events",
+  "hasMatrix": "",
+  "hasConstraint": []
+}
+2025-07-16 12:35:06,718 | INFO | EXACT CONFUSION | TP=1.000 FP=3.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:35:06,814 | INFO | CLOSE CONFUSION | TP=1.000 FP=3.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:35:38,878 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:35:39,495 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:35:43,624 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:35:43,625 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=0 | T=0.00 | Peak ground acceleration
+2025-07-16 12:35:43,625 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:35:43,625 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "earth surface",
+  "hasContextObject": "earthquake",
+  "hasConstraint": [
+    {
+      "label": "during seismic event",
+      "on": "earthquake"
+    }
+  ]
+}
+2025-07-16 12:35:43,626 | INFO | EXACT CONFUSION | TP=1.000 FP=4.000 FN=1.000 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:35:43,980 | INFO | CLOSE CONFUSION | TP=1.000 FP=4.500 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:36:57,216 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:36:57,216 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=0 | T=0.50 | Peak ground acceleration
+2025-07-16 12:36:57,217 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:36:57,217 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasMatrix": "Earth's surface",
+  "hasObjectOfInterest": "Earth's surface",
+  "hasContextObject": "earthquake",
+  "hasConstraint": [
+    {
+      "label": "seismic events",
+      "on": "earthquake"
+    }
+  ]
+}
+2025-07-16 12:36:57,217 | INFO | EXACT CONFUSION | TP=2.000 FP=3.000 FN=1.000 TN=0.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:36:57,558 | INFO | CLOSE CONFUSION | TP=2.000 FP=3.500 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:26,134 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:37:26,134 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=0 | T=0.00 | Peak ground acceleration
+2025-07-16 12:37:26,135 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:37:26,135 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasContextObject": "seismic events",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "ObjectOfInterest"
+    }
+  ]
+}
+2025-07-16 12:37:26,135 | INFO | EXACT CONFUSION | TP=2.000 FP=3.500 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:26,365 | INFO | CLOSE CONFUSION | TP=2.000 FP=3.500 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:26,369 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=1 | Peak ground acceleration
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Peak ground acceleration
+comment: Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-16 12:37:26,969 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,001 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,003 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,127 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,380 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,460 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,465 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,476 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,607 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": [], "prefix_text": "```", "suffix_text": "```"}
+2025-07-16 12:37:27,885 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,945 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,962 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:27,975 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:28,425 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:28,542 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:28,543 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=1 | T=0.50 | Peak ground acceleration
+2025-07-16 12:37:28,543 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:37:28,543 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "maximum",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:37:28,543 | INFO | EXACT CONFUSION | TP=2.000 FP=1.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:28,624 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:28,726 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": true, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": [], "raw_llm_output": ""}
+2025-07-16 12:37:28,739 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": true, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": [], "raw_llm_output": ""}
+2025-07-16 12:37:28,848 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:29,298 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:30,075 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:30,075 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=1 | T=0.00 | Peak ground acceleration
+2025-07-16 12:37:30,075 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:37:30,076 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "earth surface",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "when facing seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:37:30,076 | INFO | EXACT CONFUSION | TP=3.000 FP=1.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:30,159 | INFO | CLOSE CONFUSION | TP=3.000 FP=1.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:30,814 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:31,511 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:32,658 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:33,388 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:37:33,388 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=1 | T=0.00 | Peak ground acceleration
+2025-07-16 12:37:33,388 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:37:33,388 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:37:33,388 | INFO | EXACT CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:33,456 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:33,780 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:35,403 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:37:35,404 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=1 | T=0.50 | Peak ground acceleration
+2025-07-16 12:37:35,404 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:37:35,404 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "facing seismic events, like earthquakes",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:37:35,404 | INFO | EXACT CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:35,524 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:37:38,781 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:38,793 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:48,406 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:48,997 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:55,977 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:37:56,150 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:56,625 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:57,480 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:37:58,926 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:37:59,477 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:38:05,913 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:38:06,595 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:38:11,766 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:38:11,766 | INFO | MODEL | qwen/qwen3-32b                      | shot=1 | T=0.00 | Peak ground acceleration
+2025-07-16 12:38:11,766 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:38:11,766 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:38:11,766 | INFO | EXACT CONFUSION | TP=2.000 FP=1.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:38:12,111 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:38:15,401 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:38:15,623 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 2, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:38:16,056 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:38:22,111 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 2, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:38:25,679 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:38:32,173 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:38:33,896 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:38:33,897 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=1 | T=0.00 | Peak ground acceleration
+2025-07-16 12:38:33,897 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:38:33,898 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "earth surface",
+  "hasContextObject": "earthquake",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:38:33,898 | INFO | EXACT CONFUSION | TP=1.500 FP=4.000 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:38:34,186 | INFO | CLOSE CONFUSION | TP=1.000 FP=4.500 FN=0.500 TN=0.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 1, 0, 0), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:38:41,629 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:38:41,630 | INFO | MODEL | qwen/qwen3-32b                      | shot=1 | T=0.50 | Peak ground acceleration
+2025-07-16 12:38:41,630 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:38:41,630 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "Earth's surface",
+  "hasObjectOfInterest": "ground",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-16 12:38:41,630 | INFO | EXACT CONFUSION | TP=2.000 FP=2.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:38:41,714 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:38:41,950 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:38:41,950 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=1 | T=0.50 | Peak ground acceleration
+2025-07-16 12:38:41,950 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:38:41,950 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:38:41,950 | INFO | EXACT CONFUSION | TP=2.000 FP=1.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:38:42,009 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:38:55,872 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:38:55,872 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=1 | T=0.00 | Peak ground acceleration
+2025-07-16 12:38:55,873 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:38:55,873 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "due to seismic events",
+      "on": "peak acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:38:55,873 | INFO | EXACT CONFUSION | TP=2.000 FP=2.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:38:55,971 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:39:01,284 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:39:01,284 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=1 | T=0.50 | Peak ground acceleration
+2025-07-16 12:39:01,285 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:39:01,285 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasStatisticalModifier": "peak",
+  "hasConstraint": [
+    {
+      "label": "due to seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:39:01,285 | INFO | EXACT CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:39:01,404 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:39:03,891 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:39:03,892 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=1 | T=0.50 | Peak ground acceleration
+2025-07-16 12:39:03,892 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:39:03,892 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:39:03,893 | INFO | EXACT CONFUSION | TP=2.500 FP=2.000 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:39:03,981 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:40:56,806 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:40:56,808 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=1 | T=0.00 | Peak ground acceleration
+2025-07-16 12:40:56,808 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:40:56,808 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "during seismic event",
+      "on": "acceleration"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:40:56,808 | INFO | EXACT CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:40:57,090 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:40:57,095 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Peak ground acceleration
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Peak ground acceleration
+comment: Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-16 12:40:57,689 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,703 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,779 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,787 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,804 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,805 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,965 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,986 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:57,992 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:58,133 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:58,166 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:58,250 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:40:58,403 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:40:58,410 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:58,751 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:58,939 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:40:58,939 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=3 | T=0.50 | Peak ground acceleration
+2025-07-16 12:40:58,939 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:40:58,939 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:40:58,940 | INFO | EXACT CONFUSION | TP=2.000 FP=0.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:40:59,016 | INFO | CLOSE CONFUSION | TP=2.000 FP=0.500 FN=1.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:40:59,039 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:40:59,147 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:40:59,625 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:41:00,185 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:41:00,185 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=3 | T=0.00 | Peak ground acceleration
+2025-07-16 12:41:00,185 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:41:00,185 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    },
+    {
+      "label": "due to seismic event",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:41:00,185 | INFO | EXACT CONFUSION | TP=2.000 FP=1.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:41:00,298 | INFO | CLOSE CONFUSION | TP=2.500 FP=1.500 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.5, 0.0, 0.0)}
+2025-07-16 12:41:03,553 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:41:03,554 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=3 | T=0.00 | Peak ground acceleration
+2025-07-16 12:41:03,554 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:41:03,554 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:41:03,554 | INFO | EXACT CONFUSION | TP=2.500 FP=2.000 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:41:03,632 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:41:04,544 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:41:05,871 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:41:07,963 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:41:16,997 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:41:16,998 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=3 | T=0.50 | Peak ground acceleration
+2025-07-16 12:41:16,998 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:41:16,998 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "when facing seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:41:16,998 | INFO | EXACT CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:41:17,198 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:41:18,037 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:41:29,812 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:41:31,494 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:41:41,403 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:41:41,857 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:41:45,881 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:41:45,881 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.50 | Peak ground acceleration
+2025-07-16 12:41:45,882 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:41:45,882 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasMatrix": "Earth's surface",
+  "hasObjectOfInterest": "ground",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-16 12:41:45,882 | INFO | EXACT CONFUSION | TP=3.000 FP=1.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:41:45,882 | INFO | CLOSE CONFUSION | TP=3.000 FP=1.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:41:49,007 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasConstraint"], "extra_keys": []}
+2025-07-16 12:41:49,818 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:41:55,546 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:42:05,612 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:42:08,131 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": [], "extra_keys": []}
+2025-07-16 12:42:08,926 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:42:14,279 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:42:14,280 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.00 | Peak ground acceleration
+2025-07-16 12:42:14,280 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:42:14,280 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-16 12:42:14,281 | INFO | EXACT CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:42:14,387 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.000 FN=1.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:42:23,578 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:42:24,268 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:42:27,624 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:42:28,551 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:42:43,961 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:42:43,963 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | T=0.50 | Peak ground acceleration
+2025-07-16 12:42:43,964 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:42:43,964 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:42:43,964 | INFO | EXACT CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:42:44,244 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:43:07,714 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:43:07,715 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=3 | T=0.50 | Peak ground acceleration
+2025-07-16 12:43:07,715 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:43:07,716 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:43:07,716 | INFO | EXACT CONFUSION | TP=2.500 FP=2.000 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:43:07,967 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:43:09,032 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:43:09,032 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=3 | T=0.00 | Peak ground acceleration
+2025-07-16 12:43:09,033 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:43:09,033 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "earth's surface",
+  "hasConstraint": [
+    {
+      "label": "due to seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:43:09,033 | INFO | EXACT CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:43:09,124 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:43:22,307 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:43:22,308 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=3 | T=0.00 | Peak ground acceleration
+2025-07-16 12:43:22,308 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:43:22,309 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:43:22,309 | INFO | EXACT CONFUSION | TP=1.500 FP=3.000 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:43:22,670 | INFO | CLOSE CONFUSION | TP=1.000 FP=3.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:43:38,809 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:43:38,810 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=3 | T=0.50 | Peak ground acceleration
+2025-07-16 12:43:38,811 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:43:38,811 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "due to seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:43:38,811 | INFO | EXACT CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:43:39,032 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:39,414 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:44:39,415 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=3 | T=0.00 | Peak ground acceleration
+2025-07-16 12:44:39,416 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:44:39,416 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "peak",
+  "hasConstraint": [
+    {
+      "label": "on earth surface",
+      "on": "ground"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:44:39,416 | INFO | EXACT CONFUSION | TP=2.000 FP=1.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:39,660 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:39,664 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=5 | Peak ground acceleration
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+### Examples (valid against the same schema)
+{
+  "label": "Electron density in the solar wind",
+  "comment": "Density (particle per cm3) of electrons measured in the Solar Wind.",
+  "hasProperty": "volumetric number density",
+  "hasMatrix": "solar wind",
+  "hasObjectOfInterest": "electron"
+}
+
+{
+  "label": "Strike of bedding",
+  "comment": "Geographic azimuth (relative to true north) at a point observation location, of a horizontal line contained in a sedimentary rock bedding surface. The bedding surface must not be horizontal; the azimuth is reported such that the dip direction of the inclined bedding is to the right when facing in the azimuth direction.",
+  "hasProperty": "azimuth",
+  "hasMatrix": "sedimentary bedrock",
+  "hasObjectOfInterest": {
+    "SymmetricSystem": "line of intersection",
+    "hasPart": [
+      "bedding plane",
+      "horizontal plane"
+    ]
+  }
+}
+
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Peak ground acceleration
+comment: Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-16 12:44:40,061 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,211 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:44:40,395 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,420 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,424 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,449 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,534 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,556 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:44:40,556 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=5 | T=0.50 | Peak ground acceleration
+2025-07-16 12:44:40,556 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:44:40,556 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasMatrix": "ground",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:44:40,557 | INFO | EXACT CONFUSION | TP=2.000 FP=1.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:40,589 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:40,594 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,718 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,724 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,786 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,883 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:40,938 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:41,623 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:41,782 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:44:42,565 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:42,852 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:44:43,271 | INFO | {"model": "meta-llama/llama-4-maverick-17b-128e-instruct", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:44:43,271 | INFO | MODEL | meta-llama/llama-4-maverick-17b-128e-instruct | shot=5 | T=0.00 | Peak ground acceleration
+2025-07-16 12:44:43,272 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:44:43,272 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:44:43,272 | INFO | EXACT CONFUSION | TP=3.000 FP=1.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:43,344 | INFO | CLOSE CONFUSION | TP=3.000 FP=1.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:43,476 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:44:43,871 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:44,139 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:44:45,321 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:44:45,321 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=5 | T=0.50 | Peak ground acceleration
+2025-07-16 12:44:45,321 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:44:45,321 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "peak",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:44:45,321 | INFO | EXACT CONFUSION | TP=2.500 FP=2.000 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:44:45,415 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:45,467 | INFO | {"model": "deepseek/deepseek-chat-v3-0324", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": true, "non_json_suffix": true, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": [], "prefix_text": "```json", "suffix_text": "```"}
+2025-07-16 12:44:45,467 | INFO | MODEL | deepseek/deepseek-chat-v3-0324      | shot=5 | T=0.00 | Peak ground acceleration
+2025-07-16 12:44:45,467 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:44:45,467 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "peak",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:44:45,467 | INFO | EXACT CONFUSION | TP=2.500 FP=2.000 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:44:45,519 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:44:51,560 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:45:01,620 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:45:04,621 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:45:06,253 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:45:06,869 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasConstraint"], "extra_keys": []}
+2025-07-16 12:45:07,557 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:45:08,000 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:45:12,219 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:45:18,172 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:45:28,244 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:45:38,338 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:45:38,339 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=5 | T=0.50 | Peak ground acceleration
+2025-07-16 12:45:38,339 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:45:38,339 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasMatrix": "earth surface",
+  "hasStatisticalModifier": "peak",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-16 12:45:38,339 | INFO | EXACT CONFUSION | TP=2.000 FP=2.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:45:38,574 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:45:46,527 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-16 12:45:46,527 | INFO | MODEL | qwen/qwen3-32b                      | shot=5 | T=0.50 | Peak ground acceleration
+2025-07-16 12:45:46,527 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:45:46,528 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasContextObject": "",
+  "hasConstraint": []
+}
+2025-07-16 12:45:46,528 | INFO | EXACT CONFUSION | TP=3.000 FP=1.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:45:46,528 | INFO | CLOSE CONFUSION | TP=3.000 FP=1.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:45:49,588 | INFO | {"model": "qwen/qwen3-32b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:45:49,588 | INFO | MODEL | qwen/qwen3-32b                      | shot=5 | T=0.00 | Peak ground acceleration
+2025-07-16 12:45:49,588 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:45:49,588 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "due to seismic event",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:45:49,588 | INFO | EXACT CONFUSION | TP=3.000 FP=1.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:45:49,695 | INFO | CLOSE CONFUSION | TP=3.000 FP=1.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:45:59,437 | INFO | {"model": "deepseek/deepseek-r1-0528-qwen3-8b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:45:59,438 | INFO | MODEL | deepseek/deepseek-r1-0528-qwen3-8b  | shot=5 | T=0.00 | Peak ground acceleration
+2025-07-16 12:45:59,439 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:45:59,439 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "earth surface",
+  "hasMatrix": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "peak",
+      "on": "acceleration"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:45:59,439 | INFO | EXACT CONFUSION | TP=1.000 FP=2.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:45:59,554 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.500 FN=1.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 0, 1, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:46:01,784 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:46:02,528 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:46:08,635 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:46:09,210 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:46:13,207 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:46:13,208 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=5 | T=0.50 | Peak ground acceleration
+2025-07-16 12:46:13,208 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:46:13,208 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "during seismic event",
+      "on": "earth surface"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:46:13,209 | INFO | EXACT CONFUSION | TP=1.000 FP=3.000 FN=1.000 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.0, 1.0, 0.0)}
+2025-07-16 12:46:13,326 | INFO | CLOSE CONFUSION | TP=1.000 FP=3.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:46:51,019 | INFO | {"model": "deepseek/deepseek-r1-0528", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-16 12:46:51,021 | INFO | MODEL | deepseek/deepseek-r1-0528           | shot=5 | T=0.00 | Peak ground acceleration
+2025-07-16 12:46:51,021 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:46:51,021 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasMatrix": "earth surface",
+  "hasObjectOfInterest": "ground",
+  "hasConstraint": [
+    {
+      "label": "during seismic event",
+      "on": "acceleration"
+    }
+  ],
+  "hasContextObject": ""
+}
+2025-07-16 12:46:51,022 | INFO | EXACT CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:46:51,350 | INFO | CLOSE CONFUSION | TP=2.000 FP=2.500 FN=0.500 TN=1.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:47:21,771 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasConstraint"], "extra_keys": []}
+2025-07-16 12:47:22,499 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-16 12:48:17,869 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:48:17,870 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=5 | T=0.50 | Peak ground acceleration
+2025-07-16 12:48:17,871 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:48:17,871 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:48:17,871 | INFO | EXACT CONFUSION | TP=2.500 FP=1.000 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:48:18,202 | INFO | CLOSE CONFUSION | TP=2.000 FP=1.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (1, 0, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:48:55,129 | INFO | {"model": "qwen/qwen3-235b-a22b", "variable": "Peak ground acceleration", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-16 12:48:55,130 | INFO | MODEL | qwen/qwen3-235b-a22b                | shot=5 | T=0.00 | Peak ground acceleration
+2025-07-16 12:48:55,130 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasObjectOfInterest": "ground",
+  "hasStatisticalModifier": "maximum",
+  "hasConstraint": [
+    {
+      "label": "surface",
+      "on": "ground"
+    },
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ]
+}
+2025-07-16 12:48:55,130 | INFO | PREDICTED    JSON:
+{
+  "label": "Peak ground acceleration",
+  "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasStatisticalModifier": "peak",
+  "hasObjectOfInterest": "earth surface",
+  "hasConstraint": [
+    {
+      "label": "during seismic events",
+      "on": "acceleration"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-16 12:48:55,130 | INFO | EXACT CONFUSION | TP=1.500 FP=2.000 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.5, 0.0, 0.5, 0.0)}
+2025-07-16 12:48:55,238 | INFO | CLOSE CONFUSION | TP=1.000 FP=2.500 FN=0.500 TN=2.000 | per-key={'hasStatisticalModifier': (0, 1, 0, 0), 'hasProperty': (1, 0, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 0, 0, 1), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 0.5, 0.5, 0.0)}
+2025-07-16 12:48:55,490 | INFO | ✓ Results saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_metrics_20250716_124855.xlsx
+2025-07-16 12:48:55,503 | INFO | ✓ F-exact matrix & ranking saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_outputs/iadopt_Fexact_matrix_20250716_124855.xlsx
+2025-07-16 12:48:55,504 | INFO | ✓ Pre-processing log saved → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_preprocess_20250716_123306.log

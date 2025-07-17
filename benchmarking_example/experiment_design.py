@@ -74,9 +74,8 @@ MODEL_NAMES = [
 
 
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
-
 CLOSE_THR = 0.90  # cosine threshold for “close”
-MAX_RETRY = 1  # schema-retry attempts
+TEMPERATURES = [0.0, 0.5]  # can be overridden via CLI
 
 OUTBOOK_DIR = pathlib.Path("benchmarking_outputs")
 OUTBOOK_DIR.mkdir(exist_ok=True)
@@ -201,27 +200,39 @@ def extract_json(text: str) -> Dict[str, Any]:
     return json.loads(match.group(0))
 
 
-def call_model(model: str, prompt: str) -> str:
+# def call_model(model: str, prompt: str) -> str:
+#     try:
+#         resp = client.chat.completions.create(
+#             model=model,
+#             temperature=0.5,
+#             messages=[
+#                 # {"role": "system", "content": "/no_think"},  # disables reasoning in qwen3
+#                 {"role": "user", "content": prompt},
+#             ],
+#             timeout=30,  # network timeout
+#         )
+#         return resp.choices[0].message.content
+
+#     except APIStatusError as e:  # non-2xx JSON error
+#         logging.warning(f"{model}: HTTP {e.status_code} – {e.body!s}")
+#     except (OpenAIError, httpx.HTTPError) as e:  # network / SDK issues
+#         logging.warning(f"{model}: transport error – {e!r}")
+#     except json.JSONDecodeError as e:  # just in case
+#         logging.warning(f"{model}: invalid JSON payload – {e!r}")
+
+#     return ""  # uniform “failure” sentinel
+
+
+def call_model(model: str, prompt: str, temperature: float) -> str:
+    """Single chat completion – returns the *raw* text (may be unparsable)."""
     try:
         resp = client.chat.completions.create(
             model=model,
-            temperature=0.5,
-            # extra_headers={"X-Title": "IADOPT-bench"},
-            # extra_body={
-            #     "provider": {
-            #         "quantizations": [
-            #             "fp8", "int8"
-            #         ]
-            #     }
-            # },
-            messages=[
-                # {"role": "system", "content": "/no_think"},  # disables reasoning in qwen3
-                {"role": "user", "content": prompt},
-            ],
-            timeout=30,  # network timeout
+            temperature=temperature,
+            messages=[{"role": "user", "content": prompt}],
+            timeout=30,
         )
         return resp.choices[0].message.content
-
     except APIStatusError as e:  # non-2xx JSON error
         logging.warning(f"{model}: HTTP {e.status_code} – {e.body!s}")
     except (OpenAIError, httpx.HTTPError) as e:  # network / SDK issues
@@ -257,28 +268,57 @@ def coerce_for_eval(rec: Dict[str, Any], fixes: dict) -> Dict[str, Any]:
     return rec
 
 
-def call_llm_loose(model: str, prompt: str, exp_label: str, exp_comment: str) -> Dict[str, Any]:
+def call_llm_loose(model: str, prompt: str, orig_label: str, orig_comment: str, temperature: float) -> Dict[str, Any]:
     """
     Invoke *model*, capture its raw reply, coerce it into a dict that respects
     the schema, and **log every fix-up** (with context) to the preprocess logger.
 
     The function never raises. It returns either a clean dict (possibly empty)
     or {}, which upstream treats as a blank prediction.
+    • retries up to 3 times on unparsable JSON
+    • records 'retry_count' in the preprocess log
     """
-    raw = call_model(model, prompt)
-    fixes: dict[str, Any] = {
-        "model": model,
-        "variable": exp_label,
-        "non_json_prefix": False,
-        "non_json_suffix": False,
-        "unparsable_json": False,
-        "label_overwritten": False,
-        "comment_overwritten": False,
-        "coerced_property_dict": False,  # filled in coerce_for_eval
-        "missing_keys": [],
-        "extra_keys": [],
-    }
+    attempts, data, fixes = 0, {}, {}
+    while attempts < 3:
+        attempts += 1
+        raw = call_model(model, prompt, temperature)
+        fixes = {  # ← rebuild every round
+            "model": model,
+            "variable": orig_label,
+            "retry_count": attempts,
+            "non_json_prefix": False,
+            "non_json_suffix": False,
+            "unparsable_json": False,
+            "label_overwritten": False,
+            "comment_overwritten": False,
+            "coerced_property_dict": False,
+            "missing_keys": [],
+            "extra_keys": [],
+        }
 
+        # ---------- try to isolate JSON ---------------------------------
+        cleaned = _JSON_FENCE_RE.sub("", raw).strip()
+        m = _JSON_BLOCK_RE.search(cleaned)
+        if not m:
+            fixes["unparsable_json"] = True
+            fixes["raw_llm_output"] = raw  # keep for forensics
+            _preproc_logger.info(json.dumps(fixes, ensure_ascii=False))
+            if attempts < 3:
+                continue  #  ↺  try again
+            return {}  #  ✗  give up after 3 tries
+
+        try:
+            data = json.loads(m.group(0))
+            break  # ✓ parsed, exit loop
+        except json.JSONDecodeError:
+            fixes["unparsable_json"] = True
+            fixes["raw_llm_output"] = raw
+            _preproc_logger.info(json.dumps(fixes, ensure_ascii=False))
+            if attempts < 3:
+                continue
+            return {}
+
+    fixes["retry_count"] = attempts  # final value (1-3)
     # ---- detect stray text before / after JSON ------------------------
     if raw:
         pre = raw.split("{", 1)[0]
@@ -290,29 +330,19 @@ def call_llm_loose(model: str, prompt: str, exp_label: str, exp_comment: str) ->
             fixes["non_json_suffix"] = True
             fixes["suffix_text"] = post.strip()[:200]
 
-    # ---- try to isolate a JSON object ---------------------------------
-    try:
-        data = extract_json(raw or "")
-    except json.JSONDecodeError:
-        # -------- keep the entire LLM response ------------------
-        fixes["unparsable_json"] = True
-        fixes["raw_llm_output"] = raw  # full text
-        _preproc_logger.info("%s", json.dumps(fixes, ensure_ascii=False))
-        return {}  # give up – blank pred
-
     # ---- preserve original label/comment for logging ------------------
-    orig_label = data.get("label")
-    orig_comment = data.get("comment")
+    pred_label = data.get("label")
+    pred_comment = data.get("comment")
 
     # ---- force ground-truth label / comment ---------------------------
-    if orig_label != exp_label:
+    if pred_label != orig_label:
         fixes["label_overwritten"] = True
         fixes["orig_label"] = orig_label
-    if orig_comment != exp_comment:
+    if pred_comment != orig_comment:
         fixes["comment_overwritten"] = True
         fixes["orig_comment"] = (orig_comment or "")[:400]
-    data["label"] = exp_label
-    data["comment"] = exp_comment
+    data["label"] = orig_label
+    data["comment"] = orig_comment
 
     # ---- key coercions & sanitisation ---------------------------------
     data = coerce_for_eval(data, fixes=fixes)
@@ -511,14 +541,17 @@ def _run_one(
     gt: Dict[str, Any],
     prompt: str,
     shot: int,
-    debug_chars: int,
+    temperature: float,
 ) -> Dict[str, Any]:
+    pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
 
     try:
-        pred = call_llm_loose(model, prompt, exp_label=gt["label"], exp_comment=gt["comment"])
+        pred = call_llm_loose(
+            model, prompt, orig_label=gt["label"], orig_comment=gt["comment"], temperature=temperature
+        )
 
         # ---------- human-readable logs -----------------------------------
-        logging.info("MODEL   | %-35s | shot=%d | %s", model, shot, gt["label"])
+        logging.info("MODEL | %-35s | shot=%d | T=%.2f | %s", model, shot, temperature, gt["label"])
         logging.info("GROUND-TRUTH JSON:\n%s", json.dumps(gt, indent=2, ensure_ascii=False))
         logging.info("PREDICTED    JSON:\n%s", json.dumps(pred, indent=2, ensure_ascii=False))
 
@@ -571,6 +604,7 @@ def _run_one(
                     "Variable": gt["label"],
                     "Model": model,
                     "Shot": shot,
+                    "Temp": temperature,
                     "Metric": tag,  # exact / close
                     "TP": tp_tot,
                     "FP": fp_tot,
@@ -601,10 +635,12 @@ def evaluate(
     shot_mode: int,
     max_vars: int = 30,
     models: List[str] | None = None,
-    debug_chars: int = 500,
+    # debug_chars: int = 500,
+    temps: List[float] | None = None,
     workers: int = 8,
 ) -> List[Dict[str, Any]]:
 
+    temps = temps or TEMPERATURES
     models = models or MODEL_NAMES
     examples = load_examples(shot_mode)
     tasks: list[tuple] = []
@@ -635,14 +671,15 @@ def evaluate(
                 )
                 _PRINTED_PROMPTS.add(key)
 
-        for m in models:
-            tasks.append((m, gt, prompt, shot_mode))
+        for model in models:
+            for temp in temps:
+                tasks.append((model, gt, prompt, shot_mode, temp))
 
     rows: list[dict] = []
 
     # ---------------- parallel execution ---------------------------------
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        futs = [pool.submit(_run_one, *task, debug_chars) for task in tasks]
+        futs = [pool.submit(_run_one, *task) for task in tasks]
 
         for f in as_completed(futs):
             res = f.result()
@@ -656,7 +693,7 @@ def evaluate(
 # 11 ▪ CLI
 # --------------------------------------------------------------------------- #
 def main() -> None:
-    parser = argparse.ArgumentParser(description="I-ADOPT LLM benchmark – parallel & multi-shot")
+    parser = argparse.ArgumentParser(description="I-ADOPT LLM benchmark – shot × temperature")
     parser.add_argument("--data-dir", type=pathlib.Path, default=DATA_DIR, help="Folder with ground-truth JSON files")
     parser.add_argument(
         "--shot",
@@ -668,8 +705,9 @@ def main() -> None:
     parser.add_argument("--max-vars", type=int, default=30, help="Debug: limit number of variables")
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
     parser.add_argument("--workers", type=int, default=32, help="Parallel requests")
+    parser.add_argument("--temps", type=float, nargs="+", help="Override the default temperature grid")
     args = parser.parse_args()
-
+    temps = args.temps or TEMPERATURES
     # ---------------- run requested shot modes ---------------------------
     shots = [args.shot] if args.shot is not None else [0, 1, 3, 5]
     all_rows: list[dict] = []
@@ -698,8 +736,7 @@ def main() -> None:
         return sub.mean() if not sub.empty else float("nan")
 
     summary_rows = []
-    for (model, shot), grp in df.groupby(["Model", "Shot"]):
-
+    for (model, shot, temp), grp in df.groupby(["Model", "Shot", "Temp"]):
         # example: {'hasStatisticalModifier_F_exact': 0, 'hasStatisticalModifier_F_close': 0, ...}
         per_key_metrics = {}
         for key in ONTO_KEYS:
@@ -730,6 +767,7 @@ def main() -> None:
             {
                 "Model": model,
                 "Shot": shot,
+                "temp": temp,
                 "F_exact": pick(grp, "F", "exact"),
                 "F_close": pick(grp, "F", "close"),
                 "P_exact": pick(grp, "P", "exact"),
@@ -784,16 +822,14 @@ def main() -> None:
     f_matrix = pd.concat([shot_mean, prompt_matrix])
 
     # ---------- build the flattened ranking -----------------------------
-    # ❶  aggregate on (Shot, Model)  → one score per prompt-type & model
     best_pairs = (
-        df_exact.groupby(["Shot", "Model"], as_index=False)["F"]  # one row = one variable
-        .mean()  # mean F-exact across *all* variables
+        df_exact.groupby(["Shot", "Temp", "Model"], as_index=False)["F"]
+        .mean()
         .rename(columns={"F": "F_exact"})
         .sort_values("F_exact", ascending=False)
     )
-    # prettify the shot column (e.g. 0 → "0-shot")
-    best_pairs["Prompt"] = best_pairs["Shot"].astype(int).astype(str) + "-shot"
-    best_pairs = best_pairs[["Prompt", "Model", "F_exact"]]
+    best_pairs["Prompt"] = best_pairs["Shot"].astype(str) + "-shot"
+    best_pairs = best_pairs[["Prompt", "Temp", "Model", "F_exact"]]
 
     out_matrix = OUTBOOK_DIR / f"iadopt_Fexact_matrix_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
     with pd.ExcelWriter(out_matrix, engine="openpyxl") as wr:
