@@ -21,7 +21,12 @@ from openai import APIStatusError, OpenAI, OpenAIError
 from sentence_transformers import SentenceTransformer, util
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import Counter
+from functools import lru_cache
+from itertools import product
+import numpy as np
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # from jsonschema import validate, ValidationError
 
@@ -74,8 +79,8 @@ MODEL_NAMES = [
 
 
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
-CLOSE_THR = 0.90  # cosine threshold for “close”
-TEMPERATURES = [0.0, 0.5]  # can be overridden via CLI
+CLOSE_THR = 0.80  # cosine threshold for “close”
+TEMPERATURES = [0.5]  # can be overridden via CLI
 
 OUTBOOK_DIR = pathlib.Path("benchmarking_outputs")
 OUTBOOK_DIR.mkdir(exist_ok=True)
@@ -330,18 +335,32 @@ def call_llm_loose(model: str, prompt: str, orig_label: str, orig_comment: str, 
 # --------------------------------------------------------------------------- #
 # 4 ▪ Similarity helpers
 # --------------------------------------------------------------------------- #
-def sim_string(a: str, b: str, close: bool) -> float:
-    """String similarity (exact or cosine)."""
+@lru_cache(maxsize=4)
+def load_embedder(model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
+    """Load & cache a Sentence‑Transformer model (memoised)."""
+    return SentenceTransformer(model_name)
+
+
+def _cosine(a: str, b: str, model_name: str) -> float:
+    """Cosine similarity on sentence embeddings (helper)."""
+    embedder = load_embedder(model_name)
+    emb1 = embedder.encode(a, convert_to_tensor=True)
+    emb2 = embedder.encode(b, convert_to_tensor=True)
+    return util.cos_sim(emb1, emb2).item()
+
+
+def sim_string(a: str, b: str, close: bool, model_name: str = "all-MiniLM-L6-v2") -> float:
+    """Return similarity between two *strings*.
+
+    • *exact* mode → 1.0 if lower‑cased strings match exactly, else 0.0
+    • *close* mode → cosine similarity (embeddings)
+    """
     if not a or not b:
         return 0.0
     norm_a, norm_b = a.lower().strip(), b.lower().strip()
     if norm_a == norm_b:
         return 1.0
-    if close:
-        emb1 = embed_model.encode(norm_a, convert_to_tensor=True)
-        emb2 = embed_model.encode(norm_b, convert_to_tensor=True)
-        return util.cos_sim(emb1, emb2).item()
-    return 0.0
+    return _cosine(norm_a, norm_b, model_name) if close else 0.0
 
 
 def sim_asym(a: Dict[str, str], b: Dict[str, str], close: bool) -> float:
@@ -370,11 +389,40 @@ def sim_sym(a: Any, b: Any, close: bool) -> float:
     return (label_sim + part_sim) / 2
 
 
-def sim_constraint(a: Dict[str, str], b: Dict[str, str], close: bool) -> float:
-    """Similarity for constraint dicts."""
-    return (
-        sim_string(a.get("label", ""), b.get("label", ""), close) + sim_string(a.get("on", ""), b.get("on", ""), close)
-    ) / 2
+def sim_constraint(
+    a: Dict[str, str],
+    b: Dict[str, str],
+    close: bool,
+) -> float:
+    """Similarity between two constraint dicts (label + on)."""
+    lbl_sim = sim_string(a.get("label", ""), b.get("label", ""), close)
+
+    # ‡ NEW: strip any "<OntoKey>: " prefix before comparison
+    on_a = canonical_on(a.get("on", ""))
+    on_b = canonical_on(b.get("on", ""))
+    on_sim = sim_string(on_a, on_b, close)
+
+    return (lbl_sim + on_sim) / 2
+
+
+_ON_PREFIX_RE = re.compile(r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*:\s*(.+)$")
+
+
+def canonical_on(text: str) -> str:
+    """
+    Remove a leading '<OntoKey>:' prefix from *text* when the prefix
+    matches one of the recognised ONTO_KEYS (case-sensitive).
+
+        "hasObjectOfInterest: 3-star hotel"  →  "3-star hotel"
+        "hasMatrix: soil"                    →  "soil"
+        "random prefix: foo"                 →  unchanged
+    """
+    if not text:
+        return ""
+    m = _ON_PREFIX_RE.match(text)
+    if m and m.group(1) in ONTO_KEYS:
+        return m.group(2).strip()
+    return text.strip()
 
 
 # --------------------------------------------------------------------------- #
@@ -402,64 +450,89 @@ def confusion(gt, pred, close: bool) -> Tuple[int, int, int, int]:
 
 
 def confusion_constraints(
-    gt_list: List[Dict[str, str]], pred_list: List[Dict[str, str]], close: bool
+    gt_list: List[Dict[str, str]],
+    pred_list: List[Dict[str, str]],
+    close: bool,
+    model_name: str = "all-MiniLM-L6-v2",
 ) -> Tuple[float, float, float, float]:
     """
-    Normalised confusion counts for the constraint list key.
+    Fine-grained TP / FP / FN / TN for *hasConstraint*.
 
-    • The **whole key is worth 1.0** – never more, never less.
-    • Counts can be fractional (multiples of 1/len(gt_list)).
-      ─  TP  = proportion of correctly matched GT constraints
-      ─  FP  = proportion of *wrong* predictions
-      ─  FN  = proportion of GT constraints that received **no** prediction
-    • A prediction that tries to match a GT constraint but falls below the
-      threshold is treated as **FP**, not FN, so the same error is never
-      penalised twice.
+    • Every ground-truth field (label / on) carries equal weight
+          unit = 1 / (2 · len(gt_list))
+    • Order never matters – constraints are matched with a greedy
+      best-score algorithm.
+    • Extra, unmatched predictions add **pure FP** (both fields).
+    • Only when TP + FP + FN < 1 (numerical drift) we pad FP so the sum
+      reaches 1.  We **never shrink** FP.
     """
-    # ── trivial cases first ───────────────────────────────────────────────
+    # ── degenerate cases -------------------------------------------------
     if not gt_list and not pred_list:
         return 0.0, 0.0, 0.0, 1.0  # perfect TN
-    if not gt_list:  # GT empty but predictions exist
-        return 0.0, 1.0, 0.0, 0.0  # whole key is a FP
+    if not gt_list:  # no GT  →  everything is FP
+        return 0.0, 1.0, 0.0, 0.0
 
-    n_gt = len(gt_list)
-    unit = 1.0 / n_gt  # weight of one GT item
+    n_gt, n_pred = len(gt_list), len(pred_list)
+    unit = 1.0 / (2 * n_gt)
+    thr = CLOSE_THR if close else 1.0
+
+    # ---------- build similarity matrix for pairing --------------------
+    S = np.zeros((n_gt, n_pred))
+    for i, j in product(range(n_gt), range(n_pred)):
+        S[i, j] = sim_constraint(gt_list[i], pred_list[j], close)
 
     tp = fp = fn = 0.0
-    used_pred: set[int] = set()
+    gt_used: set[int] = set()
+    pred_used: set[int] = set()
 
-    # ---------- match each GT constraint with its best prediction --------
-    for gt_c in gt_list:
-        best_score = 0.0
-        best_idx = -1
-        for idx, p in enumerate(pred_list):
-            if idx in used_pred:
-                continue
-            score = sim_constraint(gt_c, p, close)
-            if score > best_score:
-                best_score, best_idx = score, idx
+    # ---------- greedy best-score matching -----------------------------
+    while S.size:
+        i, j = divmod(int(np.argmax(S)), S.shape[1])
+        if S[i, j] < 0:  # all remaining scores are –1
+            break
 
-        # --- classify ----------------------------------------------------
-        if best_score >= (CLOSE_THR if close else 1.0):
-            tp += unit  # correct prediction
-            used_pred.add(best_idx)
-        elif best_idx != -1:  # prediction exists but wrong
+        gt_used.add(i)
+        pred_used.add(j)
+
+        # label
+        if sim_string(gt_list[i].get("label", ""), pred_list[j].get("label", ""), close, model_name) >= thr:
+            tp += unit
+        else:
             fp += unit
-            used_pred.add(best_idx)  # mark so we don't count it again
-        else:  # no prediction at all
-            fn += unit
 
-    # ---------- leftover unmatched predictions are pure FP ---------------
-    leftover = len(pred_list) - len(used_pred)
-    fp += leftover * unit
+        # on
+        if (
+            sim_string(
+                canonical_on(gt_list[i].get("on", "")), canonical_on(pred_list[j].get("on", "")), close, model_name
+            )
+            >= thr
+        ):
+            tp += unit
+        else:
+            fp += unit
 
-    # sanity: ensure rounding errors don’t push the total off 1.0
+        # invalidate matched row & column
+        S[i, :] = -1.0
+        S[:, j] = -1.0
+
+    # ---------- unmatched GT → FN  -------------------------------------
+    fn += (n_gt - len(gt_used)) * 2 * unit
+
+    # ---------- unmatched predictions → FP -----------------------------
+    fp += (n_pred - len(pred_used)) * 2 * unit
+
+    # ---------- numeric guard (only pad *up* to 1) ---------------------
     total = tp + fp + fn
-    if abs(total - 1.0) > 1e-6:
-        # distribute the tiny residual on FP so the sum is exactly 1
+    # 1) typical floating-point drift  →  pad *up* to 1
+    if 1.0 - total > 1e-6:
         fp += 1.0 - total
+    # 2) over-prediction (total > 1)   →  **scale *down***, preserving ratios
+    elif total - 1.0 > 1e-6:
+        tp /= total
+        fp /= total
+        fn /= total
 
-    return tp, fp, fn, 0.0  # TN only occurs in the trivial case
+    return tp, fp, fn, 0.0  # TN only in trivial cases
 
 
 # --------------------------------------------------------------------------- #
@@ -482,9 +555,9 @@ def jaccard(a: Set[str], b: Set[str]) -> float:
 # 7 ▪ Flatten for Jaccard
 # --------------------------------------------------------------------------- #
 def atoms(rec: Dict[str, Any], mode: str) -> Set[str]:
-    """
-    Convert a record into atomic strings
-    mode ∈ {'both', 'concept', 'text'}
+    """Flatten a decomposed‑variable JSON into atomic strings.
+
+    *mode* ∈ {"both", "concept", "text"} determines which parts to include.
     """
     out: Set[str] = set()
     if mode in ("both", "concept"):
@@ -496,7 +569,8 @@ def atoms(rec: Dict[str, Any], mode: str) -> Set[str]:
             out.add(ooi)
     if mode in ("both", "text"):
         for c in rec.get("hasConstraint", []):
-            out.update({c["label"], c["on"]})
+            out.add(c.get("label", ""))
+            out.add(canonical_on(c.get("on", "")))
     return {s for s in out if s}
 
 
