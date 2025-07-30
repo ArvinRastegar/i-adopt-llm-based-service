@@ -48,10 +48,10 @@ MODEL_NAMES = [
     # "microsoft/phi-4",
     # "microsoft/phi-4-reasoning",
     # "open-orca/mistral-7b-openorca",
-    "deepseek/deepseek-r1-0528-qwen3-8b",
-    "deepseek/deepseek-r1-0528",
-    "deepseek/deepseek-chat-v3-0324",
-    "qwen/qwen3-235b-a22b",
+    # "deepseek/deepseek-r1-0528-qwen3-8b",
+    # "deepseek/deepseek-r1-0528",
+    # "deepseek/deepseek-chat-v3-0324",
+    # "qwen/qwen3-235b-a22b",
     # "google/gemini-2.0-flash-001",
     # "deepseek/deepseek-r1-distill-qwen-14b",
     # "deepseek/deepseek-r1-distill-qwen-32b",
@@ -66,7 +66,7 @@ MODEL_NAMES = [
     # "meta-llama/llama-guard-4-12b",
     # "perplexity/sonar-reasoning-pro",
     # "google/gemini-2.5-pro",
-    "meta-llama/llama-4-maverick-17b-128e-instruct",
+    # "meta-llama/llama-4-maverick-17b-128e-instruct",
     # "anthropic/claude-4-sonnet-20250522",
     # "intel/neural-chat-7b",
     # "openai/o3-pro",
@@ -112,10 +112,7 @@ logging.info(f"Logging to {LOG_FILE.resolve()}")
 logging.info(f"Pre-processing log → {PREPROC_LOG_FILE.resolve()}")
 
 
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY"),
-)
+client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
 
 embed_model = SentenceTransformer(EMBED_MODEL_NAME)
 
@@ -154,7 +151,7 @@ def build_prompt(label: str, comment: str, examples: List[Dict[str, Any]] | None
 
     return (
         f"{_SYSTEM_RULES}\n\n"
-        f"### JSON-Schema\n{_SCHEMA_TEXT}"
+        f"### JSON-Schema\n{_SCHEMA_TEXT}\n"
         f"{ex_block}"
         f"{_USER_HDR}label: {label}\ncomment: {comment}"
         f"{_EXPECTED}"
@@ -198,29 +195,6 @@ def extract_json(text: str) -> Dict[str, Any]:
     if not match:
         raise json.JSONDecodeError("No JSON block found", cleaned, 0)
     return json.loads(match.group(0))
-
-
-# def call_model(model: str, prompt: str) -> str:
-#     try:
-#         resp = client.chat.completions.create(
-#             model=model,
-#             temperature=0.5,
-#             messages=[
-#                 # {"role": "system", "content": "/no_think"},  # disables reasoning in qwen3
-#                 {"role": "user", "content": prompt},
-#             ],
-#             timeout=30,  # network timeout
-#         )
-#         return resp.choices[0].message.content
-
-#     except APIStatusError as e:  # non-2xx JSON error
-#         logging.warning(f"{model}: HTTP {e.status_code} – {e.body!s}")
-#     except (OpenAIError, httpx.HTTPError) as e:  # network / SDK issues
-#         logging.warning(f"{model}: transport error – {e!r}")
-#     except json.JSONDecodeError as e:  # just in case
-#         logging.warning(f"{model}: invalid JSON payload – {e!r}")
-
-#     return ""  # uniform “failure” sentinel
 
 
 def call_model(model: str, prompt: str, temperature: float) -> str:
