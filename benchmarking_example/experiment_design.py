@@ -25,6 +25,10 @@ from functools import lru_cache
 from itertools import product
 import numpy as np
 from dotenv import load_dotenv
+import requests
+import urllib.parse
+
+from datasets import load_dataset
 
 load_dotenv()
 
@@ -93,6 +97,10 @@ ONTO_KEYS = [
     "hasContextObject",
     "hasConstraint",
 ]
+
+MAPPINGS_OOI_PATH = "Terms_OoI.csv"
+MAPPINGS_MATRIX_PATH = "Terms_Matrix.csv"
+MAPPINGS_PROPERTY_PATH = "Terms_Property.csv"
 
 # --------------------------------------------------------------------------- #
 # 1 ▪ Logging & external clients
@@ -580,6 +588,116 @@ def atoms(rec: Dict[str, Any], mode: str) -> Set[str]:
 _PRINTED_PROMPTS: set[tuple[int, str]] = set()  # (shot_mode, variable label)
 _PROMPT_LOCK = Lock()
 
+def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-MiniLM-L6-v2"):
+    """Returns the associated wikidata URI (in format http://www.wikidata.org/entity/Q??) 
+    to the given term if there is a match, if not, the same term is returned.
+    """
+    output_entity = term
+    encoded_term = urllib.parse.quote_plus(term)
+    headers = {
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0",
+}
+    output = requests.get(f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={encoded_term}&language=en&format=json", headers=headers)
+    if output.status_code == 200:
+        output_search = output.json()["search"]
+        if len(output_search) > 0:
+            # Naive approach: Use the first search entry
+            if naive_approach:
+                output_entity = "http://www.wikidata.org/entity/"+output_search[0]["id"]
+            else:
+                embedder = load_embedder(model_name)
+                embedded_label = embedder.encode(f'Definition of "{term}" in context: "{context}"')
+                embedded_descriptions = embedder.encode([f"label: {search_entry['label']}, description: {search_entry['description'] if 'description' in search_entry else ""}" for search_entry in output_search])
+                similarities = util.cos_sim(embedded_label, embedded_descriptions)
+                most_similar = similarities.argmax().item()
+                output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
+    else:
+        logging.warning("Error while calling the Wikidata API")
+    return output_entity
+
+
+def link2wikidata(input_dict: Dict[str, Any], naive_approach=True) -> Dict[str, Any]:
+    """Given a prediction dictionary with terms, looks for their associated Wikidata URIs,
+    and returns a dictionary with their links if a match is found, and with the same terms if not.
+    """ 
+    input_dict_copy = input_dict.copy()
+    for key in ONTO_KEYS:
+        val = input_dict.get(key, [] if key == "hasConstraint" else "")
+        if key == "hasConstraint":
+            if len(val)>0:
+                input_dict_copy[key] = [{
+                    "label": get_wikidata_entity(constraint["label"], naive_approach=naive_approach, context=input_dict["label"]), 
+                    "on": get_wikidata_entity(constraint["on"], naive_approach=naive_approach, context=input_dict["label"]) 
+                    } for constraint in input_dict[key]
+                ]
+        else:
+            if isinstance(val, dict) and "AsymmetricSystem" in val:
+                asym_keys = ("AsymmetricSystem", "hasSource", "hasTarget")
+                input_dict_copy[key] = {
+                    asym_key: get_wikidata_entity(val[asym_key], naive_approach=naive_approach, context=input_dict["label"]) 
+                    for asym_key in asym_keys 
+                }
+            elif isinstance(val, dict) and "SymmetricSystem" in val:
+                input_dict_copy[key] = {
+                    "SymmetricSystem": get_wikidata_entity(val["SymmetricSystem"], naive_approach=naive_approach, context=input_dict["label"]), 
+                    "hasPart": [
+                        get_wikidata_entity(part, naive_approach=naive_approach, context=input_dict["label"]) 
+                        for part in val["hasPart"]
+                    ]
+                }
+            else:
+                if not val=="":
+                    input_dict_copy[key] = get_wikidata_entity(val, naive_approach=naive_approach, context=input_dict["label"])
+    return input_dict_copy
+
+
+def load_wikidata_mappings() -> Dict[str, Any]:
+    ooi_terms = load_dataset("csv", data_files=MAPPINGS_OOI_PATH, sep=";")["train"]
+    matrix_terms = load_dataset("csv", data_files=MAPPINGS_MATRIX_PATH, sep=";")["train"]
+    property_terms = load_dataset("csv",data_files=MAPPINGS_PROPERTY_PATH,sep = ";")["train"]
+    ooi_terms_filtered = ooi_terms.select(range(22))
+    matrix_terms_filtered = matrix_terms.select(range(13))
+    ooi_mappings = {concept:wikidata_uri.split("/")[-1] if wikidata_uri else None  for concept,wikidata_uri in zip(ooi_terms_filtered["Concept"],ooi_terms_filtered["Wikidata"])}
+    matrix_mappings = {concept:wikidata_uri.split("/")[-1] if wikidata_uri else None  for concept,wikidata_uri in zip(matrix_terms_filtered["Concept"],matrix_terms_filtered["Wikidata"])}
+    property_mappings = {concept:wikidata_uri.split("/")[-1] if wikidata_uri else None  for concept,wikidata_uri in zip(property_terms["Concept"],property_terms["Wikidata"])}
+    mappings = ooi_mappings | matrix_mappings | property_mappings
+    return mappings
+
+
+def get_wikidata_entity_from_mappings(term, mappings):
+    return "http://www.wikidata.org/entity/"+mappings.get(term) if mappings.get(term) else term
+
+
+def linkGT2wikidata(input_dict: Dict[str, Any], mappings: Dict[str, Any]) -> Dict[str, Any]:
+    """This function expects a ground truth decomposition, and a dict with mappings 
+    (term->{wikidata_entity_id (format: Q???),None}. The function will convert terms to 
+    wikidata URIs (in format http://www.wikidata.org/entity/Q???) using the mappings. 
+    Terms in decomposition must be present in the mappings dict, if the term is not in 
+    the mappings or there is not a link, the same term will be used.
+    """
+    input_dict_copy = input_dict.copy()
+    for key in ONTO_KEYS:
+        val = input_dict.get(key, [] if key == "hasConstraint" else "")
+        if key == "hasConstraint":
+            if len(val)>0:
+                input_dict_copy[key] = [
+                    {
+                        "label": get_wikidata_entity_from_mappings(constraint["label"], mappings), 
+                        "on": get_wikidata_entity_from_mappings(constraint["on"], mappings) 
+                    } for constraint in input_dict[key]]
+        else:
+            if isinstance(val, dict) and "AsymmetricSystem" in val:
+                asym_keys = ("AsymmetricSystem", "hasSource", "hasTarget")
+                input_dict_copy[key] = {asym_key: get_wikidata_entity_from_mappings(val[asym_key], mappings) for asym_key in asym_keys }
+            elif isinstance(val, dict) and "SymmetricSystem" in val:
+                input_dict_copy[key] = {
+                    "SymmetricSystem": get_wikidata_entity_from_mappings(val["SymmetricSystem"], mappings), 
+                    "hasPart": [get_wikidata_entity_from_mappings(part,mappings) for part in val["hasPart"]]
+                }
+            else:
+                if not val=="":
+                    input_dict_copy[key] = get_wikidata_entity_from_mappings(val,mappings)
+    return input_dict_copy
 
 # --------------------------------------------------------------------------- #
 # 9 ▪ Evaluation worker  (returns {"_rows": [...]})
@@ -590,18 +708,30 @@ def _run_one(
     prompt: str,
     shot: int,
     temperature: float,
+    mappings: Dict[str, Any],
+    naive_approach: bool
 ) -> Dict[str, Any]:
-    pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
+    # pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
 
     try:
         pred = call_llm_loose(
             model, prompt, orig_label=gt["label"], orig_comment=gt["comment"], temperature=temperature
         )
 
+        # Link prediction and ground truth entities to wikidata
+        pred_with_links = link2wikidata(pred, naive_approach=naive_approach)
+        gt_with_links = linkGT2wikidata(gt, mappings)
+
         # ---------- human-readable logs -----------------------------------
         logging.info("MODEL | %-35s | shot=%d | T=%.2f | %s", model, shot, temperature, gt["label"])
         logging.info("GROUND-TRUTH JSON:\n%s", json.dumps(gt, indent=2, ensure_ascii=False))
         logging.info("PREDICTED    JSON:\n%s", json.dumps(pred, indent=2, ensure_ascii=False))
+        logging.info("GROUND-TRUTH JSON WITH WIKIDATA LINKS:\n%s", json.dumps(gt_with_links, indent=2, ensure_ascii=False))
+        logging.info("PREDICTED    JSON WITH WIKIDATA LINKS:\n%s", json.dumps(pred_with_links, indent=2, ensure_ascii=False))
+
+        # Evaluate with links (This may be an option to include as an argument for the experiment_design.py program)
+        gt = gt_with_links
+        pred = pred_with_links
 
         rows: list[dict] = []
 
@@ -686,12 +816,17 @@ def evaluate(
     # debug_chars: int = 500,
     temps: List[float] | None = None,
     workers: int = 8,
+    naive_approach: bool = True
 ) -> List[Dict[str, Any]]:
 
     temps = temps or TEMPERATURES
     models = models or MODEL_NAMES
     examples = load_examples(shot_mode)
     tasks: list[tuple] = []
+
+    wikidata_mappings = load_wikidata_mappings()
+    logging.info("WIKIDATA_MAPPINGS:\n%s", json.dumps(wikidata_mappings, indent=2, ensure_ascii=False))
+    logging.info("NAIVE APPROACH:%s", str(naive_approach))
 
     # ---------- enumerate (variable, model) pairs ------------------------
     for v_idx, gt_path in enumerate(sorted(data_dir.glob("*.json")), 1):
@@ -721,7 +856,7 @@ def evaluate(
 
         for model in models:
             for temp in temps:
-                tasks.append((model, gt, prompt, shot_mode, temp))
+                tasks.append((model, gt, prompt, shot_mode, temp, wikidata_mappings, naive_approach))
 
     rows: list[dict] = []
 
@@ -754,6 +889,7 @@ def main() -> None:
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
     parser.add_argument("--workers", type=int, default=32, help="Parallel requests")
     parser.add_argument("--temps", type=float, nargs="+", help="Override the default temperature grid")
+    parser.add_argument('--naive_approach', action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
     temps = args.temps or TEMPERATURES
     # ---------------- run requested shot modes ---------------------------
@@ -767,6 +903,7 @@ def main() -> None:
             max_vars=args.max_vars,
             models=args.only_model,
             workers=args.workers,
+            naive_approach=args.naive_approach
         )
         all_rows.extend(rows)
 
