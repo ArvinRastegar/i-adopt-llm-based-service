@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Set, Tuple
 import httpx
 import pandas as pd
 from openai import APIStatusError, OpenAI, OpenAIError
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer, CrossEncoder, util
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import Counter
 from functools import lru_cache
@@ -29,6 +29,8 @@ import requests
 import urllib.parse
 
 from datasets import load_dataset
+
+import torch
 
 load_dotenv()
 
@@ -349,6 +351,13 @@ def load_embedder(model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
     return SentenceTransformer(model_name)
 
 
+@lru_cache(maxsize=4)
+def load_crossencoder(model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2") -> CrossEncoder:
+    """Load & cache a Sentence‑Transformer model (memoised)."""
+    # model.model.config.pad_token_id = model.tokenizer.pad_token_id
+    # return CrossEncoder(model_name, activation_fn=torch.nn.Sigmoid())
+    return CrossEncoder(model_name)
+
 def _cosine(a: str, b: str, model_name: str) -> float:
     """Cosine similarity on sentence embeddings (helper)."""
     embedder = load_embedder(model_name)
@@ -588,6 +597,19 @@ def atoms(rec: Dict[str, Any], mode: str) -> Set[str]:
 _PRINTED_PROMPTS: set[tuple[int, str]] = set()  # (shot_mode, variable label)
 _PROMPT_LOCK = Lock()
 
+def format_queries(query, instruction=None):
+    prefix = '<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".<|im_end|>\n<|im_start|>user\n'
+    if instruction is None:
+        instruction = (
+            "Given a web search query, retrieve relevant passages that answer the query"
+        )
+    return f"{prefix}<Instruct>: {instruction}\n<Query>: {query}\n"
+
+
+def format_document(document):
+    suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    return f"<Document>: {document}{suffix}"
+
 def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-MiniLM-L6-v2"):
     """Returns the associated wikidata URI (in format http://www.wikidata.org/entity/Q??) 
     to the given term if there is a match, if not, the same term is returned.
@@ -605,12 +627,21 @@ def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-M
             if naive_approach:
                 output_entity = "http://www.wikidata.org/entity/"+output_search[0]["id"]
             else:
-                embedder = load_embedder(model_name)
-                embedded_label = embedder.encode(f'Definition of "{term}" in context: "{context}"')
-                embedded_descriptions = embedder.encode([f"label: {search_entry['label']}, description: {search_entry['description'] if 'description' in search_entry else ""}" for search_entry in output_search])
-                similarities = util.cos_sim(embedded_label, embedded_descriptions)
-                most_similar = similarities.argmax().item()
-                output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
+                model = load_crossencoder("tomaarsen/Qwen3-Reranker-0.6B-seq-cls")
+                task = "Given a web search query, retrieve relevant passages that answer the query"
+                queries = [f'Definition of "{term}" in context: "{context}"'] * len(output_search)
+                documents = [f"label:\"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\"" for search_entry in output_search]
+                pairs = [
+                    [format_queries(query, task), format_document(doc)]
+                    for query, doc in zip(queries, documents)
+                ]
+                scores = model.predict(pairs)
+                most_similar = scores.argmax().item()
+                logging.info(f"Query: {queries[0]}")
+                for i,score in enumerate(scores):
+                    logging.info(f"{score:.2f}\t{documents[i]}")
+                if scores[most_similar]>0.9:
+                    output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
     else:
         logging.warning("Error while calling the Wikidata API")
     return output_entity
@@ -626,28 +657,28 @@ def link2wikidata(input_dict: Dict[str, Any], naive_approach=True) -> Dict[str, 
         if key == "hasConstraint":
             if len(val)>0:
                 input_dict_copy[key] = [{
-                    "label": get_wikidata_entity(constraint["label"], naive_approach=naive_approach, context=input_dict["label"]), 
-                    "on": get_wikidata_entity(constraint["on"], naive_approach=naive_approach, context=input_dict["label"]) 
+                    "label": get_wikidata_entity(constraint["label"], naive_approach=naive_approach, context=f"{input_dict["label"]}"), 
+                    "on": get_wikidata_entity(constraint["on"], naive_approach=naive_approach, context=f"{input_dict["label"]}") 
                     } for constraint in input_dict[key]
                 ]
         else:
             if isinstance(val, dict) and "AsymmetricSystem" in val:
                 asym_keys = ("AsymmetricSystem", "hasSource", "hasTarget")
                 input_dict_copy[key] = {
-                    asym_key: get_wikidata_entity(val[asym_key], naive_approach=naive_approach, context=input_dict["label"]) 
+                    asym_key: get_wikidata_entity(val[asym_key], naive_approach=naive_approach, context=f"{input_dict["label"]}") 
                     for asym_key in asym_keys 
                 }
             elif isinstance(val, dict) and "SymmetricSystem" in val:
                 input_dict_copy[key] = {
-                    "SymmetricSystem": get_wikidata_entity(val["SymmetricSystem"], naive_approach=naive_approach, context=input_dict["label"]), 
+                    "SymmetricSystem": get_wikidata_entity(val["SymmetricSystem"], naive_approach=naive_approach, context=f"{input_dict["label"]}"), 
                     "hasPart": [
-                        get_wikidata_entity(part, naive_approach=naive_approach, context=input_dict["label"]) 
+                        get_wikidata_entity(part, naive_approach=naive_approach, context=f"{input_dict["label"]}") 
                         for part in val["hasPart"]
                     ]
                 }
             else:
                 if not val=="":
-                    input_dict_copy[key] = get_wikidata_entity(val, naive_approach=naive_approach, context=input_dict["label"])
+                    input_dict_copy[key] = get_wikidata_entity(val, naive_approach=naive_approach, context=f"{input_dict["label"]}")
     return input_dict_copy
 
 
@@ -714,9 +745,9 @@ def _run_one(
     # pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
 
     try:
-        pred = call_llm_loose(
-            model, prompt, orig_label=gt["label"], orig_comment=gt["comment"], temperature=temperature
-        )
+        # pred = call_llm_loose(
+        #     model, prompt, orig_label=gt["label"], orig_comment=gt["comment"], temperature=temperature
+        # )
 
         # Link prediction and ground truth entities to wikidata
         pred_with_links = link2wikidata(pred, naive_approach=naive_approach)
