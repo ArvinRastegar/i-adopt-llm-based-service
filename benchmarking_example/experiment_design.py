@@ -655,7 +655,7 @@ def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-M
                 logging.info(f"Query: {queries[0]}")
                 for i,score in enumerate(scores):
                     logging.info(f"{score:.2f}\t{documents[i]}")
-                if scores[most_similar]>0.5:
+                if scores[most_similar]>0.9:
                     output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
     else:
         logging.warning("Error while calling the Wikidata API")
