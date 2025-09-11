@@ -745,9 +745,9 @@ def _run_one(
     # pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
 
     try:
-        # pred = call_llm_loose(
-        #     model, prompt, orig_label=gt["label"], orig_comment=gt["comment"], temperature=temperature
-        # )
+        pred = call_llm_loose(
+            model, prompt, orig_label=gt["label"], orig_comment=gt["comment"], temperature=temperature
+        )
 
         # Link prediction and ground truth entities to wikidata
         pred_with_links = link2wikidata(pred, naive_approach=naive_approach)
