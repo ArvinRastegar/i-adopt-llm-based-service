@@ -32,6 +32,10 @@ from datasets import load_dataset
 
 import torch
 
+import requests_cache
+
+session = requests_cache.CachedSession('wikidata_cache')
+
 load_dotenv()
 
 # from jsonschema import validate, ValidationError
@@ -619,7 +623,7 @@ def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-M
     headers = {
 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0",
 }
-    output = requests.get(f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={encoded_term}&language=en&format=json", headers=headers)
+    output = session.get(f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={encoded_term}&language=en&format=json", headers=headers)
     if output.status_code == 200:
         output_search = output.json()["search"]
         if len(output_search) > 0:
@@ -640,7 +644,7 @@ def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-M
                 logging.info(f"Query: {queries[0]}")
                 for i,score in enumerate(scores):
                     logging.info(f"{score:.2f}\t{documents[i]}")
-                if scores[most_similar]>0.9:
+                if scores[most_similar]>0.5:
                     output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
     else:
         logging.warning("Error while calling the Wikidata API")
