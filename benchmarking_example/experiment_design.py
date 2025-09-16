@@ -33,6 +33,10 @@ from datasets import load_dataset
 import traceback
 import torch
 
+import requests_cache
+
+session = requests_cache.CachedSession('wikidata_cache')
+
 load_dotenv()
 
 # from jsonschema import validate, ValidationError
@@ -128,7 +132,7 @@ logging.info(f"Logging to {LOG_FILE.resolve()}")
 logging.info(f"Pre-processing log → {PREPROC_LOG_FILE.resolve()}")
 
 
-client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
+# client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
 
 embed_model = SentenceTransformer(EMBED_MODEL_NAME)
 
@@ -611,7 +615,7 @@ def format_document(document):
     suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
     return f"<Document>: {document}{suffix}"
 
-def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-MiniLM-L6-v2"):
+def get_wikidata_entity(term, approach="naive", context="", model_name="all-MiniLM-L6-v2", threshold=0.0):
     """Returns the associated wikidata URI (in format http://www.wikidata.org/entity/Q??) 
     to the given term if there is a match, if not, the same term is returned.
     """
@@ -620,49 +624,52 @@ def get_wikidata_entity(term, naive_approach=True, context="", model_name="all-M
     headers = {
 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0",
 }
-    output = requests.get(f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={encoded_term}&language=en&format=json", headers=headers)
+    output = session.get(f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={encoded_term}&language=en&format=json", headers=headers)
     if output.status_code == 200:
         output_search = output.json()["search"]
         if len(output_search) > 0:
             # Naive approach: Use the first search entry
-            if naive_approach:
+            if approach=="naive":
                 output_entity = "http://www.wikidata.org/entity/"+output_search[0]["id"]
-            else:
-                # embedder = load_embedder(model_name)
-                # embedded_label = embedder.encode(f'Definition of "{term}" in context: "{context}"')
-                # embedded_descriptions = embedder.encode([f"label: {search_entry['label']}, description: {search_entry['description'] if 'description' in search_entry else ""}" for search_entry in output_search])
-                # similarities = util.cos_sim(embedded_label, embedded_descriptions)
-                # most_similar = similarities.argmax().item()
-                # output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
-                
-                # model = load_crossencoder("Alibaba-NLP/gte-reranker-modernbert-base")
-                # query = f'Definition of "{term}" in context: "{context}"'
-                # passages=[f"label:{search_entry['label']}, description: {search_entry['description'] if 'description' in search_entry else ""}" for search_entry in output_search]
-                # ranks = model.rank(query, passages)
-                # most_similar = ranks[0]['corpus_id']
-                # output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
 
-                model = load_crossencoder("tomaarsen/Qwen3-Reranker-0.6B-seq-cls")
-                task = "Given a web search query, retrieve relevant passages that answer the query"
-                queries = [f'Definition of "{term}" in context: "{context}"'] * len(output_search)
-                documents = [f"label:\"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\"" for search_entry in output_search]
-                pairs = [
-                    [format_queries(query, task), format_document(doc)]
-                    for query, doc in zip(queries, documents)
-                ]
-                scores = model.predict(pairs)
-                most_similar = scores.argmax().item()
-                logging.info(f"Query: {queries[0]}")
-                for i,score in enumerate(scores):
-                    logging.info(f"{score:.2f}\t{documents[i]}")
-                if scores[most_similar]>0.9:
+            elif approach=="embedding":
+                embedder = load_embedder(model_name)
+                embedded_label = embedder.encode(f'Definition of "{term}" in context: "{context}"')
+                embedded_descriptions = embedder.encode([f"label: \"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\"" for search_entry in output_search])
+                similarities = util.cos_sim(embedded_label, embedded_descriptions)
+                most_similar = similarities.argmax().item()
+                output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
+            
+            elif approach=="cross-encoder":
+                if "Qwen3" not in model_name:
+                    model = load_crossencoder(model_name)
+                    query = f'Definition of "{term}" in context: "{context}"'
+                    passages=[f"label: \"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\"" for search_entry in output_search]
+                    ranks = model.rank(query, passages)
+                    most_similar = ranks[0]['corpus_id']
                     output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
+                else:
+                    model = load_crossencoder(model_name)
+                    task = "Given a web search query, retrieve relevant passages that answer the query"
+                    queries = [f'Definition of "{term}" in context: "{context}"'] * len(output_search)
+                    documents = [f"label: \"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\"" for search_entry in output_search]
+                    pairs = [
+                        [format_queries(query, task), format_document(doc)]
+                        for query, doc in zip(queries, documents)
+                    ]
+                    scores = model.predict(pairs)
+                    most_similar = scores.argmax().item()
+                    logging.info(f"Query: {queries[0]}")
+                    for i,score in enumerate(scores):
+                        logging.info(f"{score:.2f}\t{documents[i]}")
+                    if scores[most_similar]>threshold:
+                        output_entity = "http://www.wikidata.org/entity/"+output_search[most_similar]["id"]
     else:
         logging.warning("Error while calling the Wikidata API")
     return output_entity
 
 
-def link2wikidata(input_dict: Dict[str, Any], naive_approach=True) -> Dict[str, Any]:
+def link2wikidata(input_dict: Dict[str, Any], approach="naive", model_name="all-MiniLM-L6-v2", threshold=0.0) -> Dict[str, Any]:
     """Given a prediction dictionary with terms, looks for their associated Wikidata URIs,
     and returns a dictionary with their links if a match is found, and with the same terms if not.
     """ 
@@ -672,28 +679,28 @@ def link2wikidata(input_dict: Dict[str, Any], naive_approach=True) -> Dict[str, 
         if key == "hasConstraint":
             if len(val)>0:
                 input_dict_copy[key] = [{
-                    "label": get_wikidata_entity(constraint["label"], naive_approach=naive_approach, context=f"{input_dict["label"]}"), 
-                    "on": get_wikidata_entity(constraint["on"], naive_approach=naive_approach, context=f"{input_dict["label"]}") 
+                    "label": get_wikidata_entity(constraint["label"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold), 
+                    "on": get_wikidata_entity(constraint["on"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold) 
                     } for constraint in input_dict[key]
                 ]
         else:
             if isinstance(val, dict) and "AsymmetricSystem" in val:
                 asym_keys = ("AsymmetricSystem", "hasSource", "hasTarget")
                 input_dict_copy[key] = {
-                    asym_key: get_wikidata_entity(val[asym_key], naive_approach=naive_approach, context=f"{input_dict["label"]}") 
+                    asym_key: get_wikidata_entity(val[asym_key], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold) 
                     for asym_key in asym_keys 
                 }
             elif isinstance(val, dict) and "SymmetricSystem" in val:
                 input_dict_copy[key] = {
-                    "SymmetricSystem": get_wikidata_entity(val["SymmetricSystem"], naive_approach=naive_approach, context=f"{input_dict["label"]}"), 
+                    "SymmetricSystem": get_wikidata_entity(val["SymmetricSystem"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold), 
                     "hasPart": [
-                        get_wikidata_entity(part, naive_approach=naive_approach, context=f"{input_dict["label"]}") 
+                        get_wikidata_entity(part, approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold) 
                         for part in val["hasPart"]
                     ]
                 }
             else:
                 if not val=="":
-                    input_dict_copy[key] = get_wikidata_entity(val, naive_approach=naive_approach, context=f"{input_dict["label"]}")
+                    input_dict_copy[key] = get_wikidata_entity(val, approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold)
     return input_dict_copy
 
 
@@ -755,7 +762,9 @@ def _run_one(
     shot: int,
     temperature: float,
     mappings: Dict[str, Any],
-    naive_approach: bool
+    approach: str,
+    model_name: str,
+    threshold: float
 ) -> Dict[str, Any]:
     # pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
 
@@ -766,7 +775,7 @@ def _run_one(
 
         # Link prediction and ground truth entities to wikidata
         # pred_with_links = link2wikidata(pred, naive_approach=naive_approach)
-        pred_with_links = link2wikidata(gt, naive_approach=naive_approach) 
+        pred_with_links = link2wikidata(gt, approach=approach, model_name=model_name, threshold=threshold) 
         gt_with_links = linkGT2wikidata(gt, mappings)
 
         # ---------- human-readable logs -----------------------------------
@@ -865,7 +874,9 @@ def evaluate(
     # debug_chars: int = 500,
     temps: List[float] | None = None,
     workers: int = 8,
-    naive_approach: bool = True
+    approach: str = "naive",
+    model_name: str = "all-MiniLM-L6-v2",
+    threshold: float = 0.0
 ) -> List[Dict[str, Any]]:
 
     temps = temps or TEMPERATURES
@@ -875,7 +886,9 @@ def evaluate(
 
     wikidata_mappings = load_wikidata_mappings()
     logging.info("WIKIDATA_MAPPINGS:\n%s", json.dumps(wikidata_mappings, indent=2, ensure_ascii=False))
-    logging.info("NAIVE APPROACH:%s", str(naive_approach))
+    logging.info("APPROACH:%s", str(approach))
+    logging.info("MODEL_NAME:%s", str(model_name))
+    logging.info("THRESHOLD:%s", str(threshold))
 
     # ---------- enumerate (variable, model) pairs ------------------------
     for v_idx, gt_path in enumerate(sorted(data_dir.glob("*.json")), 1):
@@ -905,7 +918,7 @@ def evaluate(
 
         for model in models:
             for temp in temps:
-                tasks.append((model, gt, prompt, shot_mode, temp, wikidata_mappings, naive_approach))
+                tasks.append((model, gt, prompt, shot_mode, temp, wikidata_mappings, approach, model_name, threshold))
 
     rows: list[dict] = []
 
@@ -938,7 +951,15 @@ def main() -> None:
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
     parser.add_argument("--workers", type=int, default=32, help="Parallel requests")
     parser.add_argument("--temps", type=float, nargs="+", help="Override the default temperature grid")
-    parser.add_argument('--naive_approach', action=argparse.BooleanOptionalAction)
+    parser.add_argument(
+        "--approach",
+        type=str,
+        choices=["naive", "embedding", "cross-encoder"],
+        default="naive",
+        help="Wikidata linking approach (naive / embedding / cross-encoder). " "If omitted, all four modes are executed.",
+    )
+    parser.add_argument('--model_name', type=str, default="all-MiniLM-L6-v2", help="Sentence tranformer model to use for Wikipedia linking. Only used when approach is either embedding or cross-encoder.")
+    parser.add_argument('--threshold', type=float, default=0.0, help="Threshold used to decide if a candidate can be used as final prediction in Wikidata linking. Used only in cross-encoder approach and with Qwen3.")
     args = parser.parse_args()
     temps = args.temps or TEMPERATURES
     # ---------------- run requested shot modes ---------------------------
@@ -952,7 +973,9 @@ def main() -> None:
             max_vars=args.max_vars,
             models=args.only_model,
             workers=args.workers,
-            naive_approach=args.naive_approach
+            approach=args.approach,
+            model_name=args.model_name,
+            threshold=args.threshold
         )
         all_rows.extend(rows)
 
