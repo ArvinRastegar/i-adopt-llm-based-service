@@ -84,6 +84,7 @@ Judge whether the Document meets the requirements based on the Query and the Ins
 ```bash
 python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --model_name tomaarsen/Qwen3-Reranker-0.6B-seq-cls
 ```
+[log file](benchmarking_example/benchmarking_logs/iadopt_run_20250905_124920.log)
 
 |     F_exact    |     P_exact    |     R_exact    |
 |----------------|----------------|----------------|
@@ -92,6 +93,7 @@ python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --mode
 ```bash
 python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --model_name tomaarsen/Qwen3-Reranker-0.6B-seq-cls --threshold 0.5
 ```
+[log file](benchmarking_example/benchmarking_logs/iadopt_run_20250910_111218.log)
 
 |     F_exact    |     P_exact    |     R_exact    |
 |----------------|----------------|----------------|
@@ -100,6 +102,7 @@ python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --mode
 ```bash
 python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --model_name tomaarsen/Qwen3-Reranker-0.6B-seq-cls --threshold 0.9
 ```
+[log file](benchmarking_example/benchmarking_logs/iadopt_run_20250910_153120.log)
 
 |     F_exact    |     P_exact    |     R_exact    |
 |----------------|----------------|----------------|
