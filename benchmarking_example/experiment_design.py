@@ -615,11 +615,11 @@ def format_document(document):
     suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
     return f"<Document>: {document}{suffix}"
 
-def get_wikidata_entity(term, approach="naive", context="", model_name="all-MiniLM-L6-v2", threshold=0.0):
+def get_wikidata_entity(term, approach="naive", context="", model_name="all-MiniLM-L6-v2", threshold=0.0, none_if_no_link=False):
     """Returns the associated wikidata URI (in format http://www.wikidata.org/entity/Q??) 
-    to the given term if there is a match, if not, the same term is returned.
+    to the given term if there is a match, if not, None is returned if none_if_no_link is set to True, otherwise the same term is returned.
     """
-    output_entity = term
+    output_entity = None if none_if_no_link else term
     encoded_term = urllib.parse.quote_plus(term)
     headers = {
 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0",
@@ -669,9 +669,9 @@ def get_wikidata_entity(term, approach="naive", context="", model_name="all-Mini
     return output_entity
 
 
-def link2wikidata(input_dict: Dict[str, Any], approach="naive", model_name="all-MiniLM-L6-v2", threshold=0.0) -> Dict[str, Any]:
+def link2wikidata(input_dict: Dict[str, Any], approach="naive", model_name="all-MiniLM-L6-v2", threshold=0.0, none_if_no_link=False) -> Dict[str, Any]:
     """Given a prediction dictionary with terms, looks for their associated Wikidata URIs,
-    and returns a dictionary with their links if a match is found, and with the same terms if not.
+    and returns a dictionary with their links if a match is found, and if not, Nos will be return if none_if_no_link is set to True, and the same term otherwise.
     """ 
     input_dict_copy = input_dict.copy()
     for key in ONTO_KEYS:
@@ -679,28 +679,28 @@ def link2wikidata(input_dict: Dict[str, Any], approach="naive", model_name="all-
         if key == "hasConstraint":
             if len(val)>0:
                 input_dict_copy[key] = [{
-                    "label": get_wikidata_entity(constraint["label"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold), 
-                    "on": get_wikidata_entity(constraint["on"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold) 
+                    "label": get_wikidata_entity(constraint["label"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link), 
+                    "on": get_wikidata_entity(constraint["on"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link) 
                     } for constraint in input_dict[key]
                 ]
         else:
             if isinstance(val, dict) and "AsymmetricSystem" in val:
                 asym_keys = ("AsymmetricSystem", "hasSource", "hasTarget")
                 input_dict_copy[key] = {
-                    asym_key: get_wikidata_entity(val[asym_key], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold) 
+                    asym_key: get_wikidata_entity(val[asym_key], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link) 
                     for asym_key in asym_keys 
                 }
             elif isinstance(val, dict) and "SymmetricSystem" in val:
                 input_dict_copy[key] = {
-                    "SymmetricSystem": get_wikidata_entity(val["SymmetricSystem"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold), 
+                    "SymmetricSystem": get_wikidata_entity(val["SymmetricSystem"], approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link), 
                     "hasPart": [
-                        get_wikidata_entity(part, approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold) 
+                        get_wikidata_entity(part, approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link) 
                         for part in val["hasPart"]
                     ]
                 }
             else:
                 if not val=="":
-                    input_dict_copy[key] = get_wikidata_entity(val, approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold)
+                    input_dict_copy[key] = get_wikidata_entity(val, approach=approach, context=f"{input_dict["label"]}", model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link)
     return input_dict_copy
 
 
@@ -717,16 +717,19 @@ def load_wikidata_mappings() -> Dict[str, Any]:
     return mappings
 
 
-def get_wikidata_entity_from_mappings(term, mappings):
-    return "http://www.wikidata.org/entity/"+mappings.get(term) if mappings.get(term) else term
+def get_wikidata_entity_from_mappings(term, mappings, none_if_no_link=False):
+    if mappings.get(term):
+        return "http://www.wikidata.org/entity/"+mappings.get(term)
+    else:
+        return None if none_if_no_link else term
 
 
-def linkGT2wikidata(input_dict: Dict[str, Any], mappings: Dict[str, Any]) -> Dict[str, Any]:
+def linkGT2wikidata(input_dict: Dict[str, Any], mappings: Dict[str, Any], none_if_no_link: bool =False) -> Dict[str, Any]:
     """This function expects a ground truth decomposition, and a dict with mappings 
     (term->{wikidata_entity_id (format: Q???),None}. The function will convert terms to 
     wikidata URIs (in format http://www.wikidata.org/entity/Q???) using the mappings. 
     Terms in decomposition must be present in the mappings dict, if the term is not in 
-    the mappings or there is not a link, the same term will be used.
+    the mappings or there is not a link, a None will be returned.
     """
     input_dict_copy = input_dict.copy()
     for key in ONTO_KEYS:
@@ -735,21 +738,21 @@ def linkGT2wikidata(input_dict: Dict[str, Any], mappings: Dict[str, Any]) -> Dic
             if len(val)>0:
                 input_dict_copy[key] = [
                     {
-                        "label": get_wikidata_entity_from_mappings(constraint["label"], mappings), 
-                        "on": get_wikidata_entity_from_mappings(constraint["on"], mappings) 
+                        "label": get_wikidata_entity_from_mappings(constraint["label"], mappings, none_if_no_link=none_if_no_link), 
+                        "on": get_wikidata_entity_from_mappings(constraint["on"], mappings, none_if_no_link=none_if_no_link) 
                     } for constraint in input_dict[key]]
         else:
             if isinstance(val, dict) and "AsymmetricSystem" in val:
                 asym_keys = ("AsymmetricSystem", "hasSource", "hasTarget")
-                input_dict_copy[key] = {asym_key: get_wikidata_entity_from_mappings(val[asym_key], mappings) for asym_key in asym_keys }
+                input_dict_copy[key] = {asym_key: get_wikidata_entity_from_mappings(val[asym_key], mappings, none_if_no_link=none_if_no_link) for asym_key in asym_keys }
             elif isinstance(val, dict) and "SymmetricSystem" in val:
                 input_dict_copy[key] = {
-                    "SymmetricSystem": get_wikidata_entity_from_mappings(val["SymmetricSystem"], mappings), 
-                    "hasPart": [get_wikidata_entity_from_mappings(part,mappings) for part in val["hasPart"]]
+                    "SymmetricSystem": get_wikidata_entity_from_mappings(val["SymmetricSystem"], mappings, none_if_no_link=none_if_no_link), 
+                    "hasPart": [get_wikidata_entity_from_mappings(part,mappings, none_if_no_link=none_if_no_link) for part in val["hasPart"]]
                 }
             else:
                 if not val=="":
-                    input_dict_copy[key] = get_wikidata_entity_from_mappings(val,mappings)
+                    input_dict_copy[key] = get_wikidata_entity_from_mappings(val,mappings, none_if_no_link=none_if_no_link)
     return input_dict_copy
 
 # --------------------------------------------------------------------------- #
@@ -764,7 +767,8 @@ def _run_one(
     mappings: Dict[str, Any],
     approach: str,
     model_name: str,
-    threshold: float
+    threshold: float,
+    none_if_no_link: bool
 ) -> Dict[str, Any]:
     # pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
 
@@ -775,8 +779,8 @@ def _run_one(
 
         # Link prediction and ground truth entities to wikidata
         # pred_with_links = link2wikidata(pred, naive_approach=naive_approach)
-        pred_with_links = link2wikidata(gt, approach=approach, model_name=model_name, threshold=threshold) 
-        gt_with_links = linkGT2wikidata(gt, mappings)
+        pred_with_links = link2wikidata(gt, approach=approach, model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link) 
+        gt_with_links = linkGT2wikidata(gt, mappings, none_if_no_link=none_if_no_link)
 
         # ---------- human-readable logs -----------------------------------
         logging.info("MODEL | %-35s | shot=%d | T=%.2f | %s", model, shot, temperature, gt["label"])
@@ -876,7 +880,8 @@ def evaluate(
     workers: int = 8,
     approach: str = "naive",
     model_name: str = "all-MiniLM-L6-v2",
-    threshold: float = 0.0
+    threshold: float = 0.0,
+    none_if_no_link: bool = False
 ) -> List[Dict[str, Any]]:
 
     temps = temps or TEMPERATURES
@@ -918,7 +923,7 @@ def evaluate(
 
         for model in models:
             for temp in temps:
-                tasks.append((model, gt, prompt, shot_mode, temp, wikidata_mappings, approach, model_name, threshold))
+                tasks.append((model, gt, prompt, shot_mode, temp, wikidata_mappings, approach, model_name, threshold, none_if_no_link))
 
     rows: list[dict] = []
 
@@ -960,6 +965,7 @@ def main() -> None:
     )
     parser.add_argument('--model_name', type=str, default="all-MiniLM-L6-v2", help="Sentence tranformer model to use for Wikipedia linking. Only used when approach is either embedding or cross-encoder.")
     parser.add_argument('--threshold', type=float, default=0.0, help="Threshold used to decide if a candidate can be used as final prediction in Wikidata linking. Used only in cross-encoder approach and with Qwen3.")
+    parser.add_argument('--none_if_no_link', action='store_true', help="If this flag is used, whenever there is not a link (both in prediction and ground truth) a None will be used insted of the same term.")
     args = parser.parse_args()
     temps = args.temps or TEMPERATURES
     # ---------------- run requested shot modes ---------------------------
@@ -975,7 +981,8 @@ def main() -> None:
             workers=args.workers,
             approach=args.approach,
             model_name=args.model_name,
-            threshold=args.threshold
+            threshold=args.threshold,
+            none_if_no_link=args.none_if_no_link
         )
         all_rows.extend(rows)
 
