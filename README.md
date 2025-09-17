@@ -107,3 +107,31 @@ python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --mode
 |     F_exact    |     P_exact    |     R_exact    |
 |----------------|----------------|----------------|
 |     0.815      |     0.709      |     1          |
+
+### Evaluation only when there is a correct link
+
+For the previous results, each time there is not a link, the same term is used, however, we might be interested in evaluate only when there is a link. To do this, we can use the "--none_if_no_link" flag.
+
+```bash
+python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --model_name tomaarsen/Qwen3-Reranker-0.6B-seq-cls --none_if_no_link
+```
+
+|     F_exact    |     P_exact    |     R_exact    |
+|----------------|----------------|----------------|
+|     0.631      |     0.497      |     0.92       |
+
+```bash
+python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --model_name tomaarsen/Qwen3-Reranker-0.6B-seq-cls --threshold 0.5 --none_if_no_link
+```
+
+|     F_exact    |     P_exact    |     R_exact    |
+|----------------|----------------|----------------|
+|     0.639      |     0.504      |     0.92       |
+
+```bash
+python experiment_design.py --shot 0 --workers 1 --approach cross-encoder --model_name tomaarsen/Qwen3-Reranker-0.6B-seq-cls --threshold 0.9 --none_if_no_link
+```
+
+|     F_exact    |     P_exact    |     R_exact    |
+|----------------|----------------|----------------|
+|     0.66       |     0.534      |     0.92       |
