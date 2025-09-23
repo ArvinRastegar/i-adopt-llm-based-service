@@ -1,0 +1,5039 @@
+2025-07-30 17:16:23,606 | INFO | Logging to /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_run_20250730_171623.log
+2025-07-30 17:16:23,606 | INFO | Pre-processing log → /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/benchmarking_logs/iadopt_preprocess_20250730_171623.log
+2025-07-30 17:16:23,662 | INFO | Use pytorch device_name: mps
+2025-07-30 17:16:23,662 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-07-30 17:16:25,863 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Peak ground acceleration
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Peak ground acceleration
+comment: Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,865 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Probablity of occurence of habitat
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Probablity of occurence of habitat
+comment: Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,865 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Feral-free enclosure area
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Feral-free enclosure area
+comment: The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,865 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Foraminifera, planktic, size
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Foraminifera, planktic, size
+comment: Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,866 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Standard metabolic rate in mg of Oxygen per hour
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Standard metabolic rate in mg of Oxygen per hour
+comment: The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,866 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)
+comment: The amount of docosahexaenoic acid relative to dry weight in an individual.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,866 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Biological sex
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Biological sex
+comment: Biological sex [female | male | intersex | unknown]
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,867 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Air daily maximum temperature
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Air daily maximum temperature
+comment: Temperature of the air in a height of 1.7 meter, daily maximum
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,867 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Concentration of DDT impacted by industry
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Concentration of DDT impacted by industry
+comment: Concentration of DDT in a given year at a site impacted by industry.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,867 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Resting systolic blood pressure
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Resting systolic blood pressure
+comment: Resting blood pressure systolic in millimeters of mercury (mmHg)
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,867 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Current smoking status
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Current smoking status
+comment: Smoking status current of a patient
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,867 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area
+comment: Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,868 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area
+comment: Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,868 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Dynamic shear viscosity of polystyrene PS042
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Dynamic shear viscosity of polystyrene PS042
+comment: Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,868 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Sheet resistance of layer of gold
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Sheet resistance of layer of gold
+comment: The sheet resistance of a 5-nanometer-thick layer of gold.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,890 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Mass concentration of isobutylene in chloroform
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Mass concentration of isobutylene in chloroform
+comment: Mass concentration of isobutylene in chloroform.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,891 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Overnight stays in 3-star hotel near the sea shore
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Overnight stays in 3-star hotel near the sea shore
+comment: Number of nights in a 3-star hotel near the sea shore
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,891 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Nervosity feelings
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Nervosity feelings
+comment: In the past 30 days, how often did you feel nervous?
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,892 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Cloud cover
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Cloud cover
+comment: The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,892 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Date of last PCR-test
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Date of last PCR-test
+comment: date of last COVID-19 PCR test performed by a certified laboratory
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,892 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Atmospheric boundary layer height defined by temperature inversion
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Atmospheric boundary layer height defined by temperature inversion
+comment: Atmospheric boundary layer height defined by temperature inversion.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,893 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Atmosphere optical thickness of particulate organic matter ambient aerosol
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Atmosphere optical thickness of particulate organic matter ambient aerosol
+comment: Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,893 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Maximum trunk char height
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Maximum trunk char height
+comment: Trunk char height is a measure of the extent of fire height above ground which is measured from the base to the highest point of fire occurrence on the tree trunk. Maximum char height is measured at the community level using a 360° sweep at each sampling location.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,893 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Coarse woody debris abundance
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Coarse woody debris abundance
+comment: CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:25,894 | INFO | 
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+PROMPT | shot=3 | Foliage projective cover in the lower canopy strata
+You are an ontology engineer.
+Your task is to output **one** JSON object that satisfies the
+JSON-Schema provided below.
+
+▸ Copy *label* and *comment* verbatim from the user section.
+▸ Do **NOT** introduce keys that are absent from the schema.
+▸ Every value must respect the declared JSON type
+  (e.g. hasProperty is a string, hasConstraint is an array, …).
+▸ Reply with the JSON object only — no markdown fences, no narration.
+
+### JSON-Schema
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/iadopt-variable.json",
+  "title": "I-ADOPT decomposed variable",
+  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "type": "object",
+
+  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Variable name."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Definition / description."
+    },
+    "hasProperty": {
+      "type": "string",
+      "description": "Property being observed (e.g. 'distance', 'temperature')."
+    },
+    "hasStatisticalModifier": {
+      "type": "string",
+      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+    },
+    "hasObjectOfInterest": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+    },
+    "hasContextObject": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Additional background Entity or System that gives context to the Object of Interest."
+    },
+    "hasConstraint": {
+      "type": "array",
+      "description": "List of constraints, each with a label and the target it applies to.",
+      "items": {
+        "type": "object",
+        "required": ["label", "on"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Constraint label."
+          },
+          "on": {
+            "type": "string",
+            "description": "What the constraint applies to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "entityOrSystem": {
+      "description": "Either a simple label or a structured system.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "$comment": "Asymmetric system",
+          "type": "object",
+          "required": [
+            "AsymmetricSystem",
+            "hasSource",
+            "hasTarget",
+            "hasNumerator",
+            "hasDenominator"
+          ],
+          "properties": {
+            "AsymmetricSystem": { "type": "string" },
+            "hasSource":        { "type": "string" },
+            "hasTarget":        { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$comment": "Symmetric system",
+          "type": "object",
+          "required": ["SymmetricSystem", "hasPart"],
+          "properties": {
+            "SymmetricSystem": { "type": "string" },
+            "hasPart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
+
+### Examples (valid against the same schema)
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "comment": "This variable is part of the EBV Connectivity of terrestrial ecosystem habitat types and helps to measure the degree of connection of EUNIS habitats within a landscape, in terms of their spatial distribution. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "hasProperty": "distance",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "hasTarget: habitat patch"
+    }
+  ]
+}
+
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "comment": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass flow rate",
+  "hasMatrix": "organism",
+  "hasObjectOfInterest": "Carbon",
+  "hasConstraint": [
+    {
+      "label": "weight-specific",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "dry",
+      "on": "organism"
+    },
+    {
+      "label": "at non-limiting conditions",
+      "on": "Carbon"
+    },
+    {
+      "label": "at 15°C temperature",
+      "on": "mass flow rate"
+    },
+    {
+      "label": "due to ingestion",
+      "on": "mass flow rate"
+    }
+  ]
+}
+
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "comment": "In accordance with common usage in geophysical disciplines, \"flux\" implies per unit area, called \"flux density\" in physics. \"Vegetation\" means any living plants e.g. trees, shrubs, grass. The specification of a physical process by the phrase \"due_to_\" process means that the quantity named is a single term in a sum of terms which together compose the general quantity named by omitting the phrase. The term \"senescence\" means loss of living biomass excluding plant death, e.g. leaf drop and other seasonal effects. The term refers to changes in the whole plant and is not confined only to leaf drop.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to senescence",
+      "on": "mass flux"
+    }
+  ]
+}
+
+### Variable to decompose
+label: Foliage projective cover in the lower canopy strata
+comment: The proportion of the ground area covered by foliage (or photosynthetic tissue) held in a vertical plane. Foliage Projective Cover is usually expressed as the percentage of ground covered by foliage and can be separated according to vegetation strata.
+
+### Expected output
+*(only the JSON object)*
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2025-07-30 17:16:26,895 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:27,126 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:27,425 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:27,703 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:27,887 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:27,977 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,516 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,519 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,530 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,553 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,604 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,642 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,655 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,663 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,808 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:28,899 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:29,046 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:29,104 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:29,125 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:29,130 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:29,504 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:29,589 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:30,288 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:31,080 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:35,273 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:41,804 | INFO | {"model": "qwen/qwen3-32b", "variable": "Atmospheric boundary layer height defined by temperature inversion", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:16:44,449 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:54,016 | INFO | {"model": "qwen/qwen3-32b", "variable": "Cloud cover", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:16:56,700 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:16:59,614 | INFO | {"model": "qwen/qwen3-32b", "variable": "Feral-free enclosure area", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:16:59,766 | INFO | {"model": "qwen/qwen3-32b", "variable": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:00,567 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:00,642 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:02,140 | INFO | {"model": "qwen/qwen3-32b", "variable": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:04,642 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:08,885 | INFO | {"model": "qwen/qwen3-32b", "variable": "Feral-free enclosure area", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:08,886 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.50 | Feral-free enclosure area
+2025-07-30 17:17:08,886 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "free of feral",
+      "on": "enclosure"
+    }
+  ]
+}
+2025-07-30 17:17:08,886 | INFO | PREDICTED    JSON:
+{
+  "label": "Feral-free enclosure area",
+  "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasStatisticalModifier": "total",
+  "hasObjectOfInterest": "enclosure",
+  "hasConstraint": [
+    {
+      "label": "feral-free",
+      "on": "enclosure"
+    }
+  ],
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-30 17:17:08,886 | ERROR | qwen/qwen3-32b | Feral-free enclosure area: worker crashed – TypeError('sim_constraint() takes 3 positional arguments but 4 were given')
+2025-07-30 17:17:09,744 | INFO | {"model": "qwen/qwen3-32b", "variable": "Atmospheric boundary layer height defined by temperature inversion", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:09,744 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.50 | Atmospheric boundary layer height defined by temperature inversion
+2025-07-30 17:17:09,744 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Atmospheric boundary layer height defined by temperature inversion",
+  "comment": "Atmospheric boundary layer height defined by temperature inversion.",
+  "hasProperty": "height",
+  "hasMatrix": "atmosphere",
+  "hasObjectOfInterest": "atmospheric boundary layer",
+  "hasConstraint": [
+    {
+      "label": "defined by temperature inversion",
+      "on": "atmospheric boundary layer"
+    },
+    {
+      "label": "above the valley floor",
+      "on": "height"
+    }
+  ]
+}
+2025-07-30 17:17:09,745 | INFO | PREDICTED    JSON:
+{
+  "label": "Atmospheric boundary layer height defined by temperature inversion",
+  "comment": "Atmospheric boundary layer height defined by temperature inversion.",
+  "hasProperty": "height",
+  "hasObjectOfInterest": "atmospheric boundary layer",
+  "hasConstraint": [
+    {
+      "label": "temperature inversion",
+      "on": "hasProperty: height"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-30 17:17:09,745 | ERROR | qwen/qwen3-32b | Atmospheric boundary layer height defined by temperature inversion: worker crashed – TypeError('sim_constraint() takes 3 positional arguments but 4 were given')
+2025-07-30 17:17:11,750 | INFO | {"model": "qwen/qwen3-32b", "variable": "Nervosity feelings", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:12,239 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:14,258 | INFO | {"model": "qwen/qwen3-32b", "variable": "Current smoking status", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:15,595 | INFO | {"model": "qwen/qwen3-32b", "variable": "Coarse woody debris abundance", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:15,713 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:16,944 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:18,158 | INFO | {"model": "qwen/qwen3-32b", "variable": "Air daily maximum temperature", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:18,742 | INFO | {"model": "qwen/qwen3-32b", "variable": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:18,743 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.50 | dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area
+2025-07-30 17:17:18,743 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area",
+  "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.",
+  "hasProperty": "mass per area",
+  "hasMatrix": "cell surface",
+  "hasObjectOfInterest": "nanomaterial particle",
+  "hasConstraint": [
+    {
+      "label": "entering the cell",
+      "on": "nanomaterial particle"
+    }
+  ]
+}
+2025-07-30 17:17:18,743 | INFO | PREDICTED    JSON:
+{
+  "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area",
+  "comment": "Correlation of dose and response for nanomaterials toxicity assessment requires information on the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell) and is dependent on a number of factors including the exposure time, the particle density (i.e., whether settling occurs and thus the distribution of particles in the medium is non-homogeneous affecting the local concentration at the cell surface) etc.",
+  "hasProperty": "mass per cell area",
+  "hasObjectOfInterest": "nanomaterial",
+  "hasMatrix": "cell",
+  "hasConstraint": [
+    {
+      "label": "internalised by a specific cell population or per single cell",
+      "on": "cell"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-30 17:17:18,743 | ERROR | qwen/qwen3-32b | dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area: worker crashed – TypeError('sim_constraint() takes 3 positional arguments but 4 were given')
+2025-07-30 17:17:19,721 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:20,571 | INFO | {"model": "qwen/qwen3-32b", "variable": "Mass concentration of isobutylene in chloroform", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:21,647 | INFO | {"model": "qwen/qwen3-32b", "variable": "Nervosity feelings", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:21,647 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.50 | Nervosity feelings
+2025-07-30 17:17:21,647 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Nervosity feelings",
+  "comment": "In the past 30 days, how often did you feel nervous?",
+  "hasProperty": "frequency",
+  "hasMatrix": "person",
+  "hasObjectOfInterest": "nervosity feeling",
+  "hasConstraint": [
+    {
+      "label": "during last 30 days",
+      "on": "frequency"
+    }
+  ]
+}
+2025-07-30 17:17:21,647 | INFO | PREDICTED    JSON:
+{
+  "label": "Nervosity feelings",
+  "comment": "In the past 30 days, how often did you feel nervous?",
+  "hasProperty": "frequency",
+  "hasObjectOfInterest": "nervousness",
+  "hasConstraint": [
+    {
+      "label": "past 30 days",
+      "on": "frequency"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-30 17:17:21,647 | ERROR | qwen/qwen3-32b | Nervosity feelings: worker crashed – TypeError('sim_constraint() takes 3 positional arguments but 4 were given')
+2025-07-30 17:17:21,914 | INFO | {"model": "qwen/qwen3-32b", "variable": "Dynamic shear viscosity of polystyrene PS042", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:22,222 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:22,637 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:24,429 | INFO | {"model": "qwen/qwen3-32b", "variable": "Resting systolic blood pressure", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:26,624 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:28,061 | INFO | {"model": "qwen/qwen3-32b", "variable": "Cloud cover", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:28,061 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.50 | Cloud cover
+2025-07-30 17:17:28,061 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Cloud cover",
+  "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",
+  "hasProperty": "area fraction",
+  "hasMatrix": "atmosphere",
+  "hasObjectOfInterest": "cloud"
+}
+2025-07-30 17:17:28,061 | INFO | PREDICTED    JSON:
+{
+  "label": "Cloud cover",
+  "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",
+  "hasProperty": "amount",
+  "hasMatrix": "sky",
+  "hasObjectOfInterest": "clouds",
+  "hasConstraint": [
+    {
+      "label": "nearest okta",
+      "on": "amount"
+    },
+    {
+      "label": "0-8 scale",
+      "on": "amount"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasContextObject": ""
+}
+2025-07-30 17:17:28,061 | INFO | EXACT CONFUSION | TP=0.000 FP=4.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (0, 1, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-30 17:17:28,063 | INFO | Use pytorch device_name: mps
+2025-07-30 17:17:28,065 | INFO | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-07-30 17:17:28,458 | INFO | {"model": "qwen/qwen3-32b", "variable": "Foraminifera, planktic, size", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:28,950 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:29,786 | INFO | {"model": "qwen/qwen3-32b", "variable": "Concentration of DDT impacted by industry", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:30,713 | INFO | CLOSE CONFUSION | TP=1.000 FP=3.000 FN=0.000 TN=2.000 | per-key={'hasStatisticalModifier': (0, 0, 0, 1), 'hasProperty': (0, 1, 0, 0), 'hasObjectOfInterest': (1, 0, 0, 0), 'hasMatrix': (0, 1, 0, 0), 'hasContextObject': (0, 0, 0, 1), 'hasConstraint': (0.0, 1.0, 0.0, 0.0)}
+2025-07-30 17:17:31,526 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:34,480 | INFO | {"model": "qwen/qwen3-32b", "variable": "Dynamic shear viscosity of polystyrene PS042", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:34,481 | INFO | MODEL | qwen/qwen3-32b                      | shot=3 | T=0.50 | Dynamic shear viscosity of polystyrene PS042
+2025-07-30 17:17:34,481 | INFO | GROUND-TRUTH JSON:
+{
+  "label": "Dynamic shear viscosity of polystyrene PS042",
+  "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+  "hasProperty": "shear viscosity",
+  "hasObjectOfInterest": "polystyrene",
+  "hasConstraint": [
+    {
+      "label": "dynamic",
+      "on": "shear viscosity"
+    }
+  ]
+}
+2025-07-30 17:17:34,482 | INFO | PREDICTED    JSON:
+{
+  "label": "Dynamic shear viscosity of polystyrene PS042",
+  "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+  "hasProperty": "dynamic shear viscosity",
+  "hasObjectOfInterest": "polystyrene PS042",
+  "hasConstraint": [
+    {
+      "label": "under DIN 51810-1 testing conditions",
+      "on": "dynamic shear viscosity"
+    }
+  ],
+  "hasStatisticalModifier": "",
+  "hasMatrix": "",
+  "hasContextObject": ""
+}
+2025-07-30 17:17:34,482 | ERROR | qwen/qwen3-32b | Dynamic shear viscosity of polystyrene PS042: worker crashed – TypeError('sim_constraint() takes 3 positional arguments but 4 were given')
+2025-07-30 17:17:36,573 | INFO | {"model": "qwen/qwen3-32b", "variable": "Atmosphere optical thickness of particulate organic matter ambient aerosol", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": true, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject"], "extra_keys": [], "orig_label": "Atmosphere optical thickness of particulate organic matter ambient aerosol"}
+2025-07-30 17:17:37,289 | INFO | {"model": "qwen/qwen3-32b", "variable": "Sheet resistance of layer of gold", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasMatrix", "hasContextObject"], "extra_keys": []}
+2025-07-30 17:17:37,529 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:39,151 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-30 17:17:39,766 | INFO | {"model": "qwen/qwen3-32b", "variable": "Biological sex", "retry_count": 1, "non_json_prefix": false, "non_json_suffix": false, "unparsable_json": false, "label_overwritten": false, "comment_overwritten": false, "coerced_property_dict": false, "missing_keys": ["hasStatisticalModifier", "hasContextObject", "hasConstraint"], "extra_keys": []}
+2025-07-30 17:17:42,620 | INFO | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"

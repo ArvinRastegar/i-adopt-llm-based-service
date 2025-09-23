@@ -80,7 +80,8 @@ MODEL_NAMES = [
 
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
 CLOSE_THR = 0.80  # cosine threshold for “close”
-TEMPERATURES = [0.5]  # can be overridden via CLI
+TEMPERATURES = [0, 0.5, 1]  # can be overridden via CLI
+TEMPERATURES = [0.5]
 
 OUTBOOK_DIR = pathlib.Path("benchmarking_outputs")
 OUTBOOK_DIR.mkdir(exist_ok=True)
