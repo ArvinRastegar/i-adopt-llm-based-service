@@ -779,8 +779,8 @@ def _run_one(
 
         # Link prediction and ground truth entities to wikidata
         # pred_with_links = link2wikidata(pred, naive_approach=naive_approach)
-        pred_with_links = link2wikidata(gt, approach=approach, model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link) 
-        gt_with_links = linkGT2wikidata(gt, mappings, none_if_no_link=none_if_no_link)
+        pred_with_links = link2wikidata(gt, approach=approach, model_name=model_name, threshold=threshold, none_if_no_link=none_if_no_link) # Change gt with llm response from phase 1
+        gt_with_links = linkGT2wikidata(gt, mappings, none_if_no_link=none_if_no_link) # This has to change, the ground truth would be as the one you sent, we use the URIs from there
 
         # ---------- human-readable logs -----------------------------------
         logging.info("MODEL | %-35s | shot=%d | T=%.2f | %s", model, shot, temperature, gt["label"])
