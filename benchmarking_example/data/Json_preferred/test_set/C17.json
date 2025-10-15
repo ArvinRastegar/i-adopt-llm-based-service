@@ -2,7 +2,9 @@
   "label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
   "comment": "The amount of docosahexaenoic acid relative to dry weight in an individual.",
   "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
   "hasMatrix": "organism",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q7239",
   "hasObjectOfInterest": "docosahexaenoic acid",
   "hasConstraint": [
     {

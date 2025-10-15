@@ -2,6 +2,7 @@
   "label": "Nervosity feelings",
   "comment": "In the past 30 days, how often did you feel nervous?",
   "hasProperty": "frequency",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q124528241",
   "hasMatrix": "person",
   "hasObjectOfInterest": "nervosity feeling",
   "hasConstraint": [

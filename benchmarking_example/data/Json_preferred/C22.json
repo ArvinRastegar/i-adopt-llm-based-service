@@ -3,6 +3,7 @@
   "comment": "Smoking status current of a patient",
   "hasProperty": "smoking status",
   "hasObjectOfInterest": "patient",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q181600",
   "hasConstraint": [
     {
       "label": "current",

@@ -3,7 +3,9 @@
   "comment": "Number of nights in a 3-star hotel near the sea shore",
   "hasProperty": "count",
   "hasMatrix": "hotel",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q27686",
   "hasObjectOfInterest": "overnight stay",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q3346212",
   "hasConstraint": [
     {
       "label": "near the sea shore",

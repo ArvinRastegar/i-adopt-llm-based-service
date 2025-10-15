@@ -3,5 +3,6 @@
   "comment": "CWD abundance per hectare (m2/hectare) is the abundance of CWD measured from all the plots/transects scaled to a hectare (100 x 100 m). They are calculated using the formula (see https://www.sciencedirect.com/science/article/pii/S037811270900783X)",
   "hasProperty": "area fraction",
   "hasMatrix": "ground",
-  "hasObjectOfInterest": "coarse woody debris"
+  "hasObjectOfInterest": "coarse woody debris",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2069734"
 }

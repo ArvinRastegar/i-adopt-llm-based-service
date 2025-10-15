@@ -2,7 +2,9 @@
   "label": "Atmospheric boundary layer height defined by temperature inversion",
   "comment": "Atmospheric boundary layer height defined by temperature inversion.",
   "hasProperty": "height",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q208826",
   "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
   "hasObjectOfInterest": "atmospheric boundary layer",
   "hasConstraint": [
     {

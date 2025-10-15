@@ -2,6 +2,7 @@
   "label": "Feral-free enclosure area",
   "comment": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
   "hasProperty": "area",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11500",
   "hasObjectOfInterest": "enclosure",
   "hasConstraint": [
     {

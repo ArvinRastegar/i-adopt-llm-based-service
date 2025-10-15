@@ -2,6 +2,7 @@
   "label": "Peak ground acceleration",
   "comment": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
   "hasProperty": "acceleration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11376",
   "hasObjectOfInterest": "ground",
   "hasStatisticalModifier": "maximum",
   "hasConstraint": [

@@ -2,8 +2,11 @@
   "label": "Standard metabolic rate in mg of Oxygen per hour",
   "comment": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
   "hasProperty": "mass flow rate",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q1366187",
   "hasMatrix": "organism",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q7239",
   "hasObjectOfInterest": "oxygen",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q629",
   "hasConstraint": [
     {
       "label": "ectotherm",

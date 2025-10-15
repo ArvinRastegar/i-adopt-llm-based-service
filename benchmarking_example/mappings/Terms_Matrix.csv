@@ -1,0 +1,14 @@
+Domain,Concept,EnvThes,SWEET,Earth Sciences,GCMD,IOBC,OZCAR,INRAE,NCIT,CHEBI,Wikidata
+extraterrestrial environment,solar wind,,http://sweetontology.net/phenHelio/SolarWind,http://data.loterre.fr/ark:/67375/26L-ZTJ994X8-D,https://gcmd.earthdata.nasa.gov/kms/concept/5d290bd8-049b-4002-86c8-8acba563d0e1,,,,,,https://www.wikidata.org/wiki/Q79833
+atmosphere,atmosphere,http://vocabs.lter-europe.net/EnvThes/21920,http://sweetontology.net/realm/Atmosphere,http://data.loterre.fr/ark:/67375/26L-WHXPPTS6-6,,,https://w3id.org/ozcar-theia/c_6e0a5597,http://opendata.inrae.fr/thesaurusINRAE/c_412,,,https://www.wikidata.org/wiki/Q8104
+atmosphere,ambient aerosol particle,http://vocabs.lter-europe.net/EnvThes/30361,,,,,,,,,
+terrestrial ecosystem,soil,http://vocabs.lter-europe.net/EnvThes/24,http://sweetontology.net/matrSediment/Soil,http://data.loterre.fr/ark:/67375/26L-H9RWX77X-5,,,https://w3id.org/ozcar-theia/c_dc6163a1,http://opendata.inrae.fr/thesaurusINRAE/c_1524,,,https://www.wikidata.org/wiki/Q36133
+terrestrial ecosystem,vegetation,http://vocabs.lter-europe.net/EnvThes/20535,http://sweetontology.net/matrPlant/Vegetation,http://data.loterre.fr/ark:/67375/26L-K5L0TBN4-L,,,https://w3id.org/ozcar-theia/c_d63e406d,http://opendata.inrae.fr/thesaurusINRAE/c_8895,,,https://www.wikidata.org/wiki/Q187997
+terrestrial ecosystem,trunk (tree),,http://sweetontology.net/matrPlant/Trunk,,,http://purl.jp/bio/4/id/200906090403689217,https://w3id.org/ozcar-theia/c_9eb61d4a,http://opendata.inrae.fr/thesaurusINRAE/c_6419,,,https://www.wikidata.org/wiki/Q193472
+terrestrial ecosystem,ground,http://vocabs.lter-europe.net/EnvThes/30365,http://sweetontology.net/realmSoil/Ground,,,,,http://opendata.inrae.fr/thesaurusINRAE/c_5217,,,
+geology,sedimentary rock,,http://sweetontology.net/matrRock/SedimentaryRock,http://data.loterre.fr/ark:/67375/26L-VC1JBQPX-8,,,,http://opendata.inrae.fr/thesaurusINRAE/c_5217,,,https://www.wikidata.org/wiki/Q82480
+terrestrial ecosystem,sediment,http://vocabs.lter-europe.net/EnvThes/20899,,http://data.loterre.fr/ark:/67375/26L-CRNF7SJ0-B,,,,http://opendata.inrae.fr/thesaurusINRAE/c_4436,,,https://www.wikidata.org/wiki/Q180184
+biodiversity,organism,http://vocabs.lter-europe.net/EnvThes/26,,,,,,,http://purl.obolibrary.org/obo/NCIT_C14250,,https://www.wikidata.org/wiki/Q7239
+biology,cell surface,,,,,,,http://opendata.inrae.fr/thesaurusINRAE/c_8980,http://purl.obolibrary.org/obo/NCIT_C33974,,https://www.wikidata.org/wiki/Q189094
+chemistry,chloroform,,,,,,,http://opendata.inrae.fr/thesaurusINRAE/c_667c3f72,http://purl.obolibrary.org/obo/NCIT_C29815,http://purl.obolibrary.org/obo/CHEBI_35255,https://www.wikidata.org/wiki/Q172275
+social science,hotel,,,,,,,,,,https://www.wikidata.org/wiki/Q27686

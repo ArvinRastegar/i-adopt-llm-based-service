@@ -2,8 +2,11 @@
   "label": "Air daily maximum temperature",
   "comment": "Temperature of the air in a height of 1.7 meter, daily maximum",
   "hasProperty": "temperature",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11466",
   "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
   "hasObjectOfInterest": "air",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292",
   "hasStatisticalModifier": "maximum",
   "hasConstraint": [
     {

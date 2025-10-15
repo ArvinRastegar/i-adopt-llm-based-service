@@ -4,6 +4,7 @@
   "hasProperty": "area fraction",
   "hasMatrix": "ground",
   "hasObjectOfInterest": "foliage",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18250160",
   "hasConstraint": [
     {
       "label": "lower canopy strata",

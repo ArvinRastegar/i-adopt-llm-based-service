@@ -2,5 +2,6 @@
   "label": "Biological sex",
   "comment": "Biological sex [female | male | intersex | unknown]",
   "hasProperty": "biological sex",
-  "hasObjectOfInterest": "organism"
+  "hasObjectOfInterest": "organism",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7239"
 }

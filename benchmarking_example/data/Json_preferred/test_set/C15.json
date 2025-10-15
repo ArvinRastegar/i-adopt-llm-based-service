@@ -3,6 +3,7 @@
   "comment": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
   "hasProperty": "size",
   "hasMatrix": "sediment",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q180184",
   "hasObjectOfInterest": "foraminfers",
   "hasConstraint": [
     {

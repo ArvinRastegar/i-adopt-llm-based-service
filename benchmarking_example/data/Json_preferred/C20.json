@@ -2,7 +2,9 @@
   "label": "Concentration of DDT impacted by industry",
   "comment": "Concentration of DDT in a given year at a site impacted by industry.",
   "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
   "hasMatrix": "soil",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
   "hasObjectOfInterest": "DDT",
   "hasConstraint": [
     {
