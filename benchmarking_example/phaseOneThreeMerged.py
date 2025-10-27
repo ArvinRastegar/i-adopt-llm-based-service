@@ -435,6 +435,20 @@ def _to_wiki_url(uri: Optional[str]) -> Optional[str]:
     return f"https://www.wikidata.org/wiki/{q}" if q else canonicalize_uri_for_compare(uri)
 
 
+def format_queries(query, instruction=None):
+    prefix = '<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".<|im_end|>\n<|im_start|>user\n'
+    if instruction is None:
+        instruction = (
+            "Given a web search query, retrieve relevant passages that answer the query"
+        )
+    return f"{prefix}<Instruct>: {instruction}\n<Query>: {query}\n"
+
+
+def format_document(document):
+    suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    return f"<Document>: {document}{suffix}"
+
+
 def get_wikidata_entity(
     term: str, approach: str = "naive", context: str = "", model_name: str = "all-MiniLM-L6-v2", threshold: float = 0.0
 ) -> Optional[str]:
@@ -475,9 +489,14 @@ def get_wikidata_entity(
 
         if approach == "cross-encoder":
             model = load_crossencoder("tomaarsen/Qwen3-Reranker-0.6B-seq-cls")
-            query = f'Definition of "{term}" in context: "{context}"'
-            docs = [f'label: "{s.get("label","")}", description: "{s.get("description","")}"' for s in search]
-            scores = model.predict([(query, d) for d in docs])
+            task = "Given a web search query, retrieve relevant passages that answer the query"
+            queries = [f'Definition of "{term}" in context: "{context}"'] * len(search)
+            documents = [f"label: \"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\"" for search_entry in search]
+            pairs = [
+                [format_queries(query, task), format_document(doc)]
+                for query, doc in zip(queries, documents)
+            ]
+            scores = model.predict(pairs)
             # Sort results by score (descending)
             ranked = sorted(zip(search, scores), key=lambda x: x[1], reverse=True)
 
