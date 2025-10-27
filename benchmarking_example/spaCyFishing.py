@@ -26,16 +26,30 @@ from itertools import product
 import numpy as np
 from dotenv import load_dotenv
 import urllib.parse
-
 import requests
 
-try:
-    import requests_cache
+# import requests_cache
+import spacy
+from spacyfishing import EntityFishing
+import threading
 
-    _CACHE_SESSION = requests_cache.CachedSession("wikidata_cache", backend="sqlite", expire_after=None)
-    _REQUESTS = _CACHE_SESSION
-except Exception:
-    _REQUESTS = requests  # fallback without cache
+# Define spaCyFishing profiles we want to test
+SPACYFISHING_PROFILES = {}
+SPACYFISHING_LOCKS = {}
+ENTITY_FISHING_API = "https://cloud.science-miner.com/nerd/service/disambiguate"
+
+for suffix, cfg in [
+    ("default", {"language": "en", "extra_info": False}),
+    ("extra_info", {"language": "en", "extra_info": True}),
+]:
+    nlp = spacy.blank("en")
+    # IMPORTANT: entityfishing expects sentences
+    nlp.add_pipe("sentencizer")
+    nlp.add_pipe("entityfishing", config=cfg)
+    SPACYFISHING_PROFILES[f"spacyfishing_{suffix}"] = nlp
+    SPACYFISHING_LOCKS[f"spacyfishing_{suffix}"] = threading.Lock()
+
+_REQUESTS = requests  # fallback without cache
 
 # ----- static config -------------------------------------------------------- #
 load_dotenv()
@@ -267,7 +281,7 @@ def load_embedder(model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
 
 
 @lru_cache(maxsize=2)
-def load_crossencoder(model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2") -> CrossEncoder:
+def load_crossencoder(model_name: str = "tomaarsen/Qwen3-Reranker-0.6B-seq-cls") -> CrossEncoder:
     return CrossEncoder(model_name)
 
 
@@ -443,8 +457,51 @@ def get_wikidata_entity(
     Returns a Wikidata URI for *term* using the chosen approach.
     Output is canonicalized to https://www.wikidata.org/wiki/Qxxxx for consistency.
     """
+
     if not term:
         return None
+
+    # --- spaCyFishing approaches ------------------------------------------
+    if approach.startswith("spacyfishing"):
+        try:
+            payload = {
+                "text": term,
+                "language": "en",
+            }
+            headers = {"Content-Type": "application/json"}
+            resp = requests.post(ENTITY_FISHING_API, headers=headers, json=payload, timeout=30)
+            resp.raise_for_status()
+            data = resp.json()
+            entities = data.get("entities", [])
+            if not entities:
+                return None
+
+            # Pick the top candidate with a Wikidata QID
+            candidates = []
+            for ent in entities:
+                for cand in ent.get("rawName", []):
+                    qid = ent.get("wikidataId")
+                    if qid:
+                        score = ent.get("nerd_selection_score", 1.0)
+                        candidates.append((qid, score, ent.get("rawName")))
+            if not candidates:
+                return None
+
+            candidates.sort(key=lambda x: x[1], reverse=True)
+            best_qid, best_score, ent_text = candidates[0]
+            logging.info(
+                "Remote entity-fishing | term=%r | candidate=%r | kb_id=%s | score=%.4f",
+                term,
+                ent_text,
+                best_qid,
+                best_score,
+            )
+            return _to_wiki_url(best_qid)
+        except Exception as e:
+            logging.warning("Remote entity-fishing failure for %r: %r", term, e)
+            return None
+
+    # --- existing methods (naive / embedding / cross-encoder) -------------
     encoded = urllib.parse.quote_plus(term)
     headers = {"User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"}
     try:
@@ -457,7 +514,6 @@ def get_wikidata_entity(
             logging.warning("Wikidata API HTTP %s for %r", resp.status_code, term)
             return None
         search = resp.json().get("search", [])
-
         if not search:
             return None
 
@@ -475,27 +531,29 @@ def get_wikidata_entity(
             return _to_wiki_url(search[idx]["id"])
 
         if approach == "cross-encoder":
-            model = load_crossencoder("tomaarsen/Qwen3-Reranker-0.6B-seq-cls")
+            model = load_crossencoder()
             query = f'Definition of "{term}" in context: "{context}"'
             docs = [f'label: "{s.get("label","")}", description: "{s.get("description","")}"' for s in search]
             scores = model.predict([(query, d) for d in docs])
             # Sort results by score (descending)
             ranked = sorted(zip(search, scores), key=lambda x: x[1], reverse=True)
 
-            # Log neatly: original term, candidate label, score
             logging.info("Cross-encoder ranking | term=%r | context=%r", term, context)
             for s, score in ranked:
                 logging.info(
-                    "  term=%r | candidate=%r | score=%.4f | id=%s", term, s.get("label"), float(score), s.get("id")
+                    "  term=%r | candidate=%r | score=%.4f | id=%s",
+                    term,
+                    s.get("label"),
+                    float(score),
+                    s.get("id"),
                 )
 
-            # Pick top candidate if above threshold
             best_s, best_score = ranked[0]
             if float(best_score) >= float(threshold):
                 return _to_wiki_url(best_s["id"])
             return None
 
-        # default to naive
+        # fallback
         qid = search[0]["id"]
         return _to_wiki_url(qid)
 
@@ -918,19 +976,20 @@ def main() -> None:
     parser.add_argument(
         "--approach",
         type=str,
-        choices=["naive", "embedding", "cross-encoder"],
-        help="Wikidata linking approach",
+        help="Wikidata linking approach: naive, embedding, cross-encoder, spacyfishing_default, spacyfishing_extra",
     )
     parser.add_argument(
         "--model_name", type=str, default=EMBED_MODEL_NAME, help="Sentence Transformer / CrossEncoder model for linking"
     )
-    parser.add_argument("--threshold", type=float, default=0.5, help="Score threshold (used by cross-encoder)")
+    parser.add_argument("--threshold", type=float, default=0.3, help="Score threshold (used by cross-encoder)")
     args = parser.parse_args()
 
     temps = args.temps or TEMPERATURES
     shots = [args.shot] if args.shot is not None else [0, 1, 3, 5]
-    # NEW: if approach not specified → run all three
-    approaches = [args.approach] if args.approach else ["naive", "embedding", "cross-encoder"]
+    # NEW: if approach not specified → run all (including spacyfishing profiles)
+    approaches = (
+        [args.approach] if args.approach else ["naive", "embedding", "cross-encoder", *SPACYFISHING_PROFILES.keys()]
+    )
     all_rows: list[dict] = []
 
     for approach in approaches:
