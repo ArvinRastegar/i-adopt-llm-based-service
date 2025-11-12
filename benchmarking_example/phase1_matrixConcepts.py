@@ -81,7 +81,7 @@ _SYSTEM_RULES = textwrap.dedent(
     Your task is to output **one** JSON object that satisfies the
     JSON-Schema provided below.
 
-    ▸ Copy *label* and *comment* verbatim from the user section.
+    ▸ Copy *comment* verbatim from the user section.
     ▸ Do **NOT** introduce keys that are absent from the schema.
     ▸ Every value must respect the declared JSON type
       (e.g. hasProperty is a string, hasConstraint is an array, …).
@@ -103,7 +103,7 @@ def build_prompt(label: str, comment: str, examples: List[Dict[str, Any]] | None
         f"{_SYSTEM_RULES}\n\n"
         f"### JSON-Schema\n{_SCHEMA_TEXT}\n"
         f"{ex_block}"
-        f"{_USER_HDR}label: {label}\ncomment: {comment}"
+        f"{_USER_HDR}comment: {comment}"
         f"{_EXPECTED}"
     )
 
@@ -185,6 +185,11 @@ def _run_one(model: str, gt: Dict[str, Any], prompt: str, shot: int, temperature
         gt_matrix = gt.get("hasMatrix", "")
         pred_matrix = pred.get("hasMatrix", "")
 
+        # ---------- human-readable logs -----------------------------------
+        logging.info("MODEL | %-35s | shot=%d | T=%.2f | %s", model, shot, temperature, gt["label"])
+        logging.info("GROUND-TRUTH JSON (GT):\n%s", json.dumps(gt, indent=2, ensure_ascii=False))
+        logging.info("PREDICTED JSON (labels only):\n%s", json.dumps(pred, indent=2, ensure_ascii=False))
+
         return {
             "variable": gt["label"],
             "ground_truth_matrix": gt_matrix,  # only hasMatrix field
@@ -220,6 +225,14 @@ def evaluate(
         if any(ex["label"] == gt["label"] for ex in examples):
             continue
         prompt = build_prompt(gt["label"], gt["comment"], examples)
+        logging.info(
+            "\n%s\nPROMPT | shot=%d | %s\n%s\n%s",
+            "═" * 120,
+            shot_mode,
+            gt["label"],
+            prompt,
+            "═" * 120,
+        )
         for model in models:
             for temp in temps:
                 tasks.append((model, gt, prompt, shot_mode, temp))
