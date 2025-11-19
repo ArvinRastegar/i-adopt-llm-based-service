@@ -124,9 +124,84 @@ MATRIX_EXPLANATION = textwrap.dedent(
 """
 ).strip()
 
+REVISED_MATRIX_EXPLANATION = textwrap.dedent(
+    """
+    Additional guidance for this task
+
+    Role summary:
+
+    • hasProperty:
+      The type of characteristic being observed
+      (e.g. "distance", "mass flux", "temperature").
+
+    • hasObjectOfInterest:
+      The Entity whose Property is observed
+      (e.g. "carbon", "organism", "habitat patch", "electron").
+
+    • hasMatrix:
+      An Entity or System that contains or surrounds the
+      ObjectOfInterest. Examples: "soil", "ocean water",
+      "organism", "solar wind", or a system such as
+      "from vegetation to soil".
+
+    • hasConstraint:
+      Short phrases that limit the scope or state of the
+      observation, such as "nearest neighbour", "dry",
+      "at 15°C", "at non-limiting conditions",
+      "due to ingestion".
+
+    Deciding between hasMatrix and hasConstraint:
+
+    • Use hasMatrix when you name an Entity or System
+      that acts as the environment or container of the
+      ObjectOfInterest.
+
+    • Use hasConstraint for state or filter phrases that
+      restrict a Property or Entity, even if they appear
+      in the textual definition. For example:
+        - "nearest neighbour"
+        - "dry"
+        - "at 15°C temperature"
+        - "at non-limiting conditions"
+        - "due to ingestion"
+      These MUST NOT be placed in hasMatrix.
+
+    Defining constraints (hasConstraint array):
+
+    • Each constraint is an object with:
+        - "label": a short phrase for the state or restriction.
+        - "on": EXACTLY which Property or Entity this constraint applies to.
+
+    • IMPORTANT RULE:
+      The "on" value MUST be copied verbatim from one of
+      the keys you already generated in this JSON:
+        - the exact hasProperty string, OR
+        - the exact entity label used in hasObjectOfInterest,
+          hasMatrix, or hasContextObject.
+
+      Do NOT invent new labels for "on".  
+      Do NOT paraphrase.  
+      Always reuse the exact string you already used elsewhere.
+
+    • Examples:
+        label = "nearest neighbour",    on = "distance"
+        label = "dry",                  on = "soil"
+        label = "due to ingestion",     on = "organism"
+        label = "at 15°C temperature",  on = "temperature"
+
+    Important exclusions:
+
+    • Do NOT model units, instruments, methods, or
+      geographical locations in this JSON. These should
+      not appear in hasProperty, hasObjectOfInterest,
+      hasMatrix, or hasConstraint.
+"""
+).strip()
+
 PROMPT_TEMPLATES = {
     "baseline": BASELINE_INSTRUCTIONS,
     "matrix_explainer": BASELINE_INSTRUCTIONS + "\n\n" + MATRIX_EXPLANATION,
+    "matrix_extender": BASELINE_INSTRUCTIONS + "\n\n" + REVISED_MATRIX_EXPLANATION,
 }
 
 _EXAMPLE_HDR = "\n\n### Examples (valid against the same schema)\n"
@@ -607,7 +682,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="I-ADOPT LLM Phase 1 – Matrix & Constraint comparison + evaluation")
     parser.add_argument("--data-dir", type=pathlib.Path, default=DATA_DIR)
     parser.add_argument("--max-vars", type=int, default=30)
-    parser.add_argument("--workers", type=int, default=16)
+    parser.add_argument("--workers", type=int, default=64)
 
     parser.add_argument(
         "--shot",
