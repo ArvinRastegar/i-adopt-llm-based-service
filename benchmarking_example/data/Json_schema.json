@@ -26,7 +26,7 @@
     },
     "hasMatrix": {
       "$ref": "#/$defs/entityOrSystem",
-      "description": "The *Matrix* (Entity or System) in which the observation takes place."
+      "description": "The Matrix (Entity or System) that contains or surrounds the ObjectOfInterest. It must be an Entity or System (e.g. 'soil', 'ocean water', 'solar wind', 'organism'), not a method, instrument, unit, or geographical location."
     },
     "hasObjectOfInterest": {
       "$ref": "#/$defs/entityOrSystem",
@@ -38,18 +38,18 @@
     },
     "hasConstraint": {
       "type": "array",
-      "description": "List of constraints, each with a label and the target it applies to.",
+      "description": "List of Constraints that limit the scope or state of the observation (e.g. 'nearest neighbour', 'dry', 'at 15°C').",
       "items": {
         "type": "object",
         "required": ["label", "on"],
         "properties": {
           "label": {
             "type": "string",
-            "description": "Constraint label."
+            "description": "Short phrase for the state or restriction (e.g. 'nearest neighbour', 'dry', 'at 15°C temperature', 'due to ingestion')."
           },
           "on": {
             "type": "string",
-            "description": "What the constraint applies to."
+            "description": "What the constraint applies to (The name of a Property or Entity in this variable, e.g. 'distance', 'mass flux', 'habitat patch', 'organism')."
           }
         },
         "additionalProperties": false
@@ -62,7 +62,7 @@
 
   "$defs": {
     "entityOrSystem": {
-      "description": "Either a simple label or a structured system.",
+      "description": "Either a simple label (e.g. 'soil', 'ocean water') or a structured system. Asymmetric systems have roles like 'hasSource' and 'hasTarget' (e.g. 'from vegetation to soil'); symmetric systems have a label and 'hasPart' list (e.g. 'line of intersection' with parts 'bedding plane' and 'horizontal plane').",
       "oneOf": [
         { "type": "string" },
         {
