@@ -1,0 +1,53 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C17
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)" ;
+    skos:definition 
+        """The amount of docosahexaenoic acid relative to dry weight in an organism.""" ;
+    rdfs:comment "docosahexaenoic acid, organism, mass fraction, dry -> state: dry, ADD: normalization: per unit mass" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP21.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP31.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP76.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q423345> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q7239> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q899138> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "condition: dry" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q7239> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit mass" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q899138> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q423345>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "docosahexaenoic acid" .
+
+<https://www.wikidata.org/wiki/Q7239>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "organism" .
+
+<https://www.wikidata.org/wiki/Q899138>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass fraction" .

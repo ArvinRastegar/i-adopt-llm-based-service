@@ -1,0 +1,45 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C26
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Sheet resistance of layer of gold" ;
+    skos:definition 
+        """The sheet resistance of a 5-nanometer-thick layer of gold.""" ;
+    rdfs:comment
+        """gold; sheet resistance; size: 5nm thick layer""" ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP63.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q897> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q354718> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "size: 5 nm thick layer" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q897> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q897>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "gold" .
+
+<https://www.wikidata.org/wiki/Q354718>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "sheet resistance" .

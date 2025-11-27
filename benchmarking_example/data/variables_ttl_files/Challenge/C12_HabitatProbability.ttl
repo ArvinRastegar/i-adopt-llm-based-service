@@ -1,0 +1,58 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C12
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Probablity of occurence of habitat" ;
+     skos:definition 
+        """Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats""" ;
+    rdfs:comment "habitat, probability -> propability of occurrence, ADD: Europe, type: EUNIS habitat type, temporal extend: over 1 year, spatial extend: grid cell of 100x100 m" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP40.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP61.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP74.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP75.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q52105> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q941769> ;
+    iop:hasProperty 
+        <https://lod.nal.usda.gov/nalt/137027> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "temporal extent: over 1 year" ;
+             iop:constrains <https://lod.nal.usda.gov/nalt/137027> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "spatial extent: grid cell of 100x100 m" ;
+             iop:constrains <https://lod.nal.usda.gov/nalt/137027> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "type: EUNIS habitat type" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q52105> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q52105>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "habitat" .
+
+<https://www.wikidata.org/wiki/Q941769>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "Europe" .
+
+<https://lod.nal.usda.gov/nalt/137027>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "probability of occurrence" .

@@ -1,0 +1,85 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/HFR> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/iadopt/ETMP>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "ETMP Radial velocity (away from) standard deviation of water current relative to instrument in the water body by high frequency radar" ;
+    skos:definition 
+        """Standard deviation Radial velocity (away from) inof water current relative to instrument in the water body by high frequency radar, evaluated over the coverage period""" ;
+    rdfs:comment "water current; water body; at the sea surface; standard deviation; over the temporal coverage period; sea; velocity; relative to instrument; positive away from the instrument; radial" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP13.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP31.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP40.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP68.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP75.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP81.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q5195029> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q15324> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/wiki/Q165> ;
+    iop:hasStatisticalModifier 
+        <https://www.wikidata.org/wiki/Q159375> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q11465> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "datum: relative to instrument" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q11465> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "location: at the sea surface" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q15324> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "temporal extent: over the temporal coverage period" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q159375> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "sign meaning: positive away from the instrument" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q11465> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "type: radial" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q11465> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q5195029>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "water current" .
+
+<https://www.wikidata.org/wiki/Q15324>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "water body" .
+
+<https://www.wikidata.org/wiki/Q159375>
+    a 
+        iop:StatisticalModifier ;
+    rdfs:label 
+        "standard deviation" .
+
+<https://www.wikidata.org/wiki/Q11465>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "velocity" .
+
+<https://www.wikidata.org/wiki/Q165>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sea" .

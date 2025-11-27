@@ -1,0 +1,71 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/bio/example/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:EC1
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "concentration of endosulfane sulfate in wet flesh of ostrea edulis" ;
+    skos:definition 
+        """Mass concentration of endosulfane sulfate in wet flesh of ostrea edulis, measured in μg/kg.""" ;
+    rdfs:comment
+        """Mass concentration; endosulfane sulfate; wet; flesh->body; ostrea edulis; ADD: normalization: per unit mass. 
+           10 for property:specific, 17 for property:concentration, 30 for matrix, 71 for constraint:normalization""" ;
+    iopp:Pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP17.yaml> ;
+    iopp:Pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP76.yaml> ;
+    iopp:Pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP31.yaml> ;
+    iopp:Pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iopp:Pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP76.yaml> ;
+    iopp:Pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/89> ;
+    iop:hasObjectOfInterest 
+        <http://vocab.nerc.ac.uk/collection/S27/current/CS003625/> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q170494> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/wiki/Q729678> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q589446> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit mass" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q589446> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "state:wet" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q170494> ;
+        ] .
+
+<http://vocab.nerc.ac.uk/collection/S27/current/CS003625/>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "endosulfane sulfate" .
+
+<https://www.wikidata.org/wiki/Q170494>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "body" .
+
+<https://www.wikidata.org/wiki/Q589446>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass concentration" .
+
+<https://www.wikidata.org/wiki/Q729678>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "ostrea edulis" .

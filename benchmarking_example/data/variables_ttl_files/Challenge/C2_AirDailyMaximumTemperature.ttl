@@ -1,0 +1,65 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C2
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Air daily maximum temperature at 1.7m" ;
+    skos:definition 
+        """Thermodynamic temperature of the air in a height of 1.7 meter, daily maximum""" ;
+    rdfs:comment
+        """Thermodynamic temperature; air; in a height of 1.7 meter; daily; maximum - ADD: atmosphere (to distinguish it from indoors); 
+VDP10 for property;  VDP40 for context object; VDP66 for constraint:datum; VDP67 for constraint:condition.""" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP40.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP66.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/8> ;
+    iopp:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q7391292> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/wiki/Q8104> ;
+    iop:hasStatisticalModifier 
+        <https://www.wikidata.org/wiki/Q10578722> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q264647> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "frequency: daily" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q10578722> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "location:  in a height of 1.7 m above ground" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q7391292> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q7391292>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "air" .
+
+<https://www.wikidata.org/wiki/Q10578722>
+    a 
+        iop:StatisticalModifier ;
+    rdfs:label 
+        "maximum" .
+
+<https://www.wikidata.org/wiki/Q264647>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "thermodynamic temperature" .
+
+<https://www.wikidata.org/wiki/Q8104>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "atmosphere" .

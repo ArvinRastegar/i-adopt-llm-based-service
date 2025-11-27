@@ -1,0 +1,68 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:densvar
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "density of benzene" ;
+    skos:definition 
+        """mass density of a 10.00 mL sample of ACS reagent grade 99.0 %(v/v) benzene at a room temperature""" ;
+    rdfs:comment 
+        """mass density -> mass concentration, 10.00 mL sample; reagent grade 99.0 %(v/v) -> purity 99.0 %(v/v); benzene; at a room temperature; ADD: per unit volume""" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP79.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP84.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP85.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/85> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q2270> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q36133> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q589446> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "requirement: local room temperature" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q589446> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit volume" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q589446> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "size: sample of 10.00 mL " ;
+             iop:constrains <https://www.wikidata.org/wiki/Q36133> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "origin: soil sample" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q36133> ;
+        ],
+        [ a iop:Constraint ;
+             rdfs:label "quality: purity 99.0 %(v/v)" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q2270> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q2270>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "benzene (C6H6)" .
+
+<https://www.wikidata.org/wiki/Q36133>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "soil" .
+
+<https://www.wikidata.org/wiki/Q589446>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass concentration" .

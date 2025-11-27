@@ -1,9 +1,0 @@
-{
-  "label": "Cloud cover",
-  "comment": "The amount of sky estimated to be covered by all cloud types (cloud amount). The estimate is made to the nearest okta (eighth) and is reported on a scale which is essentially one of the nearest eighth, except that figures 0 and 8 on the scale signify a completely clear and cloudy sky, respectively, with consequent adjustment to the adjacent 1 and 7 okta intervals.",
-  "hasProperty": "area fraction",
-  "hasMatrix": "atmosphere",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
-  "hasObjectOfInterest": "cloud",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8074"
-}

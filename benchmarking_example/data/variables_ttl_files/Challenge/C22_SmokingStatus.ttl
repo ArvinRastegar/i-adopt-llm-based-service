@@ -1,0 +1,49 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C22
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Current smoking status" ;
+    skos:definition 
+        """Smoking status current of a patient""" ;
+    rdfs:comment 
+        """patient; status; time: current; controlled list: smoking status""" ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP12.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP78.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q181600> ;
+    iop:hasProperty 
+        _:b0 ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "time: current" ;
+             iop:constrains _:b0 ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "controlled list: smoking status" ;
+             iop:constrains _:b0 ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q181600>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "patient" .
+
+_:b0
+    a 
+        iop:Property ;
+    rdfs:label 
+        "status" .

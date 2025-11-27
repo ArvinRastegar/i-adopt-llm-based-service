@@ -1,0 +1,59 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C23
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area" ;
+    skos:definition 
+        """the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell)""" ;
+    rdfs:comment
+        """nanomaterial; location: intracellular; cell membrane; mass; normalization: per area""" ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q967847> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q54888819> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q11423> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "location: intracellular" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q967847> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per area" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q11423> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q967847>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "nanomaterial" .
+
+<https://www.wikidata.org/wiki/Q54888819>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "cell membrane" .
+
+<https://www.wikidata.org/wiki/Q11423>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass" .

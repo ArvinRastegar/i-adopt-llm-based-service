@@ -1,0 +1,59 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C4
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Atmospheric boundary layer height defined by temperature inversion" ;
+    skos:definition 
+        """Atmospheric boundary layer height defined by temperature inversion.""" ;
+    rdfs:comment
+        """Atmospheric boundary layer, height, temperature inversion (ADD atmosphere, above ground surface).""" ;    
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP16.yaml> ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP68.yaml> ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
+    ex:issue
+        <https://github.com/mabablue/I-ADOPT-examples-playground/issues/10> ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q8104> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q208826> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "due to: temperature inversion" ;
+             iop:constrains _:b0 ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "datum: above ground" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q208826> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "atmospheric boundary layer" .
+
+<https://www.wikidata.org/wiki/Q8104>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "atmosphere" .
+
+<https://www.wikidata.org/wiki/Q208826>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "height" .

@@ -1,0 +1,52 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <https://example.org/data/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+
+ex:State-of-tube
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "State of connection pipe" ;
+    skos:definition 
+        """State (faulty, cracked, ... ) of pipe connection in plastic with a diametre of 30 cm.""" ;
+    rdfs:comment
+         "state, pipe connection; plastic, diametre of 30 cm" ; 
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP12.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP63.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP64.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP83.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/1> ; 
+    iop:hasObjectOfInterest 
+        ex:PipeConnection ;
+    iop:hasProperty 
+        _:b0 ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "material type: plastic" ;
+             iop:constrains ex:PipeConnection ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "size:diameter of 30 cm" ;
+             iop:constrains ex:PipeConnection ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "controlled list: state of pipe connection" ;
+             iop:constrains _:b0 ;
+        ] .
+
+ex:PipeConnection
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "pipe connection" .
+
+_:b0
+    a 
+        iop:Property ;
+    rdfs:label 
+        "state" .

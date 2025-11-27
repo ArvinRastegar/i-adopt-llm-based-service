@@ -1,0 +1,41 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/HFR> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:RadVelDirHF
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "DRVA Direction of radial velocity of water current relative to instrument and to True North by high frequency radar" ;
+    skos:definition 
+        """ Direction of radial velocity of water current relative to instrument and to True North by high frequency radar.""" ;
+    rdfs:comment "Radial velocity (away from) of water current related to instrument; direction -> plane angle, relative to True North -> relative to True North" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP68.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP90.yaml> ;
+    iop:hasObjectOfInterest 
+        <http://example.org/iadopt/RDVA_variable> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q2849635> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "datum: relative to True North" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q2849635> ;
+        ] .
+
+<http://example.org/iadopt/RDVA_variable>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "RDVA radial velocity (away from) of water current related to instrument" .
+
+<https://www.wikidata.org/wiki/Q2849635>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "plane angle" .

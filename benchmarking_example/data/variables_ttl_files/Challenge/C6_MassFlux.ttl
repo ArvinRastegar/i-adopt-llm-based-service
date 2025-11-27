@@ -1,0 +1,76 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C6
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Mass flux of carbon into soil from vegetation due to senescence" ;
+    skos:definition 
+        """Mass flux of carbon into soil from vegetation due to senescence, measured in kg m-2 s-1. """ ;
+    rdfs:comment
+      """Mass flux; carbon; soil; vegetation; due to senescence. From indicates the source, into indicates the target.""" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP18.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP34.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/12> ;
+    iop:hasObjectOfInterest 
+        <http://vocabs.lter-europe.net/EnvThes/20805> ;
+    iop:hasMatrix 
+        _:b0 ;
+    iop:hasProperty 
+        <http://vocabs.lter-europe.net/EnvThes/30361> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "due to: senescence" ;
+             iop:constrains <http://vocabs.lter-europe.net/EnvThes/30361> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit area" ;
+             iop:constrains <http://vocabs.lter-europe.net/EnvThes/30361> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit time" ;
+             iop:constrains <http://vocabs.lter-europe.net/EnvThes/30361> ;
+        ] .
+
+<http://vocabs.lter-europe.net/EnvThes/20805>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "carbon" .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    rdfs:label 
+        "from vegetation to soil" ;
+    iop:hasSource 
+        <http://vocabs.lter-europe.net/EnvThes/20535> ;
+    iop:hasTarget 
+        <http://vocabs.lter-europe.net/EnvThes/24> .
+
+<http://vocabs.lter-europe.net/EnvThes/30361>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass flux" .
+
+<http://vocabs.lter-europe.net/EnvThes/20535>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "vegetation" .
+
+<http://vocabs.lter-europe.net/EnvThes/24>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "soil" .

@@ -1,0 +1,65 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C20
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Concentration of DDT impacted by industry" ;
+    skos:definition 
+        """Concentration of DDT in a given year at a site impacted by industry.""" ;
+    rdfs:comment 
+        """DDT; due to: industry; soil; mass fraction; temporal extent: 1 year; normalization: per unit mass""" ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP21.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q163648> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q36133> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q899138> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "temporal extent: 1 year" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q899138> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit mass" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q899138> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "due to: industry" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q163648> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q163648>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "DDT" .
+
+<https://www.wikidata.org/wiki/Q36133>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "soil" .
+
+<https://www.wikidata.org/wiki/Q899138>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass fraction" .

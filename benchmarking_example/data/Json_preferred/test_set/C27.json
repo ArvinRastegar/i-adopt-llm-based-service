@@ -1,9 +1,0 @@
-{
-  "label": "Mass concentration of isobutylene in chloroform",
-  "comment": "Mass concentration of isobutylene in chloroform.",
-  "hasProperty": "mass concentration",
-  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-  "hasMatrix": "chloroform",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q172275",
-  "hasObjectOfInterest": "isobutylene"
-}

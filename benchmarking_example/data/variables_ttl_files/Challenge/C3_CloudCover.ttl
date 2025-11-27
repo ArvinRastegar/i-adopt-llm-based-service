@@ -1,0 +1,45 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+
+ex:C3
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Cloud cover" ;
+    skos:definition 
+        """The amount of sky estimated to be covered by all cloud types.""" ;
+    rdfs:comment
+        """sky, cloud, (amount covered -> area fraction)""" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP15.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP33.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/9> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q8074> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q527> ;
+    iop:hasProperty 
+        _:b0 .
+
+<https://www.wikidata.org/wiki/Q8074>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "cloud" .
+
+<https://www.wikidata.org/wiki/Q527>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sky" .
+
+_:b0
+    a 
+        iop:Property ;
+    rdfs:label 
+        "area fraction" .

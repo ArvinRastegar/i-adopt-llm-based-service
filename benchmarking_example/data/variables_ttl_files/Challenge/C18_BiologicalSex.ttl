@@ -1,0 +1,38 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C18
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Biological sex" ;
+    skos:definition 
+        """Biological sex [female | male | intersex | unknown]""" ;
+    rdfs:comment "organism, ADD: sex, biological sex -> controlled list: biological sex" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP12.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q7239> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q290> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "controlled list: biological sex" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q290> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q7239>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "organism" .
+
+<https://www.wikidata.org/wiki/Q290>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "sex" .

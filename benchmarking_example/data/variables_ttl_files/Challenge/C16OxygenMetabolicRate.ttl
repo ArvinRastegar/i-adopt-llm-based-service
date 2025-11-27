@@ -1,0 +1,85 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C16
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Standard metabolic rate in mg of Oxygen per hour" ;
+    skos:definition 
+        """The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.""" ;
+    rdfs:comment "oxygen, from air to organism, MassFlowRate -> mass flow rate, due to: metabolism, air, organism, ectotherm -> type: ectotherm, non-stressed -> condition: non-stressed, non-active -> state: non-active, ADD: normalization: per hour" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP20.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP34.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP61.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP76.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q5203615> ;
+    iop:hasMatrix 
+        _:b0 ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q1366187> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "type: ectotherm" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q7239> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "due to: metabolism" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q1366187> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: non-stressed" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q7239> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: non-active" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q7239> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per hour" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q1366187> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q5203615>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "oxygen" .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    rdfs:label 
+        "from air to organism" ;
+    iop:hasSource 
+        <https://www.wikidata.org/wiki/Q7391292> ;
+    iop:hasTarget 
+        <https://www.wikidata.org/wiki/Q7239> .
+
+<https://www.wikidata.org/wiki/Q1366187>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass flow rate" .
+
+<https://www.wikidata.org/wiki/Q7391292>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "air" .
+
+<https://www.wikidata.org/wiki/Q7239>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "organism" .

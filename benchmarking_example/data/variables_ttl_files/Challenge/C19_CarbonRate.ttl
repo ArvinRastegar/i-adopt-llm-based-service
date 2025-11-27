@@ -1,0 +1,84 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C19
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Weight specific-ingestion Carbon rate at 15 °C" ;
+    skos:definition 
+        """The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1""" ;
+    rdfs:comment "Carbon, at non-limiting conditions -> condition: under non-limiting food conditions, from food to organism, food, organism, dry -> state: dry, mass flow rate, weight-specific -> normalization: per mass, at 15°C temperature -> condition: at 15°C temperature, due to: ingestion" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP18.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP34.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP76.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q623> ;
+    iop:hasMatrix 
+        _:b0 ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q1366187> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per mass" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q1366187> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "state: dry" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q7239> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: under non-limiting food conditions" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q623> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: at 15°C temperature" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q1366187> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "due to: ingestion" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q1366187> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q623>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "Carbon" .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    rdfs:label 
+        "from food to organism" ;
+    iop:hasSource 
+        <https://www.wikidata.org/wiki/Q2095> ;
+    iop:hasTarget 
+        <https://www.wikidata.org/wiki/Q7239> .
+
+<https://www.wikidata.org/wiki/Q1366187>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass flow rate" .
+
+<https://www.wikidata.org/wiki/Q2095>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "food" .
+
+<https://www.wikidata.org/wiki/Q7239>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "organism" .

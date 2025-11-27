@@ -1,0 +1,77 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C13
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Distance to nearest neighbour habitat patch" ;
+    skos:definition """Distance to nearest neighbour habitat patch to measure the degree of connection of EUNIS habitats within a landscape. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types""" ;
+    rdfs:comment "habitat patch system, distance, habitat patch, habitat patch, nearest neighbour -> location: nearest neighbour, ADD: type: specfic EUNIS habitat, landscape region, minimum" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP19.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP26.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP31.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP61.yaml> ;
+    iop:hasObjectOfInterest 
+        ex:C13_OoI18 ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q25496956> ;
+    iop:hasStatisticalModifier 
+        <https://www.wikidata.org/wiki/Q10585806> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q126017> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "nearest neighbour" ;
+             iop:constrains ex:C13_OoI18_part2 ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "type: specific EUNIS habitat" ;
+             iop:constrains ex:C13_OoI18 ;
+        ] .
+
+ex:C13_OoI18
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    rdfs:label 
+        "habitat patch system" ;
+    iop:hasSource 
+        ex:C13_OoI18_part1 ;
+    iop:hasTarget 
+        ex:C13_OoI18_part2 .
+
+<https://www.wikidata.org/wiki/Q25496956>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "landscape region" .
+
+<https://www.wikidata.org/wiki/Q10585806>
+    a 
+        iop:StatisticalModifier ;
+    rdfs:label 
+        "minimum" .
+
+<https://www.wikidata.org/wiki/Q126017>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "distance" .
+
+ex:C13_OoI18_part1
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "habitat patch" .
+
+ex:C13_OoI18_part2
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "habitat patch" .

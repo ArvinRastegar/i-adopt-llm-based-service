@@ -1,0 +1,50 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/HFR> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:GDOP
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "GDOP Geometric dilution of precision " ;
+    skos:definition
+        """Geometric dilution of precision of the relative position, based on the position of the receiver and the transmitters.""" ;
+    rdfs:comment "relative position; dilution of precision; position of receiver; position of transmitters" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP27.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP91.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q23008351> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q616896> .
+
+<https://www.wikidata.org/wiki/Q23008351>
+    a 
+        iop:Entity ,
+        iop:SymmetricSystem ;
+    rdfs:label 
+        "relative position" ;
+    iop:hasPart 
+        _:b0 ,
+        _:b1 .
+
+<https://www.wikidata.org/wiki/Q616896>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "dilution of precision" .
+
+_:b0
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "position of receiver" .
+
+_:b1
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "position of transmitters" .

@@ -1,0 +1,66 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+<http://example.org/F2A/CS2>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Labile detrital nitrogen concentration in the seabed" ;
+    skos:definition 
+        """Labile detrital nitrogen concentration in the seabed in mmoleN/kg in sediment.""" ;
+    rdfs:comment 
+        """Labile; detrital -> detrital organic material; nitrogen; concentration -> molar concentration; seabed; sediment; ADD: per unit mass; sea""" ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP17.yaml> ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP40.yaml> ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP79.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q627> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q180184> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/wiki/Q165> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q672821> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit mass" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q672821> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "origin: detrital organic matter" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q627> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "location: seabed" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q180184> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q627>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "nitrogen" .
+
+<https://www.wikidata.org/wiki/Q180184>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sediment" .
+
+<https://www.wikidata.org/wiki/Q672821>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "molar concentration" .
+
+<https://www.wikidata.org/wiki/Q165>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sea" .

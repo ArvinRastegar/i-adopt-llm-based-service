@@ -1,0 +1,75 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+
+
+ex:C5
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Atmosphere optical thickness of particulate organic matter ambient aerosol" ;
+    skos:definition 
+        """Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.""" ;
+    rdfs:comment
+        """Atmospheric, optical thickness, particulate matter, organic, 550nm, under ambient conditions.""" ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP65.yaml> ;
+    iopp:pattern
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
+    ex:issue
+        <https://github.com/mabablue/I-ADOPT-examples-playground/issues/11> ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q104541> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/wiki/Q8104> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q890809> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "condition: at 550nm wavelength" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q890809> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "type: organic" ;
+             iop:constrains _:b0 ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: under ambient conditions" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q104541> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "particles of matter" .
+
+<https://www.wikidata.org/wiki/Q104541>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "aerosol" .
+
+<https://www.wikidata.org/wiki/Q890809>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "optical thickness" .
+
+<https://www.wikidata.org/wiki/Q8104>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "atmosphere" .

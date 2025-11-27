@@ -1,0 +1,58 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:phvar
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "pH measurement of a sample of apple juice" ;
+    skos:definition 
+        """(PH) solution hydronium ion concentration measurement in a apple juice using a solid-state pH electrode""" ;
+    rdfs:comment 
+        """solution-> acqueous; hydronium; concentration -> molar concentration; apple juice; ADD: per unit volume (pH = molar concentration of acqueous hydronium per unit volume)""" ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP17.yaml> ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
+    iop:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP86.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/87> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q849881> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q618355> ;
+    iop:hasProperty 
+        ex:Prop ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per unit volume" ;
+             iop:constrains ex:Prop ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: homogeneous solution" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q618355> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "phase: acqueous" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q849881> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q849881>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "hydronium" .
+
+<https://www.wikidata.org/wiki/Q618355>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "apple juice" .
+
+ex:Prop
+    a 
+        iop:Property ;
+    rdfs:label 
+        "molar concentration" .

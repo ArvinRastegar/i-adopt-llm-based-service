@@ -1,0 +1,64 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C11
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Strike of bedding" ;
+    skos:definition 
+        """Geographic azimuth (relative to true north) at a point observation location, of a horizontal line contained in a sedimentary rock bedding surface. The bedding surface must not be horizontal; the azimuth is reported such that the dip direction of the inclined bedding is to the right when facing in the azimuth direction.""" ;
+    rdfs:comment "line of intersection, sedimentary rock, azimuth, bedding plane, horizontal plane, ADD: interpretation: angle measured with the dip direction to the right";
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP25.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP73.yaml> ;
+iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q82480> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q124274> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "interpretation: angle measured with the dip direction to the right" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q124274> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:SymmetricSystem ;
+    rdfs:label 
+        "line of intersection" ;
+    iop:hasPart 
+        <http://data.bgs.ac.uk/id/GeoscienceThesaurus/Concept/428> ,
+        <https://www.wikidata.org/wiki/Q1055798> .
+
+<https://www.wikidata.org/wiki/Q82480>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sedimentary rock" .
+
+<https://www.wikidata.org/wiki/Q124274>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "azimuth" .
+
+<http://data.bgs.ac.uk/id/GeoscienceThesaurus/Concept/428>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "bedding plane" .
+
+<https://www.wikidata.org/wiki/Q1055798>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "horizontal plane" .

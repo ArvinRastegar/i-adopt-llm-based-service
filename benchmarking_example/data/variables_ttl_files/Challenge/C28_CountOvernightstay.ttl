@@ -1,0 +1,57 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C28
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Overnight stays in 3-star hotel near the sea shore" ;
+    skos:definition 
+        """Number of nights in a 3-star hotel near the sea shore""" ;
+    rdfs:comment
+        """nights; hotel; number; location: near the sea shore; type: 3 star""";
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP61.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q575> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q27686> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q11563> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "location: near the sea shore" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q27686> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "type: 3 star" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q27686> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q575>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "nights" .
+
+<https://www.wikidata.org/wiki/Q27686>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "hotel" .
+
+<https://www.wikidata.org/wiki/Q11563>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "number" .

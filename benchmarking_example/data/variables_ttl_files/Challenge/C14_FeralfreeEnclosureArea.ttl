@@ -1,0 +1,39 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C14
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Feral-free enclosure area" ;
+    skos:definition
+        """The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b""" ;
+    rdfs:comment "enclosure, area, free of feral -> condition: free of feral" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP13.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q858177> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q11500> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "condition: free of feral" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q858177> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q858177>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "enclosure" .
+
+<https://www.wikidata.org/wiki/Q11500>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "area" .

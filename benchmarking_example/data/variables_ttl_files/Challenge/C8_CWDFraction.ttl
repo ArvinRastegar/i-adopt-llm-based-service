@@ -1,0 +1,42 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C8
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Coarse woody debris abundance" ;
+    skos:definition """Coarse woody debris abundance (m2/hectare)""" ;
+    rdfs:comment "coarse woody debris, abundance -> area fraction, ADD: ground" ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP15.yaml> ;
+    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP33.yaml> ;
+    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/14> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q2069734> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q36133> ;
+    iop:hasProperty 
+        <http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction> .
+
+<https://www.wikidata.org/wiki/Q2069734>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "coarse woody debris" .
+
+<https://www.wikidata.org/wiki/Q36133>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "ground" .
+
+<http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "area fraction" .

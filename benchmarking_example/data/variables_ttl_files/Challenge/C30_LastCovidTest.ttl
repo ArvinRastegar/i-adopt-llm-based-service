@@ -1,0 +1,61 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C30
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Date of last PCR-test" ;
+    skos:definition 
+        """date of last COVID-19 PCR test performed by a certified laboratory""" ;
+    rdfs:comment 
+        """date; last; COVID-19; PCR test; performed by a certified laboratory""" ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP11.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP11.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP11.yaml> ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP11.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q104462307> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q181600> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q205892> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "protocol: performed by a certified laboratory" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q104462307> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "type: SARS-CoV2" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q104462307> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "time: last" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q205892> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q104462307>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "PCR-test" .
+
+<https://www.wikidata.org/wiki/Q181600>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "patient" .
+
+<https://www.wikidata.org/wiki/Q205892>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "date" .

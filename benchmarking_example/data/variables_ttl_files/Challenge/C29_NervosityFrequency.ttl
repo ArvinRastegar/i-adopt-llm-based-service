@@ -1,0 +1,47 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:C29
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Nervosity feelings" ;
+    skos:definition
+        """In the past 30 days, how often did you feel nervous?""" ;
+    rdfs:comment
+        """nervousness; patient; frequency; during last 30 days""" ;
+    iop:pattern 
+        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP75.yaml> ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/wiki/Q1978097> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/wiki/Q181600> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/wiki/Q11652> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "temporal extent: during last 30 days" ;
+             iop:constrains <https://www.wikidata.org/wiki/Q11652> ;
+        ] .
+
+<https://www.wikidata.org/wiki/Q1978097>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "nervousness" .
+
+<https://www.wikidata.org/wiki/Q181600>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "patient" .
+
+<https://www.wikidata.org/wiki/Q11652>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "frequency" .
