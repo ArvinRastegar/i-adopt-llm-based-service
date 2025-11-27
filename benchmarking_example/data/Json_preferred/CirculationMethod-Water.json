@@ -1,0 +1,20 @@
+{
+  "label": "Circulation-Method-in-Tube",
+  "definition": "Circulation method (gravity, forced, ...) of water in canalisation pipe",
+  "comment": "circulation method, water, pipe, canalisation",
+  "hasProperty": "CirculationMethod",
+  "hasMatrix": "Pipe",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q41551",
+  "hasObjectOfInterest": "Water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+  "hasConstraint": [
+    {
+      "label": "type",
+      "on": "Pipe"
+    },
+    {
+      "label": "controlled list",
+      "on": "CirculationMethod"
+    }
+  ]
+}

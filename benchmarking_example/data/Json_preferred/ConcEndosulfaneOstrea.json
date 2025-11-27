@@ -1,0 +1,22 @@
+{
+  "label": "concentration of endosulfane sulfate in wet flesh of ostrea edulis",
+  "definition": "Mass concentration of endosulfane sulfate in wet flesh of ostrea edulis, measured in μg/kg.",
+  "comment": "Mass concentration; endosulfane sulfate; wet; flesh->body; ostrea edulis; ADD: normalization: per unit mass. \n           10 for property:specific, 17 for property:concentration, 30 for matrix, 71 for constraint:normalization",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasMatrix": "body",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q170494",
+  "hasObjectOfInterest": "endosulfane sulfate",
+  "hasContextObject": "ostrea edulis",
+  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q729678",
+  "hasConstraint": [
+    {
+      "label": "normalization",
+      "on": "mass concentration"
+    },
+    {
+      "label": "state:wet",
+      "on": "body"
+    }
+  ]
+}

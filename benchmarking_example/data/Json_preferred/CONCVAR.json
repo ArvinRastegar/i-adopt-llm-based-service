@@ -1,0 +1,33 @@
+{
+  "label": "Iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline",
+  "definition": "Iron(II) solution derived from a soil sample (via digestion and dilution) using a quantitative reaction with ortho-phenantroline and product color measurement of absorbance at 510 nm",
+  "comment": "Iron(II) solution --> iron + acqueous; soil sample; o-phenantroline;at 510 nm-> at 510 nm wavelength",
+  "hasProperty": "molar concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
+  "hasMatrix": "soil",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
+  "hasObjectOfInterest": "iron",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q677",
+  "hasConstraint": [
+    {
+      "label": "requirement",
+      "on": "molar concentration"
+    },
+    {
+      "label": "normalization",
+      "on": "molar concentration"
+    },
+    {
+      "label": "reagent",
+      "on": "soil"
+    },
+    {
+      "label": "phase",
+      "on": "iron"
+    },
+    {
+      "label": "origin",
+      "on": "soil"
+    }
+  ]
+}

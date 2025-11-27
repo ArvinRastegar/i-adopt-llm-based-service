@@ -1,0 +1,25 @@
+{
+  "label": "Concentration of DDT impacted by industry",
+  "definition": "Concentration of DDT in a given year at a site impacted by industry.",
+  "comment": "DDT; due to: industry; soil; mass fraction; temporal extent: 1 year; normalization: per unit mass",
+  "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
+  "hasMatrix": "soil",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
+  "hasObjectOfInterest": "DDT",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q163648",
+  "hasConstraint": [
+    {
+      "label": "temporal extent",
+      "on": "mass fraction"
+    },
+    {
+      "label": "normalization",
+      "on": "mass fraction"
+    },
+    {
+      "label": "due to",
+      "on": "DDT"
+    }
+  ]
+}

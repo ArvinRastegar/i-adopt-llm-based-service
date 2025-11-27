@@ -1,0 +1,17 @@
+{
+  "label": "VART_QC Variance quality flag",
+  "definition": "QC flags for radial velocity variance of water current, good data flag for those whose temporal variance is smaller than a maximum variance threshold.",
+  "comment": "HCSS Radial velocity variance of water current, quality flag, good if under threshold value",
+  "hasProperty": "quality flag",
+  "hasObjectOfInterest": "HCSS Radial velocity variance of water current",
+  "hasConstraint": [
+    {
+      "label": "threshold",
+      "on": "quality flag"
+    },
+    {
+      "label": "controlled list",
+      "on": "quality flag"
+    }
+  ]
+}

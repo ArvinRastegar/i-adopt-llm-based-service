@@ -1,0 +1,35 @@
+{
+  "label": "estimation of the energy of reaction per mole upon combustion of hexanol",
+  "definition": "energy released per mole upon combustion of a 5.00 g sample of 99.98%(w/w) pure hexanol in air",
+  "comment": "energy; per mole; combustion; 5.00 g sample; 99.98%(w/w) pure;hexanol; air",
+  "hasProperty": "energy",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11379",
+  "hasMatrix": "combustion",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q133235",
+  "hasObjectOfInterest": "hexanol (C6H14O)",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q76933",
+  "hasContextObject": "air",
+  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q7391292",
+  "hasConstraint": [
+    {
+      "label": "quality",
+      "on": "hexanol (C6H14O)"
+    },
+    {
+      "label": "requirement",
+      "on": "hexanol (C6H14O)"
+    },
+    {
+      "label": "requirement",
+      "on": "combustion"
+    },
+    {
+      "label": "requirement",
+      "on": "combustion"
+    },
+    {
+      "label": "normalization",
+      "on": "energy"
+    }
+  ]
+}

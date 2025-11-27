@@ -1,0 +1,52 @@
+{
+  "label": "solubility of molecular oxygen from air in water",
+  "definition": "solubility (molar concentration per unit volume) of molecular oxygen in air in MilliQ water (18.2 MOhm) using the static method",
+  "comment": "molar concentration; per unit volume; molecular oxygen; air; in MilliQ water (18.2 MOhm); ADD phases and required conditions",
+  "hasProperty": "molar concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
+  "hasMatrix": {
+    "AsymmetricSystem": "two-phase gas-liquid system",
+    "hasSource": "air",
+    "hasTarget": "water"
+  },
+  "hasObjectOfInterest": "molecular oxygen",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5203615",
+  "hasConstraint": [
+    {
+      "label": "requirement",
+      "on": "air"
+    },
+    {
+      "label": "quality",
+      "on": "water"
+    },
+    {
+      "label": "requirement",
+      "on": "molecular oxygen"
+    },
+    {
+      "label": "requirement",
+      "on": "molar concentration"
+    },
+    {
+      "label": "requirement",
+      "on": "molar concentration"
+    },
+    {
+      "label": "phase",
+      "on": "water"
+    },
+    {
+      "label": "phase",
+      "on": "molecular oxygen"
+    },
+    {
+      "label": "phase",
+      "on": "air"
+    },
+    {
+      "label": "normalization",
+      "on": "molar concentration"
+    }
+  ]
+}

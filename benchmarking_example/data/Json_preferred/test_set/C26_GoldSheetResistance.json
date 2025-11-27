@@ -1,0 +1,15 @@
+{
+  "label": "Sheet resistance of layer of gold",
+  "definition": "The sheet resistance of a 5-nanometer-thick layer of gold.",
+  "comment": "gold; sheet resistance; size: 5nm thick layer",
+  "hasProperty": "sheet resistance",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q354718",
+  "hasObjectOfInterest": "gold",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q897",
+  "hasConstraint": [
+    {
+      "label": "size",
+      "on": "gold"
+    }
+  ]
+}

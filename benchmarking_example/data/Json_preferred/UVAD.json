@@ -1,0 +1,23 @@
+{
+  "label": "UVAD Eastward velocity average in the water by a moored acoustic doppler current profile (ADCP)",
+  "definition": "Eastward velocity average in the water by a moored acoustic doppler current profile measured in (m s-1)",
+  "comment": "water current; water body; average value; sea; velocity; eastward; eulerian",
+  "hasProperty": "velocity",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+  "hasMatrix": "water body",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
+  "hasObjectOfInterest": "water current",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5195029",
+  "hasContextObject": "sea",
+  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
+  "hasConstraint": [
+    {
+      "label": "type",
+      "on": "velocity"
+    },
+    {
+      "label": "type",
+      "on": "velocity"
+    }
+  ]
+}

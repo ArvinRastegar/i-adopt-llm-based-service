@@ -1,0 +1,40 @@
+{
+  "label": "solubility of naphthalene in water at room temperature",
+  "definition": "solubility measurement of napathalene in deionized water at room temperature by monitoring absorption at 279 nm",
+  "comment": "solubility -> mass concentration; napathalene; deionized; water; at room temperature; absorption at 279 nm",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasMatrix": {
+    "AsymmetricSystem": "two-phase solid-liquid system",
+    "hasSource": "naphthalene (C10H8)",
+    "hasTarget": "water (H2O)"
+  },
+  "hasObjectOfInterest": "naphthalene (C10H8)",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q179724",
+  "hasConstraint": [
+    {
+      "label": "phase",
+      "on": "naphthalene (C10H8)"
+    },
+    {
+      "label": "phase",
+      "on": "water (H2O)"
+    },
+    {
+      "label": "requirement",
+      "on": "mass concentration"
+    },
+    {
+      "label": "requirement",
+      "on": "mass concentration"
+    },
+    {
+      "label": "normalization",
+      "on": "mass concentration"
+    },
+    {
+      "label": "condition",
+      "on": "water (H2O)"
+    }
+  ]
+}

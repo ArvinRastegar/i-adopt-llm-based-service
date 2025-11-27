@@ -1,0 +1,21 @@
+{
+  "label": "Maximum trunk char height",
+  "definition": "Maximum trunk char height due to fire, measured above ground.",
+  "comment": "trunk -> tree trunk, char; height, maximum, due to fire; above ground.",
+  "hasProperty": "height",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q208826",
+  "hasMatrix": "tree trunk",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q193472",
+  "hasObjectOfInterest": "char",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q11567121",
+  "hasConstraint": [
+    {
+      "label": "datum:above ground",
+      "on": "height"
+    },
+    {
+      "label": "due to",
+      "on": "char"
+    }
+  ]
+}

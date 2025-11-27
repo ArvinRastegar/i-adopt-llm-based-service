@@ -1,0 +1,21 @@
+{
+  "label": "Foraminifera, planktic, size",
+  "definition": "Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730",
+  "comment": "foraminifera, sediment, size, planctonic -> type: planktonic, surface -> location: surface",
+  "hasProperty": "size",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q322481",
+  "hasMatrix": "sediment",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q180184",
+  "hasObjectOfInterest": "foraminifera",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q107027",
+  "hasConstraint": [
+    {
+      "label": "type",
+      "on": "foraminifera"
+    },
+    {
+      "label": "location",
+      "on": "sediment"
+    }
+  ]
+}

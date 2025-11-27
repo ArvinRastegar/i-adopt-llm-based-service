@@ -1,0 +1,17 @@
+{
+  "label": "Nervosity feelings",
+  "definition": "In the past 30 days, how often did you feel nervous?",
+  "comment": "nervousness; patient; frequency; during last 30 days",
+  "hasProperty": "frequency",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11652",
+  "hasMatrix": "patient",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q181600",
+  "hasObjectOfInterest": "nervousness",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q1978097",
+  "hasConstraint": [
+    {
+      "label": "temporal extent",
+      "on": "frequency"
+    }
+  ]
+}

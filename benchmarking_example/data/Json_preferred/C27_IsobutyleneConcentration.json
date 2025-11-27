@@ -1,0 +1,17 @@
+{
+  "label": "Mass concentration of isobutylene in chloroform",
+  "definition": "Mass concentration of isobutylene in chloroform, measured in g/l.",
+  "comment": "Mass concentration; isobutylene; chloroform; ADD: per unit mass",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasMatrix": "chloroform",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q172275",
+  "hasObjectOfInterest": "isobutylene",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q776976",
+  "hasConstraint": [
+    {
+      "label": "normalization",
+      "on": "mass concentration"
+    }
+  ]
+}

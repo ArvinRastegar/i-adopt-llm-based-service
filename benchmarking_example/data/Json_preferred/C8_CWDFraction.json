@@ -1,0 +1,10 @@
+{
+  "label": "Coarse woody debris abundance",
+  "definition": "Coarse woody debris abundance (m2/hectare)",
+  "comment": "coarse woody debris, abundance -> area fraction, ADD: ground",
+  "hasProperty": "area fraction",
+  "hasMatrix": "ground",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
+  "hasObjectOfInterest": "coarse woody debris",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2069734"
+}

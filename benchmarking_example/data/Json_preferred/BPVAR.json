@@ -1,0 +1,23 @@
+{
+  "label": "boiling point of benzene under standard conditions",
+  "definition": "thermodynamic temperature for the boiling point of a known purity (99.07% (v/v)) liquid sample of benzene under standard conditions",
+  "comment": "thermodynamic temperature; at the boiling point; purity (99.07% (v/v)); benzene; 1 atm pressure",
+  "hasProperty": "thermodynamic temperature",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
+  "hasObjectOfInterest": "benzene",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
+  "hasConstraint": [
+    {
+      "label": "condition",
+      "on": "thermodynamic temperature"
+    },
+    {
+      "label": "requirement",
+      "on": "thermodynamic temperature"
+    },
+    {
+      "label": "quality",
+      "on": "benzene"
+    }
+  ]
+}

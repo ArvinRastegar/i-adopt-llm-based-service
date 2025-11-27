@@ -1,0 +1,18 @@
+{
+  "label": "Current smoking status",
+  "definition": "Smoking status current of a patient",
+  "comment": "patient; status; time: current; controlled list: smoking status",
+  "hasProperty": "status",
+  "hasObjectOfInterest": "patient",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q181600",
+  "hasConstraint": [
+    {
+      "label": "time",
+      "on": "status"
+    },
+    {
+      "label": "controlled list",
+      "on": "status"
+    }
+  ]
+}

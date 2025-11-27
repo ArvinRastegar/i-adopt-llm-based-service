@@ -1,0 +1,20 @@
+{
+  "label": "Atmospheric boundary layer height defined by temperature inversion",
+  "definition": "Atmospheric boundary layer height defined by temperature inversion.",
+  "comment": "Atmospheric boundary layer, height, temperature inversion (ADD atmosphere, above ground surface).",
+  "hasProperty": "height",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q208826",
+  "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
+  "hasObjectOfInterest": "atmospheric boundary layer",
+  "hasConstraint": [
+    {
+      "label": "due to",
+      "on": "atmospheric boundary layer"
+    },
+    {
+      "label": "datum",
+      "on": "height"
+    }
+  ]
+}

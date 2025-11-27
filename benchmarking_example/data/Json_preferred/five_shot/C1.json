@@ -1,9 +1,0 @@
-{
-  "label": "Electron density in the solar wind",
-  "comment": "Density (particle per cm3) of electrons measured in the Solar Wind.",
-  "hasProperty": "volumetric number density",
-  "hasMatrix": "solar wind",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q79833",
-  "hasObjectOfInterest": "electron",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2225"
-}

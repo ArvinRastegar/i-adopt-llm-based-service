@@ -1,0 +1,21 @@
+{
+  "label": "Overnight stays in 3-star hotel near the sea shore",
+  "definition": "Number of nights in a 3-star hotel near the sea shore",
+  "comment": "nights; hotel; number; location: near the sea shore; type: 3 star",
+  "hasProperty": "number",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+  "hasMatrix": "hotel",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q27686",
+  "hasObjectOfInterest": "nights",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q575",
+  "hasConstraint": [
+    {
+      "label": "location",
+      "on": "hotel"
+    },
+    {
+      "label": "type",
+      "on": "hotel"
+    }
+  ]
+}

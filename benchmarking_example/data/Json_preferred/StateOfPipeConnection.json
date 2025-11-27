@@ -1,0 +1,21 @@
+{
+  "label": "State of connection pipe",
+  "definition": "State (faulty, cracked, ... ) of pipe connection in plastic with a diametre of 30 cm.",
+  "comment": "state, pipe connection; plastic, diametre of 30 cm",
+  "hasProperty": "state",
+  "hasObjectOfInterest": "pipe connection",
+  "hasConstraint": [
+    {
+      "label": "material type",
+      "on": "pipe connection"
+    },
+    {
+      "label": "size:diameter of 30 cm",
+      "on": "pipe connection"
+    },
+    {
+      "label": "controlled list",
+      "on": "state"
+    }
+  ]
+}

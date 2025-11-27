@@ -1,0 +1,26 @@
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "definition": "Mass flux of carbon into soil from vegetation due to senescence, measured in kg m-2 s-1.",
+  "comment": "Mass flux; carbon; soil; vegetation; due to senescence. From indicates the source, into indicates the target.",
+  "hasProperty": "mass flux",
+  "hasMatrix": {
+    "AsymmetricSystem": "from vegetation to soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasObjectOfInterest": "carbon",
+  "hasConstraint": [
+    {
+      "label": "due to",
+      "on": "mass flux"
+    },
+    {
+      "label": "normalization",
+      "on": "mass flux"
+    },
+    {
+      "label": "normalization",
+      "on": "mass flux"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "label": "solubility of benzene in water",
+  "definition": "mutual solubility (g/L) of 99.82 %(w/w) pure benzene in deionized water at phase equilibrium (immiscible phases) and 298.15 K",
+  "comment": "solubility (g/L)-> mass concentration; 99.82 %(w/w) pure-> purity 99.82 % (w/w), benzene; deionized; water; 298.15 K",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasMatrix": {
+    "AsymmetricSystem": "two-phase immiscible liquid-liquid system",
+    "hasSource": "benzene (C6H6)",
+    "hasTarget": "water (H2O)"
+  },
+  "hasObjectOfInterest": "benzene (C6H6)",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
+  "hasConstraint": [
+    {
+      "label": "phase",
+      "on": "benzene (C6H6)"
+    },
+    {
+      "label": "phase",
+      "on": "water (H2O)"
+    },
+    {
+      "label": "quality",
+      "on": "benzene (C6H6)"
+    },
+    {
+      "label": "requirement",
+      "on": "mass concentration"
+    },
+    {
+      "label": "phase",
+      "on": "benzene (C6H6)"
+    },
+    {
+      "label": "normalization",
+      "on": "mass concentration"
+    },
+    {
+      "label": "condition",
+      "on": "water (H2O)"
+    }
+  ]
+}

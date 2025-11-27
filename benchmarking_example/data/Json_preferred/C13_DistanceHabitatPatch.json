@@ -1,0 +1,24 @@
+{
+  "label": "Distance to nearest neighbour habitat patch",
+  "definition": "Distance to nearest neighbour habitat patch to measure the degree of connection of EUNIS habitats within a landscape. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+  "comment": "habitat patch system, distance, habitat patch, habitat patch, nearest neighbour -> location: nearest neighbour, ADD: type: specfic EUNIS habitat, landscape region, minimum",
+  "hasProperty": "distance",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q126017",
+  "hasMatrix": "landscape region",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q25496956",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "habitat patch system",
+    "hasSource": "habitat patch",
+    "hasTarget": "habitat patch"
+  },
+  "hasConstraint": [
+    {
+      "label": "nearest neighbour",
+      "on": "habitat patch"
+    },
+    {
+      "label": "type",
+      "on": "habitat patch system"
+    }
+  ]
+}

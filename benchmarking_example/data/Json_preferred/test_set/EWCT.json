@@ -1,0 +1,23 @@
+{
+  "label": "EWCT Eastward velocity of water current in the water body by high frequency radar",
+  "definition": "Eastward velocity of water current in the water body by high frequency radar that is directed eastward (positive values) or westward (negative values)",
+  "comment": "Eastward; velocity; water current; water body; positive if eastward",
+  "hasProperty": "velocity",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+  "hasMatrix": "water body",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
+  "hasObjectOfInterest": "water current",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5195029",
+  "hasContextObject": "sea",
+  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
+  "hasConstraint": [
+    {
+      "label": "type",
+      "on": "velocity"
+    },
+    {
+      "label": "location",
+      "on": "water body"
+    }
+  ]
+}

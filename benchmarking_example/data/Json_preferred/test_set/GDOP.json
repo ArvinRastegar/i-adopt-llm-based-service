@@ -1,0 +1,14 @@
+{
+  "label": "GDOP Geometric dilution of precision ",
+  "definition": "Geometric dilution of precision of the relative position, based on the position of the receiver and the transmitters.",
+  "comment": "relative position; dilution of precision; position of receiver; position of transmitters",
+  "hasProperty": "dilution of precision",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q616896",
+  "hasObjectOfInterest": {
+    "SymmetricSystem": "relative position",
+    "hasPart": [
+      "position of receiver",
+      "position of transmitters"
+    ]
+  }
+}

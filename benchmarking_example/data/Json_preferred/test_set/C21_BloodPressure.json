@@ -1,0 +1,21 @@
+{
+  "label": "Resting systolic blood pressure",
+  "definition": "Resting systolic blood pressure in millimeters of mercury (mmHg)",
+  "comment": "blood; human; condition: resting; pressure; state: systolic",
+  "hasProperty": "pressure",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q39552",
+  "hasMatrix": "human",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "blood",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7873",
+  "hasConstraint": [
+    {
+      "label": "condition",
+      "on": "human"
+    },
+    {
+      "label": "state",
+      "on": "pressure"
+    }
+  ]
+}

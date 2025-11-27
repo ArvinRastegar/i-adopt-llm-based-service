@@ -1,0 +1,25 @@
+{
+  "label": "Date of last PCR-test",
+  "definition": "date of last COVID-19 PCR test performed by a certified laboratory",
+  "comment": "date; last; COVID-19; PCR test; performed by a certified laboratory",
+  "hasProperty": "date",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q205892",
+  "hasMatrix": "patient",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q181600",
+  "hasObjectOfInterest": "PCR-test",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q104462307",
+  "hasConstraint": [
+    {
+      "label": "protocol",
+      "on": "PCR-test"
+    },
+    {
+      "label": "type",
+      "on": "PCR-test"
+    },
+    {
+      "label": "time",
+      "on": "date"
+    }
+  ]
+}

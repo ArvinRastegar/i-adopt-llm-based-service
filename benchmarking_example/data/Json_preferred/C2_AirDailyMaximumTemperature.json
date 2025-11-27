@@ -1,0 +1,19 @@
+{
+  "label": "Air daily maximum temperature at 1.7m",
+  "definition": "Thermodynamic temperature of the air in a height of 1.7 meter, daily maximum",
+  "comment": "Thermodynamic temperature; air; in a height of 1.7 meter; daily; maximum - ADD: atmosphere (to distinguish it from indoors); \nVDP10 for property;  VDP40 for context object; VDP66 for constraint:datum; VDP67 for constraint:condition.",
+  "hasProperty": "thermodynamic temperature",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
+  "hasContextObject": "atmosphere",
+  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
+  "hasConstraint": [
+    {
+      "label": "frequency",
+      "on": "maximum"
+    },
+    {
+      "label": "location",
+      "on": "air"
+    }
+  ]
+}
