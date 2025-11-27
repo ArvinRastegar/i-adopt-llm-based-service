@@ -106,7 +106,7 @@ _SYSTEM_RULES = textwrap.dedent(
     Your task is to output **one** JSON object that satisfies the
     JSON-Schema provided below.
 
-    ▸ Copy *label* and *comment* verbatim from the user section.
+    ▸ Copy *comment* verbatim from the user section.
     ▸ Do **NOT** introduce keys that are absent from the schema.
     ▸ Every value must respect the declared JSON type
       (e.g. hasProperty is a string, hasConstraint is an array, …).
@@ -128,7 +128,7 @@ def build_prompt(label: str, comment: str, examples: List[Dict[str, Any]] | None
         f"{_SYSTEM_RULES}\n\n"
         f"### JSON-Schema\n{_SCHEMA_TEXT}\n"
         f"{ex_block}"
-        f"{_USER_HDR}label: {label}\ncomment: {comment}"
+        f"{_USER_HDR}comment: {comment}"
         f"{_EXPECTED}"
     )
 
@@ -439,9 +439,7 @@ def _to_wiki_url(uri: Optional[str]) -> Optional[str]:
 def format_queries(query, instruction=None):
     prefix = '<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".<|im_end|>\n<|im_start|>user\n'
     if instruction is None:
-        instruction = (
-            "Given a web search query, retrieve relevant passages that answer the query"
-        )
+        instruction = "Given a web search query, retrieve relevant passages that answer the query"
     return f"{prefix}<Instruct>: {instruction}\n<Query>: {query}\n"
 
 
@@ -492,11 +490,11 @@ def get_wikidata_entity(
             model = load_crossencoder("tomaarsen/Qwen3-Reranker-0.6B-seq-cls")
             task = "Given a web search query, retrieve relevant passages that answer the query"
             queries = [f'Definition of "{term}" in context: "{context}"'] * len(search)
-            documents = [f"label: \"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\"" for search_entry in search]
-            pairs = [
-                [format_queries(query, task), format_document(doc)]
-                for query, doc in zip(queries, documents)
+            documents = [
+                f"label: \"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\""
+                for search_entry in search
             ]
+            pairs = [[format_queries(query, task), format_document(doc)] for query, doc in zip(queries, documents)]
             scores = model.predict(pairs)
             # Sort results by score (descending)
             ranked = sorted(zip(search, scores), key=lambda x: x[1], reverse=True)
@@ -529,6 +527,9 @@ def enrich_with_uris(
     """
     Return a copy of *pred* enriched with ...URI fields (top-level and nested systems).
     """
+    if approach == "none":
+        # Skip Phase 3 entirely – return Phase 1 output unchanged
+        return pred
     out = json.loads(json.dumps(pred))  # deep copy
 
     def add_uri_field(container: Dict[str, Any], key: str, label_value: Any):
@@ -937,7 +938,7 @@ def main() -> None:
     parser.add_argument(
         "--approach",
         type=str,
-        choices=["naive", "embedding", "cross-encoder"],
+        choices=["none", "naive", "embedding", "cross-encoder"],
         help="Wikidata linking approach",
     )
     parser.add_argument(
@@ -949,7 +950,7 @@ def main() -> None:
     temps = args.temps or TEMPERATURES
     shots = [args.shot] if args.shot is not None else [0, 1, 3, 5]
     # NEW: if approach not specified → run all three
-    approaches = [args.approach] if args.approach else ["naive", "embedding", "cross-encoder"]
+    approaches = [args.approach] if args.approach else ["none", "naive", "embedding", "cross-encoder"]
     all_rows: list[dict] = []
 
     for approach in approaches:
