@@ -11,11 +11,11 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q729678",
   "hasConstraint": [
     {
-      "label": "normalization",
+      "label": "per unit mass",
       "on": "mass concentration"
     },
     {
-      "label": "state:wet",
+      "label": "wet",
       "on": "body"
     }
   ]

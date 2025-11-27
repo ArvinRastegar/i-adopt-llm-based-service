@@ -45,10 +45,10 @@ OUTBOOK_DIR.mkdir(exist_ok=True)
 
 MODEL_NAMES = [
     "qwen/qwen3-32b",
-    "qwen/qwen3-30b-a3b-instruct-2507",
-    "meta-llama/llama-4-maverick",
-    "meta-llama/llama-3.3-70b-instruct",
-    "openai/gpt-5.1-chat",
+    # "qwen/qwen3-30b-a3b-instruct-2507",
+    # "meta-llama/llama-4-maverick",
+    # "meta-llama/llama-3.3-70b-instruct",
+    # "openai/gpt-5.1-chat",
     "qwen/qwen3-235b-a22b-thinking-2507",
 ]
 TEMPERATURES = [0.5]  # can be extended later
@@ -95,7 +95,7 @@ _SYSTEM_RULES = textwrap.dedent(
     Your task is to output **one** JSON object that satisfies the
     JSON-Schema provided below.
 
-    ▸ Copy *comment* verbatim from the user section.
+    ▸ Copy *definition* verbatim from the user section.
     ▸ Do **NOT** introduce keys that are absent from the schema.
     ▸ Every value must respect the declared JSON type.
     ▸ Reply with the JSON object only — no markdown fences, no narration.
@@ -216,7 +216,7 @@ _USER_HDR = "\n\n### Variable to decompose\n"
 _EXPECTED = "\n\n### Expected output\n*(only the JSON object)*"
 
 
-def build_prompt(comment: str, examples: List[Dict[str, Any]] | None, prompt_version: str) -> str:
+def build_prompt(definition: str, examples: List[Dict[str, Any]] | None, prompt_version: str) -> str:
     examples = examples or []
 
     # Pick the template by name (fallback = baseline)
@@ -230,7 +230,7 @@ def build_prompt(comment: str, examples: List[Dict[str, Any]] | None, prompt_ver
         f"{instructions}\n\n"
         f"### JSON-Schema\n{_SCHEMA_TEXT}\n"
         f"{ex_block}"
-        f"{_USER_HDR}comment: {comment}"
+        f"{_USER_HDR}definition: {definition}"
         f"{_EXPECTED}"
     )
 
@@ -298,7 +298,7 @@ def call_model(model: str, prompt: str, temperature: float) -> str:
     return ""
 
 
-def call_llm_loose(model: str, prompt: str, comment: str, temperature: float) -> Dict[str, Any]:
+def call_llm_loose(model: str, prompt: str, definition: str, temperature: float) -> Dict[str, Any]:
     """
     - Calls call_model() with 3 retries
     - Extracts JSON robustly
@@ -324,7 +324,7 @@ def call_llm_loose(model: str, prompt: str, comment: str, temperature: float) ->
             continue
 
         # success → post-process and return
-        data["comment"] = comment
+        data["definition"] = definition
         for key in ONTO_KEYS:
             if key not in data:
                 data[key] = [] if key == "hasConstraint" else ""
@@ -496,7 +496,7 @@ def _run_one(
     prompt: str,
     shot: int,
 ) -> Dict[str, Any]:
-    pred = call_llm_loose(model, prompt, gt["comment"], temperature)
+    pred = call_llm_loose(model, prompt, gt["definition"], temperature)
     return {
         "variable": gt["label"],
         "ground_truth_json": gt,
@@ -532,7 +532,7 @@ def evaluate(
         if any(ex["label"] == gt["label"] for ex in examples):
             continue
 
-        prompt = build_prompt(gt["comment"], examples, prompt_version)
+        prompt = build_prompt(gt["definition"], examples, prompt_version)
 
         logging.info(
             "\n%s\nPROMPT | version=%s | shot=%d | %s\n%s\n%s",
@@ -731,8 +731,8 @@ def build_excel(results: List[Dict[str, Any]]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="I-ADOPT LLM Phase 1 – Matrix & Constraint comparison + evaluation")
     parser.add_argument("--data-dir", type=pathlib.Path, default=DATA_DIR)
-    parser.add_argument("--max-vars", type=int, default=30)
-    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--max-vars", type=int, default=100)
+    parser.add_argument("--workers", type=int, default=16)
 
     parser.add_argument(
         "--shot",

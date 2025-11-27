@@ -9,15 +9,15 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q52105",
   "hasConstraint": [
     {
-      "label": "temporal extent",
+      "label": "over 1 year",
       "on": "probability of occurrence"
     },
     {
-      "label": "spatial extent",
+      "label": "grid cell of 100x100 m",
       "on": "probability of occurrence"
     },
     {
-      "label": "type",
+      "label": "EUNIS habitat type",
       "on": "habitat"
     }
   ]

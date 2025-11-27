@@ -13,39 +13,39 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5203615",
   "hasConstraint": [
     {
-      "label": "requirement",
+      "label": "local air conditions",
       "on": "air"
     },
     {
-      "label": "quality",
+      "label": "MilliQ purity",
       "on": "water"
     },
     {
-      "label": "requirement",
+      "label": "partial pressure of molecular oxygen in the gas phase",
       "on": "molecular oxygen"
     },
     {
-      "label": "requirement",
+      "label": "thermodynamic temperature",
       "on": "molar concentration"
     },
     {
-      "label": "requirement",
+      "label": "atmospheric pressure",
       "on": "molar concentration"
     },
     {
-      "label": "phase",
+      "label": "liquid",
       "on": "water"
     },
     {
-      "label": "phase",
+      "label": "gaseous",
       "on": "molecular oxygen"
     },
     {
-      "label": "phase",
+      "label": "gaseous",
       "on": "air"
     },
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "molar concentration"
     }
   ]

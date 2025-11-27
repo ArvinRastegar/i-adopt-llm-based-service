@@ -11,15 +11,15 @@
   "hasObjectOfInterest": "carbon",
   "hasConstraint": [
     {
-      "label": "due to",
+      "label": "senescence",
       "on": "mass flux"
     },
     {
-      "label": "normalization",
+      "label": "per unit area",
       "on": "mass flux"
     },
     {
-      "label": "normalization",
+      "label": "per unit time",
       "on": "mass flux"
     }
   ]

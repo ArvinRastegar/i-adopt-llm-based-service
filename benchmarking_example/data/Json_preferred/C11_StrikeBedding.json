@@ -15,7 +15,7 @@
   },
   "hasConstraint": [
     {
-      "label": "interpretation",
+      "label": "angle measured with the dip direction to the right",
       "on": "azimuth"
     }
   ]

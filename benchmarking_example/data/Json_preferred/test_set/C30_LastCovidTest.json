@@ -10,15 +10,15 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q104462307",
   "hasConstraint": [
     {
-      "label": "protocol",
+      "label": "performed by a certified laboratory",
       "on": "PCR-test"
     },
     {
-      "label": "type",
+      "label": "SARS-CoV2",
       "on": "PCR-test"
     },
     {
-      "label": "time",
+      "label": "last",
       "on": "date"
     }
   ]

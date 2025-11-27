@@ -9,11 +9,11 @@
   "hasObjectOfInterest": "atmospheric boundary layer",
   "hasConstraint": [
     {
-      "label": "due to",
+      "label": "temperature inversion",
       "on": "atmospheric boundary layer"
     },
     {
-      "label": "datum",
+      "label": "above ground",
       "on": "height"
     }
   ]

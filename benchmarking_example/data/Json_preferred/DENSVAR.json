@@ -10,23 +10,23 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
   "hasConstraint": [
     {
-      "label": "requirement",
+      "label": "local room temperature",
       "on": "mass concentration"
     },
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "mass concentration"
     },
     {
-      "label": "size",
+      "label": "sample of 10.00 mL",
       "on": "soil"
     },
     {
-      "label": "origin",
+      "label": "soil sample",
       "on": "soil"
     },
     {
-      "label": "quality",
+      "label": "purity 99.0 %(v/v)",
       "on": "benzene (C6H6)"
     }
   ]

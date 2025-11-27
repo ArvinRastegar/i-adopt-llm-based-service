@@ -13,23 +13,23 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5203615",
   "hasConstraint": [
     {
-      "label": "type",
+      "label": "ectotherm",
       "on": "organism"
     },
     {
-      "label": "due to",
+      "label": "metabolism",
       "on": "mass flow rate"
     },
     {
-      "label": "condition",
+      "label": "non-stressed",
       "on": "organism"
     },
     {
-      "label": "condition",
+      "label": "non-active",
       "on": "organism"
     },
     {
-      "label": "normalization",
+      "label": "per hour",
       "on": "mass flow rate"
     }
   ]

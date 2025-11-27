@@ -12,23 +12,23 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
   "hasConstraint": [
     {
-      "label": "location",
+      "label": "at the surface",
       "on": "water body"
     },
     {
-      "label": "spatial distribution",
+      "label": "over the scatter patch",
       "on": "standard deviation"
     },
     {
-      "label": "type",
+      "label": "radial",
       "on": "Velocity"
     },
     {
-      "label": "sign meaning",
+      "label": "positive away from the instrument",
       "on": "Velocity"
     },
     {
-      "label": "datum",
+      "label": "relative to instrument",
       "on": "Velocity"
     }
   ]

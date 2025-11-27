@@ -6,15 +6,15 @@
   "hasObjectOfInterest": "pipe connection",
   "hasConstraint": [
     {
-      "label": "material type",
+      "label": "plastic",
       "on": "pipe connection"
     },
     {
-      "label": "size:diameter of 30 cm",
+      "label": "diameter of 30 cm",
       "on": "pipe connection"
     },
     {
-      "label": "controlled list",
+      "label": "state of pipe connection",
       "on": "state"
     }
   ]

@@ -7,11 +7,11 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q181600",
   "hasConstraint": [
     {
-      "label": "time",
+      "label": "current",
       "on": "status"
     },
     {
-      "label": "controlled list",
+      "label": "smoking status",
       "on": "status"
     }
   ]

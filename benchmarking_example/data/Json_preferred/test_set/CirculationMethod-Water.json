@@ -9,11 +9,11 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
   "hasConstraint": [
     {
-      "label": "type",
+      "label": "canalisation",
       "on": "Pipe"
     },
     {
-      "label": "controlled list",
+      "label": "water circulation method",
       "on": "CirculationMethod"
     }
   ]

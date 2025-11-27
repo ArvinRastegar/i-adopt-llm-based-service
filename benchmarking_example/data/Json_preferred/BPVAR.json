@@ -8,15 +8,15 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
   "hasConstraint": [
     {
-      "label": "condition",
+      "label": "at the liquid to gas phase transition",
       "on": "thermodynamic temperature"
     },
     {
-      "label": "requirement",
+      "label": "1 atm pressure",
       "on": "thermodynamic temperature"
     },
     {
-      "label": "quality",
+      "label": "purity 99.07% (v/v)",
       "on": "benzene"
     }
   ]

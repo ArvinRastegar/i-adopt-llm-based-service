@@ -9,15 +9,15 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q849881",
   "hasConstraint": [
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "molar concentration"
     },
     {
-      "label": "condition",
+      "label": "homogeneous solution",
       "on": "apple juice"
     },
     {
-      "label": "phase",
+      "label": "acqueous",
       "on": "hydronium"
     }
   ]

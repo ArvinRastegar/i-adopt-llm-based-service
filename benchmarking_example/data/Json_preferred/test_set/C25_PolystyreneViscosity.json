@@ -8,11 +8,11 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q146243",
   "hasConstraint": [
     {
-      "label": "type",
+      "label": "PS042",
       "on": "polystyrene"
     },
     {
-      "label": "condition",
+      "label": "under testing conditions of DIN 5810-1",
       "on": "dynamic viscosity"
     }
   ]

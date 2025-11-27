@@ -12,11 +12,11 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
   "hasConstraint": [
     {
-      "label": "type",
+      "label": "eastward",
       "on": "velocity"
     },
     {
-      "label": "location",
+      "label": "at the surface",
       "on": "water body"
     }
   ]

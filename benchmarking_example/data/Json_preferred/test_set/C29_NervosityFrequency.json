@@ -10,7 +10,7 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q1978097",
   "hasConstraint": [
     {
-      "label": "temporal extent",
+      "label": "during last 30 days",
       "on": "frequency"
     }
   ]

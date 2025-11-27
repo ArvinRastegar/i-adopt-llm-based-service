@@ -10,11 +10,11 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q423345",
   "hasConstraint": [
     {
-      "label": "condition",
+      "label": "dry",
       "on": "organism"
     },
     {
-      "label": "normalization",
+      "label": "per unit mass",
       "on": "mass fraction"
     }
   ]

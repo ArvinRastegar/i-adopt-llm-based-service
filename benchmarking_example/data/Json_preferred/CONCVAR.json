@@ -10,23 +10,23 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q677",
   "hasConstraint": [
     {
-      "label": "requirement",
+      "label": "at 510 nm wavelength",
       "on": "molar concentration"
     },
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "molar concentration"
     },
     {
-      "label": "reagent",
+      "label": "o-phenanthroline",
       "on": "soil"
     },
     {
-      "label": "phase",
+      "label": "acqueous",
       "on": "iron"
     },
     {
-      "label": "origin",
+      "label": "soil sample",
       "on": "soil"
     }
   ]

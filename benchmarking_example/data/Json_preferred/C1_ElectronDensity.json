@@ -10,7 +10,7 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2225",
   "hasConstraint": [
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "number density"
     }
   ]

@@ -54,10 +54,16 @@ def _label(g: Graph, node: URIRef | None):
 
 
 def _clean_constraint_label(label: str) -> str:
-    """Remove prefix before ': '."""
-    if label and ": " in label:
-        return label.split(": ", 1)[0].strip()
-    return label
+    """
+    Extract everything AFTER the first colon.
+    Example:
+        'quality: purity 99.98%(w/w)' -> 'purity 99.98%(w/w)'
+    """
+    if not label:
+        return label
+    if ":" in label:
+        return label.split(":", 1)[1].strip()
+    return label.strip()
 
 
 def _maybe_uri(node: Any) -> Optional[str]:
@@ -138,17 +144,20 @@ def parse_variable(ttl: str) -> Dict[str, Any]:
                     result[f"{key}URI"] = u
 
     # --- Constraints --------------------------------------------------------
+    # --- Constraints --------------------------------------------------------
     constraints = list(g.objects(root, IOP.hasConstraint))
     if constraints:
         out = []
         for c in constraints:
-            raw = _label(g, c)
-            clean = _clean_constraint_label(raw)
-            target = _label(g, g.value(c, IOP.constrains))
-            out.append({"label": clean, "on": target})
+            raw_label = _label(g, c)
+            clean_label = _clean_constraint_label(raw_label)
+            target_label = _label(g, g.value(c, IOP.constrains))
+
+            out.append({"label": clean_label, "on": target_label})
+
         result["hasConstraint"] = out
 
-    # Remove None values
+    # Remove None-valued fields before returning
     return {k: v for k, v in result.items() if v is not None}
 
 

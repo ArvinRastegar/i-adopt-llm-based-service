@@ -12,15 +12,15 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
   "hasConstraint": [
     {
-      "label": "normalization",
+      "label": "per unit mass",
       "on": "molar concentration"
     },
     {
-      "label": "origin",
+      "label": "detrital organic matter",
       "on": "nitrogen"
     },
     {
-      "label": "location",
+      "label": "seabed",
       "on": "sediment"
     }
   ]

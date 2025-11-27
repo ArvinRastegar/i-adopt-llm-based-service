@@ -12,19 +12,19 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
   "hasConstraint": [
     {
-      "label": "datum",
+      "label": "relative to instrument",
       "on": "velocity"
     },
     {
-      "label": "location",
+      "label": "at the surface",
       "on": "water body"
     },
     {
-      "label": "sign meaning",
+      "label": "positive away from the instrument",
       "on": "velocity"
     },
     {
-      "label": "type",
+      "label": "radial",
       "on": "velocity"
     }
   ]

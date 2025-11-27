@@ -8,7 +8,7 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q858177",
   "hasConstraint": [
     {
-      "label": "condition",
+      "label": "free of feral",
       "on": "enclosure"
     }
   ]

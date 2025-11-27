@@ -8,11 +8,11 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
   "hasConstraint": [
     {
-      "label": "frequency",
+      "label": "daily",
       "on": "maximum"
     },
     {
-      "label": "location",
+      "label": "in a height of 1.7 m above ground",
       "on": "air"
     }
   ]

@@ -10,15 +10,15 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q163648",
   "hasConstraint": [
     {
-      "label": "temporal extent",
+      "label": "1 year",
       "on": "mass fraction"
     },
     {
-      "label": "normalization",
+      "label": "per unit mass",
       "on": "mass fraction"
     },
     {
-      "label": "due to",
+      "label": "industry",
       "on": "DDT"
     }
   ]

@@ -13,27 +13,27 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q179724",
   "hasConstraint": [
     {
-      "label": "phase",
+      "label": "solid",
       "on": "naphthalene (C10H8)"
     },
     {
-      "label": "phase",
+      "label": "liquid",
       "on": "water (H2O)"
     },
     {
-      "label": "requirement",
+      "label": "local room temperature",
       "on": "mass concentration"
     },
     {
-      "label": "requirement",
+      "label": "at 279 nm wavelength",
       "on": "mass concentration"
     },
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "mass concentration"
     },
     {
-      "label": "condition",
+      "label": "deionized",
       "on": "water (H2O)"
     }
   ]

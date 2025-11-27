@@ -9,7 +9,7 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18250160",
   "hasConstraint": [
     {
-      "label": "layer",
+      "label": "lower canopy strata",
       "on": "foliage"
     }
   ]

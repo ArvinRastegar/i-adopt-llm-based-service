@@ -10,11 +10,11 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q11567121",
   "hasConstraint": [
     {
-      "label": "datum:above ground",
+      "label": "above ground",
       "on": "height"
     },
     {
-      "label": "due to",
+      "label": "fire",
       "on": "char"
     }
   ]

@@ -11,15 +11,15 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
   "hasConstraint": [
     {
-      "label": "condition",
+      "label": "at 550nm wavelength",
       "on": "optical thickness"
     },
     {
-      "label": "type",
+      "label": "organic",
       "on": "particles of matter"
     },
     {
-      "label": "condition",
+      "label": "under ambient conditions",
       "on": "aerosol"
     }
   ]

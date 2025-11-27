@@ -10,7 +10,7 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q776976",
   "hasConstraint": [
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "mass concentration"
     }
   ]

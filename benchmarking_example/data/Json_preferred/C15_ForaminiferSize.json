@@ -10,11 +10,11 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q107027",
   "hasConstraint": [
     {
-      "label": "type",
+      "label": "planktonic",
       "on": "foraminifera"
     },
     {
-      "label": "location",
+      "label": "surface",
       "on": "sediment"
     }
   ]

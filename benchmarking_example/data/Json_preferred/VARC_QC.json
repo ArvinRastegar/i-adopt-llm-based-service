@@ -6,11 +6,11 @@
   "hasObjectOfInterest": "HCSS Radial velocity variance of water current",
   "hasConstraint": [
     {
-      "label": "threshold",
+      "label": "good if temporal variance is smaller than a maximum variance threshold",
       "on": "quality flag"
     },
     {
-      "label": "controlled list",
+      "label": "quality flag",
       "on": "quality flag"
     }
   ]

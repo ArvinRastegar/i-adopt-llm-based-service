@@ -12,23 +12,23 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q7391292",
   "hasConstraint": [
     {
-      "label": "quality",
+      "label": "purity 99.98%(w/w)",
       "on": "hexanol (C6H14O)"
     },
     {
-      "label": "requirement",
+      "label": "5.00 g sample",
       "on": "hexanol (C6H14O)"
     },
     {
-      "label": "requirement",
+      "label": "at local atmospheric presure",
       "on": "combustion"
     },
     {
-      "label": "requirement",
+      "label": "at local atmospheric oxygen level",
       "on": "combustion"
     },
     {
-      "label": "normalization",
+      "label": "per mol",
       "on": "energy"
     }
   ]

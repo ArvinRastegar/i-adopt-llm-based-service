@@ -13,31 +13,31 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
   "hasConstraint": [
     {
-      "label": "phase",
+      "label": "liquid",
       "on": "benzene (C6H6)"
     },
     {
-      "label": "phase",
+      "label": "liquid",
       "on": "water (H2O)"
     },
     {
-      "label": "quality",
+      "label": "purity 99.82 %(w/w)",
       "on": "benzene (C6H6)"
     },
     {
-      "label": "requirement",
+      "label": "298.15 K thermodynamic temperature",
       "on": "mass concentration"
     },
     {
-      "label": "phase",
+      "label": "dissolved",
       "on": "benzene (C6H6)"
     },
     {
-      "label": "normalization",
+      "label": "per unit volume",
       "on": "mass concentration"
     },
     {
-      "label": "condition",
+      "label": "deionized",
       "on": "water (H2O)"
     }
   ]

@@ -17,7 +17,7 @@
       "on": "habitat patch"
     },
     {
-      "label": "type",
+      "label": "specific EUNIS habitat",
       "on": "habitat patch system"
     }
   ]

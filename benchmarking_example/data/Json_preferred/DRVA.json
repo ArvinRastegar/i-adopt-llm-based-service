@@ -7,7 +7,7 @@
   "hasObjectOfInterest": "RDVA radial velocity (away from) of water current related to instrument",
   "hasConstraint": [
     {
-      "label": "datum",
+      "label": "relative to True North",
       "on": "plane angle"
     }
   ]

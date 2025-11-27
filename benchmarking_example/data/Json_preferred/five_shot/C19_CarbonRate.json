@@ -13,23 +13,23 @@
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q623",
   "hasConstraint": [
     {
-      "label": "normalization",
+      "label": "per mass",
       "on": "mass flow rate"
     },
     {
-      "label": "state",
+      "label": "dry",
       "on": "organism"
     },
     {
-      "label": "condition",
+      "label": "under non-limiting food conditions",
       "on": "Carbon"
     },
     {
-      "label": "condition",
+      "label": "at 15°C temperature",
       "on": "mass flow rate"
     },
     {
-      "label": "due to",
+      "label": "ingestion",
       "on": "mass flow rate"
     }
   ]

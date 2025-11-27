@@ -12,11 +12,11 @@
   "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
   "hasConstraint": [
     {
-      "label": "type",
+      "label": "eastward",
       "on": "velocity"
     },
     {
-      "label": "type",
+      "label": "eulerian",
       "on": "velocity"
     }
   ]
