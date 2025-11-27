@@ -43,7 +43,14 @@ LOG_FILE = LOG_DIR / f"onlyPhaseOne{datetime.now():%Y%m%d_%H%M%S}.log"
 OUTBOOK_DIR = pathlib.Path("benchmarking_outputs")
 OUTBOOK_DIR.mkdir(exist_ok=True)
 
-MODEL_NAMES = ["qwen/qwen3-32b"]  # can be extended later
+MODEL_NAMES = [
+    "qwen/qwen3-32b",
+    "qwen/qwen3-30b-a3b-instruct-2507",
+    "meta-llama/llama-4-maverick",
+    "meta-llama/llama-3.3-70b-instruct",
+    "openai/gpt-5.1-chat",
+    "qwen/qwen3-235b-a22b-thinking-2507",
+]
 TEMPERATURES = [0.5]  # can be extended later
 
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
@@ -251,42 +258,81 @@ _JSON_BLOCK_RE = re.compile(r"\{.*\}", re.DOTALL)
 
 
 def call_model(model: str, prompt: str, temperature: float) -> str:
-    try:
-        resp = client.chat.completions.create(
-            model=model,
-            temperature=temperature,
-            messages=[{"role": "user", "content": prompt}],
-            timeout=60,
-        )
-        return resp.choices[0].message.content
-    except (APIStatusError, OpenAIError, httpx.HTTPError) as e:
-        logging.warning(f"{model}: LLM request failed – {e!r}")
-        return ""
+    """
+    Robust API call with:
+    - 3 retries
+    - detection of HTML / empty responses
+    - logs raw response on failure
+    - returns "" if no valid content after retries
+    """
+    for attempt in range(1, 4):
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                temperature=temperature,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=60,
+            )
+            text = resp.choices[0].message.content or ""
+
+            # detect HTML or empty response
+            if text.strip().startswith("<!DOCTYPE html") or text.strip().startswith("<html"):
+                logging.warning(f"{model}: HTML error response on attempt {attempt}")
+                continue
+
+            if not text.strip():
+                logging.warning(f"{model}: empty response on attempt {attempt}")
+                continue
+
+            return text
+
+        except APIStatusError as e:
+            logging.warning(f"{model}: APIStatusError attempt {attempt} – {e.status_code} – {getattr(e, 'body', '')}")
+        except (OpenAIError, httpx.HTTPError) as e:
+            logging.warning(f"{model}: transport error attempt {attempt} – {e!r}")
+        except Exception as e:
+            logging.warning(f"{model}: unexpected error attempt {attempt} – {e!r}")
+
+    # after 3 failures
+    logging.error(f"{model}: failed after 3 attempts")
+    return ""
 
 
-def call_llm_loose(model: str, prompt: str, label: str, comment: str, temperature: float) -> Dict[str, Any]:
-    data: Dict[str, Any] = {}
-    for _ in range(3):
+def call_llm_loose(model: str, prompt: str, comment: str, temperature: float) -> Dict[str, Any]:
+    """
+    - Calls call_model() with 3 retries
+    - Extracts JSON robustly
+    - Returns {} if no valid JSON after 3 attempts
+    """
+    for attempt in range(1, 4):
         raw = call_model(model, prompt, temperature)
+
+        if not raw.strip():
+            logging.warning(f"{model}: empty output on JSON extraction attempt {attempt}")
+            continue
+
         cleaned = _JSON_FENCE_RE.sub("", raw).strip()
         m = _JSON_BLOCK_RE.search(cleaned)
         if not m:
+            logging.warning(f"{model}: no JSON block found on attempt {attempt}")
             continue
+
         try:
             data = json.loads(m.group(0))
-            break
-        except json.JSONDecodeError:
+        except Exception as e:
+            logging.warning(f"{model}: JSON decode failure on attempt {attempt} – {e!r}")
             continue
-    if not data:
-        return {}
 
-    # Enforce label/comment and presence of ONTO_KEYS
-    # data["label"] = label
-    data["comment"] = comment
-    for key in ONTO_KEYS:
-        if key not in data:
-            data[key] = [] if key == "hasConstraint" else ""
-    return data
+        # success → post-process and return
+        data["comment"] = comment
+        for key in ONTO_KEYS:
+            if key not in data:
+                data[key] = [] if key == "hasConstraint" else ""
+        return data
+
+    # after 3 JSON extraction failures
+    logging.error(f"{model}: could not extract JSON after 3 attempts")
+    return {}
 
 
 # --------------------------------------------------------------------------- #
@@ -450,7 +496,7 @@ def _run_one(
     prompt: str,
     shot: int,
 ) -> Dict[str, Any]:
-    pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature)
+    pred = call_llm_loose(model, prompt, gt["comment"], temperature)
     return {
         "variable": gt["label"],
         "ground_truth_json": gt,
@@ -478,7 +524,11 @@ def evaluate(
     tasks: list[tuple] = []
 
     for gt_path in sorted(data_dir.glob("*.json"))[:max_vars]:
-        gt = json.load(open(gt_path))
+        try:
+            gt = json.load(open(gt_path))
+        except Exception as e:
+            logging.error(f"Failed to load {gt_path}: {e}")
+            continue
         if any(ex["label"] == gt["label"] for ex in examples):
             continue
 
@@ -682,7 +732,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="I-ADOPT LLM Phase 1 – Matrix & Constraint comparison + evaluation")
     parser.add_argument("--data-dir", type=pathlib.Path, default=DATA_DIR)
     parser.add_argument("--max-vars", type=int, default=30)
-    parser.add_argument("--workers", type=int, default=64)
+    parser.add_argument("--workers", type=int, default=8)
 
     parser.add_argument(
         "--shot",
