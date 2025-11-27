@@ -5,16 +5,20 @@
   "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
   "type": "object",
 
-  "required": ["label", "comment", "hasProperty", "hasObjectOfInterest"],
+  "required": ["label", "definition", "comment", "hasProperty", "hasObjectOfInterest"],
 
   "properties": {
     "label": {
       "type": "string",
       "description": "Variable name."
     },
+    "definition": {
+      "type": "string",
+      "description": "Natural-language descriptive definition (from skos:definition)."
+    },
     "comment": {
       "type": "string",
-      "description": "Definition / description."
+      "description": "Compact version of the definition, cleaned by an expert."
     },
     "hasProperty": {
       "type": "string",
