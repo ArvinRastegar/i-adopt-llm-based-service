@@ -1,12 +1,14 @@
 {
   "label": "Foliage projective cover in the lower canopy strata",
   "definition": "The proportion (percentage) of the ground area covered by foliage (or photosynthetic tissue) in the lower canopy strata.",
-  "comment": "foliage, lower canopy strata, ground, cover -> area fraction",
-  "hasProperty": "area fraction",
-  "hasMatrix": "ground",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
-  "hasObjectOfInterest": "foliage",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18250160",
+  "comment": "foliage, lower canopy strata, ground, proportion -> fraction",
+  "hasProperty": "percentage",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11229",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n0795957d2ca4488781d8f189d6109362b1",
+    "hasSource": "foliage",
+    "hasTarget": "study area"
+  },
   "hasConstraint": [
     {
       "label": "lower canopy strata",

@@ -1,0 +1,22 @@
+{
+  "label": "Global fallout of U‑236 (U236GF)",
+  "definition": "Global fallout of U‑236 (U236GF) in atoms kg-1",
+  "comment": "location: global, condition: deposited, soil, Uranium‑236, atoms per mass",
+  "hasProperty": "number density",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q176449",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n89aba1f392a64e808322383bc4eafa54b1",
+    "hasSource": "Uranium‑236",
+    "hasTarget": "soil"
+  },
+  "hasConstraint": [
+    {
+      "label": "global",
+      "on": "n89aba1f392a64e808322383bc4eafa54b1"
+    },
+    {
+      "label": "deposited",
+      "on": "Uranium‑236"
+    }
+  ]
+}

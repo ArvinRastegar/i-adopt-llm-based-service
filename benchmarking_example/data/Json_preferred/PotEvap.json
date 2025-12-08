@@ -1,0 +1,23 @@
+{
+  "label": "Potential evaporation",
+  "definition": "Potential evaporation l m⁻² s⁻¹",
+  "comment": "condition: evaporated, condition: at non-limiting water supply, soil, volume flux, flow, water, atmosphere",
+  "hasProperty": "volume flux",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q55753416",
+  "hasMatrix": {
+    "AsymmetricSystem": "n354c0a9f68904eafa734b43444eed61bb1",
+    "hasSource": "soil",
+    "hasTarget": "atmosphere"
+  },
+  "hasObjectOfInterest": "water",
+  "hasConstraint": [
+    {
+      "label": "at non-limiting water supply",
+      "on": "water"
+    },
+    {
+      "label": "evaporated",
+      "on": "water"
+    }
+  ]
+}

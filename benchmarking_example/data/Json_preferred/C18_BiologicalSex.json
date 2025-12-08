@@ -1,15 +1,9 @@
 {
   "label": "Biological sex",
   "definition": "Biological sex [female | male | intersex | unknown]",
-  "comment": "organism, ADD: sex, biological sex -> controlled list: biological sex",
+  "comment": "organism, sex",
   "hasProperty": "sex",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q290",
   "hasObjectOfInterest": "organism",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7239",
-  "hasConstraint": [
-    {
-      "label": "biological sex",
-      "on": "sex"
-    }
-  ]
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7239"
 }

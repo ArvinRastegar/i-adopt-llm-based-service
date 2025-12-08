@@ -4,15 +4,19 @@
   "comment": "Thermodynamic temperature; air; in a height of 1.7 meter; daily; maximum - ADD: atmosphere (to distinguish it from indoors); \nVDP10 for property;  VDP40 for context object; VDP66 for constraint:datum; VDP67 for constraint:condition.",
   "hasProperty": "thermodynamic temperature",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
-  "hasContextObject": "atmosphere",
-  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
+  "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
+  "hasObjectOfInterest": "air",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292",
   "hasConstraint": [
     {
       "label": "daily",
       "on": "maximum"
     },
     {
-      "label": "in a height of 1.7 m above ground",
+      "label": "1,7 m  above ground",
       "on": "air"
     }
   ]

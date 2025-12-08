@@ -1,0 +1,11 @@
+{
+  "label": "Level of highest education",
+  "definition": "level of highest education",
+  "comment": "education; person; highest; level",
+  "hasProperty": "level",
+  "hasStatisticalModifier": "highest",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "education",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8434"
+}

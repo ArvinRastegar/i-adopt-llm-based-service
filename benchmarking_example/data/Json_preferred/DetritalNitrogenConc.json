@@ -1,27 +1,32 @@
 {
   "label": "Labile detrital nitrogen concentration in the seabed",
   "definition": "Labile detrital nitrogen concentration in the seabed in mmoleN/kg in sediment.",
-  "comment": "Labile; detrital -> detrital organic material; nitrogen; concentration -> molar concentration; seabed; sediment; ADD: per unit mass; sea",
-  "hasProperty": "molar concentration",
-  "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
-  "hasMatrix": "sediment",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q180184",
-  "hasObjectOfInterest": "nitrogen",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q627",
-  "hasContextObject": "sea",
-  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
+  "comment": "Labile; detrital -> detrital organic material; nitrogen; concentration -> molar concentration; seabed; sediment; sea",
+  "hasProperty": "mass flow rate",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q1366187",
+  "hasMatrix": {
+    "AsymmetricSystem": "flow",
+    "hasSource": "air",
+    "hasTarget": "organism"
+  },
+  "hasObjectOfInterest": "oxygen",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5203615",
   "hasConstraint": [
     {
-      "label": "per unit mass",
-      "on": "molar concentration"
+      "label": "metabolism",
+      "on": "flow"
     },
     {
-      "label": "detrital organic matter",
-      "on": "nitrogen"
+      "label": "ectotherm",
+      "on": "organism"
     },
     {
-      "label": "seabed",
-      "on": "sediment"
+      "label": "non-stressed",
+      "on": "organism"
+    },
+    {
+      "label": "non-active",
+      "on": "organism"
     }
   ]
 }

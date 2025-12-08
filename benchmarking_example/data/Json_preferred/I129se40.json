@@ -1,0 +1,22 @@
+{
+  "label": "I129 deposition from Ringhals of Sweden",
+  "definition": "I129 deposition from Ringhals of Sweden (I129se40) in atoms kg-1",
+  "comment": "origin: Ringhals nuclear plant, condition: deposited, atoms per mass, Iodine-129, soil",
+  "hasProperty": "number density",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q176449",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "bc_0_b39_b0",
+    "hasSource": "Iodine-129",
+    "hasTarget": "soil"
+  },
+  "hasConstraint": [
+    {
+      "label": "Ringhals nuclear plant",
+      "on": "bc_0_b39_b0"
+    },
+    {
+      "label": "deposited",
+      "on": "Iodine-129"
+    }
+  ]
+}

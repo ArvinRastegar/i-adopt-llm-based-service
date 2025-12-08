@@ -1,0 +1,25 @@
+{
+  "label": "Number of elderly people living alone in a statistical unit",
+  "definition": "number of elderly people living alone in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "comment": "number of elderly people living alone in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "number",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": "elderly person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q1358789",
+  "hasConstraint": [
+    {
+      "label": "living alone",
+      "on": "elderly person"
+    },
+    {
+      "label": "age over 65 years",
+      "on": "elderly person"
+    },
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    }
+  ]
+}

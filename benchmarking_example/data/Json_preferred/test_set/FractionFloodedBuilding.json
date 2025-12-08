@@ -1,0 +1,25 @@
+{
+  "label": "Fraction of flooded area around building",
+  "definition": "Fraction of flooded area above 30 cm water level within a 5 m buffer around an affected building",
+  "comment": "Fraction of flooded area above 30 cm water level within a 5 m buffer around an affected building",
+  "hasProperty": "area fraction",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "ratio",
+    "hasSource": "flooded area",
+    "hasTarget": "surrounding area"
+  },
+  "hasConstraint": [
+    {
+      "label": "area per area",
+      "on": "area fraction"
+    },
+    {
+      "label": "flooded above 30 cm",
+      "on": "flooded area"
+    },
+    {
+      "label": "buffer area of 5m around an affected building",
+      "on": "surrounding area"
+    }
+  ]
+}

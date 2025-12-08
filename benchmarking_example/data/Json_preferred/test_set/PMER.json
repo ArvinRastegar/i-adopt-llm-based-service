@@ -1,0 +1,17 @@
+{
+  "label": "Mean sea level pressure",
+  "definition": "Mean sea level pressure expressed in Pa",
+  "comment": "Mean sea level pressure expressed in Pa",
+  "hasProperty": "pressure",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q39552",
+  "hasObjectOfInterest": "air",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292",
+  "hasContextObject": "atmosphere",
+  "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
+  "hasConstraint": [
+    {
+      "label": "mean sea level",
+      "on": "air"
+    }
+  ]
+}

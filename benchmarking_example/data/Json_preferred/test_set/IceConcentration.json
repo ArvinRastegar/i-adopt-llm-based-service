@@ -1,0 +1,18 @@
+{
+  "label": "Ice water content in atmosphere",
+  "definition": "mass concentration of ice in atmosphere measured in g/m3",
+  "comment": "g/m3-> mass concentration, ice -> water, state:solid, atmosphere",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "bc_0_b6_b0",
+    "hasSource": "water",
+    "hasTarget": "atmosphere"
+  },
+  "hasConstraint": [
+    {
+      "label": "solid",
+      "on": "water"
+    }
+  ]
+}

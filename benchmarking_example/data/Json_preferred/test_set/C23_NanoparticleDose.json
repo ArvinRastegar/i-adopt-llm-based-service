@@ -1,21 +1,23 @@
 {
-  "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area",
-  "definition": "the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell)",
-  "comment": "nanomaterial; location: intracellular; cell membrane; mass; normalization: per area",
-  "hasProperty": "mass",
-  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11423",
-  "hasMatrix": "cell membrane",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q54888819",
-  "hasObjectOfInterest": "nanomaterial",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q967847",
+  "label": "Cellular dose in vitro of nanomaterials (mass / cell)",
+  "definition": "the mass of nanomaterial internalised into the cell over the duration of the experiment, mass per cell",
+  "comment": "nanomaterial; location: intracellular; cell ; mass per cell; ADD: group of cells",
+  "hasProperty": "mass per cell",
+  "hasMatrix": "group of cells",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q20088819",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n3d49e2982003443093e84b9c04a782e3b1",
+    "hasSource": "nanomaterial",
+    "hasTarget": "cell"
+  },
   "hasConstraint": [
     {
       "label": "intracellular",
-      "on": "nanomaterial"
+      "on": "n3d49e2982003443093e84b9c04a782e3b1"
     },
     {
-      "label": "per area",
-      "on": "mass"
+      "label": "duration of the experiment",
+      "on": "mass per cell"
     }
   ]
 }

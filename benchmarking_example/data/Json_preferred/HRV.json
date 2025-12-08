@@ -1,0 +1,27 @@
+{
+  "label": "HRV Heart rate variabilty",
+  "definition": "HRV- Heart rate variability, Category: ECG metrics, Ontology: BMONT Unit: milliseconds (ms)",
+  "comment": "contractions; person; ADD: role:patient; variation; time interval; type: heart; interval: n+(n+1)",
+  "hasProperty": "time interval",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q186081",
+  "hasStatisticalModifier": "variance",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q175199",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "muscle contractions",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q127006",
+  "hasConstraint": [
+    {
+      "label": "heart",
+      "on": "muscle contractions"
+    },
+    {
+      "label": "n+(n+1)",
+      "on": "muscle contractions"
+    },
+    {
+      "label": "patient",
+      "on": "person"
+    }
+  ]
+}

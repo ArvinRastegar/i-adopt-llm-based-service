@@ -1,40 +1,26 @@
 {
   "label": "solubility of naphthalene in water at room temperature",
-  "definition": "solubility measurement of napathalene in deionized water at room temperature by monitoring absorption at 279 nm",
-  "comment": "solubility -> mass concentration; napathalene; deionized; water; at room temperature; absorption at 279 nm",
+  "definition": "solubility measurement of napathalene in deionized water at room temperature by monitoring absorption at 279 nm, measured in mg/L",
+  "comment": "napathalene; deionized; water; at room temperature; ADD: state:dissolved, quality: dionized",
   "hasProperty": "mass concentration",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-  "hasMatrix": {
-    "AsymmetricSystem": "two-phase solid-liquid system",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "nb1b1cb7e456d4319bf0aa922f6077806b1",
     "hasSource": "naphthalene (C10H8)",
-    "hasTarget": "water (H2O)"
+    "hasTarget": "water"
   },
-  "hasObjectOfInterest": "naphthalene (C10H8)",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q179724",
   "hasConstraint": [
     {
-      "label": "solid",
+      "label": "at room temperature",
+      "on": "mass concentration"
+    },
+    {
+      "label": "dissolved",
       "on": "naphthalene (C10H8)"
     },
     {
-      "label": "liquid",
-      "on": "water (H2O)"
-    },
-    {
-      "label": "local room temperature",
-      "on": "mass concentration"
-    },
-    {
-      "label": "at 279 nm wavelength",
-      "on": "mass concentration"
-    },
-    {
-      "label": "per unit volume",
-      "on": "mass concentration"
-    },
-    {
-      "label": "deionized",
-      "on": "water (H2O)"
+      "label": "dionized",
+      "on": "water"
     }
   ]
 }

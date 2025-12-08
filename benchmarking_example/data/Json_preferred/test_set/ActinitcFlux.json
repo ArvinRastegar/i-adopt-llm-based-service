@@ -1,0 +1,24 @@
+{
+  "label": "Spectral upwelling actinic flux",
+  "definition": "Upwelling component of actinic flux in wavelength range of 297-640 nm measured in photons/s/cm2/nm",
+  "comment": "Upwelling; actinic -> point; flux -> energy flux; wavelength range of 297-640 -> type: shortwave; ADD: atmosphere",
+  "hasProperty": "energy flux",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q5377054",
+  "hasMatrix": {
+    "AsymmetricSystem": "n3debd50225ac449f9d8048f207f4798ab1",
+    "hasSource": "atmosphere",
+    "hasTarget": "point"
+  },
+  "hasObjectOfInterest": "radiation",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18335",
+  "hasConstraint": [
+    {
+      "label": "upwelling",
+      "on": "radiation"
+    },
+    {
+      "label": "shortwave (297-640 at nm wavelength)",
+      "on": "radiation"
+    }
+  ]
+}

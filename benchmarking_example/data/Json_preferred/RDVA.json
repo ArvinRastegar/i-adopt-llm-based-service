@@ -1,6 +1,6 @@
 {
   "label": "RDVA Radial velocity (away from) of water current relative to instrument in the water body by High Frequency Radar",
-  "definition": "Component of the sea surface current velocity that is directed toward (negative values) or away from (positive values) the High Frequency Radar (HFR) antenna.",
+  "definition": "Component of the sea surface current velocity that is directed toward (negative values) or away from (positive values) the High Frequency Radar (HFR) antenna, measured along the lines of sights of the antenna, i.e. along radial lines centered at the HFR antenna.",
   "comment": "water current, water body, at the surface, sea, velocity, relative to instrument, positive away from the instrument, radial",
   "hasProperty": "velocity",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",

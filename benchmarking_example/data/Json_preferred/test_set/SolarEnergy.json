@@ -1,0 +1,25 @@
+{
+  "label": "Solar energy production of building per month",
+  "definition": "Solar energy production of building in kWh",
+  "comment": "origin: photovoltaik panel, temporal extent: month, energy, amount, building",
+  "hasProperty": "energy",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11379",
+  "hasMatrix": "building",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q41176",
+  "hasObjectOfInterest": "solar energy",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q40015",
+  "hasConstraint": [
+    {
+      "label": "photovoltaik panel",
+      "on": "solar energy"
+    },
+    {
+      "label": "month",
+      "on": "energy"
+    },
+    {
+      "label": "solar",
+      "on": "solar energy"
+    }
+  ]
+}

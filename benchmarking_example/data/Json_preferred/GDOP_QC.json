@@ -1,0 +1,13 @@
+{
+  "label": "GDOP threshold quality flag ",
+  "definition": "QC flags resulting from setting a threshold on GDOP. Setting a threshold on GDOP for total combination avoids the combination of radials with an intersection angle below a certain value.",
+  "comment": "QC flags resulting from setting a threshold on GDOP. Setting a threshold on GDOP for total combination avoids the combination of radials with an intersection angle below a certain value.",
+  "hasProperty": "quality flag",
+  "hasObjectOfInterest": "GDOP",
+  "hasConstraint": [
+    {
+      "label": "good if under the threshold value",
+      "on": "quality flag"
+    }
+  ]
+}

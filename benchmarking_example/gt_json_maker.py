@@ -13,8 +13,11 @@ gt_json_maker.py · 2025-11-27
     - hasMatrix (+URI if TTL provides one)
     - hasObjectOfInterest (+URI if TTL provides one)
     - hasContextObject (+URI if TTL provides one)
-    - hasConstraint (cleaned label)
+    - hasStatisticalModifier (+URI)
+    - hasConstraint (cleaned label, correct ON target)
 • URI enrichment ONLY for Wikidata URIs present in TTL
+• All Wikidata URIs normalized to:
+      https://www.wikidata.org/wiki/Qxxxx
 • Writes one JSON per TTL + all_variables.json
 """
 
@@ -23,6 +26,7 @@ from rdflib import Graph, Namespace, RDF, RDFS, URIRef
 from pathlib import Path
 import json, sys, re
 from typing import Any, Dict, Optional
+
 
 # --------------------------------------------------------------------------- #
 # Output Folder
@@ -34,6 +38,7 @@ TTL_INPUT_DIR = Path(
     "/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files"
 )
 
+
 # --------------------------------------------------------------------------- #
 # Namespaces
 # --------------------------------------------------------------------------- #
@@ -43,10 +48,48 @@ RDFS_NS = RDFS
 
 
 # --------------------------------------------------------------------------- #
+# URI normalization helper
+# --------------------------------------------------------------------------- #
+def _maybe_uri(node: Any) -> Optional[str]:
+    """
+    Normalize ANY Wikidata URI to canonical format:
+        https://www.wikidata.org/wiki/Qxxxx
+
+    Accepts:
+        - entity/Qxxxx
+        - wiki/Qxxxx
+        - malformed HTTP forms
+        - raw "wikidata.org/entity/Qxxx"
+    """
+    if not isinstance(node, URIRef):
+        return None
+
+    raw = str(node).strip()
+
+    # fix common protocol errors
+    raw = re.sub(r"^hhttps://", "https://", raw)
+    raw = re.sub(r"^httpss://", "https://", raw)
+    raw = raw.replace("http://", "https://")
+
+    # inject full domain if missing
+    if raw.startswith("wikidata.org"):
+        raw = "https://" + raw
+    if raw.startswith("www.wikidata.org"):
+        raw = "https://" + raw
+
+    # extract Q-id
+    m = re.search(r"(Q[0-9]+)", raw)
+    if not m:
+        return None
+
+    qid = m.group(1)
+    return f"https://www.wikidata.org/wiki/{qid}"
+
+
+# --------------------------------------------------------------------------- #
 # Helpers
 # --------------------------------------------------------------------------- #
 def _label(g: Graph, node: URIRef | None):
-    """Return the rdfs:label value as a Python string."""
     if not node:
         return None
     lab = g.value(node, RDFS_NS.label)
@@ -54,11 +97,7 @@ def _label(g: Graph, node: URIRef | None):
 
 
 def _clean_constraint_label(label: str) -> str:
-    """
-    Extract everything AFTER the first colon.
-    Example:
-        'quality: purity 99.98%(w/w)' -> 'purity 99.98%(w/w)'
-    """
+    """Remove leading 'XXX:' if present."""
     if not label:
         return label
     if ":" in label:
@@ -66,103 +105,161 @@ def _clean_constraint_label(label: str) -> str:
     return label.strip()
 
 
-def _maybe_uri(node: Any) -> Optional[str]:
-    """Return Wikidata URI only if node is a Wikidata URIRef."""
-    if isinstance(node, URIRef):
-        uri = str(node)
-        if uri.startswith("https://www.wikidata.org/wiki/"):
-            return uri
-    return None
-
-
 # --------------------------------------------------------------------------- #
-# Entity & System Representation
+# Entity / System Representation
 # --------------------------------------------------------------------------- #
 def _entity_representation(g: Graph, node: URIRef | None):
     if node is None:
         return None
 
-    # Asymmetric system
+    def name(n):
+        return _label(g, n) or str(n).split("/")[-1]
+
+    # Asymmetric
     if (node, RDF.type, IOP.AsymmetricSystem) in g:
+        source = g.value(node, IOP.hasSource) or g.value(node, IOP.hasNumerator)
+        target = g.value(node, IOP.hasTarget) or g.value(node, IOP.hasDenominator)
+
+        if source == target and source is not None:
+            return {"SymmetricSystem": name(node), "hasPart": [name(source)]}
+
         return {
-            "AsymmetricSystem": _label(g, node),
-            "hasSource": _label(g, g.value(node, IOP.hasSource)),
-            "hasTarget": _label(g, g.value(node, IOP.hasTarget)),
+            "AsymmetricSystem": name(node),
+            "hasSource": name(source) if source else None,
+            "hasTarget": name(target) if target else None,
         }
 
-    # Symmetric system
+    # Symmetric
     if (node, RDF.type, IOP.SymmetricSystem) in g:
-        parts_nodes = list(g.objects(node, IOP.hasPart))
-        return {
-            "SymmetricSystem": _label(g, node),
-            "hasPart": [_label(g, p) for p in parts_nodes],
-        }
+        parts = list(g.objects(node, IOP.hasPart))
+        return {"SymmetricSystem": name(node), "hasPart": [name(p) for p in parts]}
 
-    # Plain entity → return label
-    return _label(g, node)
+    return name(node)
 
 
 # --------------------------------------------------------------------------- #
-# Core TTL → JSON Parser
+# Root finder
+# --------------------------------------------------------------------------- #
+def _find_variable_root(g: Graph):
+    roots = set()
+
+    for s in g.subjects(RDF.type, IOP.Variable):
+        roots.add(s)
+    if roots:
+        return list(roots)[0]
+
+    for s, _, o in g.triples((None, RDF.type, None)):
+        if isinstance(o, URIRef) and str(o).rstrip("/#").endswith("Variable"):
+            roots.add(s)
+    if roots:
+        return list(roots)[0]
+
+    for s in g.subjects(RDFS.label, None):
+        if g.value(s, SKOS.definition) or g.value(s, RDFS.comment):
+            roots.add(s)
+    if roots:
+        return list(roots)[0]
+
+    raise ValueError("No Variable root found.")
+
+
+# --------------------------------------------------------------------------- #
+# Definition extractor
+# --------------------------------------------------------------------------- #
+def _get_definition(g: Graph, root):
+    DCT = Namespace("http://purl.org/dc/terms/")
+
+    for pred in (SKOS.definition, DCT.description, RDFS.comment):
+        val = g.value(root, pred)
+        if val:
+            return str(val).strip()
+
+    return None
+
+
+# --------------------------------------------------------------------------- #
+# MAIN TTL → JSON CONVERTER
 # --------------------------------------------------------------------------- #
 def parse_variable(ttl: str) -> Dict[str, Any]:
     g = Graph()
     g.parse(data=ttl, format="turtle")
 
-    # Find root variable
-    roots = list(g.subjects(RDF.type, IOP.Variable))
-    if not roots:
-        raise ValueError("No iop:Variable found in TTL file.")
-    root = roots[0]
+    root = _find_variable_root(g)
 
-    result: Dict[str, Any] = {
+    result = {
         "label": _label(g, root),
-        "definition": str(g.value(root, SKOS.definition) or "").strip() or None,
-        "comment": str(g.value(root, RDFS_NS.comment) or "").strip() or None,
+        "definition": _get_definition(g, root),
+        "comment": (str(g.value(root, RDFS.comment) or "").strip() or None),
     }
 
-    # --- Property (label + URI) --------------------------------------------
+    # ------------------------- Property -------------------------------------
     if prop := g.value(root, IOP.hasProperty):
         result["hasProperty"] = _label(g, prop)
         if u := _maybe_uri(prop):
             result["hasPropertyURI"] = u
 
-    # --- Matrix, OOI, Context ----------------------------------------------
+    # ------------------- Statistical Modifier (NEW) --------------------------
+    if stat := g.value(root, IOP.hasStatisticalModifier):
+        result["hasStatisticalModifier"] = _label(g, stat)
+        if u := _maybe_uri(stat):
+            result["hasStatisticalModifierURI"] = u
+
+    # --------------- Matrix / OOI / Context Objects -------------------------
     for pred, key in [
         (IOP.hasMatrix, "hasMatrix"),
         (IOP.hasObjectOfInterest, "hasObjectOfInterest"),
         (IOP.hasContextObject, "hasContextObject"),
     ]:
-        node = g.value(root, pred)
-        if node:
-            val = _entity_representation(g, node)
-            result[key] = val
+        nodes = list(g.objects(root, pred))
+        if not nodes:
+            continue
 
-            # Only add ...URI if node is a Wikidata URI
-            if isinstance(val, str):
+        if len(nodes) == 1:
+            node = nodes[0]
+            rep = _entity_representation(g, node)
+            result[key] = rep
+            if isinstance(node, URIRef):
                 if u := _maybe_uri(node):
-                    result[f"{key}URI"] = u
+                    result[key + "URI"] = u
+        else:
+            result[key] = []
+            for node in nodes:
+                result[key].append(_entity_representation(g, node))
 
-    # --- Constraints --------------------------------------------------------
-    # --- Constraints --------------------------------------------------------
+    # ---------------------------- Constraints --------------------------------
     constraints = list(g.objects(root, IOP.hasConstraint))
     if constraints:
         out = []
         for c in constraints:
             raw_label = _label(g, c)
-            clean_label = _clean_constraint_label(raw_label)
-            target_label = _label(g, g.value(c, IOP.constrains))
+            clean = _clean_constraint_label(raw_label)
 
-            out.append({"label": clean_label, "on": target_label})
+            target_node = g.value(c, IOP.constrains)
+
+            # Guarantee a target:
+            if target_node is None:
+                target_node = (
+                    g.value(root, IOP.hasStatisticalModifier)
+                    or g.value(root, IOP.hasObjectOfInterest)
+                    or g.value(root, IOP.hasProperty)
+                    or g.value(root, IOP.hasMatrix)
+                    or root
+                )
+
+            target_label = _label(g, target_node)
+            if not target_label:
+                target_label = str(target_node).split("/")[-1]
+
+            out.append({"label": clean, "on": target_label})
 
         result["hasConstraint"] = out
 
-    # Remove None-valued fields before returning
+    # ---------------------- Clean output ------------------------------------
     return {k: v for k, v in result.items() if v is not None}
 
 
 # --------------------------------------------------------------------------- #
-# File Conversion
+# File conversion
 # --------------------------------------------------------------------------- #
 def convert_file(ttl_path: Path) -> Dict[str, Any]:
     ttl_text = ttl_path.read_text(encoding="utf-8")
@@ -176,20 +273,18 @@ def convert_file(ttl_path: Path) -> Dict[str, Any]:
 
 
 # --------------------------------------------------------------------------- #
-# Main CLI
+# CLI
 # --------------------------------------------------------------------------- #
 def main():
-    # Recursively find all TTL files
     ttl_files = sorted(TTL_INPUT_DIR.rglob("*.ttl"))
     if not ttl_files:
-        print(f"❌ No TTL files found under {TTL_INPUT_DIR}")
+        print("❌ No TTL files found.")
         sys.exit(1)
 
     log_path = OUTDIR / "processing_log.txt"
     log_lines = []
 
-    def log(msg: str):
-        """Append to log list and print to terminal."""
+    def log(msg):
         print(msg)
         log_lines.append(msg)
 
@@ -200,33 +295,25 @@ def main():
 
     for f in ttl_files:
         try:
-            data = convert_file(f)
-            all_data.append(data)
+            d = convert_file(f)
+            all_data.append(d)
             log(f"✓ SUCCESS: {f}")
         except Exception as e:
-            error_msg = f"❌ FAILED: {f}\n      ERROR: {e}"
-            log(error_msg)
+            log(f"❌ FAILED: {f}\n      ERROR: {e}")
             failed.append((f, e))
 
-    # Write combined JSON only for successfully parsed variables
     if all_data:
-        combined_path = OUTDIR / "all_variables.json"
-        combined_path.write_text(json.dumps(all_data, indent=2, ensure_ascii=False), encoding="utf-8")
+        combined = OUTDIR / "all_variables.json"
+        combined.write_text(json.dumps(all_data, indent=2, ensure_ascii=False), encoding="utf-8")
         log(f"\n✓ all_variables.json written with {len(all_data)} variables.\n")
-    else:
-        log("\n❌ No variables were successfully parsed, all failed.\n")
 
-    # Summary of failures
     if failed:
         log("⚠️ FAILED TTL FILES:")
         for f, e in failed:
             log(f"  - {f}: {e}")
 
-    # Save log file
     log_path.write_text("\n".join(log_lines), encoding="utf-8")
-    print(f"\n📄 Log file written to: {log_path}\n")
 
 
-# --------------------------------------------------------------------------- #
 if __name__ == "__main__":
     main()

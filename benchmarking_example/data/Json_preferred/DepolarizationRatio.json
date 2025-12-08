@@ -1,0 +1,11 @@
+{
+  "label": "Total Deplorizadion Ratio",
+  "definition": "Total Deplorization Ratio: Ratio of backscattered light from the cross-polarized channel to the backscattered light from the parallet-polarized channel. Total is referring to the air as a whole.",
+  "comment": "Deplorization Ratio; air; ADD: atmosphere.",
+  "hasProperty": "depolarization ratio",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q2095",
+  "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
+  "hasObjectOfInterest": "air",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292"
+}

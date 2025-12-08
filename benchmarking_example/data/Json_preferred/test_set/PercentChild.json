@@ -1,0 +1,32 @@
+{
+  "label": "Percentage of number of children",
+  "definition": "Percentage of number of children under 10 years versus total number of people dwelling in the buildings within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "comment": "Percentage of number of children under 10 years versus total number of people dwelling in the buildings within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "percentage",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11229",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "ratio",
+    "hasSource": "child",
+    "hasTarget": "inhabitant"
+  },
+  "hasConstraint": [
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    },
+    {
+      "label": "number per number",
+      "on": "percentage"
+    },
+    {
+      "label": "age under 10 years",
+      "on": "child"
+    },
+    {
+      "label": "living in the housing",
+      "on": "ratio"
+    }
+  ]
+}

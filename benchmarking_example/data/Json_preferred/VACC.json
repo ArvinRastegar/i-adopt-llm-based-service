@@ -1,0 +1,8 @@
+{
+  "label": "Northward velocity uncertainty of water current in the water body by high frequency radar",
+  "definition": "Uncertainty of the northward component of water velocity in a water body.",
+  "comment": "northward component of water velocity in a water body; confidence interval",
+  "hasProperty": "confidence interval",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q208498",
+  "hasObjectOfInterest": "NSCT - Northward velocity of water current in the water body by high frequency radar"
+}

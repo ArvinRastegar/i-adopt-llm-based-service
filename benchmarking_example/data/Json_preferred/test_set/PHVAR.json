@@ -1,24 +1,9 @@
 {
   "label": "pH measurement of a sample of apple juice",
-  "definition": "(PH) solution hydronium ion concentration measurement in a apple juice using a solid-state pH electrode",
-  "comment": "solution-> acqueous; hydronium; concentration -> molar concentration; apple juice; ADD: per unit volume (pH = molar concentration of acqueous hydronium per unit volume)",
-  "hasProperty": "molar concentration",
-  "hasMatrix": "apple juice",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q618355",
-  "hasObjectOfInterest": "hydronium",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q849881",
-  "hasConstraint": [
-    {
-      "label": "per unit volume",
-      "on": "molar concentration"
-    },
-    {
-      "label": "homogeneous solution",
-      "on": "apple juice"
-    },
-    {
-      "label": "acqueous",
-      "on": "hydronium"
-    }
-  ]
+  "definition": "pH of a sample of apple juice using a solid-state pH electrode",
+  "comment": "pH; apple juice; ADD: hydronium ion activity",
+  "hasProperty": "pH",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q40936",
+  "hasObjectOfInterest": "apple juice",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q618355"
 }

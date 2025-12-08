@@ -1,21 +1,23 @@
 {
-  "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area",
-  "definition": "the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell)",
-  "comment": "nanomaterial; cell membrane; number; location: intracellular; normalization: per area; ADD: particle number per cell area",
-  "hasProperty": "number",
-  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
-  "hasMatrix": "cell membrane",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q54888819",
-  "hasObjectOfInterest": "nanomaterial",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q967847",
+  "label": "dose of applied nanomaterial internalised by a specific cell (number per cell)",
+  "definition": "Number of particles internalised into the cell over the duration of the experiment",
+  "comment": "nanomaterial; cell; number per cell; location: intracellular, duration of the experiment; ADD: group of cells",
+  "hasProperty": "number per entity",
+  "hasMatrix": "group of cells",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q20088819",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n8df892be24624efa951a7f609c7adb11b1",
+    "hasSource": "nanomaterial",
+    "hasTarget": "cell"
+  },
   "hasConstraint": [
     {
       "label": "intracellular",
-      "on": "nanomaterial"
+      "on": "n8df892be24624efa951a7f609c7adb11b1"
     },
     {
-      "label": "per area",
-      "on": "number"
+      "label": "time extent. duration of the experiment",
+      "on": "number per entity"
     }
   ]
 }

@@ -1,0 +1,28 @@
+{
+  "label": "Surface long-wave (thermal) radiation downwards",
+  "definition": "Surface long-wave (thermal) radiation downwards measured in Wm-2",
+  "comment": "Surface-> location: at the surface; long-wave; radiation; downwards; measured in Wm-2-> energy flux; ADD: study area; ground; atmosphere",
+  "hasProperty": "energy flux",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q5377054",
+  "hasMatrix": {
+    "AsymmetricSystem": "n16235a344dec4256a4285a14618b2d8eb1",
+    "hasSource": "atmosphere",
+    "hasTarget": "ground"
+  },
+  "hasObjectOfInterest": "radiation",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18335",
+  "hasConstraint": [
+    {
+      "label": "long-wave",
+      "on": "radiation"
+    },
+    {
+      "label": "downwards",
+      "on": "radiation"
+    },
+    {
+      "label": "at the surface",
+      "on": "ground"
+    }
+  ]
+}

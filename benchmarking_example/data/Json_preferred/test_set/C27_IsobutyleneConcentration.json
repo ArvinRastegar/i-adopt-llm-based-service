@@ -4,14 +4,9 @@
   "comment": "Mass concentration; isobutylene; chloroform; ADD: per unit mass",
   "hasProperty": "mass concentration",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-  "hasMatrix": "chloroform",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q172275",
-  "hasObjectOfInterest": "isobutylene",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q776976",
-  "hasConstraint": [
-    {
-      "label": "per unit volume",
-      "on": "mass concentration"
-    }
-  ]
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "ratio",
+    "hasSource": "isobutylene",
+    "hasTarget": "chloroform"
+  }
 }

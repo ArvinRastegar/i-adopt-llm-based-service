@@ -1,0 +1,21 @@
+{
+  "label": "Total Number of people living in a statistical unit",
+  "definition": "total number of people living within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "comment": "total number of people living within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "number",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": "person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5",
+  "hasConstraint": [
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    },
+    {
+      "label": "living in the buildings",
+      "on": "person"
+    }
+  ]
+}

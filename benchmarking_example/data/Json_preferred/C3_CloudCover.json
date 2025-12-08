@@ -1,10 +1,11 @@
 {
   "label": "Cloud cover",
   "definition": "The amount of sky estimated to be covered by all cloud types.",
-  "comment": "sky, cloud, (amount covered -> area fraction)",
+  "comment": "sky; cloud; amount covered -> area fraction; ADD: area per area",
   "hasProperty": "area fraction",
-  "hasMatrix": "sky",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q527",
-  "hasObjectOfInterest": "cloud",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8074"
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n52398c5994a04077b0fe7b594261e37fb1",
+    "hasSource": "cloud",
+    "hasTarget": "sky"
+  }
 }

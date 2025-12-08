@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.org/schemas/iadopt-variable.json",
-  "title": "I-ADOPT decomposed variable",
-  "description": "Single variable expressed in the compact JSON layout used for LLM-driven decomposition.",
+  "title": "I-ADOPT Variable (Decomposed Form)",
+  "description": "A single scientific variable structured according to the I-ADOPT framework. This compact JSON model is used for LLM benchmarking and represents: label, natural-language definition, cleaned comment, property, objects/entities, matrices, context objects, and constraints.",
   "type": "object",
 
   "required": ["label", "definition", "comment", "hasProperty", "hasObjectOfInterest"],
@@ -10,46 +10,46 @@
   "properties": {
     "label": {
       "type": "string",
-      "description": "Variable name."
+      "description": "Human-readable name of the variable (rdfs:label)."
     },
     "definition": {
       "type": "string",
-      "description": "Natural-language descriptive definition (from skos:definition)."
+      "description": "Full natural-language description."
     },
     "comment": {
       "type": "string",
-      "description": "Compact version of the definition, cleaned by an expert."
+      "description": "Use a short summary of the definition. Do not add new concepts."
     },
     "hasProperty": {
       "type": "string",
-      "description": "Property being observed (e.g. 'distance', 'temperature')."
+      "description": "The main measurable property in the definition."
     },
     "hasStatisticalModifier": {
       "type": "string",
-      "description": "Statistical qualifier (e.g. 'maximum', 'latest')."
-    },
-    "hasMatrix": {
-      "$ref": "#/$defs/entityOrSystem",
-      "description": "The Matrix (Entity or System) that contains or surrounds the ObjectOfInterest. It must be an Entity or System (e.g. 'soil', 'ocean water', 'solar wind', 'organism'), not a method, instrument, unit, or geographical location."
+      "description": "Optional statistical qualifier (e.g., 'maximum', 'minimum', 'median')."
     },
     "hasObjectOfInterest": {
       "$ref": "#/$defs/entityOrSystem",
-      "description": "The main *Object of Interest* (Entity or System) that is being characterised."
+      "description": "The thing that has the property."
+    },
+    "hasMatrix": {
+      "$ref": "#/$defs/entityOrSystem",
+      "description": "Medium in which the object occurs. Not a process or location."
     },
     "hasContextObject": {
       "$ref": "#/$defs/entityOrSystem",
-      "description": "Additional background Entity or System that gives context to the Object of Interest."
+      "description": "Optional contextual Entity or System that provides environmental or situational context (e.g., 'air', 'atmosphere')."
     },
     "hasConstraint": {
       "type": "array",
-      "description": "List of Constraints that limit the scope or state of the observation (e.g. 'nearest neighbour', 'dry', 'at 15°C').",
+      "description": "List of Constraints describing states, conditions, purity, normalization, or other limiting qualifiers and or quantifiers that apply to the Entity.",
       "items": {
         "type": "object",
         "required": ["label", "on"],
         "properties": {
           "label": {
             "type": "string",
-            "description": "Short phrase for the state or restriction (e.g. 'nearest neighbour', 'dry', 'at 15°C temperature', 'due to ingestion')."
+            "description": "Short cleaned phrase describing the restriction (e.g., 'dry', 'purity 99.98%', '5.00 g sample', 'per mol')."
           },
           "on": {
             "type": "string",
@@ -66,11 +66,13 @@
 
   "$defs": {
     "entityOrSystem": {
-      "description": "Either a simple label (e.g. 'soil', 'ocean water') or a structured system. Asymmetric systems have roles like 'hasSource' and 'hasTarget' (e.g. 'from vegetation to soil'); symmetric systems have a label and 'hasPart' list (e.g. 'line of intersection' with parts 'bedding plane' and 'horizontal plane').",
+      "description": "An Entity or System involved in the variable. It may be a simple entity (e.g., 'hexanol', 'air', 'soil') or a structured system (asymmetric or symmetric).",
       "oneOf": [
-        { "type": "string" },
+        { "type": "string",
+        "description": "A simple entity label (e.g., 'air', 'soil', 'nitrogen')."
+      },
         {
-          "$comment": "Asymmetric system",
+          "$comment": "Asymmetric system, from A to B",
           "type": "object",
           "required": [
             "AsymmetricSystem",
@@ -87,7 +89,7 @@
           "additionalProperties": false
         },
         {
-          "$comment": "Symmetric system",
+          "$comment": "Symmetric system, A and B together form a system",
           "type": "object",
           "required": ["SymmetricSystem", "hasPart"],
           "properties": {

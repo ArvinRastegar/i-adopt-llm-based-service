@@ -1,33 +1,12 @@
 {
-  "label": "Iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline",
-  "definition": "Iron(II) solution derived from a soil sample (via digestion and dilution) using a quantitative reaction with ortho-phenantroline and product color measurement of absorbance at 510 nm",
-  "comment": "Iron(II) solution --> iron + acqueous; soil sample; o-phenantroline;at 510 nm-> at 510 nm wavelength",
-  "hasProperty": "molar concentration",
-  "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
-  "hasMatrix": "soil",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
-  "hasObjectOfInterest": "iron",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q677",
-  "hasConstraint": [
-    {
-      "label": "at 510 nm wavelength",
-      "on": "molar concentration"
-    },
-    {
-      "label": "per unit volume",
-      "on": "molar concentration"
-    },
-    {
-      "label": "o-phenanthroline",
-      "on": "soil"
-    },
-    {
-      "label": "acqueous",
-      "on": "iron"
-    },
-    {
-      "label": "soil sample",
-      "on": "soil"
-    }
-  ]
+  "label": "Determination of iron concentration in a soil sample",
+  "definition": "Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline as mass fraction",
+  "comment": "Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline as mass fraction",
+  "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n70ced741cfd04fba899c663e914f005bb1",
+    "hasSource": "iron(II)",
+    "hasTarget": "soil"
+  }
 }

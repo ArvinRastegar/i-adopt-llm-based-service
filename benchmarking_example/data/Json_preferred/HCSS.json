@@ -1,9 +1,11 @@
 {
-  "label": "HCSS Radial velocity variance of water current relative to instrument  in the water body by high frequency radar",
-  "definition": "Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+  "label": "HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+  "definition": "Variance of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the coverage period",
   "comment": "water current; water body; at the surface; variance; over the temporal coverage period; sea; velocity; relative to instrument; radial",
   "hasProperty": "velocity",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+  "hasStatisticalModifier": "variance",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q175199",
   "hasMatrix": "water body",
   "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
   "hasObjectOfInterest": "water current",

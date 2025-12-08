@@ -1,0 +1,17 @@
+{
+  "label": "Body Mass Index",
+  "definition": "Body mass index calculated by dividing body mass by height squared",
+  "comment": "Body mass; index; defined by: body mass divided by height squared; ADD: person",
+  "hasProperty": "index",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q25472932",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "body mass",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q620876",
+  "hasConstraint": [
+    {
+      "label": "body mass divided by height squared",
+      "on": "index"
+    }
+  ]
+}

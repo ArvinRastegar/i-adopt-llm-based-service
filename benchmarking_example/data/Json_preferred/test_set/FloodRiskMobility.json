@@ -1,0 +1,23 @@
+{
+  "label": "Flood risk index related to mobility and accessibility ",
+  "definition": "Flood risk index related to mobility and accessibility when streets around the houses are flooded",
+  "comment": "Flood risk index related to mobility and accessibility when streets around the houses are flooded",
+  "hasProperty": "index",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": "flood risk",
+  "hasConstraint": [
+    {
+      "label": "streets around the houses are flooded",
+      "on": "flood risk"
+    },
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    },
+    {
+      "label": "mobility and accessibility",
+      "on": "flood risk"
+    }
+  ]
+}

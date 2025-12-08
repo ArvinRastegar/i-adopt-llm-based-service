@@ -1,9 +1,11 @@
 {
   "label": "ESPC Radial velocity (away from) standard deviation over the scatter patch of water current relative to instrument in the water body by high frequency radar",
-  "definition": "Standard deviation of the radial velocity (away from) standard deviation over the scatter patch of water current relative to instrument in the water body by high frequency radar",
+  "definition": "Standard deviation of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the scatter patch",
   "comment": "water current; water body; at the surface; standard deviation; over the scatter patch; sea; velocity; radial; positive away from the instrument; relative to the instrument",
   "hasProperty": "Velocity",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+  "hasStatisticalModifier": "standard deviation",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q159375",
   "hasMatrix": "water body",
   "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
   "hasObjectOfInterest": "water current",

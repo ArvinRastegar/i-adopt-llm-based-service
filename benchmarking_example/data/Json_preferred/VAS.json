@@ -1,0 +1,19 @@
+{
+  "label": "Northward Near-Surface Wind",
+  "definition": "Northward Near-Surface Wind (v-component), measured in m s⁻¹",
+  "comment": "Northward Near-Surface Wind (v-component), measured in m s⁻¹",
+  "hasProperty": "speed",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q3711325",
+  "hasObjectOfInterest": "wind",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8094",
+  "hasConstraint": [
+    {
+      "label": "near surface",
+      "on": "wind"
+    },
+    {
+      "label": "northward",
+      "on": "wind"
+    }
+  ]
+}

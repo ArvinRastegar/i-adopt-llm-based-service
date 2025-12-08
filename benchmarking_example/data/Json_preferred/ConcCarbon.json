@@ -1,0 +1,22 @@
+{
+  "label": "Concentration of dissolved organic carbon in water",
+  "definition": "Mass concentration of dissolved organic carbon in water",
+  "comment": "Mass concentration of dissolved organic carbon in water",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "nb11ae6ab8f77443cacaaa66c3df20724b1",
+    "hasSource": "carbon",
+    "hasTarget": "water"
+  },
+  "hasConstraint": [
+    {
+      "label": "dissolved",
+      "on": "carbon"
+    },
+    {
+      "label": "organic",
+      "on": "carbon"
+    }
+  ]
+}

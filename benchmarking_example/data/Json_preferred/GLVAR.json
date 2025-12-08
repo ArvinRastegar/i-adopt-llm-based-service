@@ -1,52 +1,26 @@
 {
   "label": "solubility of molecular oxygen from air in water",
-  "definition": "solubility (molar concentration per unit volume) of molecular oxygen in air in MilliQ water (18.2 MOhm) using the static method",
-  "comment": "molar concentration; per unit volume; molecular oxygen; air; in MilliQ water (18.2 MOhm); ADD phases and required conditions",
-  "hasProperty": "molar concentration",
-  "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
-  "hasMatrix": {
-    "AsymmetricSystem": "two-phase gas-liquid system",
-    "hasSource": "air",
+  "definition": "solubility of molecular oxygen from air in water with MilliQ (10.2MOhm) purity at local air conditions",
+  "comment": "solubility; molecular oxygen; air; water; MilliQ (10.2MOhm) purity; at local air conditions",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "bc_0_b10_b0",
+    "hasSource": "molecular oxygen",
     "hasTarget": "water"
   },
-  "hasObjectOfInterest": "molecular oxygen",
-  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5203615",
   "hasConstraint": [
     {
-      "label": "local air conditions",
-      "on": "air"
+      "label": "at local air conditions",
+      "on": "mass concentration"
     },
     {
-      "label": "MilliQ purity",
-      "on": "water"
-    },
-    {
-      "label": "partial pressure of molecular oxygen in the gas phase",
+      "label": "air",
       "on": "molecular oxygen"
     },
     {
-      "label": "thermodynamic temperature",
-      "on": "molar concentration"
-    },
-    {
-      "label": "atmospheric pressure",
-      "on": "molar concentration"
-    },
-    {
-      "label": "liquid",
+      "label": "purity 99.82 (w/w)",
       "on": "water"
-    },
-    {
-      "label": "gaseous",
-      "on": "molecular oxygen"
-    },
-    {
-      "label": "gaseous",
-      "on": "air"
-    },
-    {
-      "label": "per unit volume",
-      "on": "molar concentration"
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "label": "melting point of naphthalene under standard conditions",
+  "definition": "thermodynamic temperature for the melting point (at the solid to liquid phase transition) of a known purity (99.12 (w/w) sample of naphthalene at atmospheric pressure",
+  "comment": "thermodynamic temperature; at the solid to liquid phase transition; purity (99.12 (w/w); naphthalene; at atmospheric pressure",
+  "hasProperty": "thermodynamic temperature",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
+  "hasObjectOfInterest": "naphthalene (C10H8)",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q179724",
+  "hasConstraint": [
+    {
+      "label": "at the solid to liquid phase transition",
+      "on": "thermodynamic temperature"
+    },
+    {
+      "label": "purity of 99.12 (w/w)",
+      "on": "naphthalene (C10H8)"
+    },
+    {
+      "label": "at 1 atm pressure",
+      "on": "thermodynamic temperature"
+    }
+  ]
+}

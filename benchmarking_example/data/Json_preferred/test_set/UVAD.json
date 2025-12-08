@@ -4,6 +4,8 @@
   "comment": "water current; water body; average value; sea; velocity; eastward; eulerian",
   "hasProperty": "velocity",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+  "hasStatisticalModifier": "average value",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q2796622",
   "hasMatrix": "water body",
   "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
   "hasObjectOfInterest": "water current",

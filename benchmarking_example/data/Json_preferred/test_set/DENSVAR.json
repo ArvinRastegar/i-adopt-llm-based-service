@@ -1,32 +1,22 @@
 {
   "label": "density of benzene",
-  "definition": "mass density of a 10.00 mL sample of ACS reagent grade 99.0 %(v/v) benzene at a room temperature",
-  "comment": "mass density -> mass concentration, 10.00 mL sample; reagent grade 99.0 %(v/v) -> purity 99.0 %(v/v); benzene; at a room temperature; ADD: per unit volume",
-  "hasProperty": "mass concentration",
-  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-  "hasMatrix": "soil",
-  "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
+  "definition": "mass density of a 10.00 mL sample of ACS reagent grade (99.0 (v/v)) benzene at a room temperature",
+  "comment": "mass density; 10.00 mL sample; ACS reagent grade (99.0 (v/v)); benzene; at a room temperature",
+  "hasProperty": "mass density",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q29539",
   "hasObjectOfInterest": "benzene (C6H6)",
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
   "hasConstraint": [
     {
-      "label": "local room temperature",
-      "on": "mass concentration"
+      "label": "at room temperature",
+      "on": "mass density"
     },
     {
-      "label": "per unit volume",
-      "on": "mass concentration"
+      "label": "10.00 mL sample",
+      "on": "benzene (C6H6)"
     },
     {
-      "label": "sample of 10.00 mL",
-      "on": "soil"
-    },
-    {
-      "label": "soil sample",
-      "on": "soil"
-    },
-    {
-      "label": "purity 99.0 %(v/v)",
+      "label": "ACS reagent grade (99.0 (v/v))",
       "on": "benzene (C6H6)"
     }
   ]

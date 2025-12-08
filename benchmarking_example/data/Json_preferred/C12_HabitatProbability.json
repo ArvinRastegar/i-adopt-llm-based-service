@@ -1,9 +1,9 @@
 {
   "label": "Probablity of occurence of habitat",
-  "definition": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+  "definition": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/entity/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
   "comment": "habitat, probability -> propability of occurrence, ADD: Europe, type: EUNIS habitat type, temporal extend: over 1 year, spatial extend: grid cell of 100x100 m",
   "hasProperty": "probability of occurrence",
-  "hasMatrix": "Europe",
+  "hasMatrix": "European Union",
   "hasMatrixURI": "https://www.wikidata.org/wiki/Q941769",
   "hasObjectOfInterest": "habitat",
   "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q52105",

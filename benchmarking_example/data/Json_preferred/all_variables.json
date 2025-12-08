@@ -1,28 +1,556 @@
 [
   {
-    "label": "Labile detrital nitrogen concentration in the seabed",
-    "definition": "Labile detrital nitrogen concentration in the seabed in mmoleN/kg in sediment.",
-    "comment": "Labile; detrital -> detrital organic material; nitrogen; concentration -> molar concentration; seabed; sediment; ADD: per unit mass; sea",
-    "hasProperty": "molar concentration",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
-    "hasMatrix": "sediment",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q180184",
-    "hasObjectOfInterest": "nitrogen",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q627",
-    "hasContextObject": "sea",
-    "hasContextObjectURI": "https://www.wikidata.org/wiki/Q165",
+    "label": "Aircraft Angle of Attack.",
+    "definition": "Aircraft Angle of Attack measured in degrees. The angle at which a straight line from the leading edge to the training edge of an aircraft’s wing meets the relative wind.",
+    "comment": "\"aircraft; type: angle of attack; angle",
+    "hasProperty": "angle",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11352",
+    "hasObjectOfInterest": "aircraft",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q11436",
     "hasConstraint": [
       {
-        "label": "per unit mass",
-        "on": "molar concentration"
+        "label": "angle of attack",
+        "on": "angle"
+      }
+    ]
+  },
+  {
+    "label": "Spectral upwelling actinic flux",
+    "definition": "Upwelling component of actinic flux in wavelength range of 297-640 nm measured in photons/s/cm2/nm",
+    "comment": "Upwelling; actinic -> point; flux -> energy flux; wavelength range of 297-640 -> type: shortwave; ADD: atmosphere",
+    "hasProperty": "energy flux",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q5377054",
+    "hasMatrix": {
+      "AsymmetricSystem": "n3debd50225ac449f9d8048f207f4798ab1",
+      "hasSource": "atmosphere",
+      "hasTarget": "point"
+    },
+    "hasObjectOfInterest": "radiation",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18335",
+    "hasConstraint": [
+      {
+        "label": "upwelling",
+        "on": "radiation"
       },
       {
-        "label": "detrital organic matter",
-        "on": "nitrogen"
+        "label": "shortwave (297-640 at nm wavelength)",
+        "on": "radiation"
+      }
+    ]
+  },
+  {
+    "label": "Total Deplorizadion Ratio",
+    "definition": "Total Deplorization Ratio: Ratio of backscattered light from the cross-polarized channel to the backscattered light from the parallet-polarized channel. Total is referring to the air as a whole.",
+    "comment": "Deplorization Ratio; air; ADD: atmosphere.",
+    "hasProperty": "depolarization ratio",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q2095",
+    "hasMatrix": "atmosphere",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
+    "hasObjectOfInterest": "air",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292"
+  },
+  {
+    "label": "Ice water content in atmosphere",
+    "definition": "mass concentration of ice in atmosphere measured in g/m3",
+    "comment": "g/m3-> mass concentration, ice -> water, state:solid, atmosphere",
+    "hasProperty": "mass concentration",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "bc_0_b6_b0",
+      "hasSource": "water",
+      "hasTarget": "atmosphere"
+    },
+    "hasConstraint": [
+      {
+        "label": "solid",
+        "on": "water"
+      }
+    ]
+  },
+  {
+    "label": "Sulfate organic nitrate in aerosol particles",
+    "definition": "Number fraction of aerosol particles from 0.1 um to larger than 1 um that are identified as sulfate-organic-nitrate internal mixtures.",
+    "comment": "Number fraction of aerosol particles from 0.1 um to larger than 1 um that are identified as sulfate-organic-nitrate internal mixtures.",
+    "hasProperty": "ratio",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q3481047",
+    "hasMatrix": "aerosol",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q104541",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n4985b60481364e3a868ac78fbb11af48b1",
+      "hasSource": "particle",
+      "hasTarget": "particle mixture"
+    },
+    "hasConstraint": [
+      {
+        "label": "mixture of sulfate-organic-nitrate",
+        "on": "particle"
       },
       {
-        "label": "seabed",
-        "on": "sediment"
+        "label": "total",
+        "on": "particle mixture"
+      },
+      {
+        "label": "0.1 µm to larger than 1 µm",
+        "on": "particle"
+      }
+    ]
+  },
+  {
+    "label": "Labile detrital nitrogen concentration in the seabed",
+    "definition": "Labile detrital nitrogen concentration in the seabed in mmoleN/kg in sediment.",
+    "comment": "Labile; detrital -> detrital organic material; nitrogen; concentration -> molar concentration; seabed; sediment; sea",
+    "hasProperty": "mass flow rate",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q1366187",
+    "hasMatrix": {
+      "AsymmetricSystem": "flow",
+      "hasSource": "air",
+      "hasTarget": "organism"
+    },
+    "hasObjectOfInterest": "oxygen",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5203615",
+    "hasConstraint": [
+      {
+        "label": "metabolism",
+        "on": "flow"
+      },
+      {
+        "label": "ectotherm",
+        "on": "organism"
+      },
+      {
+        "label": "non-stressed",
+        "on": "organism"
+      },
+      {
+        "label": "non-active",
+        "on": "organism"
+      }
+    ]
+  },
+  {
+    "label": "Number of elderly people living alone in a statistical unit",
+    "definition": "number of elderly people living alone in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "comment": "number of elderly people living alone in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "hasProperty": "number",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": "elderly person",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q1358789",
+    "hasConstraint": [
+      {
+        "label": "living alone",
+        "on": "elderly person"
+      },
+      {
+        "label": "age over 65 years",
+        "on": "elderly person"
+      },
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      }
+    ]
+  },
+  {
+    "label": "Flood risk index related to mobility and accessibility ",
+    "definition": "Flood risk index related to mobility and accessibility when streets around the houses are flooded",
+    "comment": "Flood risk index related to mobility and accessibility when streets around the houses are flooded",
+    "hasProperty": "index",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": "flood risk",
+    "hasConstraint": [
+      {
+        "label": "streets around the houses are flooded",
+        "on": "flood risk"
+      },
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      },
+      {
+        "label": "mobility and accessibility",
+        "on": "flood risk"
+      }
+    ]
+  },
+  {
+    "label": "Fraction of flooded area around building",
+    "definition": "Fraction of flooded area above 30 cm water level within a 5 m buffer around an affected building",
+    "comment": "Fraction of flooded area above 30 cm water level within a 5 m buffer around an affected building",
+    "hasProperty": "area fraction",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "ratio",
+      "hasSource": "flooded area",
+      "hasTarget": "surrounding area"
+    },
+    "hasConstraint": [
+      {
+        "label": "area per area",
+        "on": "area fraction"
+      },
+      {
+        "label": "flooded above 30 cm",
+        "on": "flooded area"
+      },
+      {
+        "label": "buffer area of 5m around an affected building",
+        "on": "surrounding area"
+      }
+    ]
+  },
+  {
+    "label": "I129 deposition from Ringhals of Sweden",
+    "definition": "I129 deposition from Ringhals of Sweden (I129se40) in atoms kg-1",
+    "comment": "origin: Ringhals nuclear plant, condition: deposited, atoms per mass, Iodine-129, soil",
+    "hasProperty": "number density",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q176449",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "bc_0_b39_b0",
+      "hasSource": "Iodine-129",
+      "hasTarget": "soil"
+    },
+    "hasConstraint": [
+      {
+        "label": "Ringhals nuclear plant",
+        "on": "bc_0_b39_b0"
+      },
+      {
+        "label": "deposited",
+        "on": "Iodine-129"
+      }
+    ]
+  },
+  {
+    "label": "Average number of persons without high school diploma during the last 3 years within a statistical unit",
+    "definition": "Average number of persons without high school diploma during the last 3 years in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "comment": "Average number of persons without high school diploma during the last 3 years in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "hasProperty": "number",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+    "hasStatisticalModifier": "arithmetic mean",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q19033",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": "person",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q215627",
+    "hasConstraint": [
+      {
+        "label": "without high school diploma in the past three years",
+        "on": "person"
+      },
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      }
+    ]
+  },
+  {
+    "label": "Number of children under the age of 10 years in a statistical unit",
+    "definition": "number of children under the age of 10 years in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "comment": "number; children; under the age of 10 years; statistical unit; defined by grouping of homogeneous neighboring building blocks",
+    "hasProperty": "number",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": "child",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7569",
+    "hasConstraint": [
+      {
+        "label": "age under 10 years",
+        "on": "child"
+      },
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      }
+    ]
+  },
+  {
+    "label": "Total Number of people living in a statistical unit",
+    "definition": "total number of people living within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "comment": "total number of people living within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "hasProperty": "number",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": "person",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5",
+    "hasConstraint": [
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      },
+      {
+        "label": "living in the buildings",
+        "on": "person"
+      }
+    ]
+  },
+  {
+    "label": "Mean sea level pressure",
+    "definition": "Mean sea level pressure expressed in Pa",
+    "comment": "Mean sea level pressure expressed in Pa",
+    "hasProperty": "pressure",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q39552",
+    "hasObjectOfInterest": "air",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292",
+    "hasContextObject": "atmosphere",
+    "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
+    "hasConstraint": [
+      {
+        "label": "mean sea level",
+        "on": "air"
+      }
+    ]
+  },
+  {
+    "label": "Percentage of number of children",
+    "definition": "Percentage of number of children under 10 years versus total number of people dwelling in the buildings within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "comment": "Percentage of number of children under 10 years versus total number of people dwelling in the buildings within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "hasProperty": "percentage",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11229",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "ratio",
+      "hasSource": "child",
+      "hasTarget": "inhabitant"
+    },
+    "hasConstraint": [
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      },
+      {
+        "label": "number per number",
+        "on": "percentage"
+      },
+      {
+        "label": "age under 10 years",
+        "on": "child"
+      },
+      {
+        "label": "living in the housing",
+        "on": "ratio"
+      }
+    ]
+  },
+  {
+    "label": "Number of persons receiving welfare in a statistical unit",
+    "definition": "number of persons receiving welfare in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "comment": "number of persons receiving welfare in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+    "hasProperty": "number",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": "person",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q215627",
+    "hasConstraint": [
+      {
+        "label": "receiving welfare",
+        "on": "person"
+      },
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      }
+    ]
+  },
+  {
+    "label": "Pluvial flood due to 100 year event",
+    "definition": "Pluvial flood due to 100 year event expressed as water depth caused by rainfall of 36 mm/h in a statistical unit, defined by a grouping of homogeneous neighboring building blocks",
+    "comment": "Pluvial flood due to 100 year event expressed as water depth caused by rainfall of 36 mm/h in a statistical unit, defined by a grouping of homogeneous neighboring building blocks",
+    "hasProperty": "depth",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q930412",
+    "hasMatrix": "statistical unit",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+    "hasObjectOfInterest": "water",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+    "hasConstraint": [
+      {
+        "label": "grouping of homogeneous neighboring building blocks",
+        "on": "statistical unit"
+      },
+      {
+        "label": "36 mm/h rainfall",
+        "on": "water"
+      }
+    ]
+  },
+  {
+    "label": "Surface long-wave (thermal) radiation downwards",
+    "definition": "Surface long-wave (thermal) radiation downwards measured in Wm-2",
+    "comment": "Surface-> location: at the surface; long-wave; radiation; downwards; measured in Wm-2-> energy flux; ADD: study area; ground; atmosphere",
+    "hasProperty": "energy flux",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q5377054",
+    "hasMatrix": {
+      "AsymmetricSystem": "n16235a344dec4256a4285a14618b2d8eb1",
+      "hasSource": "atmosphere",
+      "hasTarget": "ground"
+    },
+    "hasObjectOfInterest": "radiation",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18335",
+    "hasConstraint": [
+      {
+        "label": "long-wave",
+        "on": "radiation"
+      },
+      {
+        "label": "downwards",
+        "on": "radiation"
+      },
+      {
+        "label": "at the surface",
+        "on": "ground"
+      }
+    ]
+  },
+  {
+    "label": "Snow water equivalent",
+    "definition": "Snow Water Equivalent or Surface Snow Amount is the mass of water per unit area (kg/m²)",
+    "comment": "condition: if the snow melted, snow, water, surface density",
+    "hasProperty": "surface density",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q1907514",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n057a5b345f1d4b92a565bfa080ef0d31b1",
+      "hasSource": "water",
+      "hasTarget": "snow"
+    },
+    "hasConstraint": [
+      {
+        "label": "if the snow melted",
+        "on": "snow"
+      }
+    ]
+  },
+  {
+    "label": "Solar energy production of building per month",
+    "definition": "Solar energy production of building in kWh",
+    "comment": "origin: photovoltaik panel, temporal extent: month, energy, amount, building",
+    "hasProperty": "energy",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11379",
+    "hasMatrix": "building",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q41176",
+    "hasObjectOfInterest": "solar energy",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q40015",
+    "hasConstraint": [
+      {
+        "label": "photovoltaik panel",
+        "on": "solar energy"
+      },
+      {
+        "label": "month",
+        "on": "energy"
+      },
+      {
+        "label": "solar",
+        "on": "solar energy"
+      }
+    ]
+  },
+  {
+    "label": "Global fallout of U‑236 (U236GF)",
+    "definition": "Global fallout of U‑236 (U236GF) in atoms kg-1",
+    "comment": "location: global, condition: deposited, soil, Uranium‑236, atoms per mass",
+    "hasProperty": "number density",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q176449",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n89aba1f392a64e808322383bc4eafa54b1",
+      "hasSource": "Uranium‑236",
+      "hasTarget": "soil"
+    },
+    "hasConstraint": [
+      {
+        "label": "global",
+        "on": "n89aba1f392a64e808322383bc4eafa54b1"
+      },
+      {
+        "label": "deposited",
+        "on": "Uranium‑236"
+      }
+    ]
+  },
+  {
+    "label": "Realistic releases of U236 from La Hague",
+    "definition": "Realistic releases of U236 from La Hague (U236LH) in atoms kg-1",
+    "comment": "origin: La Hague facility, condition: released, condition: realistic, soil, Uranium 236, atoms per mass",
+    "hasProperty": "number density",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q176449",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "bc_0_b36_b0",
+      "hasSource": "Uranium 236",
+      "hasTarget": "soil"
+    },
+    "hasConstraint": [
+      {
+        "label": "La Hague facility",
+        "on": "bc_0_b36_b0"
+      },
+      {
+        "label": "released",
+        "on": "Uranium 236"
+      }
+    ]
+  },
+  {
+    "label": "Point sources of U-236 from Pacific Proving Grounds ",
+    "definition": "Point sources of U-236 from Pacific Proving Grounds (U236PPG) in atoms kg-1",
+    "comment": "location: point source, origin: Pacific Proving Grounds, soil, Uranium 236, atoms per mass",
+    "hasProperty": "number density",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q176449",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "bc_0_b41_b0",
+      "hasSource": "Uranium 236",
+      "hasTarget": "soil"
+    },
+    "hasConstraint": [
+      {
+        "label": "Pacific Proving Grounds",
+        "on": "bc_0_b41_b0"
+      }
+    ]
+  },
+  {
+    "label": "Northward Near-Surface Wind",
+    "definition": "Northward Near-Surface Wind (v-component), measured in m s⁻¹",
+    "comment": "Northward Near-Surface Wind (v-component), measured in m s⁻¹",
+    "hasProperty": "speed",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q3711325",
+    "hasObjectOfInterest": "wind",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8094",
+    "hasConstraint": [
+      {
+        "label": "near surface",
+        "on": "wind"
+      },
+      {
+        "label": "northward",
+        "on": "wind"
+      }
+    ]
+  },
+  {
+    "label": "Daily Maximum Near-Surface Wind Speed of Gust",
+    "definition": "Daily Maximum Near-Surface Wind Speed of Gust, measured in m s⁻¹",
+    "comment": "location: near surface, type: gust, aggregation: daily, speed, maximum, wind",
+    "hasProperty": "speed",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q3711325",
+    "hasStatisticalModifier": "maximum",
+    "hasObjectOfInterest": "wind",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8094",
+    "hasConstraint": [
+      {
+        "label": "near surface",
+        "on": "wind"
+      },
+      {
+        "label": "gust",
+        "on": "wind"
+      },
+      {
+        "label": "daily",
+        "on": "maximum"
       }
     ]
   },
@@ -32,6 +560,10 @@
     "comment": "ground, maximum, acceleration, due to: seismic event, surface -> location: surface",
     "hasProperty": "acceleration",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11376",
+    "hasStatisticalModifier": "maximum",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
+    "hasMatrix": "earth",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q2",
     "hasObjectOfInterest": "ground",
     "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q36133",
     "hasConstraint": [
@@ -40,7 +572,7 @@
         "on": "ground"
       },
       {
-        "label": "due to seismic event",
+        "label": "seismic event",
         "on": "acceleration"
       }
     ]
@@ -53,26 +585,25 @@
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q124274",
     "hasMatrix": "sedimentary rock",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q82480",
-    "hasObjectOfInterest": {
-      "SymmetricSystem": "line of intersection",
-      "hasPart": [
-        "bedding plane",
-        "horizontal plane"
-      ]
-    },
+    "hasObjectOfInterest": "bedding",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2234184",
     "hasConstraint": [
       {
-        "label": "angle measured with the dip direction to the right",
+        "label": "angle measured with the dip direction to the right when facing in the azimuth direction",
+        "on": "azimuth"
+      },
+      {
+        "label": "strike of bedding",
         "on": "azimuth"
       }
     ]
   },
   {
     "label": "Probablity of occurence of habitat",
-    "definition": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
+    "definition": "Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/entity/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats",
     "comment": "habitat, probability -> propability of occurrence, ADD: Europe, type: EUNIS habitat type, temporal extend: over 1 year, spatial extend: grid cell of 100x100 m",
     "hasProperty": "probability of occurrence",
-    "hasMatrix": "Europe",
+    "hasMatrix": "European Union",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q941769",
     "hasObjectOfInterest": "habitat",
     "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q52105",
@@ -93,10 +624,12 @@
   },
   {
     "label": "Distance to nearest neighbour habitat patch",
-    "definition": "Distance to nearest neighbour habitat patch to measure the degree of connection of EUNIS habitats within a landscape. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
+    "definition": "Distance to nearest neighbour habitat patch to measure the degree of connection of EUNIS habitats within a landscape. https://github.com/EuropaBON/EBV-Descriptions/entity/Terrestrial-Connectivity-of-terrestrial-ecosystem-habitat-types",
     "comment": "habitat patch system, distance, habitat patch, habitat patch, nearest neighbour -> location: nearest neighbour, ADD: type: specfic EUNIS habitat, landscape region, minimum",
     "hasProperty": "distance",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q126017",
+    "hasStatisticalModifier": "minimum",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10585806",
     "hasMatrix": "landscape region",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q25496956",
     "hasObjectOfInterest": {
@@ -154,11 +687,11 @@
   {
     "label": "Standard metabolic rate in mg of Oxygen per hour",
     "definition": "The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.",
-    "comment": "oxygen, from air to organism, MassFlowRate -> mass flow rate, due to: metabolism, air, organism, ectotherm -> type: ectotherm, non-stressed -> condition: non-stressed, non-active -> state: non-active, ADD: normalization: per hour",
+    "comment": "oxygen, from air to organism, MassFlowRate -> mass flow rate, condition: used in the metabolic process, air, organism, ectotherm -> type: ectotherm, non-stressed -> condition: non-stressed, non-active -> state: non-active, ADD: ratio: mass per time",
     "hasProperty": "mass flow rate",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q1366187",
     "hasMatrix": {
-      "AsymmetricSystem": "from air to organism",
+      "AsymmetricSystem": "flow",
       "hasSource": "air",
       "hasTarget": "organism"
     },
@@ -170,10 +703,6 @@
         "on": "organism"
       },
       {
-        "label": "metabolism",
-        "on": "mass flow rate"
-      },
-      {
         "label": "non-stressed",
         "on": "organism"
       },
@@ -182,80 +711,66 @@
         "on": "organism"
       },
       {
-        "label": "per hour",
-        "on": "mass flow rate"
+        "label": "used in the metabolic process",
+        "on": "flow"
       }
     ]
   },
   {
     "label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
     "definition": "The amount of docosahexaenoic acid relative to dry weight in an organism.",
-    "comment": "docosahexaenoic acid, organism, mass fraction, dry -> state: dry, ADD: normalization: per unit mass",
+    "comment": "docosahexaenoic acid, organism, mass fraction, dry -> state: dry",
     "hasProperty": "mass fraction",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
-    "hasMatrix": "organism",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q7239",
-    "hasObjectOfInterest": "docosahexaenoic acid",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q423345",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q66055",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n6d5b2c54278145e8ab74df58a203d9bbb1",
+      "hasSource": "docosahexaenoic acid",
+      "hasTarget": "organism"
+    },
     "hasConstraint": [
       {
         "label": "dry",
         "on": "organism"
-      },
-      {
-        "label": "per unit mass",
-        "on": "mass fraction"
       }
     ]
   },
   {
     "label": "Biological sex",
     "definition": "Biological sex [female | male | intersex | unknown]",
-    "comment": "organism, ADD: sex, biological sex -> controlled list: biological sex",
+    "comment": "organism, sex",
     "hasProperty": "sex",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q290",
     "hasObjectOfInterest": "organism",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7239",
-    "hasConstraint": [
-      {
-        "label": "biological sex",
-        "on": "sex"
-      }
-    ]
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7239"
   },
   {
     "label": "Weight specific-ingestion Carbon rate at 15 °C",
-    "definition": "The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
-    "comment": "Carbon, at non-limiting conditions -> condition: under non-limiting food conditions, from food to organism, food, organism, dry -> state: dry, mass flow rate, weight-specific -> normalization: per mass, at 15°C temperature -> condition: at 15°C temperature, due to: ingestion",
+    "definition": "Weight specific-ingestion Carbon rate at 15 °C. The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+    "comment": "Carbon, at non-limiting conditions -> condition: under non-limiting conditions, food, organism, dry; mass flow rate; at 15°C temperature",
     "hasProperty": "mass flow rate",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q1366187",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q3265048",
     "hasMatrix": {
-      "AsymmetricSystem": "from food to organism",
+      "AsymmetricSystem": "na8d7cdd4e1cc46d3869683f64c4fbbf5b2",
       "hasSource": "food",
       "hasTarget": "organism"
     },
-    "hasObjectOfInterest": "Carbon",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q623",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "na8d7cdd4e1cc46d3869683f64c4fbbf5b1",
+      "hasSource": "Carbon",
+      "hasTarget": "individual"
+    },
     "hasConstraint": [
-      {
-        "label": "per mass",
-        "on": "mass flow rate"
-      },
-      {
-        "label": "dry",
-        "on": "organism"
-      },
-      {
-        "label": "under non-limiting food conditions",
-        "on": "Carbon"
-      },
       {
         "label": "at 15°C temperature",
         "on": "mass flow rate"
       },
       {
-        "label": "ingestion",
-        "on": "mass flow rate"
+        "label": "at non-limiting conditions",
+        "on": "food"
+      },
+      {
+        "label": "dry",
+        "on": "individual"
       }
     ]
   },
@@ -265,39 +780,35 @@
     "comment": "density, electron, solar wind",
     "hasProperty": "number density",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q108914962",
-    "hasMatrix": "solar wind",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q79833",
-    "hasObjectOfInterest": "electron",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2225",
-    "hasConstraint": [
-      {
-        "label": "per unit volume",
-        "on": "number density"
-      }
-    ]
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "na12aa002b4be4e79ae092b8bf16dd45cb1",
+      "hasSource": "electron",
+      "hasTarget": "solar wind"
+    }
   },
   {
     "label": "Concentration of DDT impacted by industry",
     "definition": "Concentration of DDT in a given year at a site impacted by industry.",
-    "comment": "DDT; due to: industry; soil; mass fraction; temporal extent: 1 year; normalization: per unit mass",
+    "comment": "DDT; due to: industry; soil; mass fraction; temporal extent: 1 year",
     "hasProperty": "mass fraction",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
-    "hasMatrix": "soil",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
-    "hasObjectOfInterest": "DDT",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q163648",
+    "hasStatisticalModifier": "arithmetric mean",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q19033",
+    "hasMatrix": "research site",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q57951700",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n438233f95f1845f48f1362dc081f3c3cb1",
+      "hasSource": "DDT",
+      "hasTarget": "soil"
+    },
     "hasConstraint": [
-      {
-        "label": "1 year",
-        "on": "mass fraction"
-      },
-      {
-        "label": "per unit mass",
-        "on": "mass fraction"
-      },
       {
         "label": "industry",
         "on": "DDT"
+      },
+      {
+        "label": "1 year",
+        "on": "arithmetric mean"
       }
     ]
   },
@@ -325,79 +836,77 @@
   {
     "label": "Current smoking status",
     "definition": "Smoking status current of a patient",
-    "comment": "patient; status; time: current; controlled list: smoking status",
-    "hasProperty": "status",
-    "hasObjectOfInterest": "patient",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q181600",
+    "comment": "patient; smoking status;  time: current",
+    "hasProperty": "smoking status",
+    "hasObjectOfInterest": "person",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5",
     "hasConstraint": [
       {
         "label": "current",
-        "on": "status"
+        "on": "smoking status"
       },
       {
-        "label": "smoking status",
-        "on": "status"
+        "label": "patient",
+        "on": "person"
       }
     ]
   },
   {
-    "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area",
-    "definition": "the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell)",
-    "comment": "nanomaterial; location: intracellular; cell membrane; mass; normalization: per area",
-    "hasProperty": "mass",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11423",
-    "hasMatrix": "cell membrane",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q54888819",
-    "hasObjectOfInterest": "nanomaterial",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q967847",
+    "label": "Cellular dose in vitro of nanomaterials (mass / cell)",
+    "definition": "the mass of nanomaterial internalised into the cell over the duration of the experiment, mass per cell",
+    "comment": "nanomaterial; location: intracellular; cell ; mass per cell; ADD: group of cells",
+    "hasProperty": "mass per cell",
+    "hasMatrix": "group of cells",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q20088819",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n3d49e2982003443093e84b9c04a782e3b1",
+      "hasSource": "nanomaterial",
+      "hasTarget": "cell"
+    },
     "hasConstraint": [
       {
         "label": "intracellular",
-        "on": "nanomaterial"
+        "on": "n3d49e2982003443093e84b9c04a782e3b1"
       },
       {
-        "label": "per area",
-        "on": "mass"
+        "label": "duration of the experiment",
+        "on": "mass per cell"
       }
     ]
   },
   {
-    "label": "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area",
-    "definition": "the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell)",
-    "comment": "nanomaterial; cell membrane; number; location: intracellular; normalization: per area; ADD: particle number per cell area",
-    "hasProperty": "number",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
-    "hasMatrix": "cell membrane",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q54888819",
-    "hasObjectOfInterest": "nanomaterial",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q967847",
+    "label": "dose of applied nanomaterial internalised by a specific cell (number per cell)",
+    "definition": "Number of particles internalised into the cell over the duration of the experiment",
+    "comment": "nanomaterial; cell; number per cell; location: intracellular, duration of the experiment; ADD: group of cells",
+    "hasProperty": "number per entity",
+    "hasMatrix": "group of cells",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q20088819",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n8df892be24624efa951a7f609c7adb11b1",
+      "hasSource": "nanomaterial",
+      "hasTarget": "cell"
+    },
     "hasConstraint": [
       {
         "label": "intracellular",
-        "on": "nanomaterial"
+        "on": "n8df892be24624efa951a7f609c7adb11b1"
       },
       {
-        "label": "per area",
-        "on": "number"
+        "label": "time extent. duration of the experiment",
+        "on": "number per entity"
       }
     ]
   },
   {
     "label": "Dynamic shear viscosity of polystyrene PS042",
     "definition": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
-    "comment": "polystyrene; type: PS042; shear viscosity; type: dynamic; condition: under testing conditions of DIN 51810-1",
-    "hasProperty": "dynamic viscosity",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q15152757",
-    "hasObjectOfInterest": "polystyrene",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q146243",
+    "comment": "polystyrene PS042; dynamic shear viscosity; type: condition: under testing conditions of DIN 51810-1",
+    "hasProperty": "dynamic shear viscosity",
+    "hasObjectOfInterest": "polystyrene PS042",
     "hasConstraint": [
       {
-        "label": "PS042",
-        "on": "polystyrene"
-      },
-      {
         "label": "under testing conditions of DIN 5810-1",
-        "on": "dynamic viscosity"
+        "on": "dynamic shear viscosity"
       }
     ]
   },
@@ -422,16 +931,11 @@
     "comment": "Mass concentration; isobutylene; chloroform; ADD: per unit mass",
     "hasProperty": "mass concentration",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-    "hasMatrix": "chloroform",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q172275",
-    "hasObjectOfInterest": "isobutylene",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q776976",
-    "hasConstraint": [
-      {
-        "label": "per unit volume",
-        "on": "mass concentration"
-      }
-    ]
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "ratio",
+      "hasSource": "isobutylene",
+      "hasTarget": "chloroform"
+    }
   },
   {
     "label": "Overnight stays in 3-star hotel near the sea shore",
@@ -457,17 +961,21 @@
   {
     "label": "Nervosity feelings",
     "definition": "In the past 30 days, how often did you feel nervous?",
-    "comment": "nervousness; patient; frequency; during last 30 days",
+    "comment": "feel -> feeling; nervous -> type:nervous; during last 30 days; ADD: person; frequency",
     "hasProperty": "frequency",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11652",
-    "hasMatrix": "patient",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q181600",
-    "hasObjectOfInterest": "nervousness",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q1978097",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "feeling",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q205555",
     "hasConstraint": [
       {
         "label": "during last 30 days",
         "on": "frequency"
+      },
+      {
+        "label": "nervous",
+        "on": "feeling"
       }
     ]
   },
@@ -477,15 +985,19 @@
     "comment": "Thermodynamic temperature; air; in a height of 1.7 meter; daily; maximum - ADD: atmosphere (to distinguish it from indoors); \nVDP10 for property;  VDP40 for context object; VDP66 for constraint:datum; VDP67 for constraint:condition.",
     "hasProperty": "thermodynamic temperature",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
-    "hasContextObject": "atmosphere",
-    "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
+    "hasStatisticalModifier": "maximum",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
+    "hasMatrix": "atmosphere",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q8104",
+    "hasObjectOfInterest": "air",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292",
     "hasConstraint": [
       {
         "label": "daily",
         "on": "maximum"
       },
       {
-        "label": "in a height of 1.7 m above ground",
+        "label": "1,7 m  above ground",
         "on": "air"
       }
     ]
@@ -493,24 +1005,20 @@
   {
     "label": "Date of last PCR-test",
     "definition": "date of last COVID-19 PCR test performed by a certified laboratory",
-    "comment": "date; last; COVID-19; PCR test; performed by a certified laboratory",
+    "comment": "date; latest; person, COVID-19; PCR test; performed by a certified laboratory",
     "hasProperty": "date",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q205892",
-    "hasMatrix": "patient",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q181600",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
     "hasObjectOfInterest": "PCR-test",
     "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q104462307",
     "hasConstraint": [
-      {
-        "label": "performed by a certified laboratory",
-        "on": "PCR-test"
-      },
       {
         "label": "SARS-CoV2",
         "on": "PCR-test"
       },
       {
-        "label": "last",
+        "label": "latest",
         "on": "date"
       }
     ]
@@ -518,17 +1026,18 @@
   {
     "label": "Cloud cover",
     "definition": "The amount of sky estimated to be covered by all cloud types.",
-    "comment": "sky, cloud, (amount covered -> area fraction)",
+    "comment": "sky; cloud; amount covered -> area fraction; ADD: area per area",
     "hasProperty": "area fraction",
-    "hasMatrix": "sky",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q527",
-    "hasObjectOfInterest": "cloud",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8074"
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n52398c5994a04077b0fe7b594261e37fb1",
+      "hasSource": "cloud",
+      "hasTarget": "sky"
+    }
   },
   {
     "label": "Atmospheric boundary layer height defined by temperature inversion",
     "definition": "Atmospheric boundary layer height defined by temperature inversion.",
-    "comment": "Atmospheric boundary layer, height, temperature inversion (ADD atmosphere, above ground surface).",
+    "comment": "Atmospheric boundary layer, height, temperature inversion (ADD atmosphere, above ground surface, defined by: temperature inversion).",
     "hasProperty": "height",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q208826",
     "hasMatrix": "atmosphere",
@@ -547,13 +1056,14 @@
   },
   {
     "label": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
-    "definition": "Atmospheric optical thickness of particulate organic matter at 550nm under ambient conditions.",
-    "comment": "Atmospheric, optical thickness, particulate matter, organic, 550nm, under ambient conditions.",
+    "definition": "Atmospheric optical thickness of particulate organic matter at 550nm.",
+    "comment": "Atmospheric, optical thickness, particles, organic, 550nm.",
     "hasProperty": "optical thickness",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q890809",
     "hasMatrix": "aerosol",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q104541",
-    "hasObjectOfInterest": "particles of matter",
+    "hasObjectOfInterest": "particle",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q1621273",
     "hasContextObject": "atmosphere",
     "hasContextObjectURI": "https://www.wikidata.org/wiki/Q8104",
     "hasConstraint": [
@@ -563,11 +1073,7 @@
       },
       {
         "label": "organic",
-        "on": "particles of matter"
-      },
-      {
-        "label": "under ambient conditions",
-        "on": "aerosol"
+        "on": "particle"
       }
     ]
   },
@@ -577,23 +1083,16 @@
     "comment": "Mass flux; carbon; soil; vegetation; due to senescence. From indicates the source, into indicates the target.",
     "hasProperty": "mass flux",
     "hasMatrix": {
-      "AsymmetricSystem": "from vegetation to soil",
+      "AsymmetricSystem": "flow",
       "hasSource": "vegetation",
       "hasTarget": "soil"
     },
     "hasObjectOfInterest": "carbon",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q623",
     "hasConstraint": [
       {
         "label": "senescence",
-        "on": "mass flux"
-      },
-      {
-        "label": "per unit area",
-        "on": "mass flux"
-      },
-      {
-        "label": "per unit time",
-        "on": "mass flux"
+        "on": "flow"
       }
     ]
   },
@@ -603,6 +1102,8 @@
     "comment": "trunk -> tree trunk, char; height, maximum, due to fire; above ground.",
     "hasProperty": "height",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q208826",
+    "hasStatisticalModifier": "maximum",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
     "hasMatrix": "tree trunk",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q193472",
     "hasObjectOfInterest": "char",
@@ -631,12 +1132,14 @@
   {
     "label": "Foliage projective cover in the lower canopy strata",
     "definition": "The proportion (percentage) of the ground area covered by foliage (or photosynthetic tissue) in the lower canopy strata.",
-    "comment": "foliage, lower canopy strata, ground, cover -> area fraction",
-    "hasProperty": "area fraction",
-    "hasMatrix": "ground",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
-    "hasObjectOfInterest": "foliage",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q18250160",
+    "comment": "foliage, lower canopy strata, ground, proportion -> fraction",
+    "hasProperty": "percentage",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11229",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n0795957d2ca4488781d8f189d6109362b1",
+      "hasSource": "foliage",
+      "hasTarget": "study area"
+    },
     "hasConstraint": [
       {
         "label": "lower canopy strata",
@@ -645,35 +1148,56 @@
     ]
   },
   {
-    "label": "boiling point of benzene under standard conditions",
-    "definition": "thermodynamic temperature for the boiling point of a known purity (99.07% (v/v)) liquid sample of benzene under standard conditions",
-    "comment": "thermodynamic temperature; at the boiling point; purity (99.07% (v/v)); benzene; 1 atm pressure",
+    "label": "Observation of bloodtype in blood",
+    "definition": "Type of blood in a blood sample",
+    "comment": "blood; patient; clood type",
+    "hasProperty": "blood type",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q47657",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "blood",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7873"
+  },
+  {
+    "label": "Observation of Rhesusform in blood",
+    "definition": "-Rhesusform in a blood sample",
+    "comment": "blood; patient; rhesusform",
+    "hasProperty": "rhesus formula",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "blood",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7873"
+  },
+  {
+    "label": "boiling point of benzene",
+    "definition": "thermodynamic temperature for the boiling point (at the liquid to gas phase transition) of a known purity 99.07 (w/w) liquid sample of benzene at atmospheric pressure",
+    "comment": "thermodynamic temperature; at the liquid to gas phase transition; purity 99.07 (w/w); benzene; at atmospheric pressure",
     "hasProperty": "thermodynamic temperature",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
     "hasObjectOfInterest": "benzene",
     "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
     "hasConstraint": [
       {
-        "label": "at the liquid to gas phase transition",
+        "label": "liquid to gas phase transition",
         "on": "thermodynamic temperature"
       },
       {
-        "label": "1 atm pressure",
+        "label": "at 1 atm pressure",
         "on": "thermodynamic temperature"
       },
       {
-        "label": "purity 99.07% (v/v)",
+        "label": "purity 99.07 (w/w)",
         "on": "benzene"
       }
     ]
   },
   {
-    "label": "estimation of the energy of reaction per mole upon combustion of hexanol",
-    "definition": "energy released per mole upon combustion of a 5.00 g sample of 99.98%(w/w) pure hexanol in air",
-    "comment": "energy; per mole; combustion; 5.00 g sample; 99.98%(w/w) pure;hexanol; air",
+    "label": "estimation of the energy of reaction upon combustion of hexanol",
+    "definition": "energy released upon combustion of 99.98(w/w) pure hexanol in air at atmospheric pressure and atmospheric oxygen level.",
+    "comment": "energy; combustion-> combustion reaction; 99.98(w/w) pure; hexanol; air",
     "hasProperty": "energy",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11379",
-    "hasMatrix": "combustion",
+    "hasMatrix": "combustion reaction",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q133235",
     "hasObjectOfInterest": "hexanol (C6H14O)",
     "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q76933",
@@ -681,278 +1205,585 @@
     "hasContextObjectURI": "https://www.wikidata.org/wiki/Q7391292",
     "hasConstraint": [
       {
-        "label": "purity 99.98%(w/w)",
+        "label": "purity 99.98(w/w)",
         "on": "hexanol (C6H14O)"
       },
       {
-        "label": "5.00 g sample",
-        "on": "hexanol (C6H14O)"
+        "label": "at atmospheric pressure",
+        "on": "combustion reaction"
       },
       {
-        "label": "at local atmospheric presure",
-        "on": "combustion"
+        "label": "at atmospheric oxygen level",
+        "on": "combustion reaction"
       },
       {
-        "label": "at local atmospheric oxygen level",
-        "on": "combustion"
-      },
-      {
-        "label": "per mol",
+        "label": "chemical reaction",
         "on": "energy"
       }
     ]
   },
   {
-    "label": "Iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline",
-    "definition": "Iron(II) solution derived from a soil sample (via digestion and dilution) using a quantitative reaction with ortho-phenantroline and product color measurement of absorbance at 510 nm",
-    "comment": "Iron(II) solution --> iron + acqueous; soil sample; o-phenantroline;at 510 nm-> at 510 nm wavelength",
-    "hasProperty": "molar concentration",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
-    "hasMatrix": "soil",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
-    "hasObjectOfInterest": "iron",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q677",
-    "hasConstraint": [
-      {
-        "label": "at 510 nm wavelength",
-        "on": "molar concentration"
-      },
-      {
-        "label": "per unit volume",
-        "on": "molar concentration"
-      },
-      {
-        "label": "o-phenanthroline",
-        "on": "soil"
-      },
-      {
-        "label": "acqueous",
-        "on": "iron"
-      },
-      {
-        "label": "soil sample",
-        "on": "soil"
-      }
-    ]
-  },
-  {
-    "label": "concentration of endosulfane sulfate in wet flesh of ostrea edulis",
-    "definition": "Mass concentration of endosulfane sulfate in wet flesh of ostrea edulis, measured in μg/kg.",
-    "comment": "Mass concentration; endosulfane sulfate; wet; flesh->body; ostrea edulis; ADD: normalization: per unit mass. \n           10 for property:specific, 17 for property:concentration, 30 for matrix, 71 for constraint:normalization",
-    "hasProperty": "mass concentration",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-    "hasMatrix": "body",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q170494",
-    "hasObjectOfInterest": "endosulfane sulfate",
-    "hasContextObject": "ostrea edulis",
-    "hasContextObjectURI": "https://www.wikidata.org/wiki/Q729678",
-    "hasConstraint": [
-      {
-        "label": "per unit mass",
-        "on": "mass concentration"
-      },
-      {
-        "label": "wet",
-        "on": "body"
-      }
-    ]
+    "label": "Determination of iron concentration in a soil sample",
+    "definition": "Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline as mass fraction",
+    "comment": "Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline as mass fraction",
+    "hasProperty": "mass fraction",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n70ced741cfd04fba899c663e914f005bb1",
+      "hasSource": "iron(II)",
+      "hasTarget": "soil"
+    }
   },
   {
     "label": "density of benzene",
-    "definition": "mass density of a 10.00 mL sample of ACS reagent grade 99.0 %(v/v) benzene at a room temperature",
-    "comment": "mass density -> mass concentration, 10.00 mL sample; reagent grade 99.0 %(v/v) -> purity 99.0 %(v/v); benzene; at a room temperature; ADD: per unit volume",
-    "hasProperty": "mass concentration",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-    "hasMatrix": "soil",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q36133",
+    "definition": "mass density of a 10.00 mL sample of ACS reagent grade (99.0 (v/v)) benzene at a room temperature",
+    "comment": "mass density; 10.00 mL sample; ACS reagent grade (99.0 (v/v)); benzene; at a room temperature",
+    "hasProperty": "mass density",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q29539",
     "hasObjectOfInterest": "benzene (C6H6)",
     "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
     "hasConstraint": [
       {
-        "label": "local room temperature",
-        "on": "mass concentration"
+        "label": "at room temperature",
+        "on": "mass density"
       },
       {
-        "label": "per unit volume",
-        "on": "mass concentration"
+        "label": "10.00 mL sample",
+        "on": "benzene (C6H6)"
       },
       {
-        "label": "sample of 10.00 mL",
-        "on": "soil"
-      },
-      {
-        "label": "soil sample",
-        "on": "soil"
-      },
-      {
-        "label": "purity 99.0 %(v/v)",
+        "label": "ACS reagent grade (99.0 (v/v))",
         "on": "benzene (C6H6)"
       }
     ]
   },
   {
     "label": "solubility of molecular oxygen from air in water",
-    "definition": "solubility (molar concentration per unit volume) of molecular oxygen in air in MilliQ water (18.2 MOhm) using the static method",
-    "comment": "molar concentration; per unit volume; molecular oxygen; air; in MilliQ water (18.2 MOhm); ADD phases and required conditions",
-    "hasProperty": "molar concentration",
-    "hasPropertyURI": "https://www.wikidata.org/wiki/Q672821",
-    "hasMatrix": {
-      "AsymmetricSystem": "two-phase gas-liquid system",
-      "hasSource": "air",
+    "definition": "solubility of molecular oxygen from air in water with MilliQ (10.2MOhm) purity at local air conditions",
+    "comment": "solubility; molecular oxygen; air; water; MilliQ (10.2MOhm) purity; at local air conditions",
+    "hasProperty": "mass concentration",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "bc_0_b10_b0",
+      "hasSource": "molecular oxygen",
       "hasTarget": "water"
     },
-    "hasObjectOfInterest": "molecular oxygen",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q5203615",
     "hasConstraint": [
       {
-        "label": "local air conditions",
-        "on": "air"
+        "label": "at local air conditions",
+        "on": "mass concentration"
       },
       {
-        "label": "MilliQ purity",
-        "on": "water"
-      },
-      {
-        "label": "partial pressure of molecular oxygen in the gas phase",
+        "label": "air",
         "on": "molecular oxygen"
       },
       {
-        "label": "thermodynamic temperature",
-        "on": "molar concentration"
-      },
-      {
-        "label": "atmospheric pressure",
-        "on": "molar concentration"
-      },
-      {
-        "label": "liquid",
+        "label": "purity 99.82 (w/w)",
         "on": "water"
-      },
-      {
-        "label": "gaseous",
-        "on": "molecular oxygen"
-      },
-      {
-        "label": "gaseous",
-        "on": "air"
-      },
-      {
-        "label": "per unit volume",
-        "on": "molar concentration"
       }
     ]
   },
   {
     "label": "solubility of benzene in water",
-    "definition": "mutual solubility (g/L) of 99.82 %(w/w) pure benzene in deionized water at phase equilibrium (immiscible phases) and 298.15 K",
-    "comment": "solubility (g/L)-> mass concentration; 99.82 %(w/w) pure-> purity 99.82 % (w/w), benzene; deionized; water; 298.15 K",
+    "definition": "solubility (g/L) of 99.82 (w/w) pure benzene in deionized water at phase equilibrium and 298.15 K",
+    "comment": "solubility; 99.82 (w/w) pure; benzene; deionized; water; 298.15 K, ADD: dissolved",
     "hasProperty": "mass concentration",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-    "hasMatrix": {
-      "AsymmetricSystem": "two-phase immiscible liquid-liquid system",
-      "hasSource": "benzene (C6H6)",
-      "hasTarget": "water (H2O)"
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "neb78c5b9e9534fbbbd46f944b7258b09b1",
+      "hasSource": "benzene",
+      "hasTarget": "water"
     },
-    "hasObjectOfInterest": "benzene (C6H6)",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
     "hasConstraint": [
       {
-        "label": "liquid",
-        "on": "benzene (C6H6)"
-      },
-      {
-        "label": "liquid",
-        "on": "water (H2O)"
-      },
-      {
-        "label": "purity 99.82 %(w/w)",
-        "on": "benzene (C6H6)"
-      },
-      {
-        "label": "298.15 K thermodynamic temperature",
+        "label": "at 298.15 K  thermodynamic temperature",
         "on": "mass concentration"
       },
       {
         "label": "dissolved",
-        "on": "benzene (C6H6)"
+        "on": "benzene"
       },
       {
-        "label": "per unit volume",
-        "on": "mass concentration"
+        "label": "dionized",
+        "on": "water"
       },
       {
-        "label": "deionized",
-        "on": "water (H2O)"
+        "label": "purity 99.82 (w/w)",
+        "on": "benzene"
+      }
+    ]
+  },
+  {
+    "label": "melting point of naphthalene under standard conditions",
+    "definition": "thermodynamic temperature for the melting point (at the solid to liquid phase transition) of a known purity (99.12 (w/w) sample of naphthalene at atmospheric pressure",
+    "comment": "thermodynamic temperature; at the solid to liquid phase transition; purity (99.12 (w/w); naphthalene; at atmospheric pressure",
+    "hasProperty": "thermodynamic temperature",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
+    "hasObjectOfInterest": "naphthalene (C10H8)",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q179724",
+    "hasConstraint": [
+      {
+        "label": "at the solid to liquid phase transition",
+        "on": "thermodynamic temperature"
+      },
+      {
+        "label": "purity of 99.12 (w/w)",
+        "on": "naphthalene (C10H8)"
+      },
+      {
+        "label": "at 1 atm pressure",
+        "on": "thermodynamic temperature"
       }
     ]
   },
   {
     "label": "pH measurement of a sample of apple juice",
-    "definition": "(PH) solution hydronium ion concentration measurement in a apple juice using a solid-state pH electrode",
-    "comment": "solution-> acqueous; hydronium; concentration -> molar concentration; apple juice; ADD: per unit volume (pH = molar concentration of acqueous hydronium per unit volume)",
-    "hasProperty": "molar concentration",
-    "hasMatrix": "apple juice",
-    "hasMatrixURI": "https://www.wikidata.org/wiki/Q618355",
-    "hasObjectOfInterest": "hydronium",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q849881",
-    "hasConstraint": [
-      {
-        "label": "per unit volume",
-        "on": "molar concentration"
-      },
-      {
-        "label": "homogeneous solution",
-        "on": "apple juice"
-      },
-      {
-        "label": "acqueous",
-        "on": "hydronium"
-      }
-    ]
+    "definition": "pH of a sample of apple juice using a solid-state pH electrode",
+    "comment": "pH; apple juice; ADD: hydronium ion activity",
+    "hasProperty": "pH",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q40936",
+    "hasObjectOfInterest": "apple juice",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q618355"
   },
   {
     "label": "solubility of naphthalene in water at room temperature",
-    "definition": "solubility measurement of napathalene in deionized water at room temperature by monitoring absorption at 279 nm",
-    "comment": "solubility -> mass concentration; napathalene; deionized; water; at room temperature; absorption at 279 nm",
+    "definition": "solubility measurement of napathalene in deionized water at room temperature by monitoring absorption at 279 nm, measured in mg/L",
+    "comment": "napathalene; deionized; water; at room temperature; ADD: state:dissolved, quality: dionized",
     "hasProperty": "mass concentration",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
-    "hasMatrix": {
-      "AsymmetricSystem": "two-phase solid-liquid system",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "nb1b1cb7e456d4319bf0aa922f6077806b1",
       "hasSource": "naphthalene (C10H8)",
-      "hasTarget": "water (H2O)"
+      "hasTarget": "water"
     },
-    "hasObjectOfInterest": "naphthalene (C10H8)",
-    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q179724",
     "hasConstraint": [
       {
-        "label": "solid",
+        "label": "at room temperature",
+        "on": "mass concentration"
+      },
+      {
+        "label": "dissolved",
         "on": "naphthalene (C10H8)"
       },
       {
-        "label": "liquid",
-        "on": "water (H2O)"
-      },
-      {
-        "label": "local room temperature",
-        "on": "mass concentration"
-      },
-      {
-        "label": "at 279 nm wavelength",
-        "on": "mass concentration"
-      },
-      {
-        "label": "per unit volume",
-        "on": "mass concentration"
-      },
-      {
-        "label": "deionized",
-        "on": "water (H2O)"
+        "label": "dionized",
+        "on": "water"
       }
     ]
   },
   {
+    "label": "Body Mass Index",
+    "definition": "Body mass index calculated by dividing body mass by height squared",
+    "comment": "Body mass; index; defined by: body mass divided by height squared; ADD: person",
+    "hasProperty": "index",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q25472932",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "body mass",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q620876",
+    "hasConstraint": [
+      {
+        "label": "body mass divided by height squared",
+        "on": "index"
+      }
+    ]
+  },
+  {
+    "label": "HRV Heart rate variabilty",
+    "definition": "HRV- Heart rate variability, Category: ECG metrics, Ontology: BMONT Unit: milliseconds (ms)",
+    "comment": "contractions; person; ADD: role:patient; variation; time interval; type: heart; interval: n+(n+1)",
+    "hasProperty": "time interval",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q186081",
+    "hasStatisticalModifier": "variance",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q175199",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "muscle contractions",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q127006",
+    "hasConstraint": [
+      {
+        "label": "heart",
+        "on": "muscle contractions"
+      },
+      {
+        "label": "n+(n+1)",
+        "on": "muscle contractions"
+      },
+      {
+        "label": "patient",
+        "on": "person"
+      }
+    ]
+  },
+  {
+    "label": "BPM Mean heart rate",
+    "definition": "BPM mean heart rate (beats per minute, ECG-derived)",
+    "comment": "contractions; patient; mean; frequency; type: heart; ADD:patient",
+    "hasProperty": "frequency",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11652",
+    "hasStatisticalModifier": "mean",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q2796622",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "contractions",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q127006",
+    "hasConstraint": [
+      {
+        "label": "heart",
+        "on": "contractions"
+      }
+    ]
+  },
+  {
+    "label": "Chronic pain grade scale",
+    "definition": "Category: Clinical, Unit: descriptional/grade of a scale",
+    "comment": "pain; person; ADD: role: patient; grade; temporal extent: chronic; controlled list: scale",
+    "hasProperty": "grade",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q18185",
+    "hasObjectOfInterest": "pain",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q81938",
+    "hasContextObject": "person",
+    "hasContextObjectURI": "https://www.wikidata.org/wiki/Q5",
+    "hasConstraint": [
+      {
+        "label": "chronic",
+        "on": "pain"
+      },
+      {
+        "label": "scale",
+        "on": "grade"
+      },
+      {
+        "label": "patient",
+        "on": "person"
+      }
+    ]
+  },
+  {
+    "label": "Concentration of Al cations in water",
+    "definition": "Concentration of Al cations in water",
+    "comment": "composition: aluminium, mass concentration, cation, water",
+    "hasProperty": "mass concentration",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n3c315c8aa5e74f5dbed7b9435fcbefccb1",
+      "hasSource": "cation",
+      "hasTarget": "water"
+    },
+    "hasConstraint": [
+      {
+        "label": "aluminium",
+        "on": "cation"
+      }
+    ]
+  },
+  {
+    "label": "Concentration of dissolved organic carbon in water",
+    "definition": "Mass concentration of dissolved organic carbon in water",
+    "comment": "Mass concentration of dissolved organic carbon in water",
+    "hasProperty": "mass concentration",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "nb11ae6ab8f77443cacaaa66c3df20724b1",
+      "hasSource": "carbon",
+      "hasTarget": "water"
+    },
+    "hasConstraint": [
+      {
+        "label": "dissolved",
+        "on": "carbon"
+      },
+      {
+        "label": "organic",
+        "on": "carbon"
+      }
+    ]
+  },
+  {
+    "label": "concentration of endosulfane sulfate in wet flesh of ostrea edulis",
+    "definition": "Mass concentration of endosulfane sulfate in wet flesh of ostrea edulis, measured in μg/kg.",
+    "comment": "Mass concentration; endosulfane sulfate; wet; flesh->body; ostrea edulis; ADD: ratio: mass per  mass.",
+    "hasProperty": "mass fraction",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
+    "hasMatrix": "ostrea edulis",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q729678",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "nc4f5731bca8c4c5697a5ab765dd257c8b1",
+      "hasSource": "endosulfane sulfate",
+      "hasTarget": "flesh"
+    },
+    "hasConstraint": [
+      {
+        "label": "wet",
+        "on": "flesh"
+      }
+    ]
+  },
+  {
+    "label": "Water sampling depth ",
+    "definition": "Water sampling depth (the distance from the top/surface to the bottom) from which the water was sampled",
+    "comment": "datum: distance from the surface to the bottom, water sampling, depth",
+    "hasProperty": "depth",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q930412",
+    "hasObjectOfInterest": "water sampling",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q30032096",
+    "hasConstraint": [
+      {
+        "label": "distance from the surface to the bottom",
+        "on": "depth"
+      }
+    ]
+  },
+  {
+    "label": "Potential evaporation",
+    "definition": "Potential evaporation l m⁻² s⁻¹",
+    "comment": "condition: evaporated, condition: at non-limiting water supply, soil, volume flux, flow, water, atmosphere",
+    "hasProperty": "volume flux",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q55753416",
+    "hasMatrix": {
+      "AsymmetricSystem": "n354c0a9f68904eafa734b43444eed61bb1",
+      "hasSource": "soil",
+      "hasTarget": "atmosphere"
+    },
+    "hasObjectOfInterest": "water",
+    "hasConstraint": [
+      {
+        "label": "at non-limiting water supply",
+        "on": "water"
+      },
+      {
+        "label": "evaporated",
+        "on": "water"
+      }
+    ]
+  },
+  {
+    "label": "Daily maximum hourly precipitation rate",
+    "definition": "Daily maximum hourly precipitation rate, measured in kg m⁻² s⁻¹",
+    "comment": "frequency: hourly, frequency: daily, ground, atmosphere, mass flux, maximum, vegetation-soil system, water, ADD: origin: precipitation",
+    "hasProperty": "mass flux",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q3265048",
+    "hasStatisticalModifier": "maximum",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
+    "hasMatrix": {
+      "AsymmetricSystem": "vegetation-soil system",
+      "hasSource": "atmosphere",
+      "hasTarget": "ground"
+    },
+    "hasObjectOfInterest": "water",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+    "hasConstraint": [
+      {
+        "label": "daily",
+        "on": "maximum"
+      },
+      {
+        "label": "hourly",
+        "on": "maximum"
+      },
+      {
+        "label": "precipitation",
+        "on": "water"
+      }
+    ]
+  },
+  {
+    "label": "Moisture in upper soil portion",
+    "definition": "Moisture in upper soil portion measured in kg m-2",
+    "comment": "Moisture in upper soil portion measured in kg m-2",
+    "hasProperty": "surface density",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q1907514",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n37f984b5e36949148e17b357f58ffb6eb1",
+      "hasSource": "water",
+      "hasTarget": "soil"
+    },
+    "hasConstraint": [
+      {
+        "label": "upper soil",
+        "on": "soil"
+      }
+    ]
+  },
+  {
+    "label": "Surface runoff",
+    "definition": "Surface runoff measured in kg m⁻² s⁻¹",
+    "comment": "condition: not soaking into the ground, surface, water body, mass flow, water",
+    "hasProperty": "mass flow",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q3295893",
+    "hasMatrix": {
+      "AsymmetricSystem": "ne25f71485e5747a09c66451430ba6c7eb1",
+      "hasSource": "surface",
+      "hasTarget": "water body"
+    },
+    "hasObjectOfInterest": "water",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+    "hasConstraint": [
+      {
+        "label": "not soaking into the ground",
+        "on": "surface"
+      }
+    ]
+  },
+  {
+    "label": "Water turbidity of stagnant surface water ",
+    "definition": "Water turbidity of stagnant surface water",
+    "comment": "state: stagnant, type: surface, turbidity, water body, water",
+    "hasProperty": "turbidity",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q898574",
+    "hasMatrix": "water body",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
+    "hasObjectOfInterest": "water",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+    "hasConstraint": [
+      {
+        "label": "stagnant",
+        "on": "water body"
+      },
+      {
+        "label": "surface",
+        "on": "water"
+      }
+    ]
+  },
+  {
+    "label": "Country of birth of mother",
+    "definition": "country of birth of mother",
+    "comment": "birth; person; country; condition: mother of patient",
+    "hasProperty": "country",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q6256",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q215627",
+    "hasObjectOfInterest": "birth",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q14819852",
+    "hasConstraint": [
+      {
+        "label": "mother of patient",
+        "on": "person"
+      }
+    ]
+  },
+  {
+    "label": "Date of birth of mother",
+    "definition": "date of birth of mother",
+    "comment": "birth; person; calendar date; condition: mother of patient",
+    "hasProperty": "calendar date",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q205892",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q215627",
+    "hasObjectOfInterest": "birth",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q14819852",
+    "hasConstraint": [
+      {
+        "label": "mother of person",
+        "on": "person"
+      }
+    ]
+  },
+  {
+    "label": "Number of Hours of family activity per week",
+    "definition": "Number of Hours of family activity per week",
+    "comment": "hours; patient; condition: spent with family; mean; aggregation: weekly; number",
+    "hasProperty": "number",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+    "hasStatisticalModifier": "mean",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q2796622",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "hours",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q25235",
+    "hasConstraint": [
+      {
+        "label": "spent with family",
+        "on": "hours"
+      },
+      {
+        "label": "weekly",
+        "on": "mean"
+      }
+    ]
+  },
+  {
+    "label": "Level of highest education",
+    "definition": "level of highest education",
+    "comment": "education; person; highest; level",
+    "hasProperty": "level",
+    "hasStatisticalModifier": "highest",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": "education",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q8434"
+  },
+  {
+    "label": "Weight without clothes",
+    "definition": "current weight in kilogram without clothes; in case of pregnancy: last weight before pregnancy",
+    "comment": "patient; mass; condition: without clothes; time: current; conditional: if pregnant, last weight before pregnancy",
+    "hasProperty": "mass",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q11423",
+    "hasObjectOfInterest": "patient",
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q181600",
+    "hasConstraint": [
+      {
+        "label": "without clothes",
+        "on": "patient"
+      },
+      {
+        "label": "last unpregnant",
+        "on": "mass"
+      }
+    ]
+  },
+  {
+    "label": "Percentage Branched Perfluorooctane sulfonic acid (BPFOS)",
+    "definition": "Percentage Branched Perfluorooctane sulfonic acid in blood",
+    "comment": "condition: branched isomers, blood, Perfluorooctane sulfonic acid, percentage, person",
+    "hasProperty": "percentage",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q1907514",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n69922d18669d44dd846cab71cd79d909b1",
+      "hasSource": "Perfluorooctane sulfonic acid",
+      "hasTarget": "blood"
+    },
+    "hasConstraint": [
+      {
+        "label": "branched isomers",
+        "on": "Perfluorooctane sulfonic acid"
+      }
+    ]
+  },
+  {
+    "label": "Mass ratio of dehp in nail",
+    "definition": "Mass ratio in dehp in nail",
+    "comment": "nail, diethylhexyl phthalate, mass ratio, person",
+    "hasProperty": "mass ratio",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q1563068",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n7d3078a844f44bab90f04019d58cf399b1",
+      "hasSource": "diethylhexyl phthalate ",
+      "hasTarget": "nail"
+    }
+  },
+  {
+    "label": "Mass concentration of tbph in breast milk",
+    "definition": "Mass concentration of tbph in breast milk",
+    "comment": "breast milk, bis(2-ethylhexyl) tetrabromophthalate, mass concentration, person",
+    "hasProperty": "mass concentration",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+    "hasMatrix": "person",
+    "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+    "hasObjectOfInterest": {
+      "AsymmetricSystem": "n8e6bc6dfc27740d185a51beebe18d455b1",
+      "hasSource": "bis(2-ethylhexyl) tetrabromophthalate ",
+      "hasTarget": "breast milk"
+    }
+  },
+  {
     "label": "DRVA Direction of radial velocity of water current relative to instrument and to True North by high frequency radar",
-    "definition": "Direction of radial velocity of water current relative to instrument and to True North by high frequency radar.",
+    "definition": "The compass direction in degrees positive clockwise from TrueNorth of the component of water velocity in a water body along radial lines centered at the HFR antenna.",
     "comment": "Radial velocity (away from) of water current related to instrument; direction -> plane angle, relative to True North -> relative to True North",
     "hasProperty": "plane angle",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q2849635",
@@ -961,15 +1792,21 @@
       {
         "label": "relative to True North",
         "on": "plane angle"
+      },
+      {
+        "label": "positive degrees clockwise",
+        "on": "plane angle"
       }
     ]
   },
   {
     "label": "ESPC Radial velocity (away from) standard deviation over the scatter patch of water current relative to instrument in the water body by high frequency radar",
-    "definition": "Standard deviation of the radial velocity (away from) standard deviation over the scatter patch of water current relative to instrument in the water body by high frequency radar",
+    "definition": "Standard deviation of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the scatter patch",
     "comment": "water current; water body; at the surface; standard deviation; over the scatter patch; sea; velocity; radial; positive away from the instrument; relative to the instrument",
     "hasProperty": "Velocity",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+    "hasStatisticalModifier": "standard deviation",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q159375",
     "hasMatrix": "water body",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
     "hasObjectOfInterest": "water current",
@@ -1000,11 +1837,13 @@
     ]
   },
   {
-    "label": "ETMP Radial velocity (away from) standard deviation of water current relative to instrument in the water body by high frequency radar",
-    "definition": "Standard deviation Radial velocity (away from) inof water current relative to instrument in the water body by high frequency radar, evaluated over the coverage period",
+    "label": "Radial velocity (away from) standard deviation over the coverage period of water current relative to instrument in the water body by high frequency radar",
+    "definition": "Standard deviation of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the coverage period",
     "comment": "water current; water body; at the sea surface; standard deviation; over the temporal coverage period; sea; velocity; relative to instrument; positive away from the instrument; radial",
     "hasProperty": "velocity",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+    "hasStatisticalModifier": "standard deviation",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q159375",
     "hasMatrix": "water body",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
     "hasObjectOfInterest": "water current",
@@ -1036,7 +1875,7 @@
   },
   {
     "label": "EWCT Eastward velocity of water current in the water body by high frequency radar",
-    "definition": "Eastward velocity of water current in the water body by high frequency radar that is directed eastward (positive values) or westward (negative values)",
+    "definition": "Component of the sea surface current velocity that is directed eastward (positive values) or westward (negative values)",
     "comment": "Eastward; velocity; water current; water body; positive if eastward",
     "hasProperty": "velocity",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
@@ -1054,6 +1893,10 @@
       {
         "label": "at the surface",
         "on": "water body"
+      },
+      {
+        "label": "positive eastward",
+        "on": "velocity"
       }
     ]
   },
@@ -1069,14 +1912,30 @@
         "position of receiver",
         "position of transmitters"
       ]
-    }
+    },
+    "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q23008351"
   },
   {
-    "label": "HCSS Radial velocity variance of water current relative to instrument  in the water body by high frequency radar",
-    "definition": "Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+    "label": "GDOP threshold quality flag ",
+    "definition": "QC flags resulting from setting a threshold on GDOP. Setting a threshold on GDOP for total combination avoids the combination of radials with an intersection angle below a certain value.",
+    "comment": "QC flags resulting from setting a threshold on GDOP. Setting a threshold on GDOP for total combination avoids the combination of radials with an intersection angle below a certain value.",
+    "hasProperty": "quality flag",
+    "hasObjectOfInterest": "GDOP",
+    "hasConstraint": [
+      {
+        "label": "good if under the threshold value",
+        "on": "quality flag"
+      }
+    ]
+  },
+  {
+    "label": "HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+    "definition": "Variance of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the coverage period",
     "comment": "water current; water body; at the surface; variance; over the temporal coverage period; sea; velocity; relative to instrument; radial",
     "hasProperty": "velocity",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+    "hasStatisticalModifier": "variance",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q175199",
     "hasMatrix": "water body",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
     "hasObjectOfInterest": "water current",
@@ -1127,7 +1986,7 @@
   },
   {
     "label": "RDVA Radial velocity (away from) of water current relative to instrument in the water body by High Frequency Radar",
-    "definition": "Component of the sea surface current velocity that is directed toward (negative values) or away from (positive values) the High Frequency Radar (HFR) antenna.",
+    "definition": "Component of the sea surface current velocity that is directed toward (negative values) or away from (positive values) the High Frequency Radar (HFR) antenna, measured along the lines of sights of the antenna, i.e. along radial lines centered at the HFR antenna.",
     "comment": "water current, water body, at the surface, sea, velocity, relative to instrument, positive away from the instrument, radial",
     "hasProperty": "velocity",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
@@ -1157,11 +2016,21 @@
     ]
   },
   {
+    "label": "Eastward velocity uncertainty of water currentcy radar",
+    "definition": "Uncertainty of the eastward component of water velocity in a water body",
+    "comment": "eastward component of water velocity in a water body; confidence interval",
+    "hasProperty": "confidence interval",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q208498",
+    "hasObjectOfInterest": "eastward component of water velocity in a water body"
+  },
+  {
     "label": "UVAD Eastward velocity average in the water by a moored acoustic doppler current profile (ADCP)",
     "definition": "Eastward velocity average in the water by a moored acoustic doppler current profile measured in (m s-1)",
     "comment": "water current; water body; average value; sea; velocity; eastward; eulerian",
     "hasProperty": "velocity",
     "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
+    "hasStatisticalModifier": "average value",
+    "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q2796622",
     "hasMatrix": "water body",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
     "hasObjectOfInterest": "water current",
@@ -1180,27 +2049,18 @@
     ]
   },
   {
-    "label": "VART_QC Variance quality flag",
-    "definition": "QC flags for radial velocity variance of water current, good data flag for those whose temporal variance is smaller than a maximum variance threshold.",
-    "comment": "HCSS Radial velocity variance of water current, quality flag, good if under threshold value",
-    "hasProperty": "quality flag",
-    "hasObjectOfInterest": "HCSS Radial velocity variance of water current",
-    "hasConstraint": [
-      {
-        "label": "good if temporal variance is smaller than a maximum variance threshold",
-        "on": "quality flag"
-      },
-      {
-        "label": "quality flag",
-        "on": "quality flag"
-      }
-    ]
+    "label": "Northward velocity uncertainty of water current in the water body by high frequency radar",
+    "definition": "Uncertainty of the northward component of water velocity in a water body.",
+    "comment": "northward component of water velocity in a water body; confidence interval",
+    "hasProperty": "confidence interval",
+    "hasPropertyURI": "https://www.wikidata.org/wiki/Q208498",
+    "hasObjectOfInterest": "NSCT - Northward velocity of water current in the water body by high frequency radar"
   },
   {
-    "label": "Circulation-Method-in-Tube",
-    "definition": "Circulation method (gravity, forced, ...) of water in canalisation pipe",
-    "comment": "circulation method, water, pipe, canalisation",
-    "hasProperty": "CirculationMethod",
+    "label": "Circulation-Method-in-Pipe",
+    "definition": "Circulation mode (gravity, forced, ...) of water in canalisation pipe",
+    "comment": "circulation mode, water, pipe, canalisation",
+    "hasProperty": "Circulation Mode",
     "hasMatrix": "Pipe",
     "hasMatrixURI": "https://www.wikidata.org/wiki/Q41551",
     "hasObjectOfInterest": "Water",
@@ -1209,10 +2069,6 @@
       {
         "label": "canalisation",
         "on": "Pipe"
-      },
-      {
-        "label": "water circulation method",
-        "on": "CirculationMethod"
       }
     ]
   },
@@ -1230,10 +2086,6 @@
       {
         "label": "diameter of 30 cm",
         "on": "pipe connection"
-      },
-      {
-        "label": "state of pipe connection",
-        "on": "state"
       }
     ]
   }

@@ -1,0 +1,21 @@
+{
+  "label": "Water turbidity of stagnant surface water ",
+  "definition": "Water turbidity of stagnant surface water",
+  "comment": "state: stagnant, type: surface, turbidity, water body, water",
+  "hasProperty": "turbidity",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q898574",
+  "hasMatrix": "water body",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q15324",
+  "hasObjectOfInterest": "water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+  "hasConstraint": [
+    {
+      "label": "stagnant",
+      "on": "water body"
+    },
+    {
+      "label": "surface",
+      "on": "water"
+    }
+  ]
+}

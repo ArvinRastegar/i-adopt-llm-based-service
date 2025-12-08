@@ -1,0 +1,28 @@
+{
+  "label": "Sulfate organic nitrate in aerosol particles",
+  "definition": "Number fraction of aerosol particles from 0.1 um to larger than 1 um that are identified as sulfate-organic-nitrate internal mixtures.",
+  "comment": "Number fraction of aerosol particles from 0.1 um to larger than 1 um that are identified as sulfate-organic-nitrate internal mixtures.",
+  "hasProperty": "ratio",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q3481047",
+  "hasMatrix": "aerosol",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q104541",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n4985b60481364e3a868ac78fbb11af48b1",
+    "hasSource": "particle",
+    "hasTarget": "particle mixture"
+  },
+  "hasConstraint": [
+    {
+      "label": "mixture of sulfate-organic-nitrate",
+      "on": "particle"
+    },
+    {
+      "label": "total",
+      "on": "particle mixture"
+    },
+    {
+      "label": "0.1 µm to larger than 1 µm",
+      "on": "particle"
+    }
+  ]
+}

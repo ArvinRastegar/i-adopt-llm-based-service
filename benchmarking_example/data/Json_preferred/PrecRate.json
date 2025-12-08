@@ -1,0 +1,30 @@
+{
+  "label": "Daily maximum hourly precipitation rate",
+  "definition": "Daily maximum hourly precipitation rate, measured in kg m⁻² s⁻¹",
+  "comment": "frequency: hourly, frequency: daily, ground, atmosphere, mass flux, maximum, vegetation-soil system, water, ADD: origin: precipitation",
+  "hasProperty": "mass flux",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q3265048",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
+  "hasMatrix": {
+    "AsymmetricSystem": "vegetation-soil system",
+    "hasSource": "atmosphere",
+    "hasTarget": "ground"
+  },
+  "hasObjectOfInterest": "water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+  "hasConstraint": [
+    {
+      "label": "daily",
+      "on": "maximum"
+    },
+    {
+      "label": "hourly",
+      "on": "maximum"
+    },
+    {
+      "label": "precipitation",
+      "on": "water"
+    }
+  ]
+}

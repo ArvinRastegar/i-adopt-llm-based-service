@@ -1,0 +1,21 @@
+{
+  "label": "Pluvial flood due to 100 year event",
+  "definition": "Pluvial flood due to 100 year event expressed as water depth caused by rainfall of 36 mm/h in a statistical unit, defined by a grouping of homogeneous neighboring building blocks",
+  "comment": "Pluvial flood due to 100 year event expressed as water depth caused by rainfall of 36 mm/h in a statistical unit, defined by a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "depth",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q930412",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": "water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+  "hasConstraint": [
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    },
+    {
+      "label": "36 mm/h rainfall",
+      "on": "water"
+    }
+  ]
+}

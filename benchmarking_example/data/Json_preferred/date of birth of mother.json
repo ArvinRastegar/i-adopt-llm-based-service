@@ -1,0 +1,17 @@
+{
+  "label": "Date of birth of mother",
+  "definition": "date of birth of mother",
+  "comment": "birth; person; calendar date; condition: mother of patient",
+  "hasProperty": "calendar date",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q205892",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q215627",
+  "hasObjectOfInterest": "birth",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q14819852",
+  "hasConstraint": [
+    {
+      "label": "mother of person",
+      "on": "person"
+    }
+  ]
+}

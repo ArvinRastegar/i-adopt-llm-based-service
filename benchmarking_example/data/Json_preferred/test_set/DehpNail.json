@@ -1,0 +1,14 @@
+{
+  "label": "Mass ratio of dehp in nail",
+  "definition": "Mass ratio in dehp in nail",
+  "comment": "nail, diethylhexyl phthalate, mass ratio, person",
+  "hasProperty": "mass ratio",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q1563068",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n7d3078a844f44bab90f04019d58cf399b1",
+    "hasSource": "diethylhexyl phthalate ",
+    "hasTarget": "nail"
+  }
+}

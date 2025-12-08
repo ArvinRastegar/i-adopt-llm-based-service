@@ -1,0 +1,10 @@
+{
+  "label": "Observation of Rhesusform in blood",
+  "definition": "-Rhesusform in a blood sample",
+  "comment": "blood; patient; rhesusform",
+  "hasProperty": "rhesus formula",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "blood",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7873"
+}

@@ -1,0 +1,21 @@
+{
+  "label": "Number of persons receiving welfare in a statistical unit",
+  "definition": "number of persons receiving welfare in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "comment": "number of persons receiving welfare in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "number",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": "person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q215627",
+  "hasConstraint": [
+    {
+      "label": "receiving welfare",
+      "on": "person"
+    },
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    }
+  ]
+}

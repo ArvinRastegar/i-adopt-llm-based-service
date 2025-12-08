@@ -1,0 +1,14 @@
+{
+  "label": "Mass concentration of tbph in breast milk",
+  "definition": "Mass concentration of tbph in breast milk",
+  "comment": "breast milk, bis(2-ethylhexyl) tetrabromophthalate, mass concentration, person",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n8e6bc6dfc27740d185a51beebe18d455b1",
+    "hasSource": "bis(2-ethylhexyl) tetrabromophthalate ",
+    "hasTarget": "breast milk"
+  }
+}

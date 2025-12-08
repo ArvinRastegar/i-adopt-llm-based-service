@@ -1,0 +1,17 @@
+{
+  "label": "Country of birth of mother",
+  "definition": "country of birth of mother",
+  "comment": "birth; person; country; condition: mother of patient",
+  "hasProperty": "country",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q6256",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q215627",
+  "hasObjectOfInterest": "birth",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q14819852",
+  "hasConstraint": [
+    {
+      "label": "mother of patient",
+      "on": "person"
+    }
+  ]
+}

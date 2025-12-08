@@ -1,0 +1,23 @@
+{
+  "label": "Number of Hours of family activity per week",
+  "definition": "Number of Hours of family activity per week",
+  "comment": "hours; patient; condition: spent with family; mean; aggregation: weekly; number",
+  "hasProperty": "number",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+  "hasStatisticalModifier": "mean",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q2796622",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "hours",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q25235",
+  "hasConstraint": [
+    {
+      "label": "spent with family",
+      "on": "hours"
+    },
+    {
+      "label": "weekly",
+      "on": "mean"
+    }
+  ]
+}

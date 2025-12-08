@@ -1,0 +1,21 @@
+{
+  "label": "Number of children under the age of 10 years in a statistical unit",
+  "definition": "number of children under the age of 10 years in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "comment": "number; children; under the age of 10 years; statistical unit; defined by grouping of homogeneous neighboring building blocks",
+  "hasProperty": "number",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": "child",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7569",
+  "hasConstraint": [
+    {
+      "label": "age under 10 years",
+      "on": "child"
+    },
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    }
+  ]
+}

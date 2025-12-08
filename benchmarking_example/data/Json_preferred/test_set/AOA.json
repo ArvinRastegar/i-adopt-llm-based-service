@@ -1,0 +1,15 @@
+{
+  "label": "Aircraft Angle of Attack.",
+  "definition": "Aircraft Angle of Attack measured in degrees. The angle at which a straight line from the leading edge to the training edge of an aircraft’s wing meets the relative wind.",
+  "comment": "\"aircraft; type: angle of attack; angle",
+  "hasProperty": "angle",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11352",
+  "hasObjectOfInterest": "aircraft",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q11436",
+  "hasConstraint": [
+    {
+      "label": "angle of attack",
+      "on": "angle"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "label": "Observation of bloodtype in blood",
+  "definition": "Type of blood in a blood sample",
+  "comment": "blood; patient; clood type",
+  "hasProperty": "blood type",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q47657",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "blood",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7873"
+}

@@ -4,6 +4,8 @@
   "comment": "trunk -> tree trunk, char; height, maximum, due to fire; above ground.",
   "hasProperty": "height",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q208826",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
   "hasMatrix": "tree trunk",
   "hasMatrixURI": "https://www.wikidata.org/wiki/Q193472",
   "hasObjectOfInterest": "char",

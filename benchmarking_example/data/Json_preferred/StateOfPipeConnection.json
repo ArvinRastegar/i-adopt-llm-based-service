@@ -12,10 +12,6 @@
     {
       "label": "diameter of 30 cm",
       "on": "pipe connection"
-    },
-    {
-      "label": "state of pipe connection",
-      "on": "state"
     }
   ]
 }

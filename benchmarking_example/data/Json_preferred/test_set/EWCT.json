@@ -1,6 +1,6 @@
 {
   "label": "EWCT Eastward velocity of water current in the water body by high frequency radar",
-  "definition": "Eastward velocity of water current in the water body by high frequency radar that is directed eastward (positive values) or westward (negative values)",
+  "definition": "Component of the sea surface current velocity that is directed eastward (positive values) or westward (negative values)",
   "comment": "Eastward; velocity; water current; water body; positive if eastward",
   "hasProperty": "velocity",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q11465",
@@ -18,6 +18,10 @@
     {
       "label": "at the surface",
       "on": "water body"
+    },
+    {
+      "label": "positive eastward",
+      "on": "velocity"
     }
   ]
 }

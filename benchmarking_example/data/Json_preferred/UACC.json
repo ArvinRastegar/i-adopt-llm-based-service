@@ -1,0 +1,8 @@
+{
+  "label": "Eastward velocity uncertainty of water currentcy radar",
+  "definition": "Uncertainty of the eastward component of water velocity in a water body",
+  "comment": "eastward component of water velocity in a water body; confidence interval",
+  "hasProperty": "confidence interval",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q208498",
+  "hasObjectOfInterest": "eastward component of water velocity in a water body"
+}

@@ -1,0 +1,23 @@
+{
+  "label": "Average number of persons without high school diploma during the last 3 years within a statistical unit",
+  "definition": "Average number of persons without high school diploma during the last 3 years in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "comment": "Average number of persons without high school diploma during the last 3 years in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "number",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11563",
+  "hasStatisticalModifier": "arithmetic mean",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q19033",
+  "hasMatrix": "statistical unit",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q3409269",
+  "hasObjectOfInterest": "person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q215627",
+  "hasConstraint": [
+    {
+      "label": "without high school diploma in the past three years",
+      "on": "person"
+    },
+    {
+      "label": "grouping of homogeneous neighboring building blocks",
+      "on": "statistical unit"
+    }
+  ]
+}

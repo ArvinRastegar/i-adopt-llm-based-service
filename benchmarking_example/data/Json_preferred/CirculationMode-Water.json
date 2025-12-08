@@ -1,0 +1,16 @@
+{
+  "label": "Circulation-Method-in-Pipe",
+  "definition": "Circulation mode (gravity, forced, ...) of water in canalisation pipe",
+  "comment": "circulation mode, water, pipe, canalisation",
+  "hasProperty": "Circulation Mode",
+  "hasMatrix": "Pipe",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q41551",
+  "hasObjectOfInterest": "Water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q283",
+  "hasConstraint": [
+    {
+      "label": "canalisation",
+      "on": "Pipe"
+    }
+  ]
+}

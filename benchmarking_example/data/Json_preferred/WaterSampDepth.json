@@ -1,0 +1,15 @@
+{
+  "label": "Water sampling depth ",
+  "definition": "Water sampling depth (the distance from the top/surface to the bottom) from which the water was sampled",
+  "comment": "datum: distance from the surface to the bottom, water sampling, depth",
+  "hasProperty": "depth",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q930412",
+  "hasObjectOfInterest": "water sampling",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q30032096",
+  "hasConstraint": [
+    {
+      "label": "distance from the surface to the bottom",
+      "on": "depth"
+    }
+  ]
+}
