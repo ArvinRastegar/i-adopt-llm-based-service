@@ -2,4 +2,13 @@
 .env
 .DS_Store
 .log
+*.ttl
 benchmarking_outputs/onlyPhaseOne20251127_133804.xlsx
+benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_141104.log
+benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_142050.log
+.gitignore
+benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_142702.log
+benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_144738.log
+wikidata_cache.sqlite
+.gitignore
+benchmarking_example/spaCyFishing.py

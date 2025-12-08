@@ -89,7 +89,7 @@ client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPEN
 # --------------------------------------------------------------------------- #
 _SCHEMA_TEXT = SCHEMA_PATH.read_text(encoding="utf-8").strip()
 
-_SYSTEM_RULES = textwrap.dedent(
+SYSTEM_RULES = textwrap.dedent(
     """
     Follow the JSON-Schema exactly. Do not infer or invent new concepts.
 
@@ -105,8 +105,6 @@ _SYSTEM_RULES = textwrap.dedent(
     Output only the JSON object.
 """
 ).strip()
-
-BASELINE_INSTRUCTIONS = _SYSTEM_RULES
 
 STRICT_MINIMAL_GUIDE = textwrap.dedent(
     """
@@ -154,9 +152,9 @@ Extraction order:
 
 
 PROMPT_TEMPLATES = {
-    "strict_minimal": BASELINE_INSTRUCTIONS + "\n\n" + STRICT_MINIMAL_GUIDE,
-    "object_matrix_tree": BASELINE_INSTRUCTIONS + "\n\n" + OBJ_MATRIX_TREE,
-    "constraint_first": BASELINE_INSTRUCTIONS + "\n\n" + CONSTRAINT_FIRST_GUIDE,
+    "strict_minimal": SYSTEM_RULES + "\n\n" + STRICT_MINIMAL_GUIDE,
+    "object_matrix_tree": SYSTEM_RULES + "\n\n" + OBJ_MATRIX_TREE,
+    "constraint_first": SYSTEM_RULES + "\n\n" + CONSTRAINT_FIRST_GUIDE,
 }
 
 _EXAMPLE_HDR = "\n\n### Examples (valid against the same schema)\n"
