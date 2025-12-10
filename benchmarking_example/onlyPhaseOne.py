@@ -30,7 +30,6 @@ from sentence_transformers import SentenceTransformer, util
 load_dotenv()
 
 SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
-SCHEMA_PATH = SCRIPT_DIR / "data" / "Json_schema.json"
 DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "test_set"
 ONE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/one_shot"
 THREE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/three_shot"
@@ -87,75 +86,49 @@ client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPEN
 # --------------------------------------------------------------------------- #
 # ▪ Prompt helpers
 # --------------------------------------------------------------------------- #
+SCHEMA_PATH = SCRIPT_DIR / "data" / "Json_schema.json"
+PROMPT_DIR = SCRIPT_DIR / "data" / "prompts"  # data/prompts
+
 _SCHEMA_TEXT = SCHEMA_PATH.read_text(encoding="utf-8").strip()
 
-SYSTEM_RULES = textwrap.dedent(
+
+@lru_cache(maxsize=None)
+def list_prompt_versions() -> List[str]:
     """
-    Follow the JSON-Schema exactly. Do not infer or invent new concepts.
-
-    definition must be exactly the same string as provided.
-    comment = short summary of the definition. Do not add new ideas.
-
-    hasProperty = the main measurable property in the definition.
-    hasObjectOfInterest = the thing that has this property.
-    hasMatrix = the medium in which the object occurs. Never a method or location.
-
-    If a required key is not in the definition, output an empty string for it.
-
-    Output only the JSON object.
-"""
-).strip()
-
-STRICT_MINIMAL_GUIDE = textwrap.dedent(
+    Discover available prompt versions from data/prompts/*.txt.
+    Version name = filename stem (e.g. strict_minimal.txt -> 'strict_minimal').
     """
-Additional rules:
+    if not PROMPT_DIR.exists():
+        logging.warning("PROMPT_DIR %s does not exist", PROMPT_DIR)
+        return []
+    return sorted(p.stem for p in PROMPT_DIR.glob("*.txt"))
 
-• Only extract what is explicitly stated in the definition.
-• hasProperty = the main measurable characteristic.
-• hasObjectOfInterest = the thing that has that characteristic.
-• hasMatrix = medium the object is in, only if directly stated.
-• hasConstraint = only conditions explicitly stated.
-• If unsure: leave it empty. Do not guess.
-"""
-).strip()
 
-OBJ_MATRIX_TREE = textwrap.dedent(
+@lru_cache(maxsize=None)
+def load_prompt_instructions(prompt_version: str) -> str:
     """
-Decision rules:
-
-1. Identify hasProperty first.
-2. Identify hasObjectOfInterest:
-   → the entity that carries the property.
-3. Identify hasMatrix only if the definition clearly states
-   the medium or material the object is inside.
-4. If a phrase describes a condition/state, not a medium:
-   → put it in hasConstraint.
-5. Never use methods, units, instruments, or locations.
-"""
-).strip()
-
-CONSTRAINT_FIRST_GUIDE = textwrap.dedent(
+    Load the instruction text for a given prompt_version from data/prompts/<name>.txt.
+    Falls back to 'strict_minimal' if the requested file is missing.
     """
-Extraction order:
+    available = list_prompt_versions()
 
-1. Copy definition exactly.
-2. Extract hasProperty (main measurable characteristic).
-3. Extract hasObjectOfInterest (entity with that property).
-4. Extract hasMatrix only if the definition states a medium.
-5. Extract hasConstraint last:
-   • Only explicit limiting phrases.
-   • label = short phrase
-   • on = EXACT string from hasProperty or an entity
-6. Never paraphrase or introduce new concepts.
-"""
-).strip()
+    if not available:
+        raise RuntimeError(f"No prompt templates found in {PROMPT_DIR}")
 
+    # Fallback logic
+    if not prompt_version:
+        prompt_version = "strict_minimal"
+    if prompt_version not in available:
+        logging.warning(
+            "Prompt version '%s' not found in %s. Falling back to 'strict_minimal'.",
+            prompt_version,
+            PROMPT_DIR,
+        )
+        prompt_version = "strict_minimal"
 
-PROMPT_TEMPLATES = {
-    "strict_minimal": SYSTEM_RULES + "\n\n" + STRICT_MINIMAL_GUIDE,
-    "object_matrix_tree": SYSTEM_RULES + "\n\n" + OBJ_MATRIX_TREE,
-    "constraint_first": SYSTEM_RULES + "\n\n" + CONSTRAINT_FIRST_GUIDE,
-}
+    path = PROMPT_DIR / f"{prompt_version}.txt"
+    return path.read_text(encoding="utf-8").strip()
+
 
 _EXAMPLE_HDR = "\n\n### Examples (valid against the same schema)\n"
 _USER_HDR = "\n\n### Variable's definition to decompose\n"
@@ -165,8 +138,8 @@ _EXPECTED = "\n\n### Expected output\n*(only the JSON object)*"
 def build_prompt(definition: str, examples: List[Dict[str, Any]] | None, prompt_version: str) -> str:
     examples = examples or []
 
-    # Pick the template by name (fallback = strict_minimal)
-    instructions = PROMPT_TEMPLATES.get(prompt_version, PROMPT_TEMPLATES["strict_minimal"])
+    # Load instructions from file (fallback handled inside)
+    instructions = load_prompt_instructions(prompt_version)
 
     ex_block = (
         _EXAMPLE_HDR + "\n\n".join(json.dumps(e, indent=2, ensure_ascii=False) for e in examples) if examples else ""
@@ -866,7 +839,7 @@ def main() -> None:
     parser.add_argument("--data-dir", type=pathlib.Path, default=DATA_DIR)
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
     parser.add_argument("--max-vars", type=int, default=105)
-    parser.add_argument("--workers", type=int, default=16)
+    parser.add_argument("--workers", type=int, default=128)
 
     parser.add_argument(
         "--shot",
@@ -878,17 +851,17 @@ def main() -> None:
     parser.add_argument(
         "--prompt-version",
         type=str,
-        choices=list(PROMPT_TEMPLATES.keys()),
-        help="If provided: run only this prompt version. If omitted: run all prompt versions.",
+        choices=list_prompt_versions() or None,  # if no files, allow anything and fallback
+        help="If provided: run only this prompt version. If omitted: run all prompt versions found in data/prompts.",
     )
 
     args = parser.parse_args()
 
     # Determine which prompt versions to run
     if args.prompt_version is None:
-        prompt_versions = list(PROMPT_TEMPLATES.keys())  # all
+        prompt_versions = list_prompt_versions() or ["strict_minimal"]
     else:
-        prompt_versions = [args.prompt_version]  # only selected
+        prompt_versions = [args.prompt_version]
 
     # Determine which shots to run
     if args.shot is None:
