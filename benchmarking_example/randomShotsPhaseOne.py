@@ -11,7 +11,7 @@ import os
 import pathlib
 import re
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple, Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
 from itertools import product
@@ -24,11 +24,18 @@ from openai import APIStatusError, OpenAI, OpenAIError
 from sentence_transformers import SentenceTransformer, util
 import random
 from threading import Lock
+import torch
+
+torch.set_grad_enabled(False)
 
 # --------------------------------------------------------------------------- #
 # ▪ Static configuration
 # --------------------------------------------------------------------------- #
 load_dotenv()
+# --------------------------------------------------------------------------- #
+# ▪ Global embedder (thread-safe, preloaded)
+# --------------------------------------------------------------------------- #
+EMBEDDER = None
 
 # USED_EXAMPLE_SIGNATURES = set()
 
@@ -44,13 +51,32 @@ OUTBOOK_DIR.mkdir(exist_ok=True)
 
 MODEL_NAMES = [
     "qwen/qwen3-32b",
+    # "qwen/qwen3-8b",
     # "qwen/qwen3-30b-a3b-instruct-2507",
-    # "meta-llama/llama-4-maverick",
+    "meta-llama/llama-3-8b-instruct",
+    # "openai/gpt-4o",
+    "mistralai/mistral-7b-instruct",
+    "openai/gpt-4o-mini",
     # "meta-llama/llama-3.3-70b-instruct",
     # "openai/gpt-5.1-chat",
     # "qwen/qwen3-235b-a22b-thinking-2507",
 ]
-TEMPERATURES = [0.5]  # can be extended later
+
+# --------------------------------------------------------------------------- #
+# ▪ Table 1 (MODE_FIXED) – full grid search
+#   Fixed examples, evaluate on (test_set minus the 5 fixed vars)
+#   Run ALL combinations of:
+#     - all models in MODEL_NAMES
+#     - all temperatures in TEMPERATURES
+#     - all prompt versions found in data/prompts/*.txt
+#     - all shots in FIXED_GRID_SHOTS
+# --------------------------------------------------------------------------- #
+FIXED_GRID_SHOTS = [0, 1, 3, 5]
+# Models = MODEL_NAMES
+# Temperatures = TEMPERATURES
+# PromptVersions = list_prompt_versions() (computed at runtime)
+
+TEMPERATURES = [0, 0.5, 1, 2]  # can be extended later
 
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
 CLOSE_THR = 0.80
@@ -63,6 +89,35 @@ ONTO_KEYS = [
     "hasContextObject",
     "hasConstraint",
 ]
+# --------------------------------------------------------------------------- #
+# ▪ Experiment modes
+# --------------------------------------------------------------------------- #
+MODE_FREE = "free-grid"
+MODE_FIXED = "fixed-examples-grid"
+MODE_BEST = "best-random-examples"
+
+# --------------------------------------------------------------------------- #
+# ▪ Fixed example pool (hard-coded, ordered)
+#   IMPORTANT: these paths must match obj["__path"] values (e.g. "test_set/xxx.json")
+# --------------------------------------------------------------------------- #
+FIXED_EXAMPLE_PATHS = [
+    "test_set/sfcWindmax.json",
+    "test_set/DetritalNitrogenConc.json",
+    "test_set/HeartRate.json",
+    "test_set/SoilMoist.json",
+    "test_set/SurfRunoff.json",
+]
+
+# --------------------------------------------------------------------------- #
+# ▪ Best config for Table 2 (hard-coded; no CLI controls)
+#   Update these once you’ve decided the best configuration.
+# --------------------------------------------------------------------------- #
+BEST_TABLE2_CONFIG = {
+    "prompt_version": "strict_minimal",
+    "shot": 5,
+    "temperature": 0.5,
+    "models": ["qwen/qwen3-32b", "qwen/qwen3-8b"],
+}
 
 # --------------------------------------------------------------------------- #
 # ▪ Logging
@@ -234,8 +289,10 @@ def call_llm_loose(model: str, prompt: str, definition: str, temperature: float)
         # success → post-process and return
         data["definition"] = definition
         for key in ONTO_KEYS:
-            if key not in data:
+            if key not in data or data[key] is None:
                 data[key] = [] if key == "hasConstraint" else ""
+            elif key == "hasConstraint" and not isinstance(data[key], list):
+                data[key] = []
         return data
 
     # after 3 JSON extraction failures
@@ -247,12 +304,16 @@ def call_llm_loose(model: str, prompt: str, definition: str, temperature: float)
 # ▪ Similarity & confusion helpers (from original benchmark, simplified)
 # --------------------------------------------------------------------------- #
 @lru_cache(maxsize=2)
-def load_embedder(model_name: str = EMBED_MODEL_NAME) -> SentenceTransformer:
-    return SentenceTransformer(model_name)
+def init_embedder():
+    global EMBEDDER
+    if EMBEDDER is None:
+        logging.info("Loading SentenceTransformer model once (thread-safe)...")
+        EMBEDDER = SentenceTransformer(EMBED_MODEL_NAME, device="cpu")
+    return EMBEDDER
 
 
 def _cosine(a: str, b: str, model_name: str) -> float:
-    embedder = load_embedder(model_name)
+    embedder = init_embedder()
     emb1 = embedder.encode(a, convert_to_tensor=True)
     emb2 = embedder.encode(b, convert_to_tensor=True)
     return util.cos_sim(emb1, emb2).item()
@@ -427,6 +488,8 @@ def confusion_constraints(
         # no GT but some predictions => all FP
         return 0.0, 1.0, 0.0, 0.0
 
+    gt_list = gt_list or []
+    pred_list = pred_list or []
     n_gt, n_pred = len(gt_list), len(pred_list)
     unit = 1.0 / (2 * n_gt)  # same scaling as before
     thr = CLOSE_THR if close else 1.0
@@ -549,6 +612,7 @@ _log_lock = Lock()
 
 
 def _run_one(
+    mode: str,  # NEW
     model: str,
     temperature: float,
     prompt_version: str,
@@ -561,12 +625,12 @@ def _run_one(
     tested_labels: List[str],
     tested_paths: List[str],
 ) -> Dict[str, Any]:
-
     logs = []
     # Header line
     logs.append(
-        "MODEL | {model} | shot={shot} | T={temp:.2f} | prompt={pv} | "
+        "MODE | {mode} | MODEL | {model} | shot={shot} | T={temp:.2f} | prompt={pv} | "
         "variable={var} | repetition={rep}".format(
+            mode=mode,
             model=model,
             shot=shot,
             temp=temperature,
@@ -613,6 +677,7 @@ def _run_one(
         logging.info("\n".join(logs))
 
     return {
+        "mode": mode,
         "variable": gt["label"],
         "ground_truth_json": gt,
         "predicted_json": pred,
@@ -630,6 +695,33 @@ def _run_one(
     }
 
 
+def _load_all_vars(data_dir: pathlib.Path, max_vars: int) -> Tuple[List[Dict[str, Any]], Dict[str, Dict[str, Any]]]:
+    all_paths = sorted(data_dir.glob("*.json"))[:max_vars]
+    all_vars: List[Dict[str, Any]] = []
+    by_path: Dict[str, Dict[str, Any]] = {}
+
+    for p in all_paths:
+        obj = json.load(open(p, "r", encoding="utf-8"))
+        obj["__path"] = str(p.relative_to(DATA_DIR.parent))  # e.g. "test_set/xxx.json"
+        all_vars.append(obj)
+        by_path[obj["__path"]] = obj
+
+    return all_vars, by_path
+
+
+def _resolve_fixed_examples(by_path: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    missing = [p for p in FIXED_EXAMPLE_PATHS if p not in by_path]
+    if missing:
+        raise RuntimeError(f"Fixed example paths not found in loaded dataset: {missing}")
+    return [by_path[p] for p in FIXED_EXAMPLE_PATHS]
+
+
+def _deterministic_take(items: List[Dict[str, Any]], n: int) -> List[Dict[str, Any]]:
+    # deterministic order by __path (stable across machines)
+    items_sorted = sorted(items, key=lambda x: x.get("__path", ""))
+    return items_sorted[: min(n, len(items_sorted))]
+
+
 # --------------------------------------------------------------------------- #
 # ▪ Evaluation loop: run Phase 1 for a given shot
 # --------------------------------------------------------------------------- #
@@ -643,48 +735,89 @@ def evaluate(
     workers: int,
     num_random_sets: int,
     test_per_set: int,
+    mode: str,  # NEW
 ) -> List[Dict[str, Any]]:
 
-    # Load ONLY the first max_vars variables
-    all_paths = sorted(data_dir.glob("*.json"))[:max_vars]
-    all_vars: List[Dict[str, Any]] = []
-    for p in all_paths:
-        obj = json.load(open(p))
-        # store path relative to Json_preferred (parent of test_set)
-        obj["__path"] = str(p.relative_to(DATA_DIR.parent))  # e.g. "test_set/xxx.json"
-        all_vars.append(obj)
-
+    all_vars, by_path = _load_all_vars(data_dir, max_vars)
     results: List[Dict[str, Any]] = []
 
-    # Repeat for N random example sets
-    for rep in range(num_random_sets):
+    fixed_pool = _resolve_fixed_examples(by_path)  # ordered list of 5 vars
+    reserved_labels_all5 = {v["label"] for v in fixed_pool}
+
+    # repetition handling
+    reps = 1 if mode == MODE_FIXED else num_random_sets
+
+    for rep in range(reps):
         repetition_id = rep + 1
-        logging.info(f"---- Repetition {repetition_id}/{num_random_sets} ----")
-
-        # 1) pick examples
-        if shot_mode > 0:
-            examples = random_sample_examples(all_vars, k=shot_mode)
-            example_labels = [ex["label"] for ex in examples]
-            example_paths = [ex["__path"] for ex in examples]
-        else:
-            examples = []
-            example_labels = []
-            example_paths = []
-
-        # 2) pick tested variables = random subset of remaining
-        remaining = [v for v in all_vars if v["label"] not in example_labels]
-        if not remaining:
-            logging.warning("No remaining variables to test after excluding examples.")
-            continue
-
-        tested_vars = random.sample(remaining, min(test_per_set, len(remaining)))
-        tested_labels = [v["label"] for v in tested_vars]
-        tested_paths = [v["__path"] for v in tested_vars]
+        logging.info(f"---- Mode={mode} | Repetition {repetition_id}/{reps} ----")
 
         models_to_run = models or MODEL_NAMES
         tasks = []
 
-        # 3) build tasks
+        # ----------------------------
+        # MODE_FIXED: fixed examples + grid search
+        # - examples in prompt are first K fixed vars (K=shot_mode)
+        # - tested set is ALWAYS (all_vars - all 5 fixed vars), regardless of shot
+        # - tested set is deterministic
+        # ----------------------------
+        if mode == MODE_FIXED:
+            if shot_mode > len(FIXED_EXAMPLE_PATHS):
+                raise ValueError(f"shot_mode={shot_mode} > fixed example pool size={len(FIXED_EXAMPLE_PATHS)}")
+
+            examples = fixed_pool[:shot_mode] if shot_mode > 0 else []
+            example_labels = [ex["label"] for ex in examples]
+            example_paths = [ex["__path"] for ex in examples]
+
+            tested_pool = [v for v in all_vars if v["label"] not in reserved_labels_all5]
+            tested_vars = _deterministic_take(tested_pool, test_per_set)
+            tested_labels = [v["label"] for v in tested_vars]
+            tested_paths = [v["__path"] for v in tested_vars]
+
+        # ----------------------------
+        # MODE_BEST: best config (hard-coded) + random example sets + 2 models
+        # - exclude the 5 fixed vars from both sampling and evaluation
+        # - examples randomly sampled from remaining pool
+        # - tested vars randomly sampled from remaining after excluding examples
+        # ----------------------------
+        elif mode == MODE_BEST:
+            base_pool = [v for v in all_vars if v["label"] not in reserved_labels_all5]
+
+            if shot_mode > 0:
+                examples = random.sample(base_pool, k=shot_mode)
+                example_labels = [ex["label"] for ex in examples]
+                example_paths = [ex["__path"] for ex in examples]
+            else:
+                examples, example_labels, example_paths = [], [], []
+
+            remaining = [v for v in base_pool if v["label"] not in set(example_labels)]
+            tested_vars = random.sample(remaining, min(test_per_set, len(remaining)))
+            tested_labels = [v["label"] for v in tested_vars]
+            tested_paths = [v["__path"] for v in tested_vars]
+
+        # ----------------------------
+        # MODE_FREE: keep current behavior (random examples + random tested subset)
+        # ----------------------------
+        elif mode == MODE_FREE:
+            if shot_mode > 0:
+                examples = random_sample_examples(all_vars, k=shot_mode)
+                example_labels = [ex["label"] for ex in examples]
+                example_paths = [ex["__path"] for ex in examples]
+            else:
+                examples, example_labels, example_paths = [], [], []
+
+            remaining = [v for v in all_vars if v["label"] not in set(example_labels)]
+            if not remaining:
+                logging.warning("No remaining variables to test after excluding examples.")
+                continue
+
+            tested_vars = random.sample(remaining, min(test_per_set, len(remaining)))
+            tested_labels = [v["label"] for v in tested_vars]
+            tested_paths = [v["__path"] for v in tested_vars]
+
+        else:
+            raise ValueError(f"Unknown mode: {mode}")
+
+        # build tasks (models x temps x tested_vars)
         for gt in tested_vars:
             definition = gt.get("definition") or gt.get("comment")
             prompt = build_prompt(definition, examples, prompt_version)
@@ -693,6 +826,7 @@ def evaluate(
                 for temp in temps:
                     tasks.append(
                         (
+                            mode,  # NEW (passed into _run_one)
                             model,
                             temp,
                             prompt_version,
@@ -707,11 +841,14 @@ def evaluate(
                         )
                     )
 
-        # 4) Run tasks in parallel
         with ThreadPoolExecutor(max_workers=workers) as pool:
             futs = [pool.submit(_run_one, *task) for task in tasks]
             for f in as_completed(futs):
-                r = f.result()
+                try:
+                    r = f.result()
+                except Exception as e:
+                    logging.exception("Worker failed but run continues")
+                    continue
                 if r:
                     results.append(r)
 
@@ -726,6 +863,7 @@ def compute_summary_metrics(results: List[Dict[str, Any]]) -> pd.DataFrame:
 
     for r in results:
         key = (
+            r.get("mode", ""),
             r["model"],
             r["temperature"],
             r["prompt_version"],
@@ -742,6 +880,7 @@ def compute_summary_metrics(results: List[Dict[str, Any]]) -> pd.DataFrame:
 
     for key, rows in groups.items():
         (
+            mode,
             model,
             temp,
             prompt_version,
@@ -797,6 +936,7 @@ def compute_summary_metrics(results: List[Dict[str, Any]]) -> pd.DataFrame:
                 per_key[k]["close"]["tn"] += tn
 
         row_out: Dict[str, Any] = {
+            "Mode": mode,
             "Model": model,
             "Temperature": temp,
             "PromptVersion": prompt_version,
@@ -864,6 +1004,7 @@ def build_excel(results: List[Dict[str, Any]]) -> None:
                     {
                         "variable": r["variable"],
                         "model": r["model"],
+                        "mode": r.get("mode", ""),
                         "temperature": r["temperature"],
                         "prompt_version": r["prompt_version"],
                         "shot": r["shot"],
@@ -886,6 +1027,7 @@ def build_excel(results: List[Dict[str, Any]]) -> None:
                 {
                     "variable": r["variable"],
                     "model": r["model"],
+                    "mode": r.get("mode", ""),
                     "temperature": r["temperature"],
                     "prompt_version": r["prompt_version"],
                     "shot": r["shot"],
@@ -910,11 +1052,12 @@ def build_excel(results: List[Dict[str, Any]]) -> None:
 # ▪ CLI
 # --------------------------------------------------------------------------- #
 def main() -> None:
+    init_embedder()
     parser = argparse.ArgumentParser(description="I-ADOPT LLM Phase 1 – Matrix & Constraint comparison + evaluation")
     parser.add_argument("--data-dir", type=pathlib.Path, default=DATA_DIR)
     parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
     parser.add_argument("--max-vars", type=int, default=105)
-    parser.add_argument("--workers", type=int, default=96)
+    parser.add_argument("--workers", type=int, default=32, help="Number of parallel workers to use.")
     parser.add_argument("--random-sets", type=int, default=10, help="Number of random example sets to run per shot.")
 
     parser.add_argument(
@@ -934,22 +1077,44 @@ def main() -> None:
     )
 
     parser.add_argument(
-        "--test-per-set", type=int, default=100, help="Number of GT variables to evaluate per random-shot set."
+        "--test-per-set", type=int, default=96, help="Number of GT variables to evaluate per random-shot set."
+    )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=[MODE_FREE, MODE_FIXED, MODE_BEST],
+        default=MODE_FREE,
+        help="Experiment mode",
     )
 
     args = parser.parse_args()
 
-    # Determine which prompt versions to run
-    if args.prompt_version is None:
-        prompt_versions = list_prompt_versions() or ["strict_minimal"]
+    # prompt versions
+    if args.mode == MODE_BEST:
+        prompt_versions = [BEST_TABLE2_CONFIG["prompt_version"]]
+    elif args.mode == MODE_FIXED:
+        prompt_versions = list_prompt_versions() or ["strict_minimal"]  # ALL prompts
     else:
-        prompt_versions = [args.prompt_version]
+        prompt_versions = (
+            [args.prompt_version] if args.prompt_version else (list_prompt_versions() or ["strict_minimal"])
+        )
 
-    # Determine which shots to run
-    if args.shot is None:
-        shots = [0, 1, 3, 5]  # all
+    # shots
+    if args.mode == MODE_BEST:
+        shots = [BEST_TABLE2_CONFIG["shot"]]
+    elif args.mode == MODE_FIXED:
+        shots = FIXED_GRID_SHOTS  # ALL shots
     else:
-        shots = [args.shot]  # only selected
+        shots = [args.shot]
+
+    # models + temps
+    if args.mode == MODE_BEST:
+        temps = [BEST_TABLE2_CONFIG["temperature"]]
+        models = BEST_TABLE2_CONFIG["models"]
+    else:
+        temps = TEMPERATURES
+        models = MODEL_NAMES if args.mode == MODE_FIXED else args.only_model
+
     # Full evaluation grid
     all_results: List[Dict[str, Any]] = []
 
@@ -962,11 +1127,12 @@ def main() -> None:
                 shot_mode=shot,
                 prompt_version=pv,
                 max_vars=args.max_vars,
-                models=args.only_model,
-                temps=TEMPERATURES,
+                models=models,
+                temps=temps,
                 workers=args.workers,
-                num_random_sets=args.random_sets,
+                num_random_sets=(1 if args.mode == MODE_FIXED else args.random_sets),
                 test_per_set=args.test_per_set,
+                mode=args.mode,
             )
 
             all_results.extend(results_single)

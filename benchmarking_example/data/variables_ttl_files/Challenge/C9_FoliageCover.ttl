@@ -3,7 +3,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ex: <http://example.org/iadopt/challenge/> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
 
 ex:C9
     a 
@@ -12,38 +11,41 @@ ex:C9
         "Foliage projective cover in the lower canopy strata" ;
     skos:definition 
         """The proportion (percentage) of the ground area covered by foliage (or photosynthetic tissue) in the lower canopy strata.""" ;
-    rdfs:comment "foliage, lower canopy strata, ground, cover -> area fraction";
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP15.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP33.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP69.yaml> ;
-    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/15> ;
+    rdfs:comment "foliage, lower canopy strata, ground, proportion -> fraction";
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/15" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q18250160> ;
-    iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q36133> ;
+        _:b0 ;
     iop:hasProperty 
-        <http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction> ;
+        <https://www.wikidata.org/entity/Q11229> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "layer: lower canopy strata" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q18250160> ;
+             iop:constrains <https://www.wikidata.org/entity/Q18250160> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q18250160>
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q18250160> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q112117182> .
+
+<https://www.wikidata.org/entity/Q11229>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "percentage" .
+
+<https://www.wikidata.org/entity/Q18250160>
     a 
         iop:Entity ;
     rdfs:label 
         "foliage" .
 
-<https://www.wikidata.org/wiki/Q36133>
+<https://www.wikidata.org/entity/Q112117182>
     a 
         iop:Entity ;
     rdfs:label 
-        "ground" .
-
-<http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction>
-    a 
-        iop:Property ;
-    rdfs:label 
-        "area fraction" .
+        "study area" .

@@ -14,38 +14,36 @@ ex:C15
     skos:definition
         """Size of planktic foraminifers in surface sediments, see https://doi.pangaea.de/10.1594/PANGAEA.126730""" ;
     rdfs:comment "foraminifera, sediment, size, planctonic -> type: planktonic, surface -> location: surface" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP61.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/21" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q107027> ;
+        <https://www.wikidata.org/entity/Q107027> ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q180184> ;
+        <https://www.wikidata.org/entity/Q180184> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q322481> ;
+        <https://www.wikidata.org/entity/Q322481> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "type: planktonic" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q107027> ;
+             iop:constrains <https://www.wikidata.org/entity/Q107027> ;
         ] ,
         [ a iop:Constraint ;
              rdfs:label "location: surface" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q180184> ;
+             iop:constrains <https://www.wikidata.org/entity/Q180184> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q107027>
+<https://www.wikidata.org/entity/Q107027>
     a 
         iop:Entity ;
     rdfs:label 
         "foraminifera" .
 
-<https://www.wikidata.org/wiki/Q180184>
+<https://www.wikidata.org/entity/Q180184>
     a 
         iop:Entity ;
     rdfs:label 
         "sediment" .
 
-<https://www.wikidata.org/wiki/Q322481>
+<https://www.wikidata.org/entity/Q322481>
     a 
         iop:Property ;
     rdfs:label 

@@ -13,41 +13,45 @@ ex:C17
         "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)" ;
     skos:definition 
         """The amount of docosahexaenoic acid relative to dry weight in an organism.""" ;
-    rdfs:comment "docosahexaenoic acid, organism, mass fraction, dry -> state: dry, ADD: normalization: per unit mass" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP21.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP31.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP76.yaml> ;
+    rdfs:comment "docosahexaenoic acid, organism, mass fraction, dry -> state: dry" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/23" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q423345> ;
-    iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q7239> ;
+        _:b0 ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q899138> ;
+        <https://www.wikidata.org/entity/Q66055> ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q66055> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
-             rdfs:label "condition: dry" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q7239> ;
-        ] ,
-        [ a iop:Constraint ;
-             rdfs:label "normalization: per unit mass" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q899138> ;
+             rdfs:label "state: dry" ;
+             iop:constrains <https://www.wikidata.org/entity/Q7239> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q423345>
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q423345> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q7239> .
+
+<https://www.wikidata.org/entity/Q66055>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass fraction" .
+
+<https://www.wikidata.org/entity/Q423345>
     a 
         iop:Entity ;
     rdfs:label 
         "docosahexaenoic acid" .
 
-<https://www.wikidata.org/wiki/Q7239>
+<https://www.wikidata.org/entity/Q7239>
     a 
         iop:Entity ;
     rdfs:label 
         "organism" .
-
-<https://www.wikidata.org/wiki/Q899138>
-    a 
-        iop:Property ;
-    rdfs:label 
-        "mass fraction" .

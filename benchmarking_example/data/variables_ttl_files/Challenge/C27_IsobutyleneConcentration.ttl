@@ -17,40 +17,38 @@ ex:C27
         """Mass concentration of isobutylene in chloroform, measured in g/l.""" ;
     rdfs:comment
         """Mass concentration; isobutylene; chloroform; ADD: per unit mass""" ;  
-    iop:pattern
-       <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
-    iop:pattern
-       <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP17.yaml> ;
-    iop:pattern
-       <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
-    iop:pattern
-       <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/33" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q776976> ;
-    iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q172275> ;
+        _:b0 ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q589446> ;
-    iop:hasConstraint 
-        [ a iop:Constraint ;
-             rdfs:label "normalization: per unit volume" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q589446> ;
-        ] .
+        <https://www.wikidata.org/entity/Q589446> .
 
-<https://www.wikidata.org/wiki/Q776976>
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    rdfs:label 
+        "ratio" ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q776976> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q172275> .
+
+<https://www.wikidata.org/entity/Q589446>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass concentration" .
+
+<https://www.wikidata.org/entity/Q776976>
     a 
         iop:Entity ;
     rdfs:label 
         "isobutylene" .
 
-<https://www.wikidata.org/wiki/Q172275>
+<https://www.wikidata.org/entity/Q172275>
     a 
         iop:Entity ;
     rdfs:label 
         "chloroform" .
-
-<https://www.wikidata.org/wiki/Q589446>
-    a 
-        iop:Property ;
-    rdfs:label 
-        "mass concentration" .

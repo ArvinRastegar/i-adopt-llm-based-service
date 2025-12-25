@@ -3,8 +3,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ex: <http://example.org/iadopt/> .
-@prefix patt: <http://example.org/iadopt/pattern> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
 
 ex:C1
     a 
@@ -13,38 +11,35 @@ ex:C1
         "Electron density in the solar wind" ;
     skos:definition "Density (particle per cm3) of electrons measured in the Solar Wind." ;
     rdfs:comment "density, electron, solar wind" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/1.md> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/10.md> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/14.md> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/30.md> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/71.md> ;
-    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/7> ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/7" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q2225> ;
-    iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q79833> ;
+        _:b0 ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q108914962> ;
-    iop:hasConstraint 
-        [ a iop:Constraint ;
-             rdfs:label "normalization: per unit volume" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q108914962> ;
-        ] .
+        <https://www.wikidata.org/entity/Q108914962> .
 
-<https://www.wikidata.org/wiki/Q2225>
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q2225> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q79833> .
+
+<https://www.wikidata.org/entity/Q108914962>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "number density" .
+
+<https://www.wikidata.org/entity/Q2225>
     a 
         iop:Entity ;
     rdfs:label 
         "electron" .
 
-<https://www.wikidata.org/wiki/Q79833>
+<https://www.wikidata.org/entity/Q79833>
     a 
         iop:Entity ;
     rdfs:label 
         "solar wind" .
-
-<https://www.wikidata.org/wiki/Q108914962>
-    a 
-        iop:Property ;
-    rdfs:label 
-        "number density" .

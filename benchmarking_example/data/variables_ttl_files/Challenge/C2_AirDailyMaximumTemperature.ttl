@@ -17,26 +17,22 @@ ex:C2
     rdfs:comment
         """Thermodynamic temperature; air; in a height of 1.7 meter; daily; maximum - ADD: atmosphere (to distinguish it from indoors); 
 VDP10 for property;  VDP40 for context object; VDP66 for constraint:datum; VDP67 for constraint:condition.""" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP40.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP66.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
-    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/8> ;
-    iopp:hasObjectOfInterest 
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/8" ;
+    iop:hasObjectOfInterest 
         <https://www.wikidata.org/wiki/Q7391292> ;
-    iop:hasContextObject 
-        <https://www.wikidata.org/wiki/Q8104> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/entity/Q8104> ;
     iop:hasStatisticalModifier 
-        <https://www.wikidata.org/wiki/Q10578722> ;
+        <https://www.wikidata.org/entity/Q10578722> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q264647> ;
+        <https://www.wikidata.org/entity/Q264647> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "frequency: daily" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q10578722> ;
+             iop:constrains <https://www.wikidata.org/entity/Q10578722> ;
         ] ,
         [ a iop:Constraint ;
-             rdfs:label "location:  in a height of 1.7 m above ground" ;
+             rdfs:label "location: 1,7 m  above ground" ;
              iop:constrains <https://www.wikidata.org/wiki/Q7391292> ;
         ] .
 
@@ -46,20 +42,20 @@ VDP10 for property;  VDP40 for context object; VDP66 for constraint:datum; VDP67
     rdfs:label 
         "air" .
 
-<https://www.wikidata.org/wiki/Q10578722>
+<https://www.wikidata.org/entity/Q8104>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "atmosphere" .
+
+<https://www.wikidata.org/entity/Q10578722>
     a 
         iop:StatisticalModifier ;
     rdfs:label 
         "maximum" .
 
-<https://www.wikidata.org/wiki/Q264647>
+<https://www.wikidata.org/entity/Q264647>
     a 
         iop:Property ;
     rdfs:label 
         "thermodynamic temperature" .
-
-<https://www.wikidata.org/wiki/Q8104>
-    a 
-        iop:Entity ;
-    rdfs:label 
-        "atmosphere" .

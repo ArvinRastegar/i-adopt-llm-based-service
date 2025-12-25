@@ -3,7 +3,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ex: <http://example.org/iadopt/challenge/> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
 
 ex:C6
     a 
@@ -14,14 +13,9 @@ ex:C6
         """Mass flux of carbon into soil from vegetation due to senescence, measured in kg m-2 s-1. """ ;
     rdfs:comment
       """Mass flux; carbon; soil; vegetation; due to senescence. From indicates the source, into indicates the target.""" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP18.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP34.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
-    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/12> ;
+  ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/12" ;
     iop:hasObjectOfInterest 
-        <http://vocabs.lter-europe.net/EnvThes/20805> ;
+        <https://www.wikidata.org/entity/Q623> ;
     iop:hasMatrix 
         _:b0 ;
     iop:hasProperty 
@@ -29,18 +23,10 @@ ex:C6
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "due to: senescence" ;
-             iop:constrains <http://vocabs.lter-europe.net/EnvThes/30361> ;
-        ] ,
-        [ a iop:Constraint ;
-             rdfs:label "normalization: per unit area" ;
-             iop:constrains <http://vocabs.lter-europe.net/EnvThes/30361> ;
-        ] ,
-        [ a iop:Constraint ;
-             rdfs:label "normalization: per unit time" ;
-             iop:constrains <http://vocabs.lter-europe.net/EnvThes/30361> ;
+             iop:constrains _:b0 ;
         ] .
 
-<http://vocabs.lter-europe.net/EnvThes/20805>
+<https://www.wikidata.org/entity/Q623>
     a 
         iop:Entity ;
     rdfs:label 
@@ -51,7 +37,7 @@ _:b0
         iop:Entity ,
         iop:AsymmetricSystem ;
     rdfs:label 
-        "from vegetation to soil" ;
+        "flow" ;
     iop:hasSource 
         <http://vocabs.lter-europe.net/EnvThes/20535> ;
     iop:hasTarget 

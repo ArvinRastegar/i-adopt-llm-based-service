@@ -13,47 +13,57 @@ ex:C23
     a 
         iop:Variable ;
     rdfs:label 
-        "dose of applied nanomaterial internalised by a specific cell population (or per single cell) -mass per cell area" ;
+        "Cellular dose in vitro of nanomaterials (mass / cell)" ;
     skos:definition 
-        """the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell)""" ;
+        """the mass of nanomaterial internalised into the cell over the duration of the experiment, mass per cell""" ;
     rdfs:comment
-        """nanomaterial; location: intracellular; cell membrane; mass; normalization: per area""" ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP71.yaml> ;
+        """nanomaterial; location: intracellular; cell ; mass per cell; ADD: group of cells""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/29" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q967847> ;
+        _:b0 ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q54888819> ;
+        <https://www.wikidata.org/entity/Q20088819> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q11423> ;
+        _:b1 ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "location: intracellular" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q967847> ;
+             iop:constrains _:b0 ;
         ] ,
         [ a iop:Constraint ;
-             rdfs:label "normalization: per area" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q11423> ;
+             rdfs:label "time extent: duration of the experiment" ;
+             iop:constrains _:b1 ;
         ] .
 
-<https://www.wikidata.org/wiki/Q967847>
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q967847> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q7868> .
+
+<https://www.wikidata.org/entity/Q20088819>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "group of cells" .
+
+_:b1
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass per cell" .
+
+<https://www.wikidata.org/entity/Q967847>
     a 
         iop:Entity ;
     rdfs:label 
         "nanomaterial" .
 
-<https://www.wikidata.org/wiki/Q54888819>
+<https://www.wikidata.org/entity/Q7868>
     a 
         iop:Entity ;
     rdfs:label 
-        "cell membrane" .
-
-<https://www.wikidata.org/wiki/Q11423>
-    a 
-        iop:Property ;
-    rdfs:label 
-        "mass" .
+        "cell" .

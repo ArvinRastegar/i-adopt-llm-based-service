@@ -13,48 +13,44 @@ ex:C7
         "Maximum trunk char height" ;
     skos:definition """Maximum trunk char height due to fire, measured above ground.""" ;
     rdfs:comment "trunk -> tree trunk, char; height, maximum, due to fire; above ground." ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yam> ;  
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP16.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP68.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
-    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/13> ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/13" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q11567121> ;
+        <https://www.wikidata.org/entity/Q11567121> ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q193472> ;
+        <https://www.wikidata.org/entity/Q193472> ;
     iop:hasStatisticalModifier 
-        <https://www.wikidata.org/wiki/Q10578722> ;
+        <https://www.wikidata.org/entity/Q10578722> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q208826> ;
+        <https://www.wikidata.org/entity/Q208826> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "datum:above ground" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q208826> ;
+             iop:constrains <https://www.wikidata.org/entity/Q208826> ;
         ] ,
         [ a iop:Constraint ;
              rdfs:label "due to: fire" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q11567121> ;
+             iop:constrains <https://www.wikidata.org/entity/Q11567121> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q11567121>
+<https://www.wikidata.org/entity/Q11567121>
     a 
         iop:Entity ;
     rdfs:label 
         "char" .
 
-<https://www.wikidata.org/wiki/Q193472>
+<https://www.wikidata.org/entity/Q193472>
     a 
         iop:Entity ;
     rdfs:label 
         "tree trunk" .
 
-<https://www.wikidata.org/wiki/Q10578722>
+<https://www.wikidata.org/entity/Q10578722>
     a 
         iop:StatisticalModifier ;
     rdfs:label 
         "maximum" .
 
-<https://www.wikidata.org/wiki/Q208826>
+<https://www.wikidata.org/entity/Q208826>
     a 
         iop:Property ;
     rdfs:label 

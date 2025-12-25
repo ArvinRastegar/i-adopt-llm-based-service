@@ -14,49 +14,44 @@
     skos:definition 
         """Component of the sea surface current velocity that is directed northward (positive values) or southward (negative values)""" ;
     rdfs:comment "water current; water -> water body; surface layer -> at the surface; sea; velocity; norhtward -> northward" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP13.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP31.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP40.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP65.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/38" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q5195029> ;
+        <https://www.wikidata.org/entity/Q5195029> ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q15324> ;
+        <https://www.wikidata.org/entity/Q15324> ;
     iop:hasContextObject 
-        <https://www.wikidata.org/wiki/Q165> ;
+        <https://www.wikidata.org/entity/Q165> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q11465> ;
+        <https://www.wikidata.org/entity/Q11465> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "location: at the surface" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q15324> ;
+             iop:constrains <https://www.wikidata.org/entity/Q15324> ;
         ] ,
         [ a iop:Constraint ;
              rdfs:label "type: northward" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q11465> ;
+             iop:constrains <https://www.wikidata.org/entity/Q11465> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q5195029>
+<https://www.wikidata.org/entity/Q5195029>
     a 
         iop:Entity ;
     rdfs:label 
         "water current" .
 
-<https://www.wikidata.org/wiki/Q15324>
+<https://www.wikidata.org/entity/Q15324>
     a 
         iop:Entity ;
     rdfs:label 
         "water body" .
 
-<https://www.wikidata.org/wiki/Q11465>
+<https://www.wikidata.org/entity/Q11465>
     a 
         iop:Property ;
     rdfs:label 
         "velocity" .
 
-<https://www.wikidata.org/wiki/Q165>
+<https://www.wikidata.org/entity/Q165>
     a 
         iop:Entity ;
     rdfs:label 

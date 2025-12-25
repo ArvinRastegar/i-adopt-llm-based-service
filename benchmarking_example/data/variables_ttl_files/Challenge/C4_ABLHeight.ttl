@@ -13,31 +13,23 @@ ex:C4
     skos:definition 
         """Atmospheric boundary layer height defined by temperature inversion.""" ;
     rdfs:comment
-        """Atmospheric boundary layer, height, temperature inversion (ADD atmosphere, above ground surface).""" ;    
-    iopp:pattern
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
-    iopp:pattern
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP16.yaml> ;
-    iopp:pattern
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP68.yaml> ;
-    iopp:pattern
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP72.yaml> ;
+        """Atmospheric boundary layer, height, temperature inversion (ADD atmosphere, above ground surface, defined by: temperature inversion).""" ;    
     ex:issue
-        <https://github.com/mabablue/I-ADOPT-examples-playground/issues/10> ;
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/10" ;
     iop:hasObjectOfInterest 
         _:b0 ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q8104> ;
+        <https://www.wikidata.org/entity/Q8104> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q208826> ;
+        <https://www.wikidata.org/entity/Q208826> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
-             rdfs:label "due to: temperature inversion" ;
+             rdfs:label "defined by: temperature inversion" ;
              iop:constrains _:b0 ;
         ] ,
         [ a iop:Constraint ;
              rdfs:label "datum: above ground" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q208826> ;
+             iop:constrains <https://www.wikidata.org/entity/Q208826> ;
         ] .
 
 _:b0
@@ -46,13 +38,13 @@ _:b0
     rdfs:label 
         "atmospheric boundary layer" .
 
-<https://www.wikidata.org/wiki/Q8104>
+<https://www.wikidata.org/entity/Q8104>
     a 
         iop:Entity ;
     rdfs:label 
         "atmosphere" .
 
-<https://www.wikidata.org/wiki/Q208826>
+<https://www.wikidata.org/entity/Q208826>
     a 
         iop:Property ;
     rdfs:label 

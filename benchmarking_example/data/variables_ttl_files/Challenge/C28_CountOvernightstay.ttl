@@ -18,39 +18,37 @@ ex:C28
         """Number of nights in a 3-star hotel near the sea shore""" ;
     rdfs:comment
         """nights; hotel; number; location: near the sea shore; type: 3 star""";
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP61.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/34" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q575> ;
+        <https://www.wikidata.org/entity/Q575> ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q27686> ;
+        <https://www.wikidata.org/entity/Q27686> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q11563> ;
+        <https://www.wikidata.org/entity/Q11563> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "location: near the sea shore" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q27686> ;
+             iop:constrains <https://www.wikidata.org/entity/Q27686> ;
         ] ,
         [ a iop:Constraint ;
              rdfs:label "type: 3 star" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q27686> ;
+             iop:constrains <https://www.wikidata.org/entity/Q27686> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q575>
+<https://www.wikidata.org/entity/Q575>
     a 
         iop:Entity ;
     rdfs:label 
         "nights" .
 
-<https://www.wikidata.org/wiki/Q27686>
+<https://www.wikidata.org/entity/Q27686>
     a 
         iop:Entity ;
     rdfs:label 
         "hotel" .
 
-<https://www.wikidata.org/wiki/Q11563>
+<https://www.wikidata.org/entity/Q11563>
     a 
         iop:Property ;
     rdfs:label 

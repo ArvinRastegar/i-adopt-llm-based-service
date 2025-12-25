@@ -12,17 +12,13 @@ ex:C12
     rdfs:label 
         "Probablity of occurence of habitat" ;
      skos:definition 
-        """Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/wiki/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats""" ;
+        """Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/entity/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats""" ;
     rdfs:comment "habitat, probability -> propability of occurrence, ADD: Europe, type: EUNIS habitat type, temporal extend: over 1 year, spatial extend: grid cell of 100x100 m" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP40.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP61.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP74.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP75.yaml> ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/18" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q52105> ;
+        <https://www.wikidata.org/entity/Q52105> ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q941769> ;
+        <https://www.wikidata.org/entity/Q941769> ;
     iop:hasProperty 
         <https://lod.nal.usda.gov/nalt/137027> ;
     iop:hasConstraint 
@@ -36,20 +32,20 @@ ex:C12
         ] ,
         [ a iop:Constraint ;
              rdfs:label "type: EUNIS habitat type" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q52105> ;
+             iop:constrains <https://www.wikidata.org/entity/Q52105> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q52105>
+<https://www.wikidata.org/entity/Q52105>
     a 
         iop:Entity ;
     rdfs:label 
         "habitat" .
 
-<https://www.wikidata.org/wiki/Q941769>
+<https://www.wikidata.org/entity/Q941769>
     a 
         iop:Entity ;
     rdfs:label 
-        "Europe" .
+        "European Union" .
 
 <https://lod.nal.usda.gov/nalt/137027>
     a 

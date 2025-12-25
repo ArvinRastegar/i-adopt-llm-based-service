@@ -3,11 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ex: <http://example.org/iadopt/challenge/> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
-@prefix sosa: <http://www.w3.org/ns/sosa/> .
-@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
-@prefix patt: <http://example.org/iadopt/pattern> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
 
 ex:C21
     a 
@@ -18,41 +14,37 @@ ex:C21
         """Resting systolic blood pressure in millimeters of mercury (mmHg)""" ;
     rdfs:comment 
         """blood; human; condition: resting; pressure; state: systolic""" ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP31.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP76.yaml> ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/27" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q7873> ;
+        <https://www.wikidata.org/entity/Q7873> ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q5> ;
+        <https://www.wikidata.org/entity/Q5> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q39552> ;
+        <https://www.wikidata.org/entity/Q39552> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "condition: resting" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q5> ;
+             iop:constrains <https://www.wikidata.org/entity/Q5> ;
         ] ,
         [ a iop:Constraint ;
              rdfs:label "state: systolic" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q39552> ;
+             iop:constrains <https://www.wikidata.org/entity/Q39552> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q7873>
+<https://www.wikidata.org/entity/Q7873>
     a 
         iop:Entity ;
     rdfs:label 
         "blood" .
 
-<https://www.wikidata.org/wiki/Q5>
+<https://www.wikidata.org/entity/Q5>
     a 
         iop:Entity ;
     rdfs:label 
         "human" .
 
-<https://www.wikidata.org/wiki/Q39552>
+<https://www.wikidata.org/entity/Q39552>
     a 
         iop:Property ;
     rdfs:label 

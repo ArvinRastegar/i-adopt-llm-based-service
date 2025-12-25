@@ -6,7 +6,7 @@
 @prefix iopp: <https://w3id.org/iadopt/pattern/> .
 
 
-ex:State-of-tube
+ex:State-of-pipe
     a 
         iop:Variable ;
     rdfs:label 
@@ -15,12 +15,7 @@ ex:State-of-tube
         """State (faulty, cracked, ... ) of pipe connection in plastic with a diametre of 30 cm.""" ;
     rdfs:comment
          "state, pipe connection; plastic, diametre of 30 cm" ; 
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP12.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP1.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP63.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP64.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP83.yaml> ;
-    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/1> ; 
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/1" ; 
     iop:hasObjectOfInterest 
         ex:PipeConnection ;
     iop:hasProperty 
@@ -33,10 +28,6 @@ ex:State-of-tube
         [ a iop:Constraint ;
              rdfs:label "size:diameter of 30 cm" ;
              iop:constrains ex:PipeConnection ;
-        ] ,
-        [ a iop:Constraint ;
-             rdfs:label "controlled list: state of pipe connection" ;
-             iop:constrains _:b0 ;
         ] .
 
 ex:PipeConnection

@@ -18,27 +18,25 @@ ex:C26
         """The sheet resistance of a 5-nanometer-thick layer of gold.""" ;
     rdfs:comment
         """gold; sheet resistance; size: 5nm thick layer""" ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP63.yaml> ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/32" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q897> ;
+        <https://www.wikidata.org/entity/Q897> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q354718> ;
+        <https://www.wikidata.org/entity/Q354718> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "size: 5 nm thick layer" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q897> ;
+             iop:constrains <https://www.wikidata.org/entity/Q897> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q897>
+<https://www.wikidata.org/entity/Q897>
     a 
         iop:Entity ;
     rdfs:label 
         "gold" .
 
-<https://www.wikidata.org/wiki/Q354718>
+<https://www.wikidata.org/entity/Q354718>
     a 
         iop:Property ;
     rdfs:label 

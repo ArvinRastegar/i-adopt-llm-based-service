@@ -3,57 +3,63 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ex: <http://example.org/iadopt/challenge/> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
-@prefix sosa: <http://www.w3.org/ns/sosa/> .
-@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
-@prefix patt: <http://example.org/iadopt/pattern> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
 
 ex:C24
     a 
         iop:Variable ;
     rdfs:label 
-        "dose of applied nanomaterial internalised by a specific cell population (or per single cell) - particle number / cell area" ;
+        "dose of applied nanomaterial internalised by a specific cell (number per cell)" ;
     skos:definition 
-        """the amount of the applied dose of nanomaterial that has been internalised by a cell population (or per specific cell)""" ;
+        """ Number of particles internalised into the cell over the duration of the experiment""" ;
     rdfs:comment
-        """nanomaterial; cell membrane; number; location: intracellular; normalization: per area; ADD: particle number per cell area""" ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP14.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP30.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP67.yaml> ;
+        """nanomaterial; cell; number per cell; location: intracellular, duration of the experiment; ADD: group of cells""" ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/30" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q967847> ;
+        _:b0 ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q54888819> ;
+        <https://www.wikidata.org/entity/Q20088819> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q11563> ;
+        _:b1 ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "location: intracellular" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q967847> ;
+             iop:constrains _:b0 ;
         ] ,
         [ a iop:Constraint ;
-             rdfs:label "normalization: per area" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q11563> ;
+             rdfs:label "time extent. duration of the experiment" ;
+             iop:constrains _:b1 ;
         ] .
 
-<https://www.wikidata.org/wiki/Q967847>
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q967847> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q7868> .
+
+<https://www.wikidata.org/entity/Q20088819>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "group of cells" .
+
+_:b1
+    a 
+        iop:Property ;
+    rdfs:label 
+        "number per entity" .
+
+<https://www.wikidata.org/entity/Q967847>
     a 
         iop:Entity ;
     rdfs:label 
         "nanomaterial" .
 
-<https://www.wikidata.org/wiki/Q54888819>
+<https://www.wikidata.org/entity/Q7868>
     a 
         iop:Entity ;
     rdfs:label 
-        "cell membrane" .
-
-<https://www.wikidata.org/wiki/Q11563>
-    a 
-        iop:Property ;
-    rdfs:label 
-        "number" .
+        "cell" .

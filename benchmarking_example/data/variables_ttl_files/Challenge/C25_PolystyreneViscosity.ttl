@@ -3,11 +3,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ex: <http://example.org/iadopt/challenge/> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
-@prefix sosa: <http://www.w3.org/ns/sosa/> .
-@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
-@prefix patt: <http://example.org/iadopt/pattern> .
-@prefix iopp: <https://w3id.org/iadopt/pattern/> .
 
 ex:C25
     a 
@@ -17,35 +12,27 @@ ex:C25
     skos:definition 
         """Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.""" ;
     rdfs:comment
-        """polystyrene; type: PS042; shear viscosity; type: dynamic; condition: under testing conditions of DIN 51810-1""" ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP65.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP70.yaml> ;
+        """polystyrene PS042; dynamic shear viscosity; type: condition: under testing conditions of DIN 51810-1""" ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/31" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q146243> ;
+        _:b0 ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q15152757> ;
+        _:b1 ;
     iop:hasConstraint 
         [ a iop:Constraint ;
-             rdfs:label "type: PS042" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q146243> ;
-        ],
-        [ a iop:Constraint ; 
-            rdfs:label "condition: under testing conditions of DIN 5810-1" ;
-            iop:constrains <https://www.wikidata.org/wiki/Q15152757> ;
+             rdfs:label "condition: under testing conditions of DIN 5810-1" ;
+             iop:constrains _:b1 ;
         ] .
 
-<https://www.wikidata.org/wiki/Q146243>
+_:b0
     a 
         iop:Entity ;
     rdfs:label 
-        "polystyrene" .
+        "polystyrene PS042" .
 
-<https://www.wikidata.org/wiki/Q15152757>
+_:b1
     a 
         iop:Property ;
     rdfs:label 
-        "dynamic viscosity" .
+        "dynamic shear viscosity" .

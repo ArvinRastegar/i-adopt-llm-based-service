@@ -13,34 +13,38 @@ ex:C29
     skos:definition
         """In the past 30 days, how often did you feel nervous?""" ;
     rdfs:comment
-        """nervousness; patient; frequency; during last 30 days""" ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP75.yaml> ;
+        """feel -> feeling; nervous -> type:nervous; during last 30 days; ADD: person; frequency""" ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/35" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q1978097> ;
+        <https://www.wikidata.org/entity/Q205555> ;
     iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q181600> ;
+        <https://www.wikidata.org/entity/Q5> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q11652> ;
+        <https://www.wikidata.org/entity/Q11652> ;
     iop:hasConstraint 
         [ a iop:Constraint ;
              rdfs:label "temporal extent: during last 30 days" ;
-             iop:constrains <https://www.wikidata.org/wiki/Q11652> ;
+             iop:constrains <https://www.wikidata.org/entity/Q11652> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "type: nervous" ;
+             iop:constrains <https://www.wikidata.org/entity/Q205555> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q1978097>
+<https://www.wikidata.org/entity/Q205555>
     a 
         iop:Entity ;
     rdfs:label 
-        "nervousness" .
+        "feeling" .
 
-<https://www.wikidata.org/wiki/Q181600>
+<https://www.wikidata.org/entity/Q5>
     a 
         iop:Entity ;
     rdfs:label 
-        "patient" .
+        "person" .
 
-<https://www.wikidata.org/wiki/Q11652>
+<https://www.wikidata.org/entity/Q11652>
     a 
         iop:Property ;
     rdfs:label 

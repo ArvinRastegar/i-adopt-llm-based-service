@@ -14,14 +14,13 @@ ex:GDOP
     skos:definition
         """Geometric dilution of precision of the relative position, based on the position of the receiver and the transmitters.""" ;
     rdfs:comment "relative position; dilution of precision; position of receiver; position of transmitters" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP27.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP91.yaml> ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/44" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q23008351> ;
+        <https://www.wikidata.org/entity/Q23008351> ;
     iop:hasProperty 
-        <https://www.wikidata.org/wiki/Q616896> .
+        <https://www.wikidata.org/entity/Q616896> .
 
-<https://www.wikidata.org/wiki/Q23008351>
+<https://www.wikidata.org/entity/Q23008351>
     a 
         iop:Entity ,
         iop:SymmetricSystem ;
@@ -31,7 +30,7 @@ ex:GDOP
         _:b0 ,
         _:b1 .
 
-<https://www.wikidata.org/wiki/Q616896>
+<https://www.wikidata.org/entity/Q616896>
     a 
         iop:Property ;
     rdfs:label 

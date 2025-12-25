@@ -17,13 +17,11 @@ ex:C22
     skos:definition 
         """Smoking status current of a patient""" ;
     rdfs:comment 
-        """patient; status; time: current; controlled list: smoking status""" ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP12.yaml> ;
-    iop:pattern 
-        <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP78.yaml> ;
+        """patient; smoking status;  time: current""" ;
+    ex:issue
+        "https://github.com/mabablue/I-ADOPT-examples-playground/issues/28" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q181600> ;
+        <https://www.wikidata.org/entity/Q5> ;
     iop:hasProperty 
         _:b0 ;
     iop:hasConstraint 
@@ -32,18 +30,18 @@ ex:C22
              iop:constrains _:b0 ;
         ] ,
         [ a iop:Constraint ;
-             rdfs:label "controlled list: smoking status" ;
-             iop:constrains _:b0 ;
+             rdfs:label "role: patient" ;
+             iop:constrains <https://www.wikidata.org/entity/Q5> ;
         ] .
 
-<https://www.wikidata.org/wiki/Q181600>
+<https://www.wikidata.org/entity/Q5>
     a 
         iop:Entity ;
     rdfs:label 
-        "patient" .
+        "person" .
 
 _:b0
     a 
         iop:Property ;
     rdfs:label 
-        "status" .
+        "smoking status" .

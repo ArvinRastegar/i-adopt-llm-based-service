@@ -14,32 +14,36 @@ ex:C3
     skos:definition 
         """The amount of sky estimated to be covered by all cloud types.""" ;
     rdfs:comment
-        """sky, cloud, (amount covered -> area fraction)""" ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP10.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP15.yaml> ;
-    iopp:pattern <https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP33.yaml> ;
-    ex:issue <https://github.com/mabablue/I-ADOPT-examples-playground/issues/9> ;
+        """sky; cloud; amount covered -> area fraction; ADD: area per area""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/9" ;
     iop:hasObjectOfInterest 
-        <https://www.wikidata.org/wiki/Q8074> ;
-    iop:hasMatrix 
-        <https://www.wikidata.org/wiki/Q527> ;
+        _:b0 ;
     iop:hasProperty 
-        _:b0 .
+        <http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction> .
 
-<https://www.wikidata.org/wiki/Q8074>
+_:b0
     a 
-        iop:Entity ;
-    rdfs:label 
-        "cloud" .
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q527> ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q8074> .
 
-<https://www.wikidata.org/wiki/Q527>
+<http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "area fraction" .
+
+<https://www.wikidata.org/entity/Q527>
     a 
         iop:Entity ;
     rdfs:label 
         "sky" .
 
-_:b0
+<https://www.wikidata.org/entity/Q8074>
     a 
-        iop:Property ;
+        iop:Entity ;
     rdfs:label 
-        "area fraction" .
+        "cloud" .
