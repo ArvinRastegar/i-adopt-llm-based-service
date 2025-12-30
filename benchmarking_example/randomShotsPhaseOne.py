@@ -745,7 +745,7 @@ def evaluate(
     results: List[Dict[str, Any]] = []
 
     fixed_pool = _resolve_fixed_examples(by_path)  # ordered list of 5 vars
-    reserved_labels_all5 = {v["label"] for v in fixed_pool}
+    reserved_paths_all5 = {v["__path"] for v in fixed_pool}
 
     # repetition handling
     reps = 1 if mode == MODE_FIXED else num_random_sets
@@ -771,7 +771,7 @@ def evaluate(
             example_labels = [ex["label"] for ex in examples]
             example_paths = [ex["__path"] for ex in examples]
 
-            tested_pool = [v for v in all_vars if v["__path"] not in reserved_labels_all5]
+            tested_pool = [v for v in all_vars if v["__path"] not in reserved_paths_all5]
             tested_vars = _deterministic_take(tested_pool, test_per_set)
             tested_labels = [v["label"] for v in tested_vars]
             tested_paths = [v["__path"] for v in tested_vars]
@@ -783,7 +783,9 @@ def evaluate(
         # - tested vars randomly sampled from remaining after excluding examples
         # ----------------------------
         elif mode == MODE_BEST:
-            base_pool = [v for v in all_vars if v["label"] not in reserved_labels_all5]
+            base_pool = [
+                v for v in all_vars if v["__path"] not in reserved_paths_all5
+            ]  # this mode should change the exluded variables to the ones from the random set of variables in the prompt. We have to fix this later. We are not using this mode for now.
 
             if shot_mode > 0:
                 examples = random.sample(base_pool, k=shot_mode)
@@ -1080,7 +1082,7 @@ def main() -> None:
     )
 
     parser.add_argument(
-        "--test-per-set", type=int, default=98, help="Number of GT variables to evaluate per random-shot set."
+        "--test-per-set", type=int, default=105, help="Number of GT variables to evaluate per random-shot set."
     )
     parser.add_argument(
         "--mode",

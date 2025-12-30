@@ -1,6 +1,30 @@
 === I-ADOPT TTL → JSON PROCESSING LOG ===
 
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/AtmosphericComposition/AOA.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/AtmosphericComposition/ActinitcFlux.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/AtmosphericComposition/DepolarizationRatio.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/AtmosphericComposition/IceConcentration.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/AtmosphericComposition/SulfateAerosol.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/DetritalNitrogenConc.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/ElderlyAlone.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/FloodRiskMobility.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/FractionFloodedBuilding.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/I129se40.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/NoHighSchool.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/NumChild.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/NumberPers.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/PMER.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/PercentChild.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/PersWelfare.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/PluvialFlood.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/RadDown.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/SnowEquiv.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/SolarEnergy.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/U236GF.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/U236LH.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/U236PPG.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/VAS.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/CCA/sfcWindmax.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Challenge/C10_PeakGroundAcceleration.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Challenge/C11_StrikeBedding.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Challenge/C12_HabitatProbability.ttl
@@ -31,26 +55,51 @@
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Challenge/C7_TrunkCharHeight.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Challenge/C8_CWDFraction.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Challenge/C9_FoliageCover.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/BPVAR.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/COMBVAR.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/CONCVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemical Risk/Bloodtype.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemical Risk/Rhesusform.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/BPVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/COMVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/CONCVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/DENSVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/GLVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/LLVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/MPVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/PHVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Chemistry/SLVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/ClinicalStudies/BMI.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/ClinicalStudies/HRV.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/ClinicalStudies/HeartRate.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/ClinicalStudies/Pain.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/ALCat.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/ConcCarbon.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/ConcEndosulfaneOstrea.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/DENSVAR.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/GLVAR.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/LLVAR.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/PHVAR.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/SLVAR.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalChemistry/WaterSampDepth.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalSciences/PotEvap.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalSciences/PrecRate.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalSciences/SoilMoist.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalSciences/SurfRunoff.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/EnvironmentalSciences/Turbidity.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Healthcare/country of birth of mother.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Healthcare/date of birth of mother.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Healthcare/family activity.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Healthcare/highest education.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Healthcare/weight without clothes.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/HumanBiomonitoring/BPFOS.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/HumanBiomonitoring/DehpNail.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/HumanBiomonitoring/TBPHMilk.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/DRVA.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/ESPC.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/ETMP.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/EWCT.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/GDOP.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/GDOP_QC.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/HCSS.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/NSCT.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/RDVA.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/UACC.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/UVAD.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/VARC_QC.ttl
-✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Waste-Water/CirculationMethod-Water.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Ocean - HFR/VACC.ttl
+✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Waste-Water/CirculationMode-Water.ttl
 ✓ SUCCESS: /Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files/Waste-Water/StateOfPipeConnection.ttl
 
-✓ all_variables.json written with 52 variables.
+✓ all_variables.json written with 101 variables.
