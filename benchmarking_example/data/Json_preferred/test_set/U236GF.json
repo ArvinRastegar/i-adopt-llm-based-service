@@ -5,14 +5,14 @@
   "hasProperty": "number density",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q176449",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "n89aba1f392a64e808322383bc4eafa54b1",
+    "AsymmetricSystem": "n880912cfcbf1422098d93a27ad0eee68b1",
     "hasSource": "Uranium‑236",
     "hasTarget": "soil"
   },
   "hasConstraint": [
     {
       "label": "global",
-      "on": "n89aba1f392a64e808322383bc4eafa54b1"
+      "on": "n880912cfcbf1422098d93a27ad0eee68b1"
     },
     {
       "label": "deposited",

@@ -5,12 +5,12 @@
   "hasProperty": "mass flow rate",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q3265048",
   "hasMatrix": {
-    "AsymmetricSystem": "na8d7cdd4e1cc46d3869683f64c4fbbf5b2",
+    "AsymmetricSystem": "nd19aeb1e3a04479aa67c6e5bf5c997d8b2",
     "hasSource": "food",
     "hasTarget": "organism"
   },
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "na8d7cdd4e1cc46d3869683f64c4fbbf5b1",
+    "AsymmetricSystem": "nd19aeb1e3a04479aa67c6e5bf5c997d8b1",
     "hasSource": "Carbon",
     "hasTarget": "individual"
   },

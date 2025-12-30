@@ -5,7 +5,7 @@
   "hasProperty": "mass concentration",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "neb78c5b9e9534fbbbd46f944b7258b09b1",
+    "AsymmetricSystem": "nfd0d61d9b5a94b519dbc9ff91d126ec0b1",
     "hasSource": "benzene",
     "hasTarget": "water"
   },

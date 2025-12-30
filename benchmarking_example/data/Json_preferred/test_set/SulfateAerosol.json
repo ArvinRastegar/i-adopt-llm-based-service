@@ -7,7 +7,7 @@
   "hasMatrix": "aerosol",
   "hasMatrixURI": "https://www.wikidata.org/wiki/Q104541",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "n4985b60481364e3a868ac78fbb11af48b1",
+    "AsymmetricSystem": "nca25e8ec268341d28fe05371275c1d4db1",
     "hasSource": "particle",
     "hasTarget": "particle mixture"
   },

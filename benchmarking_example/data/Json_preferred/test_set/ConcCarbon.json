@@ -5,7 +5,7 @@
   "hasProperty": "mass concentration",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "nb11ae6ab8f77443cacaaa66c3df20724b1",
+    "AsymmetricSystem": "nd1d775ed6a5f4b45ab60eb046114ff77b1",
     "hasSource": "carbon",
     "hasTarget": "water"
   },

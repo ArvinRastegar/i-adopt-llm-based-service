@@ -5,7 +5,7 @@
   "hasProperty": "number density",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q108914962",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "na12aa002b4be4e79ae092b8bf16dd45cb1",
+    "AsymmetricSystem": "n6eede4de41f8461691f00826ba59e878b1",
     "hasSource": "electron",
     "hasTarget": "solar wind"
   }

@@ -5,7 +5,7 @@
   "hasProperty": "mass concentration",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "n3c315c8aa5e74f5dbed7b9435fcbefccb1",
+    "AsymmetricSystem": "nb5db61ba8e204481bc10f182e0c085a6b1",
     "hasSource": "cation",
     "hasTarget": "water"
   },

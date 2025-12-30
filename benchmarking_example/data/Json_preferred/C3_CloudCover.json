@@ -4,7 +4,7 @@
   "comment": "sky; cloud; amount covered -> area fraction; ADD: area per area",
   "hasProperty": "area fraction",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "n52398c5994a04077b0fe7b594261e37fb1",
+    "AsymmetricSystem": "n35524401b3174d81b615a0efdaf1f9c5b1",
     "hasSource": "cloud",
     "hasTarget": "sky"
   }

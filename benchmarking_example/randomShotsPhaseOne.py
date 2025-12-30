@@ -53,13 +53,14 @@ MODEL_NAMES = [
     "qwen/qwen3-32b",
     # "qwen/qwen3-8b",
     # "qwen/qwen3-30b-a3b-instruct-2507",
-    "meta-llama/llama-3-8b-instruct",
+    # "meta-llama/llama-3-8b-instruct",
     # "openai/gpt-4o",
-    "mistralai/mistral-7b-instruct",
-    "openai/gpt-4o-mini",
+    # "mistralai/mistral-7b-instruct",
+    # "openai/gpt-4o-mini",
     # "meta-llama/llama-3.3-70b-instruct",
     # "openai/gpt-5.1-chat",
     # "qwen/qwen3-235b-a22b-thinking-2507",
+    # "qwen/qwen3-235b-a22b-2507",
 ]
 
 # --------------------------------------------------------------------------- #
@@ -71,12 +72,14 @@ MODEL_NAMES = [
 #     - all prompt versions found in data/prompts/*.txt
 #     - all shots in FIXED_GRID_SHOTS
 # --------------------------------------------------------------------------- #
-FIXED_GRID_SHOTS = [0, 1, 3, 5]
+# FIXED_GRID_SHOTS = [0, 1, 3, 5]
+FIXED_GRID_SHOTS = [5]
 # Models = MODEL_NAMES
 # Temperatures = TEMPERATURES
 # PromptVersions = list_prompt_versions() (computed at runtime)
 
 TEMPERATURES = [0, 0.5, 1, 2]  # can be extended later
+TEMPERATURES = [0.5]
 
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
 CLOSE_THR = 0.80
@@ -768,7 +771,7 @@ def evaluate(
             example_labels = [ex["label"] for ex in examples]
             example_paths = [ex["__path"] for ex in examples]
 
-            tested_pool = [v for v in all_vars if v["label"] not in reserved_labels_all5]
+            tested_pool = [v for v in all_vars if v["__path"] not in reserved_labels_all5]
             tested_vars = _deterministic_take(tested_pool, test_per_set)
             tested_labels = [v["label"] for v in tested_vars]
             tested_paths = [v["__path"] for v in tested_vars]
@@ -1077,7 +1080,7 @@ def main() -> None:
     )
 
     parser.add_argument(
-        "--test-per-set", type=int, default=96, help="Number of GT variables to evaluate per random-shot set."
+        "--test-per-set", type=int, default=98, help="Number of GT variables to evaluate per random-shot set."
     )
     parser.add_argument(
         "--mode",

@@ -5,7 +5,7 @@
   "hasProperty": "mass flow",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q3295893",
   "hasMatrix": {
-    "AsymmetricSystem": "ne25f71485e5747a09c66451430ba6c7eb1",
+    "AsymmetricSystem": "ne39c414e1c004d678a5bf53a7ac23cc7b1",
     "hasSource": "surface",
     "hasTarget": "water body"
   },

@@ -5,7 +5,7 @@
   "hasProperty": "mass concentration",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "nb1b1cb7e456d4319bf0aa922f6077806b1",
+    "AsymmetricSystem": "nd82f0e60920847488d6f0cdd53df9827b1",
     "hasSource": "naphthalene (C10H8)",
     "hasTarget": "water"
   },

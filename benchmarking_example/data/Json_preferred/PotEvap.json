@@ -5,7 +5,7 @@
   "hasProperty": "volume flux",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q55753416",
   "hasMatrix": {
-    "AsymmetricSystem": "n354c0a9f68904eafa734b43444eed61bb1",
+    "AsymmetricSystem": "n386dd1e2b32c4b0289cf8bd0da72ca9db1",
     "hasSource": "soil",
     "hasTarget": "atmosphere"
   },

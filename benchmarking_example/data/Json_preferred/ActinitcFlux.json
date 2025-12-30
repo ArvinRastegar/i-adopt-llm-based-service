@@ -5,7 +5,7 @@
   "hasProperty": "energy flux",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q5377054",
   "hasMatrix": {
-    "AsymmetricSystem": "n3debd50225ac449f9d8048f207f4798ab1",
+    "AsymmetricSystem": "nf05c27bd4d8e43c88fdbfbb6c75cdcbfb1",
     "hasSource": "atmosphere",
     "hasTarget": "point"
   },

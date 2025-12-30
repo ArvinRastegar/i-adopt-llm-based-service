@@ -6,14 +6,14 @@
   "hasMatrix": "group of cells",
   "hasMatrixURI": "https://www.wikidata.org/wiki/Q20088819",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "n3d49e2982003443093e84b9c04a782e3b1",
+    "AsymmetricSystem": "n84995709a563414a9619ac2417d66f94b1",
     "hasSource": "nanomaterial",
     "hasTarget": "cell"
   },
   "hasConstraint": [
     {
       "label": "intracellular",
-      "on": "n3d49e2982003443093e84b9c04a782e3b1"
+      "on": "n84995709a563414a9619ac2417d66f94b1"
     },
     {
       "label": "duration of the experiment",

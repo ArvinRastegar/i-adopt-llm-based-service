@@ -5,7 +5,7 @@
   "hasProperty": "surface density",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q1907514",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "n37f984b5e36949148e17b357f58ffb6eb1",
+    "AsymmetricSystem": "nf0925f19ac6d439b95baf4ba6b642515b1",
     "hasSource": "water",
     "hasTarget": "soil"
   },

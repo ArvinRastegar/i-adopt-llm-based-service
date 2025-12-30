@@ -5,7 +5,7 @@
   "hasProperty": "mass fraction",
   "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
   "hasObjectOfInterest": {
-    "AsymmetricSystem": "n70ced741cfd04fba899c663e914f005bb1",
+    "AsymmetricSystem": "n2f56451f1b504e8da7a6859c632a9704b1",
     "hasSource": "iron(II)",
     "hasTarget": "soil"
   }
