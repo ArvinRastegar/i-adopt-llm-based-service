@@ -98,6 +98,9 @@ client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPEN
 # --------------------------------------------------------------------------- #
 # 2 ▪ Prompt helpers
 # --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+# 2 ▪ Prompt helpers
+# --------------------------------------------------------------------------- #
 _SCHEMA_TEXT = SCHEMA_PATH.read_text(encoding="utf-8").strip()
 
 _SYSTEM_RULES = textwrap.dedent(
@@ -106,29 +109,146 @@ _SYSTEM_RULES = textwrap.dedent(
     Your task is to output **one** JSON object that satisfies the
     JSON-Schema provided below.
 
-    ▸ Copy *comment* verbatim from the user section.
+    ▸ Copy *definition* verbatim from the user section.
     ▸ Do **NOT** introduce keys that are absent from the schema.
-    ▸ Every value must respect the declared JSON type
-      (e.g. hasProperty is a string, hasConstraint is an array, …).
+    ▸ Every value must respect the declared JSON type.
     ▸ Reply with the JSON object only — no markdown fences, no narration.
 """
 ).strip()
 
+BASELINE_INSTRUCTIONS = _SYSTEM_RULES
+
+MATRIX_EXPLANATION = textwrap.dedent(
+    """
+    Additional guidance:
+
+    Identify the Object of Interest:
+    The Object of Interest is the Entity whose Property is observed.
+
+    Identify the Matrix (if available):
+    If the Object of Interest is embedded in, or part of, another Entity,
+    that Entity is the Matrix. Not all observations have a Matrix.
+
+    hasMatrix:
+    A Variable might have an Entity in which the ObjectOfInterest is contained.
+
+    hasConstraint:
+    A Variable has a Constraint that confines an Entity involved in the observation.
+
+    Further Decompose Entities:
+    Revisit identified Entities (Object of Interest, Matrix, Context Objects) and
+    check whether they can be decomposed into more general concepts and Constraints.
+
+    Important:
+    The framework does not capture units, instruments, methods, or geographical
+    location. These must NOT be placed into the JSON.
+"""
+).strip()
+
+REVISED_MATRIX_EXPLANATION = textwrap.dedent(
+    """
+    Additional guidance for this task
+
+    Role summary:
+
+    • hasProperty:
+      The type of characteristic being observed
+      (e.g. "distance", "mass flux", "temperature").
+
+    • hasObjectOfInterest:
+      The Entity whose Property is observed
+      (e.g. "carbon", "organism", "habitat patch", "electron").
+
+    • hasMatrix:
+      An Entity or System that contains or surrounds the
+      ObjectOfInterest. Examples: "soil", "ocean water",
+      "organism", "solar wind", or a system such as
+      "from vegetation to soil".
+
+    • hasConstraint:
+      Short phrases that limit the scope or state of the
+      observation, such as "nearest neighbour", "dry",
+      "at 15°C", "at non-limiting conditions",
+      "due to ingestion".
+
+    Deciding between hasMatrix and hasConstraint:
+
+    • Use hasMatrix when you name an Entity or System
+      that acts as the environment or container of the
+      ObjectOfInterest.
+
+    • Use hasConstraint for state or filter phrases that
+      restrict a Property or Entity, even if they appear
+      in the textual definition. For example:
+        - "nearest neighbour"
+        - "dry"
+        - "at 15°C temperature"
+        - "at non-limiting conditions"
+        - "due to ingestion"
+      These MUST NOT be placed in hasMatrix.
+
+    Defining constraints (hasConstraint array):
+
+    • Each constraint is an object with:
+        - "label": a short phrase for the state or restriction.
+        - "on": EXACTLY which Property or Entity this constraint applies to.
+
+    • IMPORTANT RULE:
+      The "on" value MUST be copied verbatim from one of
+      the keys you already generated in this JSON:
+        - the exact hasProperty string, OR
+        - the exact entity label used in hasObjectOfInterest,
+          hasMatrix, or hasContextObject.
+
+      Do NOT invent new labels for "on".  
+      Do NOT paraphrase.  
+      Always reuse the exact string you already used elsewhere.
+
+    • Examples:
+        label = "nearest neighbour",    on = "distance"
+        label = "dry",                  on = "soil"
+        label = "due to ingestion",     on = "organism"
+        label = "at 15°C temperature",  on = "temperature"
+
+    Important exclusions:
+
+    • Do NOT model units, instruments, methods, or
+      geographical locations in this JSON. These should
+      not appear in hasProperty, hasObjectOfInterest,
+      hasMatrix, or hasConstraint.
+"""
+).strip()
+
+PROMPT_TEMPLATES = {
+    "baseline": BASELINE_INSTRUCTIONS,
+    "matrix_explainer": BASELINE_INSTRUCTIONS + "\n\n" + MATRIX_EXPLANATION,
+    "matrix_extender": BASELINE_INSTRUCTIONS + "\n\n" + REVISED_MATRIX_EXPLANATION,
+}
+
 _EXAMPLE_HDR = "\n\n### Examples (valid against the same schema)\n"
-_USER_HDR = "\n\n### Variable to decompose\n"
+_USER_HDR = "\n\n### Variable's definition to decompose\n"
 _EXPECTED = "\n\n### Expected output\n*(only the JSON object)*"
 
 
-def build_prompt(label: str, comment: str, examples: List[Dict[str, Any]] | None = None) -> str:
+def build_prompt(definition: str, examples: List[Dict[str, Any]] | None, prompt_version: str = "baseline") -> str:
+    """
+    Build the LLM prompt from a variable *definition* (not label/comment),
+    using one of the PROMPT_TEMPLATES (baseline / matrix_explainer / matrix_extender).
+    """
     examples = examples or []
+
+    # Pick the template by name (fallback = baseline)
+    instructions = PROMPT_TEMPLATES.get(prompt_version, PROMPT_TEMPLATES["baseline"])
+
     ex_block = (
         _EXAMPLE_HDR + "\n\n".join(json.dumps(e, indent=2, ensure_ascii=False) for e in examples) if examples else ""
     )
+
     return (
-        f"{_SYSTEM_RULES}\n\n"
+        f"{instructions}\n\n"
         f"### JSON-Schema\n{_SCHEMA_TEXT}\n"
         f"{ex_block}"
-        f"{_USER_HDR}comment: {comment}"
+        f"{_USER_HDR}definition: {definition}"
         f"{_EXPECTED}"
     )
 
@@ -164,20 +284,44 @@ def extract_json(text: str) -> Dict[str, Any]:
 
 
 def call_model(model: str, prompt: str, temperature: float) -> str:
-    try:
-        resp = client.chat.completions.create(
-            model=model,
-            temperature=temperature,
-            messages=[{"role": "user", "content": prompt}],
-            timeout=30,
-        )
-        return resp.choices[0].message.content
-    except APIStatusError as e:
-        logging.warning(f"{model}: HTTP {e.status_code} – {e.body!s}")
-    except (OpenAIError, httpx.HTTPError) as e:
-        logging.warning(f"{model}: transport error – {e!r}")
-    except json.JSONDecodeError as e:
-        logging.warning(f"{model}: invalid JSON payload – {e!r}")
+    """
+    Robust API call with:
+    - 3 retries
+    - detection of HTML / empty responses
+    - logs raw response on failure
+    - returns "" if no valid content after retries
+    """
+    for attempt in range(1, 4):
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                temperature=temperature,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=60,
+            )
+            text = resp.choices[0].message.content or ""
+
+            # detect HTML or empty response
+            stripped = text.strip()
+            if stripped.startswith("<!DOCTYPE html") or stripped.startswith("<html"):
+                logging.warning(f"{model}: HTML error response on attempt {attempt}")
+                continue
+
+            if not stripped:
+                logging.warning(f"{model}: empty response on attempt {attempt}")
+                continue
+
+            return text
+
+        except APIStatusError as e:
+            logging.warning(f"{model}: APIStatusError attempt {attempt} – {e.status_code} – {getattr(e, 'body', '')}")
+        except (OpenAIError, httpx.HTTPError) as e:
+            logging.warning(f"{model}: transport error attempt {attempt} – {e!r}")
+        except Exception as e:
+            logging.warning(f"{model}: unexpected error attempt {attempt} – {e!r}")
+
+    # after 3 failures
+    logging.error(f"{model}: failed after 3 attempts")
     return ""
 
 
@@ -196,7 +340,7 @@ def coerce_for_eval(rec: Dict[str, Any], fixes: dict) -> Dict[str, Any]:
     return rec
 
 
-def call_llm_loose(model: str, prompt: str, orig_label: str, orig_comment: str, temperature: float) -> Dict[str, Any]:
+def call_llm_loose(model: str, prompt: str, orig_label: str, definition: str, temperature: float) -> Dict[str, Any]:
     attempts, data, fixes, raw = 0, {}, {}, ""
     while attempts < 3:
         attempts += 1
@@ -209,7 +353,7 @@ def call_llm_loose(model: str, prompt: str, orig_label: str, orig_comment: str, 
             "non_json_suffix": False,
             "unparsable_json": False,
             "label_overwritten": False,
-            "comment_overwritten": False,
+            # "comment_overwritten": False,
             "coerced_property_dict": False,
             "missing_keys": [],
             "extra_keys": [],
@@ -248,11 +392,11 @@ def call_llm_loose(model: str, prompt: str, orig_label: str, orig_comment: str, 
     if pred_label != orig_label:
         fixes["label_overwritten"] = True
         fixes["orig_label"] = orig_label
-    if pred_comment != orig_comment:
-        fixes["comment_overwritten"] = True
-        fixes["orig_comment"] = (orig_comment or "")[:400]
+    # if pred_comment != orig_comment:
+    # fixes["comment_overwritten"] = True
+    # fixes["orig_comment"] = (orig_comment or "")[:400]
     data["label"] = orig_label
-    data["comment"] = orig_comment
+    data["definition"] = definition
     data = coerce_for_eval(data, fixes=fixes)
     _preproc_logger.info("%s", json.dumps(fixes, ensure_ascii=False))
     return data
@@ -332,6 +476,34 @@ def canonical_on(text: str) -> str:
     return text.strip()
 
 
+def normalize_constraint(c: Dict[str, str]) -> Dict[str, str]:
+    """
+    Canonicalize label/on for robust, order-invariant comparison.
+    - Lowercase
+    - Strip whitespace
+    - Collapse multiple spaces
+    - Apply canonical_on() to the 'on' field
+    """
+    if not isinstance(c, dict):
+        return {"label": "", "on": ""}
+
+    def norm_label(s: str) -> str:
+        s = (s or "").strip().lower()
+        s = re.sub(r"\s+", " ", s)
+        return s
+
+    def norm_on(s: str) -> str:
+        s = canonical_on(s or "")
+        s = s.strip().lower()
+        s = re.sub(r"\s+", " ", s)
+        return s
+
+    return {
+        "label": norm_label(c.get("label", "")),
+        "on": norm_on(c.get("on", "")),
+    }
+
+
 # --------------------------------------------------------------------------- #
 # 5 ▪ Confusion-matrix helpers (existing metrics)
 # --------------------------------------------------------------------------- #
@@ -360,42 +532,72 @@ def confusion_constraints(
     close: bool,
     model_name: str = "all-MiniLM-L6-v2",
 ) -> Tuple[float, float, float, float]:
+    """
+    Constraint confusion with:
+    - canonicalized 'label' and 'on'
+    - greedy matching on similarity matrix (order-invariant)
+    - same TP/FP/FN scaling as original implementation
+    """
+
+    # trivial cases
     if not gt_list and not pred_list:
         return 0.0, 0.0, 0.0, 1.0
     if not gt_list:
+        # no GT but some predictions => all FP
         return 0.0, 1.0, 0.0, 0.0
+
     n_gt, n_pred = len(gt_list), len(pred_list)
-    unit = 1.0 / (2 * n_gt)
+    unit = 1.0 / (2 * n_gt)  # same scaling as before
     thr = CLOSE_THR if close else 1.0
+
+    # normalize constraints (label & on)
+    gt_norm = [normalize_constraint(c) for c in gt_list]
+    pred_norm = [normalize_constraint(c) for c in pred_list]
+
+    # similarity matrix S[i, j] based on normalized label+on
     S = np.zeros((n_gt, n_pred))
-    for i, j in product(range(n_gt), range(n_pred)):
-        S[i, j] = sim_constraint(gt_list[i], pred_list[j], close)
+    for i, g in enumerate(gt_norm):
+        for j, p in enumerate(pred_norm):
+            lbl_sim = sim_string(g["label"], p["label"], close, model_name)
+            on_sim = sim_string(g["on"], p["on"], close, model_name)
+            S[i, j] = (lbl_sim + on_sim) / 2.0
+
     tp = fp = fn = 0.0
     gt_used: set[int] = set()
     pred_used: set[int] = set()
+
+    # greedy matching on S (order-invariant but not index-based)
     while S.size:
-        i, j = divmod(int(np.argmax(S)), S.shape[1])
+        idx = int(np.argmax(S))
+        i, j = divmod(idx, S.shape[1])
         if S[i, j] < 0:
             break
+
         gt_used.add(i)
         pred_used.add(j)
-        if sim_string(gt_list[i].get("label", ""), pred_list[j].get("label", ""), close, model_name) >= thr:
+
+        # label contribution
+        if sim_string(gt_norm[i]["label"], pred_norm[j]["label"], close, model_name) >= thr:
             tp += unit
         else:
             fp += unit
-        if (
-            sim_string(
-                canonical_on(gt_list[i].get("on", "")), canonical_on(pred_list[j].get("on", "")), close, model_name
-            )
-            >= thr
-        ):
+
+        # 'on' contribution
+        if sim_string(gt_norm[i]["on"], pred_norm[j]["on"], close, model_name) >= thr:
             tp += unit
         else:
             fp += unit
+
+        # mask row/col as used
         S[i, :] = -1.0
         S[:, j] = -1.0
+
+    # remaining GT → FN (for label + on)
     fn += (n_gt - len(gt_used)) * 2 * unit
+    # remaining predictions → FP (for label + on)
     fp += (n_pred - len(pred_used)) * 2 * unit
+
+    # small numerical correction (keep tp+fp+fn ≈ 1.0)
     total = tp + fp + fn
     if 1.0 - total > 1e-6:
         fp += 1.0 - total
@@ -403,6 +605,7 @@ def confusion_constraints(
         tp /= total
         fp /= total
         fn /= total
+
     return tp, fp, fn, 0.0
 
 
@@ -662,7 +865,9 @@ def _get_pred_uri_at_path(pred_enriched: Dict[str, Any], path: str) -> Any:
     return cur
 
 
-def compare_uris(gt: Dict[str, Any], pred_enriched: Dict[str, Any]) -> Tuple[int, int, float, Dict[str, bool]]:
+def compare_uris(
+    gt: Dict[str, Any], pred_enriched: Dict[str, Any]
+):  # fix the type guide -> Tuple[int, int, float, Dict[str, bool]]
     """
     Compare all URI fields present in GT with predicted enriched URIs.
     Returns (total, correct, acc, per_field_ok).
@@ -688,8 +893,16 @@ def compare_uris(gt: Dict[str, Any], pred_enriched: Dict[str, Any]) -> Tuple[int
             ok = canonicalize_uri_for_compare(pred_val) == canonicalize_uri_for_compare(expected)
         per_field_ok[path.replace(".", "_")] = bool(ok)
         correct += 1 if ok else 0
+
     acc = (correct / total) if total else 1.0
-    return total, correct, acc, per_field_ok
+    # predicted URI count (non-null)
+    predicted_non_null = sum(
+        1 for path, _ in assertions if _get_pred_uri_at_path(pred_enriched, path) not in (None, "", [])
+    )
+    # coverage score
+    coverage = (predicted_non_null / total) if total else 1.0
+    # return signature
+    return total, correct, acc, coverage, predicted_non_null, per_field_ok
 
 
 # --------------------------------------------------------------------------- #
@@ -736,19 +949,21 @@ def _run_one(
     approach: str,
     model_name: str,
     threshold: float,
+    prompt_version: str,
 ) -> Dict[str, Any]:
 
     try:
         # ---------------- Phase 1: call LLM to decompose (labels only) ----------------
         # Use a cache so we do NOT recompute the LLM decomposition when only the
         # linking 'approach' changes.
-        cache_key = (model, shot, temperature, gt["label"])
+        cache_key = (model, shot, temperature, prompt_version, gt["label"])
         with _DECOMP_LOCK:
             pred = _DECOMP_CACHE.get(cache_key)
 
         if pred is None:
             logging.info("LLM cache MISS | model=%s | shot=%d | T=%.2f | var=%r", model, shot, temperature, gt["label"])
-            pred = call_llm_loose(model, prompt, gt["label"], gt["comment"], temperature=temperature)
+            definition = gt.get("definition") or gt.get("comment")
+            pred = call_llm_loose(model, prompt, gt["label"], definition, temperature=temperature)
             with _DECOMP_LOCK:
                 _DECOMP_CACHE[cache_key] = pred
         else:
@@ -805,8 +1020,15 @@ def _run_one(
                 for i, metric in enumerate(["TP", "FP", "FN", "TN"])
             }
 
-            # ---------- NEW: URI evaluation (exact by QID; http/https equal) ----------
-            uris_total, uris_correct, uris_acc, uri_flags = compare_uris(gt, pred_enriched)
+            # ---------- URI evaluation (exact by QID; http/https equal) ----------
+            (
+                uris_total,
+                uris_correct,
+                uris_acc,
+                uris_coverage,
+                uris_predicted,
+                uri_flags,
+            ) = compare_uris(gt, pred_enriched)
 
             rows.append(
                 {
@@ -828,6 +1050,8 @@ def _run_one(
                     "URIs_total": uris_total,
                     "URIs_correct": uris_correct,
                     "URIs_acc": round(uris_acc, 3),
+                    "URIs_predicted": uris_predicted,
+                    "URIs_coverage": round(uris_coverage, 3),
                     **uri_flags,
                     **per_key_unwrapped,
                 }
@@ -846,6 +1070,7 @@ def _run_one(
 def evaluate(
     data_dir: pathlib.Path,
     shot_mode: int,
+    prompt_version: str,
     max_vars: int = 30,
     models: List[str] | None = None,
     temps: List[float] | None = None,
@@ -873,7 +1098,8 @@ def evaluate(
             logging.info("Skip %s (in-prompt example)", gt["label"])
             continue
 
-        prompt = build_prompt(gt["label"], gt["comment"], examples)
+        definition = gt.get("definition") or gt.get("comment") or ""
+        prompt = build_prompt(definition, examples, prompt_version)
 
         with _PROMPT_LOCK:
             key = (shot_mode, gt["label"])
@@ -890,7 +1116,7 @@ def evaluate(
 
         for model in models:
             for temp in temps:
-                tasks.append((model, gt, prompt, shot_mode, temp, approach, model_name, threshold))
+                tasks.append((model, gt, prompt, shot_mode, temp, approach, model_name, threshold, prompt_version))
 
     rows: list[dict] = []
     with ThreadPoolExecutor(max_workers=workers) as pool:
@@ -942,33 +1168,45 @@ def main() -> None:
         help="Wikidata linking approach",
     )
     parser.add_argument(
+        "--prompt-version",
+        type=str,
+        choices=list(PROMPT_TEMPLATES.keys()),
+        help="If provided: run only this prompt version. If omitted: run all prompt versions.",
+    )
+    parser.add_argument(
         "--model_name", type=str, default=EMBED_MODEL_NAME, help="Sentence Transformer / CrossEncoder model for linking"
     )
     parser.add_argument("--threshold", type=float, default=0.5, help="Score threshold (used by cross-encoder)")
     args = parser.parse_args()
+
+    # NEW: prompt version(s)
+    prompt_versions = [args.prompt_version] if args.prompt_version else list(PROMPT_TEMPLATES.keys())
 
     temps = args.temps or TEMPERATURES
     shots = [args.shot] if args.shot is not None else [0, 1, 3, 5]
     # NEW: if approach not specified → run all three
     approaches = [args.approach] if args.approach else ["none", "naive", "embedding", "cross-encoder"]
     all_rows: list[dict] = []
-
-    for approach in approaches:
-        for s in shots:
-            rows = evaluate(
-                args.data_dir,
-                shot_mode=s,
-                max_vars=args.max_vars,
-                models=args.only_model,
-                workers=args.workers,
-                approach=approach,
-                model_name=args.model_name,
-                threshold=args.threshold,
-            )
-            # Tag each row with the approach used
-            for r in rows:
-                r["LinkApproach"] = approach
-            all_rows.extend(rows)
+    for pv in prompt_versions:
+        for approach in approaches:
+            for shot in shots:
+                print(f"\n=== Running prompt_version={pv} | shot={shot} ===\n")
+                rows = evaluate(
+                    args.data_dir,
+                    shot_mode=shot,
+                    prompt_version=pv,
+                    max_vars=args.max_vars,
+                    models=args.only_model,
+                    temps=temps,
+                    workers=args.workers,
+                    approach=approach,
+                    model_name=args.model_name,
+                    threshold=args.threshold,
+                )
+                # Tag each row with the approach used
+                for r in rows:
+                    r["LinkApproach"] = approach
+                all_rows.extend(rows)
 
     df = pd.DataFrame(all_rows)
 
@@ -1027,6 +1265,8 @@ def main() -> None:
                 "J_concept": avg("J_concept", "exact"),
                 "J_text": avg("J_text", "exact"),
                 "URI_acc_mean": grp["URIs_acc"].mean() if "URIs_acc" in grp else float("nan"),
+                "URI_coverage_mean": grp["URIs_coverage"].mean() if "URIs_coverage" in grp else float("nan"),
+                "URI_predicted_mean": grp["URIs_predicted"].mean() if "URIs_predicted" in grp else float("nan"),
                 **per_key_metrics,
             }
         )
@@ -1083,7 +1323,7 @@ def main() -> None:
                 "non_json_suffix",
                 "unparsable_json",
                 "label_overwritten",
-                "comment_overwritten",
+                # "comment_overwritten",
                 "coerced_property_dict",
             ):
                 counter[flag] += bool(rec.get(flag))
