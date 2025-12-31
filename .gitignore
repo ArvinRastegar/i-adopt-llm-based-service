@@ -12,3 +12,4 @@ benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_144738.log
 wikidata_cache.sqlite
 .gitignore
 benchmarking_example/spaCyFishing.py
+*.log
