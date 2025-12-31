@@ -29,25 +29,25 @@ import urllib.parse
 import requests
 
 # import requests_cache
-import spacy
-from spacyfishing import EntityFishing
-import threading
+# import spacy
+# from spacyfishing import EntityFishing
+# import threading
 
 # Define spaCyFishing profiles we want to test
-SPACYFISHING_PROFILES = {}
-SPACYFISHING_LOCKS = {}
-ENTITY_FISHING_API = "https://cloud.science-miner.com/nerd/service/disambiguate"
+ENTITY_FISHING_API = "http://nerd.huma-num.fr/nerd/service/disambiguate"
 
-for suffix, cfg in [
-    ("default", {"language": "en", "extra_info": False}),
-    ("extra_info", {"language": "en", "extra_info": True}),
-]:
-    nlp = spacy.blank("en")
-    # IMPORTANT: entityfishing expects sentences
-    nlp.add_pipe("sentencizer")
-    nlp.add_pipe("entityfishing", config=cfg)
-    SPACYFISHING_PROFILES[f"spacyfishing_{suffix}"] = nlp
-    SPACYFISHING_LOCKS[f"spacyfishing_{suffix}"] = threading.Lock()
+
+def ef_entities(text: str, lang: str = "en") -> list[dict]:
+    """Call entity-fishing /disambiguate and return the raw entities list."""
+    try:
+        payload = {"text": text, "language": lang}
+        r = requests.post(ENTITY_FISHING_API, json=payload, timeout=60)
+        r.raise_for_status()
+        return r.json().get("entities", [])
+    except Exception as e:
+        logging.warning("Entity-fishing API error for text=%r: %r", text, e)
+        return []
+
 
 _REQUESTS = requests  # fallback without cache
 
@@ -450,58 +450,61 @@ def _to_wiki_url(uri: Optional[str]) -> Optional[str]:
     return f"https://www.wikidata.org/wiki/{q}" if q else canonicalize_uri_for_compare(uri)
 
 
+def _wrap_with_context(term: str, field: str) -> str:
+    """Wrap the entity with a short context sentence based on ontology field name."""
+    field_map = {
+        "hasMatrix": "matrix",
+        "hasObjectOfInterest": "object of interest",
+        "hasContextObject": "context object",
+        "hasProperty": "property",
+        "hasStatisticalModifier": "statistical modifier",
+        "hasConstraint": "constraint",
+    }
+    role = field_map.get(field, "concept")
+    return f"{term} is a {role}."
+
+
 def get_wikidata_entity(
-    term: str, approach: str = "naive", context: str = "", model_name: str = "all-MiniLM-L6-v2", threshold: float = 0.0
+    term: str,
+    approach: str = "naive",
+    context: str = "",
+    model_name: str = "all-MiniLM-L6-v2",
+    threshold: float = 0.0,
 ) -> Optional[str]:
     """
-    Returns a Wikidata URI for *term* using the chosen approach.
-    Output is canonicalized to https://www.wikidata.org/wiki/Qxxxx for consistency.
+    Resolve *term* to a Wikidata URI.
+    Approaches:
+      - ef             → entity-fishing API (/disambiguate)
+      - naive          → top Wikidata search hit
+      - embedding      → semantic similarity with SentenceTransformer
+      - cross-encoder  → pairwise scoring with CrossEncoder
+    Returns canonical https://www.wikidata.org/wiki/Qxxxx URIs or None.
     """
-
     if not term:
         return None
 
-    # --- spaCyFishing approaches ------------------------------------------
-    if approach.startswith("spacyfishing"):
-        try:
-            payload = {
-                "text": term,
-                "language": "en",
-            }
-            headers = {"Content-Type": "application/json"}
-            resp = requests.post(ENTITY_FISHING_API, headers=headers, json=payload, timeout=30)
-            resp.raise_for_status()
-            data = resp.json()
-            entities = data.get("entities", [])
-            if not entities:
-                return None
-
-            # Pick the top candidate with a Wikidata QID
-            candidates = []
-            for ent in entities:
-                for cand in ent.get("rawName", []):
-                    qid = ent.get("wikidataId")
-                    if qid:
-                        score = ent.get("nerd_selection_score", 1.0)
-                        candidates.append((qid, score, ent.get("rawName")))
-            if not candidates:
-                return None
-
-            candidates.sort(key=lambda x: x[1], reverse=True)
-            best_qid, best_score, ent_text = candidates[0]
-            logging.info(
-                "Remote entity-fishing | term=%r | candidate=%r | kb_id=%s | score=%.4f",
-                term,
-                ent_text,
-                best_qid,
-                best_score,
-            )
-            return _to_wiki_url(best_qid)
-        except Exception as e:
-            logging.warning("Remote entity-fishing failure for %r: %r", term, e)
+    # --- entity-fishing direct API ----------------------------------------
+    if approach == "ef":
+        sentence = _wrap_with_context(term, context)
+        logging.info("Entity-fishing request | term=%r | context=%r | sentence=%r", term, context, sentence)
+        ents = ef_entities(sentence)
+        if not ents:
             return None
+        # pick best matching entity
+        best = None
+        for ent in ents:
+            if not ent.get("wikidataId"):
+                continue
+            if ent.get("rawName", "").lower() == term.lower():
+                best = ent
+                break
+            if best is None or ent.get("confidence_score", 0) > best.get("confidence_score", 0):
+                best = ent
+        if best and best.get("wikidataId"):
+            return _to_wiki_url(best["wikidataId"])
+        return None
 
-    # --- existing methods (naive / embedding / cross-encoder) -------------
+    # --- Wikidata search API ----------------------------------------------
     encoded = urllib.parse.quote_plus(term)
     headers = {"User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"}
     try:
@@ -531,7 +534,7 @@ def get_wikidata_entity(
             return _to_wiki_url(search[idx]["id"])
 
         if approach == "cross-encoder":
-            model = load_crossencoder()
+            model = load_crossencoder("tomaarsen/Qwen3-Reranker-0.6B-seq-cls")
             query = f'Definition of "{term}" in context: "{context}"'
             docs = [f'label: "{s.get("label","")}", description: "{s.get("description","")}"' for s in search]
             scores = model.predict([(query, d) for d in docs])
@@ -554,7 +557,7 @@ def get_wikidata_entity(
             return None
 
         # fallback
-        qid = search[0]["id"]
+        # qid = search[0]["id"]
         return _to_wiki_url(qid)
 
     except Exception as e:
@@ -575,7 +578,7 @@ def enrich_with_uris(
             uri = get_wikidata_entity(
                 label_value,
                 approach=approach,
-                context=pred.get("label", ""),
+                context=key,  # 👈 pass ontology field here
                 model_name=model_name,
                 threshold=threshold,
             )
@@ -987,9 +990,8 @@ def main() -> None:
     temps = args.temps or TEMPERATURES
     shots = [args.shot] if args.shot is not None else [0, 1, 3, 5]
     # NEW: if approach not specified → run all (including spacyfishing profiles)
-    approaches = (
-        [args.approach] if args.approach else ["naive", "embedding", "cross-encoder", *SPACYFISHING_PROFILES.keys()]
-    )
+    approaches = [args.approach] if args.approach else ["ef", "naive", "embedding", "cross-encoder"]
+
     all_rows: list[dict] = []
 
     for approach in approaches:
