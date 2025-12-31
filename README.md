@@ -48,3 +48,6 @@ all dependencies are installed,
 the .env file is present, and
 
 the OPENROUTER_API_KEY is correctly set.
+
+
+[![DOI](https://zenodo.org/badge/946537030.svg)](https://doi.org/10.5281/zenodo.18108687)
