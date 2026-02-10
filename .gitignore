@@ -13,6 +13,8 @@ wikidata_cache.sqlite
 .gitignore
 benchmarking_example/spaCyFishing.py
 *.log
+!out/*.log
+!out/
 benchmarking_outputs/iadopt_Fexact_matrix_20251015_141144.xlsx
 benchmarking_outputs/iadopt_Fexact_matrix_20251015_142204.xlsx
 benchmarking_outputs/iadopt_Fexact_matrix_20251015_142426.xlsx
