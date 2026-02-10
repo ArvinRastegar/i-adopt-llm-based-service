@@ -1,0 +1,14 @@
+{
+  "label": "Density (particle per cm3) of electrons measured in the Solar Wind",
+  "definition": "Density (particle per cm3) of electrons measured in the Solar Wind.",
+  "comment": "Density of electrons in the Solar Wind measured per particle per cm³",
+  "hasProperty": "density",
+  "hasObjectOfInterest": "electrons",
+  "hasMatrix": "Solar Wind",
+  "hasStatisticalModifier": "",
+  "hasContextObject": "",
+  "hasConstraint": [],
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q29539",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q79833",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2225"
+}

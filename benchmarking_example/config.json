@@ -1,0 +1,57 @@
+{
+  "workflow": {
+    "steps": [
+      "extract_definition",
+      "llm_decompose",
+      "validate_json_schema",
+      "wikidata_enrich",
+      "export_rdf"
+    ]
+  },
+
+  "input": {
+    "definition": null,
+    "gt_path": "data/Json_preferred/test_set/C1_ElectronDensity.json"
+  },
+
+  "prompting": {
+    "schema_path": "data/Json_schema.json",
+    "prompts_dir": "data/prompts",
+    "prompt_version": "strict_minimal",
+    "shot": 5,
+    "examples_dir_map": {
+      "1": "data/Json_preferred/one_shot",
+      "3": "data/Json_preferred/three_shot",
+      "5": "data/Json_preferred/five_shot"
+    },
+    "examples_paths_override": []
+  },
+
+  "llm": {
+    "base_url": "https://openrouter.ai/api/v1",
+    "api_key_env": "OPENROUTER_API_KEY",
+    "model": "qwen/qwen3-32b",
+    "temperature": 0.5,
+    "timeout_sec": 60,
+    "max_retries": 3
+  },
+
+  "postprocess": {
+    "normalize_output": true
+  },
+
+  "wikidata": {
+    "approach": "cross-encoder",
+    "embed_model_name": "all-MiniLM-L6-v2",
+    "cross_encoder_model_name": "tomaarsen/Qwen3-Reranker-0.6B-seq-cls",
+    "threshold": 0.5,
+    "use_requests_cache": true
+  },
+
+  "output": {
+    "write_json_path": "out/pred_enriched.json",
+    "write_prompt_path": "out/prompt.txt",
+    "write_raw_llm_path": "out/llm_raw.txt",
+    "run_log_dir": "out"
+  }
+}
