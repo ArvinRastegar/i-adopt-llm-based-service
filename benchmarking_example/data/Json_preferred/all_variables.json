@@ -881,10 +881,10 @@
     "hasConstraint": [
       {
         "label": "location: intracellular",
-        "on": "n846dd22127954b53b6560eee04c11fb7b1"
+        "on": "n846dd22127954b53b6560eee04c11fb7B1"
       },
       {
-        "label": "time extent. duration of the experiment",
+        "label": "time extent: duration of the experiment",
         "on": "number per entity"
       }
     ]

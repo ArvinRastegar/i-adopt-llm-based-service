@@ -1,0 +1,236 @@
+{
+  "created_at": "2026-02-12T15:58:11.274727+00:00",
+  "elapsed": 0.179141,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:58:11 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-mdbqj",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "be6f2772-f77f-4e82-a615-3217a72c8132",
+    "x-search-id": "cxkja8f6sv766kfhv06s5pyk3"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=mass+fraction"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=mass+fraction",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "mass fraction"
+    },
+    "search": [
+      {
+        "id": "Q899138",
+        "title": "Q899138",
+        "pageid": 849960,
+        "concepturi": "http://www.wikidata.org/entity/Q899138",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q899138",
+        "display": {
+          "label": {
+            "value": "mass fraction",
+            "language": "en"
+          },
+          "description": {
+            "value": "ratio of one substance's mass to the mass of the total mixture",
+            "language": "en"
+          }
+        },
+        "label": "mass fraction",
+        "description": "ratio of one substance's mass to the mass of the total mixture",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "mass fraction"
+        }
+      },
+      {
+        "id": "Q76379025",
+        "title": "Q76379025",
+        "pageid": 75867620,
+        "concepturi": "http://www.wikidata.org/entity/Q76379025",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q76379025",
+        "display": {
+          "label": {
+            "value": "mass fraction of water",
+            "language": "en"
+          },
+          "description": {
+            "value": "mass of water relative to a mixture's total mass",
+            "language": "en"
+          }
+        },
+        "label": "mass fraction of water",
+        "description": "mass of water relative to a mixture's total mass",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "mass fraction of water"
+        }
+      },
+      {
+        "id": "Q76379189",
+        "title": "Q76379189",
+        "pageid": 75867784,
+        "concepturi": "http://www.wikidata.org/entity/Q76379189",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q76379189",
+        "display": {
+          "label": {
+            "value": "mass fraction of dry matter",
+            "language": "en"
+          },
+          "description": {
+            "value": "physical quantity",
+            "language": "en"
+          }
+        },
+        "label": "mass fraction of dry matter",
+        "description": "physical quantity",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "mass fraction of dry matter"
+        }
+      },
+      {
+        "id": "Q38510075",
+        "title": "Q38510075",
+        "pageid": 39874276,
+        "concepturi": "http://www.wikidata.org/entity/Q38510075",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q38510075",
+        "display": {
+          "label": {
+            "value": "Mass fractionation of noble gases in diffusion-limited hydrodynamic hydrogen escape",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on January 1990",
+            "language": "en"
+          }
+        },
+        "label": "Mass fractionation of noble gases in diffusion-limited hydrodynamic hydrogen escape",
+        "description": "scientific article published on January 1990",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Mass fractionation of noble gases in diffusion-limited hydrodynamic hydrogen escape"
+        }
+      },
+      {
+        "id": "Q64357163",
+        "title": "Q64357163",
+        "pageid": 64056632,
+        "concepturi": "http://www.wikidata.org/entity/Q64357163",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q64357163",
+        "display": {
+          "label": {
+            "value": "Mass fractionation in hydrodynamic escape",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article",
+            "language": "en"
+          }
+        },
+        "label": "Mass fractionation in hydrodynamic escape",
+        "description": "scientific article",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Mass fractionation in hydrodynamic escape"
+        }
+      },
+      {
+        "id": "Q40078280",
+        "title": "Q40078280",
+        "pageid": 41422851,
+        "concepturi": "http://www.wikidata.org/entity/Q40078280",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q40078280",
+        "display": {
+          "label": {
+            "value": "Mass fractionation of Drosophila egg chambers",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on June 1, 1977",
+            "language": "en"
+          }
+        },
+        "label": "Mass fractionation of Drosophila egg chambers",
+        "description": "scientific article published on June 1, 1977",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Mass fractionation of Drosophila egg chambers"
+        }
+      },
+      {
+        "id": "Q58068401",
+        "title": "Q58068401",
+        "pageid": 57983484,
+        "concepturi": "http://www.wikidata.org/entity/Q58068401",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q58068401",
+        "display": {
+          "label": {
+            "value": "Mass fraction spatiotemporal geostatistics and its application to map atmospheric polycyclic aromatic hydrocarbons after 9/11",
+            "language": "en"
+          },
+          "description": {
+            "value": "article",
+            "language": "en"
+          }
+        },
+        "label": "Mass fraction spatiotemporal geostatistics and its application to map atmospheric polycyclic aromatic hydrocarbons after 9/11",
+        "description": "article",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Mass fraction spatiotemporal geostatistics and its application to map atmospheric polycyclic aromatic hydrocarbons after 9/11"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "created_at": "2026-02-12T15:49:07.485999+00:00",
+  "elapsed": 0.183655,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:49:07 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-8gp7x",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "ae705191-2213-4211-9ede-333fcfd9933a",
+    "x-search-id": "8wfg7og8vsbv0ppcg7ljoj9am"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=bottom"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=bottom",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "bottom"
+    },
+    "search": [
+      {
+        "id": "Q25114879",
+        "title": "Q25114879",
+        "pageid": 27074053,
+        "concepturi": "http://www.wikidata.org/entity/Q25114879",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q25114879",
+        "display": {
+          "label": {
+            "value": "Bottom",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Bottom",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Bottom"
+        }
+      },
+      {
+        "id": "Q42165",
+        "title": "Q42165",
+        "pageid": 44412,
+        "concepturi": "http://www.wikidata.org/entity/Q42165",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q42165",
+        "display": {
+          "label": {
+            "value": "buttocks",
+            "language": "en"
+          },
+          "description": {
+            "value": "two rounded portions of the anatomy, traditionally located on the posterior of various organisms",
+            "language": "en"
+          }
+        },
+        "label": "buttocks",
+        "description": "two rounded portions of the anatomy, traditionally located on the posterior of various organisms",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "bottom"
+        },
+        "aliases": [
+          "bottom"
+        ]
+      },
+      {
+        "id": "Q11812678",
+        "title": "Q11812678",
+        "pageid": 12949297,
+        "concepturi": "http://www.wikidata.org/entity/Q11812678",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q11812678",
+        "display": {
+          "label": {
+            "value": "bottom",
+            "language": "en"
+          },
+          "description": {
+            "value": "lower side of something",
+            "language": "en"
+          }
+        },
+        "label": "bottom",
+        "description": "lower side of something",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "bottom"
+        }
+      },
+      {
+        "id": "Q634199",
+        "title": "Q634199",
+        "pageid": 596557,
+        "concepturi": "http://www.wikidata.org/entity/Q634199",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q634199",
+        "display": {
+          "label": {
+            "value": "Bottom",
+            "language": "en"
+          },
+          "description": {
+            "value": "British sitcom television series",
+            "language": "en"
+          }
+        },
+        "label": "Bottom",
+        "description": "British sitcom television series",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Bottom"
+        }
+      },
+      {
+        "id": "Q41785607",
+        "title": "Q41785607",
+        "pageid": 43096162,
+        "concepturi": "http://www.wikidata.org/entity/Q41785607",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q41785607",
+        "display": {
+          "label": {
+            "value": "Bottomley",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Bottomley",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Bottomley"
+        }
+      },
+      {
+        "id": "Q15817804",
+        "title": "Q15817804",
+        "pageid": 17446342,
+        "concepturi": "http://www.wikidata.org/entity/Q15817804",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q15817804",
+        "display": {
+          "label": {
+            "value": "The Bottom Line",
+            "language": "en"
+          },
+          "description": {
+            "value": "journal",
+            "language": "en"
+          }
+        },
+        "label": "The Bottom Line",
+        "description": "journal",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Bottom Line: managing library finances"
+        },
+        "aliases": [
+          "Bottom Line: managing library finances"
+        ]
+      },
+      {
+        "id": "Q3080526",
+        "title": "Q3080526",
+        "pageid": 2944218,
+        "concepturi": "http://www.wikidata.org/entity/Q3080526",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q3080526",
+        "display": {
+          "label": {
+            "value": "bottom",
+            "language": "en"
+          },
+          "description": {
+            "value": "receptive partner during sexual penetration",
+            "language": "en"
+          }
+        },
+        "label": "bottom",
+        "description": "receptive partner during sexual penetration",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "bottom"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

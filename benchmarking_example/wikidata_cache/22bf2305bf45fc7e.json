@@ -1,0 +1,239 @@
+{
+  "created_at": "2026-02-12T15:59:43.448706+00:00",
+  "elapsed": 0.19387,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:59:43 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-ktprz",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "404a8cde-1d02-4579-ac8c-1a0730c3016f",
+    "x-search-id": "5es8yu73gkcxw3uh82eoq9s9p"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=nail"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=nail",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "nail"
+    },
+    "search": [
+      {
+        "id": "Q1078373",
+        "title": "Q1078373",
+        "pageid": 1026623,
+        "concepturi": "http://www.wikidata.org/entity/Q1078373",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1078373",
+        "display": {
+          "label": {
+            "value": "d\u012bng",
+            "language": "en"
+          },
+          "description": {
+            "value": "fourth of the 10 heavenly stems, \u4e01 (d\u012bng, nail)",
+            "language": "en"
+          }
+        },
+        "label": "d\u012bng",
+        "description": "fourth of the 10 heavenly stems, \u4e01 (d\u012bng, nail)",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "nail"
+        },
+        "aliases": [
+          "nail"
+        ]
+      },
+      {
+        "id": "Q18331285",
+        "title": "Q18331285",
+        "pageid": 19860826,
+        "concepturi": "http://www.wikidata.org/entity/Q18331285",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q18331285",
+        "display": {
+          "label": {
+            "value": "Nail",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Nail",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Nail"
+        }
+      },
+      {
+        "id": "Q37077",
+        "title": "Q37077",
+        "pageid": 39649,
+        "concepturi": "http://www.wikidata.org/entity/Q37077",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q37077",
+        "display": {
+          "label": {
+            "value": "nail",
+            "language": "en"
+          },
+          "description": {
+            "value": "sharp object of hard metal used as a fastener",
+            "language": "en"
+          }
+        },
+        "label": "nail",
+        "description": "sharp object of hard metal used as a fastener",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "nail"
+        }
+      },
+      {
+        "id": "Q503450",
+        "title": "Q503450",
+        "pageid": 473489,
+        "concepturi": "http://www.wikidata.org/entity/Q503450",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q503450",
+        "display": {
+          "label": {
+            "value": "Naila",
+            "language": "en"
+          },
+          "description": {
+            "value": "town in Upper Franconia, Bavaria, Germany",
+            "language": "en"
+          }
+        },
+        "label": "Naila",
+        "description": "town in Upper Franconia, Bavaria, Germany",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Naila"
+        }
+      },
+      {
+        "id": "Q4312344",
+        "title": "Q4312344",
+        "pageid": 4121924,
+        "concepturi": "http://www.wikidata.org/entity/Q4312344",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q4312344",
+        "display": {
+          "label": {
+            "value": "Nail",
+            "language": "en"
+          },
+          "description": {
+            "value": "male given name",
+            "language": "en"
+          }
+        },
+        "label": "Nail",
+        "description": "male given name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Nail"
+        }
+      },
+      {
+        "id": "Q942474",
+        "title": "Q942474",
+        "pageid": 892623,
+        "concepturi": "http://www.wikidata.org/entity/Q942474",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q942474",
+        "display": {
+          "label": {
+            "value": "Nailsea",
+            "language": "en"
+          },
+          "description": {
+            "value": "town in North Somerset, England",
+            "language": "en"
+          }
+        },
+        "label": "Nailsea",
+        "description": "town in North Somerset, England",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Nailsea"
+        }
+      },
+      {
+        "id": "Q1173964",
+        "title": "Q1173964",
+        "pageid": 1119738,
+        "concepturi": "http://www.wikidata.org/entity/Q1173964",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1173964",
+        "display": {
+          "label": {
+            "value": "Nailly",
+            "language": "en"
+          },
+          "description": {
+            "value": "commune in Yonne, France",
+            "language": "en"
+          }
+        },
+        "label": "Nailly",
+        "description": "commune in Yonne, France",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Nailly"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

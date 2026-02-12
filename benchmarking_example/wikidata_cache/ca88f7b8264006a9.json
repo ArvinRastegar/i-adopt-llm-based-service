@@ -1,0 +1,245 @@
+{
+  "created_at": "2026-02-12T15:55:53.704190+00:00",
+  "elapsed": 0.169506,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:55:53 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-5jjkr",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "384099d4-d71e-4abe-a453-285a980edafa",
+    "x-search-id": "1k7jlx0xy6papzkrhc82x4beh"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=enclosures"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=enclosures",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "enclosures"
+    },
+    "search": [
+      {
+        "id": "Q792164",
+        "title": "Q792164",
+        "pageid": 745173,
+        "concepturi": "http://www.wikidata.org/entity/Q792164",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q792164",
+        "display": {
+          "label": {
+            "value": "enclosure",
+            "language": "en"
+          },
+          "description": {
+            "value": "legal process in England of consolidating (enclosing) small landholdings into larger farms",
+            "language": "en"
+          }
+        },
+        "label": "enclosure",
+        "description": "legal process in England of consolidating (enclosing) small landholdings into larger farms",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "enclosures"
+        },
+        "aliases": [
+          "enclosures"
+        ]
+      },
+      {
+        "id": "Q104634739",
+        "title": "Q104634739",
+        "pageid": 100081190,
+        "concepturi": "http://www.wikidata.org/entity/Q104634739",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q104634739",
+        "display": {
+          "label": {
+            "value": "Enclosures",
+            "language": "en"
+          },
+          "description": {
+            "value": "exhibition in 2007",
+            "language": "en"
+          }
+        },
+        "label": "Enclosures",
+        "description": "exhibition in 2007",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Enclosures"
+        }
+      },
+      {
+        "id": "Q137119639",
+        "title": "Q137119639",
+        "pageid": 130801079,
+        "concepturi": "http://www.wikidata.org/entity/Q137119639",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q137119639",
+        "display": {
+          "label": {
+            "value": "Central Asian Funerary architecture style",
+            "language": "en"
+          },
+          "description": {
+            "value": "Central Asian funerary architecture encompasses diverse tomb and memorial structures, reflecting nomadic, settled, and syncretic religious influences across the Silk Road. (ID: INHF-605135198-18-11-25-CE)",
+            "language": "en"
+          }
+        },
+        "label": "Central Asian Funerary architecture style",
+        "description": "Central Asian funerary architecture encompasses diverse tomb and memorial structures, reflecting nomadic, settled, and syncretic religious influences across the Silk Road. (ID: INHF-605135198-18-11-25-CE)",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Enclosures"
+        },
+        "aliases": [
+          "Enclosures"
+        ]
+      },
+      {
+        "id": "Q119396050",
+        "title": "Q119396050",
+        "pageid": 113886861,
+        "concepturi": "http://www.wikidata.org/entity/Q119396050",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q119396050",
+        "display": {
+          "label": {
+            "value": "Enclosures",
+            "language": "en"
+          },
+          "description": {
+            "value": "painting by Kenneth Draper (b.1944), Arts Council Collection, Southbank Centre",
+            "language": "en"
+          }
+        },
+        "label": "Enclosures",
+        "description": "painting by Kenneth Draper (b.1944), Arts Council Collection, Southbank Centre",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Enclosures"
+        }
+      },
+      {
+        "id": "Q137124019",
+        "title": "Q137124019",
+        "pageid": 130805426,
+        "concepturi": "http://www.wikidata.org/entity/Q137124019",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q137124019",
+        "display": {
+          "label": {
+            "value": "Early Indic Religious architecture style",
+            "language": "en"
+          },
+          "description": {
+            "value": "Early Indic religious architecture, evidenced by fire altars and rudimentary temple structures, reflects the cosmological beliefs and ritual practices of the Vedic period and subsequent eras. (ID: INHF-455218688-18-11-25-EC)",
+            "language": "en"
+          }
+        },
+        "label": "Early Indic Religious architecture style",
+        "description": "Early Indic religious architecture, evidenced by fire altars and rudimentary temple structures, reflects the cosmological beliefs and ritual practices of the Vedic period and subsequent eras. (ID: INHF-455218688-18-11-25-EC)",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Enclosures"
+        },
+        "aliases": [
+          "Enclosures"
+        ]
+      },
+      {
+        "id": "Q56662451",
+        "title": "Q56662451",
+        "pageid": 56603503,
+        "concepturi": "http://www.wikidata.org/entity/Q56662451",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q56662451",
+        "display": {
+          "label": {
+            "value": "enclosures 500m SSE of Stevenson Mains",
+            "language": "en"
+          },
+          "description": {
+            "value": "architectural structure in East Lothian, Scotland, UK",
+            "language": "en"
+          }
+        },
+        "label": "enclosures 500m SSE of Stevenson Mains",
+        "description": "architectural structure in East Lothian, Scotland, UK",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "enclosures 500m SSE of Stevenson Mains"
+        }
+      },
+      {
+        "id": "Q56663350",
+        "title": "Q56663350",
+        "pageid": 56604392,
+        "concepturi": "http://www.wikidata.org/entity/Q56663350",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q56663350",
+        "display": {
+          "label": {
+            "value": "enclosures 600m S of Forteviot",
+            "language": "en"
+          },
+          "description": {
+            "value": "architectural structure in Perth and Kinross, Scotland, UK",
+            "language": "en"
+          }
+        },
+        "label": "enclosures 600m S of Forteviot",
+        "description": "architectural structure in Perth and Kinross, Scotland, UK",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "enclosures 600m S of Forteviot"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

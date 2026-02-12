@@ -1,0 +1,240 @@
+{
+  "cookies": {
+    "WMF-Uniq": "jG0MiilZfBIV3-XNPwUIdgMFAAEBAFvdiBIMw5plshyCugZAePPrf-xdwduQX6uQ"
+  },
+  "created_at": "2026-02-12T15:17:32.101627+00:00",
+  "elapsed": 0.186022,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "1",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:17:32 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.canary-569d6f69c4-ff5rj",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "set-cookie": "WMF-Uniq=jG0MiilZfBIV3-XNPwUIdgMFAAEBAFvdiBIMw5plshyCugZAePPrf-xdwduQX6uQ;Domain=.wikidata.org;Path=/;HttpOnly;secure;SameSite=None;Expires=Fri, 12 Feb 2027 00:00:00 GMT",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "6e904378-40bc-4987-9e11-3f01465c523f",
+    "x-search-id": "d11efp0sqxr20f3nrw72nrugz"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "jG0MiilZfBIV3-XNPwUIdgMFAAAAAFvdBpkz6bMUiHCAMBsSfihSNfEHYOZTcirl"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=jG0MiilZfBIV3-XNPwUIdgMFAAAAAFvdBpkz6bMUiHCAMBsSfihSNfEHYOZTcirl",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=angle+of+attack"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=angle+of+attack",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "angle of attack"
+    },
+    "search": [
+      {
+        "id": "Q115011655",
+        "title": "Q115011655",
+        "pageid": 109667743,
+        "concepturi": "http://www.wikidata.org/entity/Q115011655",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q115011655",
+        "display": {
+          "label": {
+            "value": "Angle of Attack",
+            "language": "en"
+          },
+          "description": {
+            "value": "2009 video game",
+            "language": "en"
+          }
+        },
+        "label": "Angle of Attack",
+        "description": "2009 video game",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Angle of Attack"
+        }
+      },
+      {
+        "id": "Q370906",
+        "title": "Q370906",
+        "pageid": 352932,
+        "concepturi": "http://www.wikidata.org/entity/Q370906",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q370906",
+        "display": {
+          "label": {
+            "value": "angle of attack",
+            "language": "en"
+          },
+          "description": {
+            "value": "angle between the chord of a wing and the undisturbed airflow",
+            "language": "en"
+          }
+        },
+        "label": "angle of attack",
+        "description": "angle between the chord of a wing and the undisturbed airflow",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "angle of attack"
+        }
+      },
+      {
+        "id": "Q50380896",
+        "title": "Q50380896",
+        "pageid": 51354232,
+        "concepturi": "http://www.wikidata.org/entity/Q50380896",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q50380896",
+        "display": {
+          "label": {
+            "value": "Angle of Attack",
+            "language": "en"
+          },
+          "description": {
+            "value": "episode of CSI: Crime Scene Investigation (S15 E11)",
+            "language": "en"
+          }
+        },
+        "label": "Angle of Attack",
+        "description": "episode of CSI: Crime Scene Investigation (S15 E11)",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Angle of Attack"
+        }
+      },
+      {
+        "id": "Q124153853",
+        "title": "Q124153853",
+        "pageid": 118327495,
+        "concepturi": "http://www.wikidata.org/entity/Q124153853",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q124153853",
+        "display": {
+          "label": {
+            "value": "angle of attack probe",
+            "language": "en"
+          },
+          "description": {
+            "value": "aircraft component",
+            "language": "en"
+          }
+        },
+        "label": "angle of attack probe",
+        "description": "aircraft component",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "angle of attack probe"
+        }
+      },
+      {
+        "id": "Q125464425",
+        "title": "Q125464425",
+        "pageid": 119588945,
+        "concepturi": "http://www.wikidata.org/entity/Q125464425",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q125464425",
+        "display": {
+          "label": {
+            "value": "Angle of attack sensor with thermal enhancement",
+            "language": "en"
+          },
+          "description": {
+            "value": "US patent 11181545",
+            "language": "en"
+          }
+        },
+        "label": "Angle of attack sensor with thermal enhancement",
+        "description": "US patent 11181545",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Angle of attack sensor with thermal enhancement"
+        }
+      },
+      {
+        "id": "Q125464554",
+        "title": "Q125464554",
+        "pageid": 119589065,
+        "concepturi": "http://www.wikidata.org/entity/Q125464554",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q125464554",
+        "display": {
+          "label": {
+            "value": "Angle of attack sensor",
+            "language": "en"
+          },
+          "description": {
+            "value": "US patent 11162970",
+            "language": "en"
+          }
+        },
+        "label": "Angle of attack sensor",
+        "description": "US patent 11162970",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Angle of attack sensor"
+        }
+      },
+      {
+        "id": "Q122884019",
+        "title": "Q122884019",
+        "pageid": 117134164,
+        "concepturi": "http://www.wikidata.org/entity/Q122884019",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q122884019",
+        "display": {
+          "label": {
+            "value": "Angle-of-attack determination for aircraft stall protection",
+            "language": "en"
+          },
+          "description": {
+            "value": "US patent 11299289",
+            "language": "en"
+          }
+        },
+        "label": "Angle-of-attack determination for aircraft stall protection",
+        "description": "US patent 11299289",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Angle-of-attack determination for aircraft stall protection"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

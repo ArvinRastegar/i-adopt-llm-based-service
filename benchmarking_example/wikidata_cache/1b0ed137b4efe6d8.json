@@ -1,0 +1,242 @@
+{
+  "created_at": "2026-02-12T16:00:30.032031+00:00",
+  "elapsed": 0.165769,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "2",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 16:00:29 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-dpj52",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "9c247fd3-4f02-4db6-8bea-d93461a12a8e",
+    "x-search-id": "903b7zgvja5agjwl4nx9ewn3x"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=velocity"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=velocity",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "velocity"
+    },
+    "search": [
+      {
+        "id": "Q11465",
+        "title": "Q11465",
+        "pageid": 12982,
+        "concepturi": "http://www.wikidata.org/entity/Q11465",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q11465",
+        "display": {
+          "label": {
+            "value": "velocity",
+            "language": "en"
+          },
+          "description": {
+            "value": "rate of change of the position of an object as a function of time, and the direction of that change",
+            "language": "en"
+          }
+        },
+        "label": "velocity",
+        "description": "rate of change of the position of an object as a function of time, and the direction of that change",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "velocity"
+        }
+      },
+      {
+        "id": "Q1144560",
+        "title": "Q1144560",
+        "pageid": 1091186,
+        "concepturi": "http://www.wikidata.org/entity/Q1144560",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1144560",
+        "display": {
+          "label": {
+            "value": "rate",
+            "language": "en"
+          },
+          "description": {
+            "value": "quantity of process intensivity (mathematics)",
+            "language": "en"
+          }
+        },
+        "label": "rate",
+        "description": "quantity of process intensivity (mathematics)",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "velocity"
+        },
+        "aliases": [
+          "velocity"
+        ]
+      },
+      {
+        "id": "Q2111",
+        "title": "Q2111",
+        "pageid": 3020,
+        "concepturi": "http://www.wikidata.org/entity/Q2111",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q2111",
+        "display": {
+          "label": {
+            "value": "speed of light in vacuum",
+            "language": "en"
+          },
+          "description": {
+            "value": "speed of electromagnetic waves in vacuum",
+            "language": "en"
+          }
+        },
+        "label": "speed of light in vacuum",
+        "description": "speed of electromagnetic waves in vacuum",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "velocity of light"
+        },
+        "aliases": [
+          "velocity of light"
+        ]
+      },
+      {
+        "id": "Q7919281",
+        "title": "Q7919281",
+        "pageid": 7858018,
+        "concepturi": "http://www.wikidata.org/entity/Q7919281",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q7919281",
+        "display": {
+          "label": {
+            "value": "Velocity",
+            "language": "en"
+          },
+          "description": {
+            "value": "2012 video game",
+            "language": "en"
+          }
+        },
+        "label": "Velocity",
+        "description": "2012 video game",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Velocity"
+        }
+      },
+      {
+        "id": "Q22102026",
+        "title": "Q22102026",
+        "pageid": 24132848,
+        "concepturi": "http://www.wikidata.org/entity/Q22102026",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q22102026",
+        "display": {
+          "label": {
+            "value": "Velocity Frequent Flyer",
+            "language": "en"
+          },
+          "description": {
+            "value": "frequent-flyer program of Virgin Australia whose airline call sign is \"Velocity\"",
+            "language": "en"
+          }
+        },
+        "label": "Velocity Frequent Flyer",
+        "description": "frequent-flyer program of Virgin Australia whose airline call sign is \"Velocity\"",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Velocity Frequent Flyer"
+        }
+      },
+      {
+        "id": "Q50845784",
+        "title": "Q50845784",
+        "pageid": 51775698,
+        "concepturi": "http://www.wikidata.org/entity/Q50845784",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q50845784",
+        "display": {
+          "label": {
+            "value": "Velocity",
+            "language": "en"
+          },
+          "description": {
+            "value": "episode of Smallville (S3 E13)",
+            "language": "en"
+          }
+        },
+        "label": "Velocity",
+        "description": "episode of Smallville (S3 E13)",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Velocity"
+        }
+      },
+      {
+        "id": "Q2512543",
+        "title": "Q2512543",
+        "pageid": 2425198,
+        "concepturi": "http://www.wikidata.org/entity/Q2512543",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q2512543",
+        "display": {
+          "label": {
+            "value": "Velocity",
+            "language": "en"
+          },
+          "description": {
+            "value": "US musical group",
+            "language": "en"
+          }
+        },
+        "label": "Velocity",
+        "description": "US musical group",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Velocity"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

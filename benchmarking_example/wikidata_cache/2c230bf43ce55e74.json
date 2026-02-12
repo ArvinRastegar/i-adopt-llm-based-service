@@ -1,0 +1,242 @@
+{
+  "created_at": "2026-02-12T15:56:18.612796+00:00",
+  "elapsed": 0.176731,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:56:18 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-85zrd",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "a21273bf-71c3-466d-9123-3c54f10ea2a1",
+    "x-search-id": "9595k415jonnwipy6bhtp5tsl"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=organism"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=organism",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "organism"
+    },
+    "search": [
+      {
+        "id": "Q7239",
+        "title": "Q7239",
+        "pageid": 8442,
+        "concepturi": "http://www.wikidata.org/entity/Q7239",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q7239",
+        "display": {
+          "label": {
+            "value": "organism",
+            "language": "en"
+          },
+          "description": {
+            "value": "any individual living being or physical living system",
+            "language": "en"
+          }
+        },
+        "label": "organism",
+        "description": "any individual living being or physical living system",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "organism"
+        }
+      },
+      {
+        "id": "Q15753936",
+        "title": "Q15753936",
+        "pageid": 17387169,
+        "concepturi": "http://www.wikidata.org/entity/Q15753936",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q15753936",
+        "display": {
+          "label": {
+            "value": "Organisms Diversity & Evolution",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific journal",
+            "language": "en"
+          }
+        },
+        "label": "Organisms Diversity & Evolution",
+        "description": "scientific journal",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Organisms Diversity & Evolution"
+        }
+      },
+      {
+        "id": "Q55983715",
+        "title": "Q55983715",
+        "pageid": 55933906,
+        "concepturi": "http://www.wikidata.org/entity/Q55983715",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q55983715",
+        "display": {
+          "label": {
+            "value": "organisms known by a particular common name",
+            "language": "en"
+          },
+          "description": {
+            "value": "organisms which have been assigned common names in addition to their taxon name",
+            "language": "en"
+          }
+        },
+        "label": "organisms known by a particular common name",
+        "description": "organisms which have been assigned common names in addition to their taxon name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "organisms known by a particular common name"
+        }
+      },
+      {
+        "id": "Q1297766",
+        "title": "Q1297766",
+        "pageid": 1237896,
+        "concepturi": "http://www.wikidata.org/entity/Q1297766",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1297766",
+        "display": {
+          "label": {
+            "value": "organism (biology)",
+            "language": "en"
+          },
+          "description": {
+            "value": "system of organs of a living being in its entirety",
+            "language": "en"
+          }
+        },
+        "label": "organism (biology)",
+        "description": "system of organs of a living being in its entirety",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "organism (biology)"
+        }
+      },
+      {
+        "id": "Q55597235",
+        "title": "Q55597235",
+        "pageid": 55584969,
+        "concepturi": "http://www.wikidata.org/entity/Q55597235",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q55597235",
+        "display": {
+          "label": {
+            "value": "class of living thing",
+            "language": "en"
+          },
+          "description": {
+            "value": "different stages, states, and types of an organism",
+            "language": "en"
+          }
+        },
+        "label": "class of living thing",
+        "description": "different stages, states, and types of an organism",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "organism forms"
+        },
+        "aliases": [
+          "organism forms"
+        ]
+      },
+      {
+        "id": "Q182726",
+        "title": "Q182726",
+        "pageid": 181799,
+        "concepturi": "http://www.wikidata.org/entity/Q182726",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q182726",
+        "display": {
+          "label": {
+            "value": "GMO",
+            "language": "en"
+          },
+          "description": {
+            "value": "organisms whose genetic material has been altered using genetic engineering methods",
+            "language": "en"
+          }
+        },
+        "label": "GMO",
+        "description": "organisms whose genetic material has been altered using genetic engineering methods",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Organisms, Genetically Modified"
+        },
+        "aliases": [
+          "Organisms, Genetically Modified"
+        ]
+      },
+      {
+        "id": "Q2357556",
+        "title": "Q2357556",
+        "pageid": 2277731,
+        "concepturi": "http://www.wikidata.org/entity/Q2357556",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q2357556",
+        "display": {
+          "label": {
+            "value": "Organismen",
+            "language": "en"
+          },
+          "description": {
+            "value": "Swedish musician, rapper",
+            "language": "en"
+          }
+        },
+        "label": "Organismen",
+        "description": "Swedish musician, rapper",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Organismen"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

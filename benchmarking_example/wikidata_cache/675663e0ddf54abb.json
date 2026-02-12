@@ -1,0 +1,245 @@
+{
+  "created_at": "2026-02-12T15:47:16.394976+00:00",
+  "elapsed": 0.205936,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:47:16 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-z5lpd",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "23bc2675-73ea-4bff-b3d2-006be599cbc8",
+    "x-search-id": "38tmw4l95ii4f1dldz7tpq379"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=clouds"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=clouds",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "clouds"
+    },
+    "search": [
+      {
+        "id": "Q8074",
+        "title": "Q8074",
+        "pageid": 9354,
+        "concepturi": "http://www.wikidata.org/entity/Q8074",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q8074",
+        "display": {
+          "label": {
+            "value": "cloud",
+            "language": "en"
+          },
+          "description": {
+            "value": "visible mass of liquid droplets or frozen crystals suspended in the atmosphere",
+            "language": "en"
+          }
+        },
+        "label": "cloud",
+        "description": "visible mass of liquid droplets or frozen crystals suspended in the atmosphere",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "clouds"
+        },
+        "aliases": [
+          "clouds"
+        ]
+      },
+      {
+        "id": "Q113723376",
+        "title": "Q113723376",
+        "pageid": 108481845,
+        "concepturi": "http://www.wikidata.org/entity/Q113723376",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q113723376",
+        "display": {
+          "label": {
+            "value": "Clouds",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Clouds",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Clouds"
+        }
+      },
+      {
+        "id": "Q868447",
+        "title": "Q868447",
+        "pageid": 819771,
+        "concepturi": "http://www.wikidata.org/entity/Q868447",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q868447",
+        "display": {
+          "label": {
+            "value": "The Clouds",
+            "language": "en"
+          },
+          "description": {
+            "value": "comedy by Aristophanes",
+            "language": "en"
+          }
+        },
+        "label": "The Clouds",
+        "description": "comedy by Aristophanes",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Clouds"
+        },
+        "aliases": [
+          "Clouds"
+        ]
+      },
+      {
+        "id": "Q781732",
+        "title": "Q781732",
+        "pageid": 734750,
+        "concepturi": "http://www.wikidata.org/entity/Q781732",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q781732",
+        "display": {
+          "label": {
+            "value": "Clouds",
+            "language": "en"
+          },
+          "description": {
+            "value": "1969 studio album by Joni Mitchell",
+            "language": "en"
+          }
+        },
+        "label": "Clouds",
+        "description": "1969 studio album by Joni Mitchell",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Clouds"
+        }
+      },
+      {
+        "id": "Q203247",
+        "title": "Q203247",
+        "pageid": 199735,
+        "concepturi": "http://www.wikidata.org/entity/Q203247",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q203247",
+        "display": {
+          "label": {
+            "value": "Nuages",
+            "language": "en"
+          },
+          "description": {
+            "value": "instrumental composed by Django Reinhardt",
+            "language": "en"
+          }
+        },
+        "label": "Nuages",
+        "description": "instrumental composed by Django Reinhardt",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Clouds"
+        },
+        "aliases": [
+          "Clouds"
+        ]
+      },
+      {
+        "id": "Q1102660",
+        "title": "Q1102660",
+        "pageid": 1049995,
+        "concepturi": "http://www.wikidata.org/entity/Q1102660",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1102660",
+        "display": {
+          "label": {
+            "value": "Clouds",
+            "language": "en"
+          },
+          "description": {
+            "value": "1992 studio album by Tiamat",
+            "language": "en"
+          }
+        },
+        "label": "Clouds",
+        "description": "1992 studio album by Tiamat",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Clouds"
+        }
+      },
+      {
+        "id": "Q2111939",
+        "title": "Q2111939",
+        "pageid": 2038344,
+        "concepturi": "http://www.wikidata.org/entity/Q2111939",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q2111939",
+        "display": {
+          "label": {
+            "value": "Clouds",
+            "language": "en"
+          },
+          "description": {
+            "value": "1960s Scottish rock band",
+            "language": "en"
+          }
+        },
+        "label": "Clouds",
+        "description": "1960s Scottish rock band",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Clouds"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

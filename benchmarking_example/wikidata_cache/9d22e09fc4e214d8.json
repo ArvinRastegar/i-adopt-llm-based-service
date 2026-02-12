@@ -1,0 +1,231 @@
+{
+  "created_at": "2026-02-12T15:45:43.626140+00:00",
+  "elapsed": 0.191938,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:45:43 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-txl8h",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "0a735dd7-971f-4892-82ff-54041110e050",
+    "x-search-id": "3oc45md3212c5stipcg8rgbr6"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=habitat+patch"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=habitat+patch",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "habitat patch"
+    },
+    "search": [
+      {
+        "id": "Q55842516",
+        "title": "Q55842516",
+        "pageid": 55799161,
+        "concepturi": "http://www.wikidata.org/entity/Q55842516",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q55842516",
+        "display": {
+          "label": {
+            "value": "Habitat patchiness promotes invasion by alien grasses on serpentine soil",
+            "language": "en"
+          },
+          "description": {
+            "value": "article",
+            "language": "en"
+          }
+        },
+        "label": "Habitat patchiness promotes invasion by alien grasses on serpentine soil",
+        "description": "article",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Habitat patchiness promotes invasion by alien grasses on serpentine soil"
+        }
+      },
+      {
+        "id": "Q57181855",
+        "title": "Q57181855",
+        "pageid": 57098973,
+        "concepturi": "http://www.wikidata.org/entity/Q57181855",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q57181855",
+        "display": {
+          "label": {
+            "value": "Habitat patchiness and plant species richness",
+            "language": "en"
+          },
+          "description": {
+            "value": "article",
+            "language": "en"
+          }
+        },
+        "label": "Habitat patchiness and plant species richness",
+        "description": "article",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Habitat patchiness and plant species richness"
+        }
+      },
+      {
+        "id": "Q51188049",
+        "title": "Q51188049",
+        "pageid": 52109010,
+        "concepturi": "http://www.wikidata.org/entity/Q51188049",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q51188049",
+        "display": {
+          "label": {
+            "value": "Habitat patch shape, not corridors, determines herbivory and fruit production of an annual plant",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published in May 2012",
+            "language": "en"
+          }
+        },
+        "label": "Habitat patch shape, not corridors, determines herbivory and fruit production of an annual plant",
+        "description": "scientific article published in May 2012",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Habitat patch shape, not corridors, determines herbivory and fruit production of an annual plant"
+        }
+      },
+      {
+        "id": "Q57034578",
+        "title": "Q57034578",
+        "pageid": 56951550,
+        "concepturi": "http://www.wikidata.org/entity/Q57034578",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q57034578",
+        "display": {
+          "label": {
+            "value": "Habitat patch and matrix effects on small-mammal persistence in Amazonian forest fragments",
+            "language": "en"
+          }
+        },
+        "label": "Habitat patch and matrix effects on small-mammal persistence in Amazonian forest fragments",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Habitat patch and matrix effects on small-mammal persistence in Amazonian forest fragments"
+        }
+      },
+      {
+        "id": "Q57034706",
+        "title": "Q57034706",
+        "pageid": 56951678,
+        "concepturi": "http://www.wikidata.org/entity/Q57034706",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q57034706",
+        "display": {
+          "label": {
+            "value": "Habitat patch size modulates terrestrial mammal activity patterns in Amazonian forest fragments",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published in 2010",
+            "language": "en"
+          }
+        },
+        "label": "Habitat patch size modulates terrestrial mammal activity patterns in Amazonian forest fragments",
+        "description": "scientific article published in 2010",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Habitat patch size modulates terrestrial mammal activity patterns in Amazonian forest fragments"
+        }
+      },
+      {
+        "id": "Q51613099",
+        "title": "Q51613099",
+        "pageid": 52528052,
+        "concepturi": "http://www.wikidata.org/entity/Q51613099",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q51613099",
+        "display": {
+          "label": {
+            "value": "Habitat patch size and isolation as predictors of occupancy and number of argyrodine spider kleptoparasites in Nephila webs",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on December 7, 2010",
+            "language": "en"
+          }
+        },
+        "label": "Habitat patch size and isolation as predictors of occupancy and number of argyrodine spider kleptoparasites in Nephila webs",
+        "description": "scientific article published on December 7, 2010",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Habitat patch size and isolation as predictors of occupancy and number of argyrodine spider kleptoparasites in Nephila webs"
+        }
+      },
+      {
+        "id": "Q60457025",
+        "title": "Q60457025",
+        "pageid": 60329062,
+        "concepturi": "http://www.wikidata.org/entity/Q60457025",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q60457025",
+        "display": {
+          "label": {
+            "value": "Habitat Patch Arrangement and Metapopulation Persistence of Predators and Prey",
+            "language": "en"
+          },
+          "description": {
+            "value": "scholarly article by Marcel Holyoak published October 2000 in The American Naturalist",
+            "language": "en"
+          }
+        },
+        "label": "Habitat Patch Arrangement and Metapopulation Persistence of Predators and Prey",
+        "description": "scholarly article by Marcel Holyoak published October 2000 in The American Naturalist",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Habitat Patch Arrangement and Metapopulation Persistence of Predators and Prey"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

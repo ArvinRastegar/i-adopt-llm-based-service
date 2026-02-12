@@ -1,0 +1,242 @@
+{
+  "created_at": "2026-02-12T15:57:41.522058+00:00",
+  "elapsed": 0.201505,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:57:41 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-5gbhd",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "7713c63c-3bff-4592-ab7e-1573073d443c",
+    "x-search-id": "e6e95uu4ut1ubd6o10ynj4tcl"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=blood"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=blood",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "blood"
+    },
+    "search": [
+      {
+        "id": "Q16860120",
+        "title": "Q16860120",
+        "pageid": 18461815,
+        "concepturi": "http://www.wikidata.org/entity/Q16860120",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q16860120",
+        "display": {
+          "label": {
+            "value": "Blood",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Blood",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Blood"
+        }
+      },
+      {
+        "id": "Q885070",
+        "title": "Q885070",
+        "pageid": 836105,
+        "concepturi": "http://www.wikidata.org/entity/Q885070",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q885070",
+        "display": {
+          "label": {
+            "value": "Blood",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific journal from the American Society of Hematology",
+            "language": "en"
+          }
+        },
+        "label": "Blood",
+        "description": "scientific journal from the American Society of Hematology",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Blood"
+        }
+      },
+      {
+        "id": "Q7873",
+        "title": "Q7873",
+        "pageid": 9121,
+        "concepturi": "http://www.wikidata.org/entity/Q7873",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q7873",
+        "display": {
+          "label": {
+            "value": "blood",
+            "language": "en"
+          },
+          "description": {
+            "value": "organic fluid which transports nutrients throughout the organism",
+            "language": "en"
+          }
+        },
+        "label": "blood",
+        "description": "organic fluid which transports nutrients throughout the organism",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "blood"
+        }
+      },
+      {
+        "id": "Q183134",
+        "title": "Q183134",
+        "pageid": 182182,
+        "concepturi": "http://www.wikidata.org/entity/Q183134",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q183134",
+        "display": {
+          "label": {
+            "value": "sepsis",
+            "language": "en"
+          },
+          "description": {
+            "value": "life-threatening response to infection",
+            "language": "en"
+          }
+        },
+        "label": "sepsis",
+        "description": "life-threatening response to infection",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "blood poisoning"
+        },
+        "aliases": [
+          "blood poisoning"
+        ]
+      },
+      {
+        "id": "Q261327",
+        "title": "Q261327",
+        "pageid": 253503,
+        "concepturi": "http://www.wikidata.org/entity/Q261327",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q261327",
+        "display": {
+          "label": {
+            "value": "thrombosis",
+            "language": "en"
+          },
+          "description": {
+            "value": "vascular disease caused by the formation of a blood clot inside a blood vessel, obstructing the flow of blood through the circulatory system",
+            "language": "en"
+          }
+        },
+        "label": "thrombosis",
+        "description": "vascular disease caused by the formation of a blood clot inside a blood vessel, obstructing the flow of blood through the circulatory system",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Blood Clots"
+        },
+        "aliases": [
+          "Blood Clots"
+        ]
+      },
+      {
+        "id": "Q113128267",
+        "title": "Q113128267",
+        "pageid": 107941714,
+        "concepturi": "http://www.wikidata.org/entity/Q113128267",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q113128267",
+        "display": {
+          "label": {
+            "value": "Blood",
+            "language": "en"
+          },
+          "description": {
+            "value": "given name",
+            "language": "en"
+          }
+        },
+        "label": "Blood",
+        "description": "given name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Blood"
+        }
+      },
+      {
+        "id": "Q60316463",
+        "title": "Q60316463",
+        "pageid": 60192262,
+        "concepturi": "http://www.wikidata.org/entity/Q60316463",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q60316463",
+        "display": {
+          "label": {
+            "value": "Blood",
+            "language": "en"
+          },
+          "description": {
+            "value": "ESRB video game content descriptor for games that includes realistic blood.",
+            "language": "en"
+          }
+        },
+        "label": "Blood",
+        "description": "ESRB video game content descriptor for games that includes realistic blood.",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Blood"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

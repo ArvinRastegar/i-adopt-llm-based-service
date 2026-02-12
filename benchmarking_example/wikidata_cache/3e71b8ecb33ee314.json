@@ -1,0 +1,236 @@
+{
+  "created_at": "2026-02-12T15:59:02.600222+00:00",
+  "elapsed": 0.269213,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:59:02 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-dmqm5",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "26639c1d-930e-4edd-9cc2-9f50ab94cdf2",
+    "x-search-id": "2ckei5svyghsfy81measibmx"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=turbidity"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=turbidity",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "turbidity"
+    },
+    "search": [
+      {
+        "id": "Q898574",
+        "title": "Q898574",
+        "pageid": 849405,
+        "concepturi": "http://www.wikidata.org/entity/Q898574",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q898574",
+        "display": {
+          "label": {
+            "value": "turbidity",
+            "language": "en"
+          },
+          "description": {
+            "value": "cloudiness of a fluid",
+            "language": "en"
+          }
+        },
+        "label": "turbidity",
+        "description": "cloudiness of a fluid",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "turbidity"
+        }
+      },
+      {
+        "id": "Q1756774",
+        "title": "Q1756774",
+        "pageid": 1689407,
+        "concepturi": "http://www.wikidata.org/entity/Q1756774",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1756774",
+        "display": {
+          "label": {
+            "value": "turbidity current",
+            "language": "en"
+          },
+          "description": {
+            "value": "underwater current of usually rapidly moving, sediment-laden water moving down a slope",
+            "language": "en"
+          }
+        },
+        "label": "turbidity current",
+        "description": "underwater current of usually rapidly moving, sediment-laden water moving down a slope",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "turbidity current"
+        }
+      },
+      {
+        "id": "Q58456609",
+        "title": "Q58456609",
+        "pageid": 58369991,
+        "concepturi": "http://www.wikidata.org/entity/Q58456609",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q58456609",
+        "display": {
+          "label": {
+            "value": "Turbidity currents : dynamics, deposits and reversals",
+            "language": "en"
+          },
+          "description": {
+            "value": "doctoral thesis",
+            "language": "en"
+          }
+        },
+        "label": "Turbidity currents : dynamics, deposits and reversals",
+        "description": "doctoral thesis",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Turbidity currents : dynamics, deposits and reversals"
+        }
+      },
+      {
+        "id": "Q67523438",
+        "title": "Q67523438",
+        "pageid": 67157626,
+        "concepturi": "http://www.wikidata.org/entity/Q67523438",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q67523438",
+        "display": {
+          "label": {
+            "value": "TURBIDITY CURRENTS (NAID 105660)",
+            "language": "en"
+          },
+          "description": {
+            "value": "item in the National Archives and Records Administration's holdings",
+            "language": "en"
+          }
+        },
+        "label": "TURBIDITY CURRENTS (NAID 105660)",
+        "description": "item in the National Archives and Records Administration's holdings",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "TURBIDITY CURRENTS (NAID 105660)"
+        }
+      },
+      {
+        "id": "Q125517209",
+        "title": "Q125517209",
+        "pageid": 119639756,
+        "concepturi": "http://www.wikidata.org/entity/Q125517209",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q125517209",
+        "display": {
+          "label": {
+            "value": "Turbidity sensor based on ultrasound measurements",
+            "language": "en"
+          },
+          "description": {
+            "value": "US patent 11391699",
+            "language": "en"
+          }
+        },
+        "label": "Turbidity sensor based on ultrasound measurements",
+        "description": "US patent 11391699",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Turbidity sensor based on ultrasound measurements"
+        }
+      },
+      {
+        "id": "Q97615908",
+        "title": "Q97615908",
+        "pageid": 96000547,
+        "concepturi": "http://www.wikidata.org/entity/Q97615908",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q97615908",
+        "display": {
+          "label": {
+            "value": "Turbidity study of the process of film formation of polymer particles in drying thin films of acrylic latices",
+            "language": "en"
+          },
+          "description": {
+            "value": "Doctoral Thesis from Delft University of Technology",
+            "language": "en"
+          }
+        },
+        "label": "Turbidity study of the process of film formation of polymer particles in drying thin films of acrylic latices",
+        "description": "Doctoral Thesis from Delft University of Technology",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Turbidity study of the process of film formation of polymer particles in drying thin films of acrylic latices"
+        }
+      },
+      {
+        "id": "Q125938922",
+        "title": "Q125938922",
+        "pageid": 120022687,
+        "concepturi": "http://www.wikidata.org/entity/Q125938922",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q125938922",
+        "display": {
+          "label": {
+            "value": "Turbidity normalization algorithm and methods of reducing intralipid/lipemia interference in hemoglobin A1c assays",
+            "language": "en"
+          },
+          "description": {
+            "value": "US patent 11300577",
+            "language": "en"
+          }
+        },
+        "label": "Turbidity normalization algorithm and methods of reducing intralipid/lipemia interference in hemoglobin A1c assays",
+        "description": "US patent 11300577",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Turbidity normalization algorithm and methods of reducing intralipid/lipemia interference in hemoglobin A1c assays"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "created_at": "2026-02-12T15:59:51.296405+00:00",
+  "elapsed": 0.175101,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:59:51 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-v6bcd",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "995b0bfb-f63c-45df-ba86-d20009232f22",
+    "x-search-id": "56ngqt73qx49xlk9nemtgzabk"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=standard+deviation"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=standard+deviation",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "standard deviation"
+    },
+    "search": [
+      {
+        "id": "Q159375",
+        "title": "Q159375",
+        "pageid": 160314,
+        "concepturi": "http://www.wikidata.org/entity/Q159375",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q159375",
+        "display": {
+          "label": {
+            "value": "standard deviation",
+            "language": "en"
+          },
+          "description": {
+            "value": "dispersion of the values \u200b\u200bof a random variable around its expected value",
+            "language": "en"
+          }
+        },
+        "label": "standard deviation",
+        "description": "dispersion of the values \u200b\u200bof a random variable around its expected value",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "standard deviation"
+        }
+      },
+      {
+        "id": "Q51165059",
+        "title": "Q51165059",
+        "pageid": 52086180,
+        "concepturi": "http://www.wikidata.org/entity/Q51165059",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q51165059",
+        "display": {
+          "label": {
+            "value": "Standard Deviation",
+            "language": "en"
+          },
+          "description": {
+            "value": "episode of American Dad!",
+            "language": "en"
+          }
+        },
+        "label": "Standard Deviation",
+        "description": "episode of American Dad!",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Standard Deviation"
+        }
+      },
+      {
+        "id": "Q16746275",
+        "title": "Q16746275",
+        "pageid": 18349892,
+        "concepturi": "http://www.wikidata.org/entity/Q16746275",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q16746275",
+        "display": {
+          "label": {
+            "value": "Standard Deviation",
+            "language": "en"
+          },
+          "description": {
+            "value": "episode of Masters of Sex (S1 E3)",
+            "language": "en"
+          }
+        },
+        "label": "Standard Deviation",
+        "description": "episode of Masters of Sex (S1 E3)",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Standard Deviation"
+        }
+      },
+      {
+        "id": "Q51159319",
+        "title": "Q51159319",
+        "pageid": 52080529,
+        "concepturi": "http://www.wikidata.org/entity/Q51159319",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q51159319",
+        "display": {
+          "label": {
+            "value": "Standard Deviation",
+            "language": "en"
+          },
+          "description": {
+            "value": "episode of Everybody Loves Raymond (S1 E4)",
+            "language": "en"
+          }
+        },
+        "label": "Standard Deviation",
+        "description": "episode of Everybody Loves Raymond (S1 E4)",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Standard Deviation"
+        }
+      },
+      {
+        "id": "Q30243267",
+        "title": "Q30243267",
+        "pageid": 31856252,
+        "concepturi": "http://www.wikidata.org/entity/Q30243267",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q30243267",
+        "display": {
+          "label": {
+            "value": "standard deviation",
+            "language": "en"
+          }
+        },
+        "label": "standard deviation",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "standard deviation"
+        }
+      },
+      {
+        "id": "Q110893974",
+        "title": "Q110893974",
+        "pageid": 105913678,
+        "concepturi": "http://www.wikidata.org/entity/Q110893974",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q110893974",
+        "display": {
+          "label": {
+            "value": "Standard Deviations: Types and Families in Contemporary Design",
+            "language": "en"
+          },
+          "description": {
+            "value": "2011 exhibition at the Museum of Modern Art",
+            "language": "en"
+          }
+        },
+        "label": "Standard Deviations: Types and Families in Contemporary Design",
+        "description": "2011 exhibition at the Museum of Modern Art",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Standard Deviations: Types and Families in Contemporary Design"
+        }
+      },
+      {
+        "id": "Q7598218",
+        "title": "Q7598218",
+        "pageid": 7516991,
+        "concepturi": "http://www.wikidata.org/entity/Q7598218",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q7598218",
+        "display": {
+          "label": {
+            "value": "Standard Deviations",
+            "language": "en"
+          },
+          "description": {
+            "value": "2003 studio album by Fullerton College Jazz Ensembles",
+            "language": "en"
+          }
+        },
+        "label": "Standard Deviations",
+        "description": "2003 studio album by Fullerton College Jazz Ensembles",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Standard Deviations"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

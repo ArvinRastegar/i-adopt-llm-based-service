@@ -1,0 +1,245 @@
+{
+  "created_at": "2026-02-12T15:59:05.094164+00:00",
+  "elapsed": 0.192134,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "1",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:59:05 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-glg85",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "7e6d2f07-4331-4e63-84e7-c8b7781bfa65",
+    "x-search-id": "wqsbfr11u2kj6rbap1ar0crb"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=variability"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=variability",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "variability"
+    },
+    "search": [
+      {
+        "id": "Q845777",
+        "title": "Q845777",
+        "pageid": 797836,
+        "concepturi": "http://www.wikidata.org/entity/Q845777",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q845777",
+        "display": {
+          "label": {
+            "value": "statistical dispersion",
+            "language": "en"
+          },
+          "description": {
+            "value": "statistical property quantifying how much a collection of data is spread out",
+            "language": "en"
+          }
+        },
+        "label": "statistical dispersion",
+        "description": "statistical property quantifying how much a collection of data is spread out",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "variability"
+        },
+        "aliases": [
+          "variability"
+        ]
+      },
+      {
+        "id": "Q65921492",
+        "title": "Q65921492",
+        "pageid": 65550558,
+        "concepturi": "http://www.wikidata.org/entity/Q65921492",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q65921492",
+        "display": {
+          "label": {
+            "value": "flexibility",
+            "language": "en"
+          },
+          "description": {
+            "value": "ability of an item to change to suit some purpose",
+            "language": "en"
+          }
+        },
+        "label": "flexibility",
+        "description": "ability of an item to change to suit some purpose",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "variability"
+        },
+        "aliases": [
+          "variability"
+        ]
+      },
+      {
+        "id": "Q21515328",
+        "title": "Q21515328",
+        "pageid": 23559971,
+        "concepturi": "http://www.wikidata.org/entity/Q21515328",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q21515328",
+        "display": {
+          "label": {
+            "value": "erratic behavior",
+            "language": "en"
+          },
+          "description": {
+            "value": "symptom",
+            "language": "en"
+          }
+        },
+        "label": "erratic behavior",
+        "description": "symptom",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "variability in behavior"
+        },
+        "aliases": [
+          "variability in behavior"
+        ]
+      },
+      {
+        "id": "Q110142191",
+        "title": "Q110142191",
+        "pageid": 105224396,
+        "concepturi": "http://www.wikidata.org/entity/Q110142191",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q110142191",
+        "display": {
+          "label": {
+            "value": "Variability in Modified Estimators of Var and Es",
+            "language": "en"
+          },
+          "description": {
+            "value": "master's thesis by Rohit Arora, University of Washington, 2016",
+            "language": "en"
+          }
+        },
+        "label": "Variability in Modified Estimators of Var and Es",
+        "description": "master's thesis by Rohit Arora, University of Washington, 2016",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Variability in Modified Estimators of Var and Es"
+        }
+      },
+      {
+        "id": "Q25891751",
+        "title": "Q25891751",
+        "pageid": 27844683,
+        "concepturi": "http://www.wikidata.org/entity/Q25891751",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q25891751",
+        "display": {
+          "label": {
+            "value": "Variability in interindividual genotoxic responses in normal human mammary epithelial (NHME) cells exposed to zidovudine",
+            "language": "en"
+          },
+          "description": {
+            "value": "conference abstract published in 2003",
+            "language": "en"
+          }
+        },
+        "label": "Variability in interindividual genotoxic responses in normal human mammary epithelial (NHME) cells exposed to zidovudine",
+        "description": "conference abstract published in 2003",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Variability in interindividual genotoxic responses in normal human mammary epithelial (NHME) cells exposed to zidovudine"
+        }
+      },
+      {
+        "id": "Q107509560",
+        "title": "Q107509560",
+        "pageid": 102799380,
+        "concepturi": "http://www.wikidata.org/entity/Q107509560",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q107509560",
+        "display": {
+          "label": {
+            "value": "Variability in preoperative emergency utilizations is associated with initial primary pacemaker insertion",
+            "language": "en"
+          },
+          "description": {
+            "value": "doctoral thesis of Debosree Roy",
+            "language": "en"
+          }
+        },
+        "label": "Variability in preoperative emergency utilizations is associated with initial primary pacemaker insertion",
+        "description": "doctoral thesis of Debosree Roy",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Variability in preoperative emergency utilizations is associated with initial primary pacemaker insertion"
+        }
+      },
+      {
+        "id": "Q112299224",
+        "title": "Q112299224",
+        "pageid": 107198681,
+        "concepturi": "http://www.wikidata.org/entity/Q112299224",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q112299224",
+        "display": {
+          "label": {
+            "value": "Variability of an Early Developmental Cell Population Underlies Stochastic Laterality Defects",
+            "language": "en"
+          },
+          "description": {
+            "value": "publication published on 01 January 2021",
+            "language": "en"
+          }
+        },
+        "label": "Variability of an Early Developmental Cell Population Underlies Stochastic Laterality Defects",
+        "description": "publication published on 01 January 2021",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Variability of an Early Developmental Cell Population Underlies Stochastic Laterality Defects"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

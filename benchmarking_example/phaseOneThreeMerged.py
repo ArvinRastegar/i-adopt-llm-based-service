@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 # --------------------------------------------------------------------------- #
-# I-ADOPT LLM Benchmark (Phase 1 + Phase 3 Linking & URI Evaluation)
+# I-ADOPT Benchmark – Phase 1 Decomposition + Phase 3 Wikidata Linking
+# Refactor to "randomShotsPhaseOne.py" style (recursive loading, prompt files,
+# example formatting with definition-only + expected output without URIs,
+# atomic logging, Excel outputs in the same style).
 # --------------------------------------------------------------------------- #
+
 from __future__ import annotations
 
 import argparse
@@ -10,58 +14,65 @@ import logging
 import os
 import pathlib
 import re
-import textwrap
-from datetime import datetime
-from threading import Lock
-from typing import Any, Dict, List, Set, Tuple, Optional
-
-import httpx
-import pandas as pd
-from openai import APIStatusError, OpenAI, OpenAIError
-from sentence_transformers import SentenceTransformer, CrossEncoder, util
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 from functools import lru_cache
-from itertools import product
-import numpy as np
-from dotenv import load_dotenv
+from threading import Lock
+from typing import Any, Dict, List, Optional, Set, Tuple
+import textwrap
 import urllib.parse
 
+import httpx
+import numpy as np
+import pandas as pd
 import requests
+from dotenv import load_dotenv
+from openai import APIStatusError, OpenAI, OpenAIError
+from sentence_transformers import SentenceTransformer, CrossEncoder, util
 
 try:
     import requests_cache
 
-    _CACHE_SESSION = requests_cache.CachedSession("wikidata_cache", backend="sqlite", expire_after=None)
+    _CACHE_SESSION = requests_cache.CachedSession("wikidata_cache", backend="filesystem", expire_after=None)
     _REQUESTS = _CACHE_SESSION
 except Exception:
-    _REQUESTS = requests  # fallback without cache
+    _REQUESTS = requests
 
-# ----- static config -------------------------------------------------------- #
+
+# --------------------------------------------------------------------------- #
+# Static config
+# --------------------------------------------------------------------------- #
 load_dotenv()
 
 SCRIPT_DIR = pathlib.Path(__file__).resolve().parent
+
+DEFAULT_DATA_DIR = pathlib.Path(
+    "/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/Json_preferred/test_set"
+)
+
 SCHEMA_PATH = SCRIPT_DIR / "data" / "Json_schema.json"
-DATA_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "test_set"
-ONE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/one_shot"
-THREE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/three_shot"
-FIVE_SHOT_DIR = SCRIPT_DIR / "data/Json_preferred/five_shot"
+PROMPT_DIR = SCRIPT_DIR / "data" / "prompts"
+
+ONE_SHOT_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "one_shot"
+THREE_SHOT_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "three_shot"
+FIVE_SHOT_DIR = SCRIPT_DIR / "data" / "Json_preferred" / "five_shot"
 
 LOG_DIR = SCRIPT_DIR / "benchmarking_logs"
 LOG_DIR.mkdir(exist_ok=True)
-LOG_FILE = LOG_DIR / f"iadopt_run_{datetime.now():%Y%m%d_%H%M%S}.log"
-
-MODEL_NAMES = [
-    "qwen/qwen3-32b",
-    # "qwen/qwen3-max",
-]
-
-EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
-CLOSE_THR = 0.80  # cosine threshold for “close”
-TEMPERATURES = [0.5]  # can be overridden via CLI
+LOG_FILE = LOG_DIR / f"phaseOneThreeMerged{datetime.now():%Y%m%d_%H%M%S}.log"
 
 OUTBOOK_DIR = pathlib.Path("benchmarking_outputs")
 OUTBOOK_DIR.mkdir(exist_ok=True)
+
+MODEL_NAMES = [
+    "qwen/qwen3-32b",
+]
+
+TEMPERATURES = [0.5]
+EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
+CLOSE_THR = 0.80
+CROSS_ENCODER_MODEL = None
 
 ONTO_KEYS = [
     "hasStatisticalModifier",
@@ -73,7 +84,7 @@ ONTO_KEYS = [
 ]
 
 # --------------------------------------------------------------------------- #
-# 1 ▪ Logging & external clients
+# Logging
 # --------------------------------------------------------------------------- #
 log_fmt = "%(asctime)s | %(levelname)s | %(message)s"
 logging.basicConfig(
@@ -84,172 +95,102 @@ logging.basicConfig(
         logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8"),
     ],
 )
-
-PREPROC_LOG_FILE = LOG_DIR / f"iadopt_preprocess_{datetime.now():%Y%m%d_%H%M%S}.log"
-_preproc_logger = logging.getLogger("preprocess")
-_preproc_logger.setLevel(logging.INFO)
-_preproc_logger.addHandler(logging.FileHandler(PREPROC_LOG_FILE, mode="w", encoding="utf-8"))
-
 logging.info(f"Logging to {LOG_FILE.resolve()}")
-logging.info(f"Pre-processing log → {PREPROC_LOG_FILE.resolve()}")
 
+_log_lock = Lock()
+_RERANK_LOCK = Lock()
+# --------------------------------------------------------------------------- #
+# OpenAI client (OpenRouter)
+# --------------------------------------------------------------------------- #
 client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
 
 # --------------------------------------------------------------------------- #
-# 2 ▪ Prompt helpers
-# --------------------------------------------------------------------------- #
-# --------------------------------------------------------------------------- #
-# 2 ▪ Prompt helpers
+# Prompt helpers (programmatic, like randomShotsPhaseOne.py)
 # --------------------------------------------------------------------------- #
 _SCHEMA_TEXT = SCHEMA_PATH.read_text(encoding="utf-8").strip()
 
-_SYSTEM_RULES = textwrap.dedent(
-    """
-    You are an ontology engineer.
-    Your task is to output **one** JSON object that satisfies the
-    JSON-Schema provided below.
-
-    ▸ Copy *definition* verbatim from the user section.
-    ▸ Do **NOT** introduce keys that are absent from the schema.
-    ▸ Every value must respect the declared JSON type.
-    ▸ Reply with the JSON object only — no markdown fences, no narration.
-"""
-).strip()
-
-BASELINE_INSTRUCTIONS = _SYSTEM_RULES
-
-MATRIX_EXPLANATION = textwrap.dedent(
-    """
-    Additional guidance:
-
-    Identify the Object of Interest:
-    The Object of Interest is the Entity whose Property is observed.
-
-    Identify the Matrix (if available):
-    If the Object of Interest is embedded in, or part of, another Entity,
-    that Entity is the Matrix. Not all observations have a Matrix.
-
-    hasMatrix:
-    A Variable might have an Entity in which the ObjectOfInterest is contained.
-
-    hasConstraint:
-    A Variable has a Constraint that confines an Entity involved in the observation.
-
-    Further Decompose Entities:
-    Revisit identified Entities (Object of Interest, Matrix, Context Objects) and
-    check whether they can be decomposed into more general concepts and Constraints.
-
-    Important:
-    The framework does not capture units, instruments, methods, or geographical
-    location. These must NOT be placed into the JSON.
-"""
-).strip()
-
-REVISED_MATRIX_EXPLANATION = textwrap.dedent(
-    """
-    Additional guidance for this task
-
-    Role summary:
-
-    • hasProperty:
-      The type of characteristic being observed
-      (e.g. "distance", "mass flux", "temperature").
-
-    • hasObjectOfInterest:
-      The Entity whose Property is observed
-      (e.g. "carbon", "organism", "habitat patch", "electron").
-
-    • hasMatrix:
-      An Entity or System that contains or surrounds the
-      ObjectOfInterest. Examples: "soil", "ocean water",
-      "organism", "solar wind", or a system such as
-      "from vegetation to soil".
-
-    • hasConstraint:
-      Short phrases that limit the scope or state of the
-      observation, such as "nearest neighbour", "dry",
-      "at 15°C", "at non-limiting conditions",
-      "due to ingestion".
-
-    Deciding between hasMatrix and hasConstraint:
-
-    • Use hasMatrix when you name an Entity or System
-      that acts as the environment or container of the
-      ObjectOfInterest.
-
-    • Use hasConstraint for state or filter phrases that
-      restrict a Property or Entity, even if they appear
-      in the textual definition. For example:
-        - "nearest neighbour"
-        - "dry"
-        - "at 15°C temperature"
-        - "at non-limiting conditions"
-        - "due to ingestion"
-      These MUST NOT be placed in hasMatrix.
-
-    Defining constraints (hasConstraint array):
-
-    • Each constraint is an object with:
-        - "label": a short phrase for the state or restriction.
-        - "on": EXACTLY which Property or Entity this constraint applies to.
-
-    • IMPORTANT RULE:
-      The "on" value MUST be copied verbatim from one of
-      the keys you already generated in this JSON:
-        - the exact hasProperty string, OR
-        - the exact entity label used in hasObjectOfInterest,
-          hasMatrix, or hasContextObject.
-
-      Do NOT invent new labels for "on".  
-      Do NOT paraphrase.  
-      Always reuse the exact string you already used elsewhere.
-
-    • Examples:
-        label = "nearest neighbour",    on = "distance"
-        label = "dry",                  on = "soil"
-        label = "due to ingestion",     on = "organism"
-        label = "at 15°C temperature",  on = "temperature"
-
-    Important exclusions:
-
-    • Do NOT model units, instruments, methods, or
-      geographical locations in this JSON. These should
-      not appear in hasProperty, hasObjectOfInterest,
-      hasMatrix, or hasConstraint.
-"""
-).strip()
-
-PROMPT_TEMPLATES = {
-    "baseline": BASELINE_INSTRUCTIONS,
-    "matrix_explainer": BASELINE_INSTRUCTIONS + "\n\n" + MATRIX_EXPLANATION,
-    "matrix_extender": BASELINE_INSTRUCTIONS + "\n\n" + REVISED_MATRIX_EXPLANATION,
-}
-
 _EXAMPLE_HDR = "\n\n### Examples (valid against the same schema)\n"
 _USER_HDR = "\n\n### Variable's definition to decompose\n"
-_EXPECTED = "\n\n### Expected output\n*(only the JSON object)*"
+_EXPECTED_HDR = "\n\n### Expected output\n*(only the JSON object)*"
 
 
-def build_prompt(definition: str, examples: List[Dict[str, Any]] | None, prompt_version: str = "baseline") -> str:
+@lru_cache(maxsize=None)
+def list_prompt_versions() -> List[str]:
+    if not PROMPT_DIR.exists():
+        logging.warning("PROMPT_DIR %s does not exist", PROMPT_DIR)
+        return []
+    return sorted(p.stem for p in PROMPT_DIR.glob("*.txt"))
+
+
+@lru_cache(maxsize=None)
+def load_prompt_instructions(prompt_version: str) -> str:
+    available = list_prompt_versions()
+    if not available:
+        raise RuntimeError(f"No prompt templates found in {PROMPT_DIR}")
+
+    if not prompt_version:
+        prompt_version = available[0]
+
+    if prompt_version not in available:
+        logging.warning("Prompt version '%s' not found. Falling back to '%s'.", prompt_version, available[0])
+        prompt_version = available[0]
+
+    return (PROMPT_DIR / f"{prompt_version}.txt").read_text(encoding="utf-8").strip()
+
+
+def strip_all_uri_fields(obj: Any) -> Any:
     """
-    Build the LLM prompt from a variable *definition* (not label/comment),
-    using one of the PROMPT_TEMPLATES (baseline / matrix_explainer / matrix_extender).
+    Remove ANY dict key containing 'URI' (so ...URI and ...URIs) recursively.
+    This is used ONLY for examples inside the prompt, so the model doesn't think
+    it must output URIs.
     """
-    examples = examples or []
+    if isinstance(obj, dict):
+        out = {}
+        for k, v in obj.items():
+            if "URI" in k:
+                continue
+            if k.startswith("__"):  # defensive: remove path metadata if present
+                continue
+            out[k] = strip_all_uri_fields(v)
+        return out
+    if isinstance(obj, list):
+        return [strip_all_uri_fields(x) for x in obj]
+    return obj
 
-    # Pick the template by name (fallback = baseline)
-    instructions = PROMPT_TEMPLATES.get(prompt_version, PROMPT_TEMPLATES["baseline"])
 
-    ex_block = (
-        _EXAMPLE_HDR + "\n\n".join(json.dumps(e, indent=2, ensure_ascii=False) for e in examples) if examples else ""
+def format_example_block(ex: Dict[str, Any], idx: int) -> str:
+    """
+    Example format:
+      Variable's definition to decompose: <definition only>
+      Expected output:
+      <json without URI fields>
+    """
+    definition = ex.get("definition") or ex.get("comment") or ""
+    ex_no_uris = strip_all_uri_fields(ex)
+
+    # Keep expected output as JSON object (no markdown fences)
+    return (
+        f"\n\n#### Example {idx}\n"
+        f"Variable's definition to decompose: {definition}\n\n"
+        f"Expected output:\n{json.dumps(ex_no_uris, indent=2, ensure_ascii=False)}"
     )
+
+
+def build_prompt(definition: str, examples: List[Dict[str, Any]] | None, prompt_version: str) -> str:
+    examples = examples or []
+    instructions = load_prompt_instructions(prompt_version)
+
+    ex_block = ""
+    if examples:
+        blocks = [format_example_block(ex, i + 1) for i, ex in enumerate(examples)]
+        ex_block = _EXAMPLE_HDR + "".join(blocks)
 
     return (
         f"{instructions}\n\n"
         f"### JSON-Schema\n{_SCHEMA_TEXT}\n"
         f"{ex_block}"
-        f"{_USER_HDR}definition: {definition}"
-        f"{_EXPECTED}"
+        f"{_USER_HDR}Variable's definition to decompose: {definition}"
+        f"{_EXPECTED_HDR}"
     )
 
 
@@ -264,33 +205,19 @@ def load_examples(n: int) -> List[Dict[str, Any]]:
         folder = FIVE_SHOT_DIR
     else:
         raise ValueError("shot must be 0, 1, 3 or 5")
+
     paths = sorted(folder.glob("*.json"))
-    return [json.load(open(p)) for p in paths[:n]]
+    return [json.load(open(p, "r", encoding="utf-8")) for p in paths[:n]]
 
 
 # --------------------------------------------------------------------------- #
-# 3 ▪ LLM invocation with schema validation / retry
+# LLM invocation (robust) + coercion
 # --------------------------------------------------------------------------- #
 _JSON_FENCE_RE = re.compile(r"```(?:json)?", re.MULTILINE)
 _JSON_BLOCK_RE = re.compile(r"\{.*\}", re.DOTALL)
 
 
-def extract_json(text: str) -> Dict[str, Any]:
-    cleaned = _JSON_FENCE_RE.sub("", text).strip()
-    match = _JSON_BLOCK_RE.search(cleaned)
-    if not match:
-        raise json.JSONDecodeError("No JSON block found", cleaned, 0)
-    return json.loads(match.group(0))
-
-
 def call_model(model: str, prompt: str, temperature: float) -> str:
-    """
-    Robust API call with:
-    - 3 retries
-    - detection of HTML / empty responses
-    - logs raw response on failure
-    - returns "" if no valid content after retries
-    """
     for attempt in range(1, 4):
         try:
             resp = client.chat.completions.create(
@@ -300,168 +227,125 @@ def call_model(model: str, prompt: str, temperature: float) -> str:
                 timeout=60,
             )
             text = resp.choices[0].message.content or ""
-
-            # detect HTML or empty response
             stripped = text.strip()
+
             if stripped.startswith("<!DOCTYPE html") or stripped.startswith("<html"):
-                logging.warning(f"{model}: HTML error response on attempt {attempt}")
+                logging.warning("%s: HTML error response on attempt %d", model, attempt)
                 continue
-
             if not stripped:
-                logging.warning(f"{model}: empty response on attempt {attempt}")
+                logging.warning("%s: empty response on attempt %d", model, attempt)
                 continue
-
             return text
 
         except APIStatusError as e:
-            logging.warning(f"{model}: APIStatusError attempt {attempt} – {e.status_code} – {getattr(e, 'body', '')}")
+            logging.warning(
+                "%s: APIStatusError attempt %d – %s – %s", model, attempt, e.status_code, getattr(e, "body", "")
+            )
         except (OpenAIError, httpx.HTTPError) as e:
-            logging.warning(f"{model}: transport error attempt {attempt} – {e!r}")
+            logging.warning("%s: transport error attempt %d – %r", model, attempt, e)
         except Exception as e:
-            logging.warning(f"{model}: unexpected error attempt {attempt} – {e!r}")
+            logging.warning("%s: unexpected error attempt %d – %r", model, attempt, e)
 
-    # after 3 failures
-    logging.error(f"{model}: failed after 3 attempts")
+    logging.error("%s: failed after 3 attempts", model)
     return ""
 
 
-def coerce_for_eval(rec: Dict[str, Any], fixes: dict) -> Dict[str, Any]:
-    rec = dict(rec)
-    fixes["missing_keys"] = [k for k in ONTO_KEYS if k not in rec]
-    fixes["extra_keys"] = [k for k in rec.keys() if k not in {"label", "comment", *ONTO_KEYS}]
-    for k in fixes["missing_keys"]:
-        rec[k] = [] if k == "hasConstraint" else ""
-    if isinstance(rec.get("hasProperty"), dict):
-        fixes["coerced_property_dict"] = True
-        fixes["orig_hasProperty"] = rec["hasProperty"]
-        rec["hasProperty"] = rec["hasProperty"].get("label", "")
-    else:
-        fixes["coerced_property_dict"] = False
-    return rec
+def coerce_prediction(pred: Dict[str, Any]) -> Dict[str, Any]:
+    pred = dict(pred or {})
+    for k in ONTO_KEYS:
+        if k not in pred or pred[k] is None:
+            pred[k] = [] if k == "hasConstraint" else ""
+        elif k == "hasConstraint" and not isinstance(pred[k], list):
+            pred[k] = []
+    # Some models sometimes return dict for hasProperty; normalize it.
+    if isinstance(pred.get("hasProperty"), dict):
+        pred["hasProperty"] = pred["hasProperty"].get("label", "") or ""
+    return pred
 
 
-def call_llm_loose(model: str, prompt: str, orig_label: str, definition: str, temperature: float) -> Dict[str, Any]:
-    attempts, data, fixes, raw = 0, {}, {}, ""
-    while attempts < 3:
-        attempts += 1
+def call_llm_loose(model: str, prompt: str, gt_label: str, definition: str, temperature: float) -> Dict[str, Any]:
+    for attempt in range(1, 4):
         raw = call_model(model, prompt, temperature)
-        fixes = {
-            "model": model,
-            "variable": orig_label,
-            "retry_count": attempts,
-            "non_json_prefix": False,
-            "non_json_suffix": False,
-            "unparsable_json": False,
-            "label_overwritten": False,
-            # "comment_overwritten": False,
-            "coerced_property_dict": False,
-            "missing_keys": [],
-            "extra_keys": [],
-        }
+        if not raw.strip():
+            continue
+
         cleaned = _JSON_FENCE_RE.sub("", raw).strip()
         m = _JSON_BLOCK_RE.search(cleaned)
         if not m:
-            fixes["unparsable_json"] = True
-            fixes["raw_llm_output"] = raw
-            _preproc_logger.info(json.dumps(fixes, ensure_ascii=False))
-            if attempts < 3:
-                continue
-            return {}
+            logging.warning("%s: no JSON block found on attempt %d", model, attempt)
+            continue
+
         try:
             data = json.loads(m.group(0))
-            break
-        except json.JSONDecodeError:
-            fixes["unparsable_json"] = True
-            fixes["raw_llm_output"] = raw
-            _preproc_logger.info(json.dumps(fixes, ensure_ascii=False))
-            if attempts < 3:
-                continue
-            return {}
-    fixes["retry_count"] = attempts
-    if raw:
-        pre = raw.split("{", 1)[0]
-        post = raw.rsplit("}", 1)[-1] if "}" in raw else ""
-        if pre.strip():
-            fixes["non_json_prefix"] = True
-            fixes["prefix_text"] = pre.strip()[:200]
-        if post.strip():
-            fixes["non_json_suffix"] = True
-            fixes["suffix_text"] = post.strip()[:200]
-    pred_label = data.get("label")
-    pred_comment = data.get("comment")
-    if pred_label != orig_label:
-        fixes["label_overwritten"] = True
-        fixes["orig_label"] = orig_label
-    # if pred_comment != orig_comment:
-    # fixes["comment_overwritten"] = True
-    # fixes["orig_comment"] = (orig_comment or "")[:400]
-    data["label"] = orig_label
-    data["definition"] = definition
-    data = coerce_for_eval(data, fixes=fixes)
-    _preproc_logger.info("%s", json.dumps(fixes, ensure_ascii=False))
-    return data
+        except Exception as e:
+            logging.warning("%s: JSON decode failure on attempt %d – %r", model, attempt, e)
+            continue
+
+        # Force label + definition (definition-only prompting, but evaluation needs stable label)
+        data["label"] = gt_label
+        data["definition"] = definition
+
+        return coerce_prediction(data)
+
+    logging.error("%s: could not extract JSON after 3 attempts", model)
+    return {}
 
 
 # --------------------------------------------------------------------------- #
-# 4 ▪ Similarity helpers (existing metrics)
+# Similarity & confusion helpers
 # --------------------------------------------------------------------------- #
 @lru_cache(maxsize=4)
-def load_embedder(model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
+def load_embedder(model_name: str = EMBED_MODEL_NAME) -> SentenceTransformer:
     return SentenceTransformer(model_name)
 
 
-@lru_cache(maxsize=2)
-def load_crossencoder(model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2") -> CrossEncoder:
-    return CrossEncoder(model_name)
+# @lru_cache(maxsize=2)
+# def load_crossencoder(model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2") -> CrossEncoder:
+#     return CrossEncoder(model_name)
 
 
 def _cosine(a: str, b: str, model_name: str) -> float:
-    embedder = load_embedder(model_name)
-    emb1 = embedder.encode(a, convert_to_tensor=True)
-    emb2 = embedder.encode(b, convert_to_tensor=True)
-    return util.cos_sim(emb1, emb2).item()
+    emb = load_embedder(model_name)
+    e1 = emb.encode(a, convert_to_tensor=True)
+    e2 = emb.encode(b, convert_to_tensor=True)
+    return util.cos_sim(e1, e2).item()
 
 
-def sim_string(a: str, b: str, close: bool, model_name: str = "all-MiniLM-L6-v2") -> float:
+def sim_string(a: str, b: str, close: bool, model_name: str = EMBED_MODEL_NAME) -> float:
     if not a or not b:
         return 0.0
-    norm_a, norm_b = a.lower().strip(), b.lower().strip()
-    if norm_a == norm_b:
+    na, nb = a.lower().strip(), b.lower().strip()
+    if na == nb:
         return 1.0
-    return _cosine(norm_a, norm_b, model_name) if close else 0.0
-
-
-def sim_asym(a: Dict[str, str], b: Dict[str, str], close: bool) -> float:
-    keys = ("AsymmetricSystem", "hasSource", "hasTarget")
-    return (
-        sum(sim_string(a.get(k, ""), b.get(k, ""), close) for k in keys) / 3
-        if isinstance(a, dict) and isinstance(b, dict)
-        else 0.0
-    )
+    return _cosine(na, nb, model_name) if close else 0.0
 
 
 def _sym_parts(obj: Any) -> Tuple[str, Set[str]]:
     if isinstance(obj, dict) and "SymmetricSystem" in obj and "hasPart" in obj:
-        return obj["SymmetricSystem"], set(obj["hasPart"])
+        return obj.get("SymmetricSystem", ""), set(obj.get("hasPart", []))
     return "", set()
 
 
 def sim_sym(a: Any, b: Any, close: bool) -> float:
-    lbl_a, parts_a = _sym_parts(a)
-    lbl_b, parts_b = _sym_parts(b)
-    if not (lbl_a or lbl_b):
+    la, pa = _sym_parts(a)
+    lb, pb = _sym_parts(b)
+    if not (la or lb):
         return 0.0
-    label_sim = sim_string(lbl_a, lbl_b, close)
-    part_sim = len(parts_a & parts_b) / len(parts_a | parts_b) if (parts_a or parts_b) else 1.0
+    label_sim = sim_string(la, lb, close)
+    part_sim = len(pa & pb) / len(pa | pb) if (pa or pb) else 1.0
     return (label_sim + part_sim) / 2
 
 
-def sim_constraint(a: Dict[str, str], b: Dict[str, str], close: bool) -> float:
-    lbl_sim = sim_string(a.get("label", ""), b.get("label", ""), close)
-    on_a = canonical_on(a.get("on", ""))
-    on_b = canonical_on(b.get("on", ""))
-    on_sim = sim_string(on_a, on_b, close)
-    return (lbl_sim + on_sim) / 2
+def sim_asym(a: Dict[str, Any], b: Dict[str, Any], close: bool) -> float:
+    if not (isinstance(a, dict) and isinstance(b, dict)):
+        return 0.0
+    src_a = a.get("hasSource") or a.get("hasNumerator") or ""
+    tgt_a = a.get("hasTarget") or a.get("hasDenominator") or ""
+    src_b = b.get("hasSource") or b.get("hasNumerator") or ""
+    tgt_b = b.get("hasTarget") or b.get("hasDenominator") or ""
+    if not (src_a or tgt_a or src_b or tgt_b):
+        return 0.0
+    return (sim_string(src_a, src_b, close) + sim_string(tgt_a, tgt_b, close)) / 2
 
 
 _ON_PREFIX_RE = re.compile(r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*:\s*(.+)$")
@@ -477,84 +361,57 @@ def canonical_on(text: str) -> str:
 
 
 def normalize_constraint(c: Dict[str, str]) -> Dict[str, str]:
-    """
-    Canonicalize label/on for robust, order-invariant comparison.
-    - Lowercase
-    - Strip whitespace
-    - Collapse multiple spaces
-    - Apply canonical_on() to the 'on' field
-    """
     if not isinstance(c, dict):
         return {"label": "", "on": ""}
 
-    def norm_label(s: str) -> str:
+    def norm(s: str) -> str:
         s = (s or "").strip().lower()
-        s = re.sub(r"\s+", " ", s)
-        return s
+        return re.sub(r"\s+", " ", s)
 
-    def norm_on(s: str) -> str:
-        s = canonical_on(s or "")
-        s = s.strip().lower()
-        s = re.sub(r"\s+", " ", s)
-        return s
-
-    return {
-        "label": norm_label(c.get("label", "")),
-        "on": norm_on(c.get("on", "")),
-    }
+    return {"label": norm(c.get("label", "")), "on": norm(canonical_on(c.get("on", "")))}
 
 
-# --------------------------------------------------------------------------- #
-# 5 ▪ Confusion-matrix helpers (existing metrics)
-# --------------------------------------------------------------------------- #
-def confusion(gt, pred, close: bool) -> Tuple[int, int, int, int]:
+def confusion(gt, pred, close: bool) -> Tuple[float, float, float, float]:
     if isinstance(gt, dict) and "AsymmetricSystem" in gt:
         score = sim_asym(gt, pred, close)
     elif isinstance(gt, dict) and "SymmetricSystem" in gt:
         score = sim_sym(gt, pred, close)
     else:
         score = sim_string(str(gt), str(pred), close)
+
     thr = CLOSE_THR if close else 1.0
+
     if gt:
         if pred and score >= thr:
-            return 1, 0, 0, 0  # TP
-        elif pred:
-            return 0, 1, 0, 0  # FP
-        else:
-            return 0, 0, 1, 0  # FN
+            return 1.0, 0.0, 0.0, 0.0
+        if pred:
+            return 0.0, 1.0, 0.0, 0.0
+        return 0.0, 0.0, 1.0, 0.0
     else:
-        return (0, 0, 0, 1) if not pred else (0, 1, 0, 0)
+        return (0.0, 0.0, 0.0, 1.0) if not pred else (0.0, 1.0, 0.0, 0.0)
 
 
 def confusion_constraints(
     gt_list: List[Dict[str, str]],
     pred_list: List[Dict[str, str]],
     close: bool,
-    model_name: str = "all-MiniLM-L6-v2",
+    model_name: str = EMBED_MODEL_NAME,
 ) -> Tuple[float, float, float, float]:
-    """
-    Constraint confusion with:
-    - canonicalized 'label' and 'on'
-    - greedy matching on similarity matrix (order-invariant)
-    - same TP/FP/FN scaling as original implementation
-    """
 
-    # trivial cases
     if not gt_list and not pred_list:
         return 0.0, 0.0, 0.0, 1.0
     if not gt_list:
-        # no GT but some predictions => all FP
         return 0.0, 1.0, 0.0, 0.0
 
+    gt_list = gt_list or []
+    pred_list = pred_list or []
     n_gt, n_pred = len(gt_list), len(pred_list)
-    unit = 1.0 / (2 * n_gt)  # same scaling as before
+    unit = 1.0 / (2 * n_gt)
     thr = CLOSE_THR if close else 1.0
 
-    # normalize constraints (label & on)
     gt_norm = [normalize_constraint(c) for c in gt_list]
     pred_norm = [normalize_constraint(c) for c in pred_list]
 
-    # similarity matrix S[i, j] based on normalized label+on
     S = np.zeros((n_gt, n_pred))
     for i, g in enumerate(gt_norm):
         for j, p in enumerate(pred_norm):
@@ -566,7 +423,6 @@ def confusion_constraints(
     gt_used: set[int] = set()
     pred_used: set[int] = set()
 
-    # greedy matching on S (order-invariant but not index-based)
     while S.size:
         idx = int(np.argmax(S))
         i, j = divmod(idx, S.shape[1])
@@ -576,28 +432,22 @@ def confusion_constraints(
         gt_used.add(i)
         pred_used.add(j)
 
-        # label contribution
         if sim_string(gt_norm[i]["label"], pred_norm[j]["label"], close, model_name) >= thr:
             tp += unit
         else:
             fp += unit
 
-        # 'on' contribution
         if sim_string(gt_norm[i]["on"], pred_norm[j]["on"], close, model_name) >= thr:
             tp += unit
         else:
             fp += unit
 
-        # mask row/col as used
         S[i, :] = -1.0
         S[:, j] = -1.0
 
-    # remaining GT → FN (for label + on)
     fn += (n_gt - len(gt_used)) * 2 * unit
-    # remaining predictions → FP (for label + on)
     fp += (n_pred - len(pred_used)) * 2 * unit
 
-    # small numerical correction (keep tp+fp+fn ≈ 1.0)
     total = tp + fp + fn
     if 1.0 - total > 1e-6:
         fp += 1.0 - total
@@ -609,305 +459,17 @@ def confusion_constraints(
     return tp, fp, fn, 0.0
 
 
-# --------------------------------------------------------------------------- #
-# 6 ▪ URI linking to Wikidata (Phase 3)
-# --------------------------------------------------------------------------- #
-def _qid_from_uri_or_text(s: Optional[str]) -> Optional[str]:
-    if not s:
-        return None
-    m = re.search(r"(Q\d+)", s)
-    return m.group(1) if m else None
+def prf(tp: float, fp: float, fn: float) -> Tuple[float, float, float]:
+    p = tp / (tp + fp) if tp + fp else 0.0
+    r = tp / (tp + fn) if tp + fn else 0.0
+    f = 2 * p * r / (p + r) if p + r else 0.0
+    return p, r, f
 
 
-def canonicalize_uri_for_compare(uri: Optional[str]) -> Optional[str]:
-    """Make http/https equivalent and wiki/entity equivalent by canonicalizing to https://www.wikidata.org/wiki/Qxxxx."""
-    if not uri:
-        return None
-    q = _qid_from_uri_or_text(uri)
-    if q:
-        return f"https://www.wikidata.org/wiki/{q}"
-    # Fallback: normalize scheme & strip trailing slash
-    u = uri.strip().replace("http://", "https://")
-    return u[:-1] if u.endswith("/") else u
+def jaccard(a: Set[str], b: Set[str]) -> float:
+    return len(a & b) / len(a | b) if a or b else 1.0
 
 
-def _to_wiki_url(uri: Optional[str]) -> Optional[str]:
-    """Convert any Q-id or wikidata URI to canonical https://www.wikidata.org/wiki/Qxxxx for storage in ...URI."""
-    if not uri:
-        return None
-    q = _qid_from_uri_or_text(uri)
-    return f"https://www.wikidata.org/wiki/{q}" if q else canonicalize_uri_for_compare(uri)
-
-
-def format_queries(query, instruction=None):
-    prefix = '<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".<|im_end|>\n<|im_start|>user\n'
-    if instruction is None:
-        instruction = "Given a web search query, retrieve relevant passages that answer the query"
-    return f"{prefix}<Instruct>: {instruction}\n<Query>: {query}\n"
-
-
-def format_document(document):
-    suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
-    return f"<Document>: {document}{suffix}"
-
-
-def get_wikidata_entity(
-    term: str, approach: str = "naive", context: str = "", model_name: str = "all-MiniLM-L6-v2", threshold: float = 0.0
-) -> Optional[str]:
-    """
-    Returns a Wikidata URI for *term* using the chosen approach.
-    Output is canonicalized to https://www.wikidata.org/wiki/Qxxxx for consistency.
-    """
-    if not term:
-        return None
-    encoded = urllib.parse.quote_plus(term)
-    headers = {"User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"}
-    try:
-        resp = _REQUESTS.get(
-            f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={encoded}&language=en&format=json",
-            headers=headers,
-            timeout=20,
-        )
-        if resp.status_code != 200:
-            logging.warning("Wikidata API HTTP %s for %r", resp.status_code, term)
-            return None
-        search = resp.json().get("search", [])
-
-        if not search:
-            return None
-
-        if approach == "naive":
-            qid = search[0]["id"]
-            return _to_wiki_url(qid)
-
-        if approach == "embedding":
-            embedder = load_embedder(model_name)
-            query_vec = embedder.encode(f'Definition of "{term}" in context: "{context}"')
-            docs = [f'label: "{s.get("label","")}", description: "{s.get("description","")}"' for s in search]
-            doc_vecs = embedder.encode(docs)
-            sims = util.cos_sim(query_vec, doc_vecs).cpu().numpy().ravel()
-            idx = int(sims.argmax())
-            return _to_wiki_url(search[idx]["id"])
-
-        if approach == "cross-encoder":
-            model = load_crossencoder("tomaarsen/Qwen3-Reranker-0.6B-seq-cls")
-            task = "Given a web search query, retrieve relevant passages that answer the query"
-            queries = [f'Definition of "{term}" in context: "{context}"'] * len(search)
-            documents = [
-                f"label: \"{search_entry['label']}\", description: \"{search_entry['description'] if 'description' in search_entry else ""}\""
-                for search_entry in search
-            ]
-            pairs = [[format_queries(query, task), format_document(doc)] for query, doc in zip(queries, documents)]
-            scores = model.predict(pairs)
-            # Sort results by score (descending)
-            ranked = sorted(zip(search, scores), key=lambda x: x[1], reverse=True)
-
-            # Log neatly: original term, candidate label, score
-            logging.info("Cross-encoder ranking | term=%r | context=%r", term, context)
-            for s, score in ranked:
-                logging.info(
-                    "  term=%r | candidate=%r | score=%.4f | id=%s", term, s.get("label"), float(score), s.get("id")
-                )
-
-            # Pick top candidate if above threshold
-            best_s, best_score = ranked[0]
-            if float(best_score) >= float(threshold):
-                return _to_wiki_url(best_s["id"])
-            return None
-
-        # default to naive
-        qid = search[0]["id"]
-        return _to_wiki_url(qid)
-
-    except Exception as e:
-        logging.warning("Wikidata API error for %r: %r", term, e)
-        return None
-
-
-def enrich_with_uris(
-    pred: Dict[str, Any], approach: str = "naive", model_name: str = "all-MiniLM-L6-v2", threshold: float = 0.0
-) -> Dict[str, Any]:
-    """
-    Return a copy of *pred* enriched with ...URI fields (top-level and nested systems).
-    """
-    if approach == "none":
-        # Skip Phase 3 entirely – return Phase 1 output unchanged
-        return pred
-    out = json.loads(json.dumps(pred))  # deep copy
-
-    def add_uri_field(container: Dict[str, Any], key: str, label_value: Any):
-        if isinstance(label_value, str) and label_value.strip():
-            uri = get_wikidata_entity(
-                label_value,
-                approach=approach,
-                context=pred.get("label", ""),
-                model_name=model_name,
-                threshold=threshold,
-            )
-            if uri:
-                container[f"{key}URI"] = _to_wiki_url(uri)
-
-    # Top-level simple keys
-    for p, key in [
-        ("hasProperty", "hasProperty"),
-        ("hasMatrix", "hasMatrix"),
-        ("hasObjectOfInterest", "hasObjectOfInterest"),
-        ("hasContextObject", "hasContextObject"),
-    ]:
-        if p in out and isinstance(out[p], str):
-            add_uri_field(out, key, out[p])
-
-    # Systems (nested)
-    for p in ["hasMatrix", "hasObjectOfInterest", "hasContextObject"]:
-        val = out.get(p)
-        if isinstance(val, dict):
-            # Asymmetric
-            if "AsymmetricSystem" in val:
-                sys_lbl = val.get("AsymmetricSystem")
-                src_lbl = val.get("hasSource")
-                tgt_lbl = val.get("hasTarget")
-                if sys_lbl:
-                    uri = get_wikidata_entity(
-                        sys_lbl,
-                        approach=approach,
-                        context=pred.get("label", ""),
-                        model_name=model_name,
-                        threshold=threshold,
-                    )
-                    if uri:
-                        val["AsymmetricSystemURI"] = _to_wiki_url(uri)
-                if src_lbl:
-                    uri = get_wikidata_entity(
-                        src_lbl,
-                        approach=approach,
-                        context=pred.get("label", ""),
-                        model_name=model_name,
-                        threshold=threshold,
-                    )
-                    if uri:
-                        val["hasSourceURI"] = _to_wiki_url(uri)
-                if tgt_lbl:
-                    uri = get_wikidata_entity(
-                        tgt_lbl,
-                        approach=approach,
-                        context=pred.get("label", ""),
-                        model_name=model_name,
-                        threshold=threshold,
-                    )
-                    if uri:
-                        val["hasTargetURI"] = _to_wiki_url(uri)
-
-            # Symmetric
-            if "SymmetricSystem" in val:
-                sys_lbl = val.get("SymmetricSystem")
-                parts = val.get("hasPart", [])
-                if sys_lbl:
-                    uri = get_wikidata_entity(
-                        sys_lbl,
-                        approach=approach,
-                        context=pred.get("label", ""),
-                        model_name=model_name,
-                        threshold=threshold,
-                    )
-                    if uri:
-                        val["SymmetricSystemURI"] = _to_wiki_url(uri)
-                if isinstance(parts, list) and parts:
-                    part_uris: List[Optional[str]] = []
-                    for part in parts:
-                        if isinstance(part, str) and part.strip():
-                            uri = get_wikidata_entity(
-                                part,
-                                approach=approach,
-                                context=pred.get("label", ""),
-                                model_name=model_name,
-                                threshold=threshold,
-                            )
-                            part_uris.append(_to_wiki_url(uri) if uri else None)
-                        else:
-                            part_uris.append(None)
-                    if any(part_uris):
-                        val["hasPartURIs"] = part_uris
-    return out
-
-
-# --------------------------------------------------------------------------- #
-# 7 ▪ URI evaluation helpers
-# --------------------------------------------------------------------------- #
-def _iter_uri_assertions(gt: Dict[str, Any]) -> List[Tuple[str, Any]]:
-    """
-    Return list of (path, expected) for all URI-bearing fields present in gt.
-    Path uses dotted notation like 'hasPropertyURI' or 'hasMatrix.hasSourceURI'.
-    """
-    out: List[Tuple[str, Any]] = []
-    # top-level
-    for key in ["hasPropertyURI", "hasMatrixURI", "hasObjectOfInterestURI", "hasContextObjectURI"]:
-        if key in gt and gt[key]:
-            out.append((key, gt[key]))
-    # nested: hasMatrix / hasObjectOfInterest / hasContextObject
-    for root in ["hasMatrix", "hasObjectOfInterest", "hasContextObject"]:
-        node = gt.get(root)
-        if isinstance(node, dict):
-            for k in ["AsymmetricSystemURI", "SymmetricSystemURI", "hasSourceURI", "hasTargetURI"]:
-                if k in node and node[k]:
-                    out.append((f"{root}.{k}", node[k]))
-            if "hasPartURIs" in node and isinstance(node["hasPartURIs"], list):
-                out.append((f"{root}.hasPartURIs", node["hasPartURIs"]))
-    return out
-
-
-def _get_pred_uri_at_path(pred_enriched: Dict[str, Any], path: str) -> Any:
-    cur: Any = pred_enriched
-    for seg in path.split("."):
-        if isinstance(cur, dict) and seg in cur:
-            cur = cur[seg]
-        else:
-            return None
-    return cur
-
-
-def compare_uris(
-    gt: Dict[str, Any], pred_enriched: Dict[str, Any]
-):  # fix the type guide -> Tuple[int, int, float, Dict[str, bool]]
-    """
-    Compare all URI fields present in GT with predicted enriched URIs.
-    Returns (total, correct, acc, per_field_ok).
-    """
-    assertions = _iter_uri_assertions(gt)
-    total = 0
-    correct = 0
-    per_field_ok: Dict[str, bool] = {}
-    for path, expected in assertions:
-        total += 1
-        pred_val = _get_pred_uri_at_path(pred_enriched, path)
-        ok = False
-        if isinstance(expected, list):
-            # lists must match length and order (exact by QID)
-            if isinstance(pred_val, list) and len(pred_val) == len(expected):
-                ok = all(
-                    canonicalize_uri_for_compare(p) == canonicalize_uri_for_compare(g)
-                    for p, g in zip(pred_val, expected)
-                )
-            else:
-                ok = False
-        else:
-            ok = canonicalize_uri_for_compare(pred_val) == canonicalize_uri_for_compare(expected)
-        per_field_ok[path.replace(".", "_")] = bool(ok)
-        correct += 1 if ok else 0
-
-    acc = (correct / total) if total else 1.0
-    # predicted URI count (non-null)
-    predicted_non_null = sum(
-        1 for path, _ in assertions if _get_pred_uri_at_path(pred_enriched, path) not in (None, "", [])
-    )
-    # coverage score
-    coverage = (predicted_non_null / total) if total else 1.0
-    # return signature
-    return total, correct, acc, coverage, predicted_non_null, per_field_ok
-
-
-# --------------------------------------------------------------------------- #
-# 8 ▪ Flatten for Jaccard (existing)
-# --------------------------------------------------------------------------- #
 def atoms(rec: Dict[str, Any], mode: str) -> Set[str]:
     out: Set[str] = set()
     if mode in ("both", "concept"):
@@ -924,417 +486,734 @@ def atoms(rec: Dict[str, Any], mode: str) -> Set[str]:
     return {s for s in out if s}
 
 
-# --------------------------------------------------------------------------- #
-# 9 ▪ Prompt-deduplication helpers
-# --------------------------------------------------------------------------- #
-_PRINTED_PROMPTS: set[tuple[int, str]] = set()
-_PROMPT_LOCK = Lock()
+def compute_confusion_for_pair(gt: Dict[str, Any], pred: Dict[str, Any]) -> Dict[str, Any]:
+    exact = {"tp": 0.0, "fp": 0.0, "fn": 0.0, "tn": 0.0}
+    close = {"tp": 0.0, "fp": 0.0, "fn": 0.0, "tn": 0.0}
+    per_key_exact = {}
+    per_key_close = {}
+
+    for key in ONTO_KEYS:
+        gt_val = gt.get(key, [] if key == "hasConstraint" else "")
+        pred_val = pred.get(key, [] if key == "hasConstraint" else "")
+
+        if key == "hasConstraint":
+            tp, fp, fn, tn = confusion_constraints(gt_val, pred_val, close=False)
+        else:
+            tp, fp, fn, tn = confusion(gt_val, pred_val, close=False)
+
+        per_key_exact[key] = (tp, fp, fn, tn)
+        exact["tp"] += tp
+        exact["fp"] += fp
+        exact["fn"] += fn
+        exact["tn"] += tn
+
+        if key == "hasConstraint":
+            tp2, fp2, fn2, tn2 = confusion_constraints(gt_val, pred_val, close=True)
+        else:
+            tp2, fp2, fn2, tn2 = confusion(gt_val, pred_val, close=True)
+
+        per_key_close[key] = (tp2, fp2, fn2, tn2)
+        close["tp"] += tp2
+        close["fp"] += fp2
+        close["fn"] += fn2
+        close["tn"] += tn2
+
+    return {
+        "exact_totals": exact,
+        "close_totals": close,
+        "per_key_exact": per_key_exact,
+        "per_key_close": per_key_close,
+    }
 
 
 # --------------------------------------------------------------------------- #
-# 10 ▪ Evaluation worker  (returns {"_rows": [...]})
+# Phase 3: Wikidata linking + URI evaluation
 # --------------------------------------------------------------------------- #
+def _qid_from_uri_or_text(s: Optional[str]) -> Optional[str]:
+    if not s:
+        return None
+    m = re.search(r"(Q\d+)", s)
+    return m.group(1) if m else None
 
-# ---- Phase 1 decomposition cache (per model/shot/temp/variable) ----
-_DECOMP_CACHE: dict[tuple, Dict[str, Any]] = {}
-_DECOMP_LOCK = Lock()
+
+def canonicalize_uri_for_compare(uri: Optional[str]) -> Optional[str]:
+    if not uri:
+        return None
+    q = _qid_from_uri_or_text(uri)
+    if q:
+        return f"https://www.wikidata.org/wiki/{q}"
+    u = uri.strip().replace("http://", "https://")
+    return u[:-1] if u.endswith("/") else u
 
 
-def _run_one(
-    model: str,
-    gt: Dict[str, Any],
-    prompt: str,
-    shot: int,
-    temperature: float,
-    approach: str,
-    model_name: str,
-    threshold: float,
-    prompt_version: str,
-) -> Dict[str, Any]:
+def _to_wiki_url(uri: Optional[str]) -> Optional[str]:
+    if not uri:
+        return None
+    q = _qid_from_uri_or_text(uri)
+    return f"https://www.wikidata.org/wiki/{q}" if q else canonicalize_uri_for_compare(uri)
+
+
+# --- Qwen3 reranker formatting (recommended templates) ---
+QWEN3_RERANK_PREFIX = (
+    "<|im_start|>system\n"
+    " Judge whether the Document meets the requirements based on the Query and the Instruct provided. "
+    'Note that the answer can only be "yes" or "no".<|im_end|>\n'
+    "<|im_start|>user\n"
+)
+QWEN3_RERANK_SUFFIX = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+
+DEFAULT_RERANK_TASK = "Given a web search query, retrieve relevant passages that answer the query"
+
+
+def format_queries(query: str, task: str = DEFAULT_RERANK_TASK) -> str:
+    return f"{QWEN3_RERANK_PREFIX}<Instruct>: {task}\n<Query>: {query}\n"
+
+
+def format_document(doc: str) -> str:
+    return f"<Document>: {doc}{QWEN3_RERANK_SUFFIX}"
+
+
+def get_wikidata_entity(
+    term: str,
+    approach: str = "naive",
+    context: str = "",
+    model_name: str = EMBED_MODEL_NAME,
+    threshold: float = 0.0,
+) -> Optional[str]:
+    if not term:
+        return None
+
+    encoded = urllib.parse.quote_plus(term)
+    headers = {"User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"}
 
     try:
-        # ---------------- Phase 1: call LLM to decompose (labels only) ----------------
-        # Use a cache so we do NOT recompute the LLM decomposition when only the
-        # linking 'approach' changes.
-        cache_key = (model, shot, temperature, prompt_version, gt["label"])
-        with _DECOMP_LOCK:
-            pred = _DECOMP_CACHE.get(cache_key)
+        resp = _REQUESTS.get(
+            f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={encoded}&language=en&format=json",
+            headers=headers,
+            timeout=20,
+        )
+        if resp.status_code != 200:
+            logging.warning("Wikidata API HTTP %s for %r", resp.status_code, term)
+            return None
 
-        if pred is None:
-            logging.info("LLM cache MISS | model=%s | shot=%d | T=%.2f | var=%r", model, shot, temperature, gt["label"])
-            definition = gt.get("definition") or gt.get("comment")
-            pred = call_llm_loose(model, prompt, gt["label"], definition, temperature=temperature)
-            with _DECOMP_LOCK:
-                _DECOMP_CACHE[cache_key] = pred
-        else:
-            logging.info("LLM cache HIT  | model=%s | shot=%d | T=%.2f | var=%r", model, shot, temperature, gt["label"])
+        search = resp.json().get("search", [])
+        if not search:
+            return None
 
-        # Phase 3: link predicted labels to Wikidata and add ...URI fields
-        pred_enriched = enrich_with_uris(pred, approach=approach, model_name=model_name, threshold=threshold)
+        if approach == "naive":
+            return _to_wiki_url(search[0]["id"])
 
-        # ---------- human-readable logs -----------------------------------
-        logging.info("MODEL | %-35s | shot=%d | T=%.2f | %s", model, shot, temperature, gt["label"])
-        logging.info("GROUND-TRUTH JSON (GT):\n%s", json.dumps(gt, indent=2, ensure_ascii=False))
-        logging.info("PREDICTED JSON (labels only):\n%s", json.dumps(pred, indent=2, ensure_ascii=False))
-        logging.info("PREDICTED JSON (with URIs):\n%s", json.dumps(pred_enriched, indent=2, ensure_ascii=False))
+        if approach == "embedding":
+            embedder = load_embedder(model_name)
+            qv = embedder.encode(f'Definition of "{term}" in context: "{context}"')
+            docs = [f'label: "{s.get("label","")}", description: "{s.get("description","")}"' for s in search]
+            dv = embedder.encode(docs)
+            sims = util.cos_sim(qv, dv).cpu().numpy().ravel()
+            idx = int(sims.argmax())
+            return _to_wiki_url(search[idx]["id"])
 
-        rows: list[dict] = []
+        if approach == "cross-encoder":
+            reranker = CROSS_ENCODER_MODEL
+            query = f'Definition of "{term}" in context: "{context}"'
+            documents = [f'label: "{s.get("label","")}", description: "{s.get("description","")}"' for s in search]
+            pairs = [[format_queries(query, DEFAULT_RERANK_TASK), format_document(doc)] for doc in documents]
 
-        # ---------- metrics for 'exact' and 'close' on ONTO_KEYS ----------
-        for tag, close in (("exact", False), ("close", True)):
-            tp_tot = fp_tot = fn_tot = tn_tot = 0
-            per_key = {}
-            for key in ONTO_KEYS:
-                gt_val = gt.get(key, [] if key == "hasConstraint" else "")
-                pred_val = pred.get(key, [] if key == "hasConstraint" else "")
-                if key == "hasConstraint":
-                    tp, fp, fn, tn = confusion_constraints(gt_val, pred_val, close)
-                else:
-                    tp, fp, fn, tn = confusion(gt_val, pred_val, close)
-                per_key[key] = (tp, fp, fn, tn)
-                tp_tot += tp
-                fp_tot += fp
-                fn_tot += fn
-                tn_tot += tn
+            with _RERANK_LOCK:
+                scores = reranker.predict(pairs, show_progress_bar=False)
 
-            logging.info(
-                "%s CONFUSION | TP=%0.3f FP=%0.3f FN=%0.3f TN=%0.3f | per-key=%s",
-                tag.upper(),
-                tp_tot,
-                fp_tot,
-                fn_tot,
-                tn_tot,
-                per_key,
-            )
+            ranked = sorted(zip(search, scores), key=lambda x: float(x[1]), reverse=True)
+            best_s, best_score = ranked[0]
+            return _to_wiki_url(best_s["id"]) if float(best_score) >= float(threshold) else None
 
-            prec, rec, f1 = prf(tp_tot, fp_tot, fn_tot)
-
-            # Jaccards (same as before)
-            j_both = jaccard(atoms(gt, "both"), atoms(pred, "both"))
-            j_concept = jaccard(atoms(gt, "concept"), atoms(pred, "concept"))
-            j_text = jaccard(atoms(gt, "text"), atoms(pred, "text"))
-
-            per_key_unwrapped = {
-                key + "_" + metric: per_key[key][i]
-                for key in per_key
-                for i, metric in enumerate(["TP", "FP", "FN", "TN"])
-            }
-
-            # ---------- URI evaluation (exact by QID; http/https equal) ----------
-            (
-                uris_total,
-                uris_correct,
-                uris_acc,
-                uris_coverage,
-                uris_predicted,
-                uri_flags,
-            ) = compare_uris(gt, pred_enriched)
-
-            rows.append(
-                {
-                    "Variable": gt["label"],
-                    "Model": model,
-                    "Shot": shot,
-                    "Temp": temperature,
-                    "Metric": tag,  # exact / close
-                    "TP": tp_tot,
-                    "FP": fp_tot,
-                    "FN": fn_tot,
-                    "TN": tn_tot,
-                    "P": round(prec, 3),
-                    "R": round(rec, 3),
-                    "F": round(f1, 3),
-                    "J_both": round(j_both, 3),
-                    "J_concept": round(j_concept, 3),
-                    "J_text": round(j_text, 3),
-                    "URIs_total": uris_total,
-                    "URIs_correct": uris_correct,
-                    "URIs_acc": round(uris_acc, 3),
-                    "URIs_predicted": uris_predicted,
-                    "URIs_coverage": round(uris_coverage, 3),
-                    **uri_flags,
-                    **per_key_unwrapped,
-                }
-            )
-
-        return {"_rows": rows}
+        return _to_wiki_url(search[0]["id"])
 
     except Exception as e:
-        logging.error("%s | %s: worker crashed – %r", model, gt["label"], e)
-        return {"_rows": []}
+        logging.warning("Wikidata API error for %r: %r", term, e)
+        return None
+
+
+def enrich_with_uris(
+    pred: Dict[str, Any],
+    approach: str = "naive",
+    model_name: str = EMBED_MODEL_NAME,
+    threshold: float = 0.0,
+) -> Dict[str, Any]:
+    if approach == "none":
+        return pred
+
+    out = json.loads(json.dumps(pred))  # deep copy
+
+    def add_uri_field(container: Dict[str, Any], key: str, label_value: Any):
+        if isinstance(label_value, str) and label_value.strip():
+            uri = get_wikidata_entity(
+                label_value,
+                approach=approach,
+                context=pred.get("definition", ""),
+                model_name=model_name,
+                threshold=threshold,
+            )
+            if uri:
+                container[f"{key}URI"] = _to_wiki_url(uri)
+
+    # top-level
+    for p in ["hasProperty", "hasMatrix", "hasObjectOfInterest", "hasContextObject"]:
+        if p in out and isinstance(out[p], str):
+            add_uri_field(out, p, out[p])
+
+    # nested systems
+    for p in ["hasMatrix", "hasObjectOfInterest", "hasContextObject"]:
+        val = out.get(p)
+        if isinstance(val, dict):
+            if "AsymmetricSystem" in val:
+                for kk in ["AsymmetricSystem", "hasSource", "hasTarget"]:
+                    if val.get(kk):
+                        uri = get_wikidata_entity(
+                            val[kk],
+                            approach=approach,
+                            context=pred.get("definition", ""),
+                            model_name=model_name,
+                            threshold=threshold,
+                        )
+                        if uri:
+                            val[f"{kk}URI"] = _to_wiki_url(uri)
+
+            if "SymmetricSystem" in val:
+                if val.get("SymmetricSystem"):
+                    uri = get_wikidata_entity(
+                        val["SymmetricSystem"],
+                        approach=approach,
+                        context=pred.get("definition", ""),
+                        model_name=model_name,
+                        threshold=threshold,
+                    )
+                    if uri:
+                        val["SymmetricSystemURI"] = _to_wiki_url(uri)
+
+                parts = val.get("hasPart", [])
+                if isinstance(parts, list) and parts:
+                    part_uris = []
+                    for part in parts:
+                        if isinstance(part, str) and part.strip():
+                            uri = get_wikidata_entity(
+                                part,
+                                approach=approach,
+                                context=pred.get("definition", ""),
+                                model_name=model_name,
+                                threshold=threshold,
+                            )
+                            part_uris.append(_to_wiki_url(uri) if uri else None)
+                        else:
+                            part_uris.append(None)
+                    if any(part_uris):
+                        val["hasPartURIs"] = part_uris
+
+    return out
+
+
+def _iter_uri_assertions(gt: Dict[str, Any]) -> List[Tuple[str, Any]]:
+    out: List[Tuple[str, Any]] = []
+    for key in ["hasPropertyURI", "hasMatrixURI", "hasObjectOfInterestURI", "hasContextObjectURI"]:
+        if gt.get(key):
+            out.append((key, gt[key]))
+
+    for root in ["hasMatrix", "hasObjectOfInterest", "hasContextObject"]:
+        node = gt.get(root)
+        if isinstance(node, dict):
+            for k in ["AsymmetricSystemURI", "SymmetricSystemURI", "hasSourceURI", "hasTargetURI"]:
+                if node.get(k):
+                    out.append((f"{root}.{k}", node[k]))
+            if isinstance(node.get("hasPartURIs"), list):
+                out.append((f"{root}.hasPartURIs", node["hasPartURIs"]))
+    return out
+
+
+def _get_pred_uri_at_path(pred: Dict[str, Any], path: str) -> Any:
+    cur: Any = pred
+    for seg in path.split("."):
+        if isinstance(cur, dict) and seg in cur:
+            cur = cur[seg]
+        else:
+            return None
+    return cur
+
+
+def compare_uris(
+    gt: Dict[str, Any], pred_enriched: Dict[str, Any]
+) -> Tuple[int, int, float, float, int, Dict[str, bool]]:
+    assertions = _iter_uri_assertions(gt)
+    total = 0
+    correct = 0
+    per_field_ok: Dict[str, bool] = {}
+
+    for path, expected in assertions:
+        total += 1
+        pred_val = _get_pred_uri_at_path(pred_enriched, path)
+
+        ok = False
+        if isinstance(expected, list):
+            if isinstance(pred_val, list) and len(pred_val) == len(expected):
+                ok = all(
+                    canonicalize_uri_for_compare(p) == canonicalize_uri_for_compare(g)
+                    for p, g in zip(pred_val, expected)
+                )
+        else:
+            ok = canonicalize_uri_for_compare(pred_val) == canonicalize_uri_for_compare(expected)
+
+        per_field_ok[path.replace(".", "_")] = bool(ok)
+        correct += 1 if ok else 0
+
+    acc = (correct / total) if total else 1.0
+    predicted_non_null = sum(
+        1 for path, _ in assertions if _get_pred_uri_at_path(pred_enriched, path) not in (None, "", [])
+    )
+    coverage = (predicted_non_null / total) if total else 1.0
+
+    return total, correct, acc, coverage, predicted_non_null, per_field_ok
 
 
 # --------------------------------------------------------------------------- #
-# 11 ▪ Evaluation loop
+# Worker (atomic logging) + evaluation loop (recursive)
 # --------------------------------------------------------------------------- #
+def _run_one(
+    model: str,
+    temperature: float,
+    prompt_version: str,
+    approach: str,
+    link_model_name: str,
+    threshold: float,
+    gt: Dict[str, Any],
+    gt_path: str,
+    prompt: str,
+    shot: int,
+) -> Dict[str, Any]:
+
+    logs: List[str] = []
+    logs.append(
+        "MODEL | {model} | shot={shot} | T={temp:.2f} | prompt={pv} | approach={ap} | link_model={lm} | thr={thr:.2f} | var={var} | path={path}".format(
+            model=model,
+            shot=shot,
+            temp=temperature,
+            pv=prompt_version,
+            ap=approach,
+            lm=link_model_name,
+            thr=threshold,
+            var=gt.get("label", ""),
+            path=gt_path,
+        )
+    )
+
+    logs.append(f"PROMPT:\n{prompt}")
+    logs.append("GROUND-TRUTH JSON (GT, as loaded):\n" + json.dumps(gt, indent=2, ensure_ascii=False))
+
+    definition = gt.get("definition") or gt.get("comment") or ""
+    pred = call_llm_loose(model, prompt, gt.get("label", ""), definition, temperature=temperature)
+    pred_enriched = enrich_with_uris(pred, approach=approach, model_name=link_model_name, threshold=threshold)
+
+    logs.append("PREDICTED JSON (labels only):\n" + json.dumps(pred, indent=2, ensure_ascii=False))
+    logs.append("PREDICTED JSON (with URIs):\n" + json.dumps(pred_enriched, indent=2, ensure_ascii=False))
+
+    confusion_data = compute_confusion_for_pair(gt, pred)
+    exact = confusion_data["exact_totals"]
+    close = confusion_data["close_totals"]
+
+    # Explicit constraint result (your requested “result of the constraints”)
+    # c_tp_e, c_fp_e, c_fn_e, c_tn_e = confusion_data["per_key_exact"]["hasConstraint"]
+    # c_tp_c, c_fp_c, c_fn_c, c_tn_c = confusion_data["per_key_close"]["hasConstraint"]
+
+    logs.append(
+        "EXACT CONFUSION | TP={tp:.3f} FP={fp:.3f} FN={fn:.3f} TN={tn:.3f} | per-key={pk}".format(
+            tp=exact["tp"], fp=exact["fp"], fn=exact["fn"], tn=exact["tn"], pk=confusion_data["per_key_exact"]
+        )
+    )
+    logs.append(
+        "CLOSE CONFUSION | TP={tp:.3f} FP={fp:.3f} FN={fn:.3f} TN={tn:.3f} | per-key={pk}".format(
+            tp=close["tp"], fp=close["fp"], fn=close["fn"], tn=close["tn"], pk=confusion_data["per_key_close"]
+        )
+    )
+
+    # logs.append(
+    #     "CONSTRAINT RESULT | EXACT: TP={tp:.3f} FP={fp:.3f} FN={fn:.3f} TN={tn:.3f} | CLOSE: TP={tp2:.3f} FP={fp2:.3f} FN={fn2:.3f} TN={tn2:.3f}".format(
+    #         tp=c_tp_e, fp=c_fp_e, fn=c_fn_e, tn=c_tn_e, tp2=c_tp_c, fp2=c_fp_c, fn2=c_fn_c, tn2=c_tn_c
+    #     )
+    # )
+
+    # Jaccards (like original script)
+    j_both = jaccard(atoms(gt, "both"), atoms(pred, "both"))
+    j_concept = jaccard(atoms(gt, "concept"), atoms(pred, "concept"))
+    j_text = jaccard(atoms(gt, "text"), atoms(pred, "text"))
+
+    # URI evaluation
+    uris_total, uris_correct, uris_acc, uris_coverage, uris_predicted, uri_flags = compare_uris(gt, pred_enriched)
+    logs.append(
+        "URI EVAL | total={t} correct={c} acc={a:.3f} coverage={cov:.3f} predicted_non_null={pn}".format(
+            t=uris_total, c=uris_correct, a=uris_acc, cov=uris_coverage, pn=uris_predicted
+        )
+    )
+
+    with _log_lock:
+        logging.info("\n" + "\n".join(logs) + "\n" + ("─" * 120))
+
+    # Return “randomShotsPhaseOne-like” result package
+    return {
+        "variable": gt.get("label", ""),
+        "path": gt_path,
+        "model": model,
+        "temperature": temperature,
+        "prompt_version": prompt_version,
+        "shot": shot,
+        "link_approach": approach,
+        "link_model_name": link_model_name,
+        "link_threshold": threshold,
+        "prompt": prompt,
+        "ground_truth_json": gt,
+        "predicted_json": pred,
+        "predicted_json_with_uris": pred_enriched,
+        "confusion": confusion_data,
+        "j_both": j_both,
+        "j_concept": j_concept,
+        "j_text": j_text,
+        "uris_total": uris_total,
+        "uris_correct": uris_correct,
+        "uris_acc": uris_acc,
+        "uris_coverage": uris_coverage,
+        "uris_predicted": uris_predicted,
+        "uri_flags": uri_flags,
+    }
+
+
+def load_gt_files_recursive(data_dir: pathlib.Path, max_vars: int) -> List[Tuple[pathlib.Path, Dict[str, Any]]]:
+    paths = sorted(data_dir.rglob("*.json"))
+    if max_vars:
+        paths = paths[:max_vars]
+
+    out = []
+    for p in paths:
+        obj = json.load(open(p, "r", encoding="utf-8"))
+        out.append((p, obj))
+    return out
+
+
 def evaluate(
     data_dir: pathlib.Path,
     shot_mode: int,
     prompt_version: str,
-    max_vars: int = 30,
-    models: List[str] | None = None,
-    temps: List[float] | None = None,
-    workers: int = 8,
-    approach: str = "naive",
-    model_name: str = EMBED_MODEL_NAME,
-    threshold: float = 0.0,
+    approach: str,
+    models: List[str],
+    temps: List[float],
+    workers: int,
+    max_vars: int,
+    link_model_name: str,
+    threshold: float,
 ) -> List[Dict[str, Any]]:
 
-    temps = temps or TEMPERATURES
-    models = models or MODEL_NAMES
     examples = load_examples(shot_mode)
-    tasks: list[tuple] = []
 
-    logging.info("LINKING approach=%s | model_name=%s | threshold=%s", approach, model_name, threshold)
+    # For skipping (if the test set accidentally contains an example variable)
+    example_labels = {ex.get("label") for ex in examples if ex.get("label")}
 
-    # ---------- enumerate (variable, model) pairs ------------------------
-    for v_idx, gt_path in enumerate(sorted(data_dir.glob("*.json")), 1):
-        if max_vars and v_idx > max_vars:
-            break
+    gt_items = load_gt_files_recursive(data_dir, max_vars=max_vars)
 
-        gt = json.load(open(gt_path))
-
-        if any(ex["label"] == gt["label"] for ex in examples):
-            logging.info("Skip %s (in-prompt example)", gt["label"])
+    tasks = []
+    for p, gt in gt_items:
+        if gt.get("label") in example_labels:
+            logging.info("Skip %s (in-prompt example)", gt.get("label"))
             continue
 
         definition = gt.get("definition") or gt.get("comment") or ""
         prompt = build_prompt(definition, examples, prompt_version)
 
-        with _PROMPT_LOCK:
-            key = (shot_mode, gt["label"])
-            if key not in _PRINTED_PROMPTS:
-                logging.info(
-                    "\n%s\nPROMPT | shot=%d | %s\n%s\n%s",
-                    "═" * 120,
-                    shot_mode,
-                    gt["label"],
-                    prompt,
-                    "═" * 120,
-                )
-                _PRINTED_PROMPTS.add(key)
+        # keep a stable relative path for logging/excel
+        try:
+            rel_path = str(p.relative_to(data_dir.parent))  # e.g. Json_preferred/test_set/sub/x.json
+        except Exception:
+            rel_path = str(p)
 
         for model in models:
             for temp in temps:
-                tasks.append((model, gt, prompt, shot_mode, temp, approach, model_name, threshold, prompt_version))
+                tasks.append(
+                    (
+                        model,
+                        temp,
+                        prompt_version,
+                        approach,
+                        link_model_name,
+                        threshold,
+                        gt,
+                        rel_path,
+                        prompt,
+                        shot_mode,
+                    )
+                )
 
-    rows: list[dict] = []
-    with ThreadPoolExecutor(max_workers=workers) as pool:
+    results: List[Dict[str, Any]] = []
+
+    if approach == "cross-encoder":
+        logging.info("Cross-encoder detected → using reduced threading.")
+        max_workers = min(os.cpu_count(), workers)
+    else:
+        max_workers = workers
+
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futs = [pool.submit(_run_one, *task) for task in tasks]
         for f in as_completed(futs):
-            res = f.result()
-            if res and "_rows" in res:
-                rows.extend(res["_rows"])
-    return rows
+            try:
+                r = f.result()
+            except Exception:
+                logging.exception("Worker failed but run continues")
+                continue
+            if r:
+                results.append(r)
+
+    return results
 
 
 # --------------------------------------------------------------------------- #
-# 12 ▪ Metric utilities + summaries
+# Excel outputs (same style as randomShotsPhaseOne.py)
 # --------------------------------------------------------------------------- #
-def prf(tp, fp, fn) -> Tuple[float, float, float]:
-    prec = tp / (tp + fp) if tp + fp else 0.0
-    rec = tp / (tp + fn) if tp + fn else 0.0
-    f1 = 2 * prec * rec / (prec + rec) if prec + rec else 0.0
-    return prec, rec, f1
+def compute_summary_metrics(results: List[Dict[str, Any]]) -> pd.DataFrame:
+    groups: Dict[tuple, List[Dict[str, Any]]] = {}
+
+    for r in results:
+        key = (
+            r["model"],
+            r["temperature"],
+            r["prompt_version"],
+            r["shot"],
+            r["link_approach"],
+            r["link_model_name"],
+            r["link_threshold"],
+        )
+        groups.setdefault(key, []).append(r)
+
+    rows: List[Dict[str, Any]] = []
+    for key, rs in groups.items():
+        model, temp, pv, shot, approach, link_model, thr = key
+
+        # aggregate confusion totals
+        exact = {"tp": 0.0, "fp": 0.0, "fn": 0.0, "tn": 0.0}
+        close = {"tp": 0.0, "fp": 0.0, "fn": 0.0, "tn": 0.0}
+
+        per_key = {
+            k: {
+                "exact": {"tp": 0.0, "fp": 0.0, "fn": 0.0, "tn": 0.0},
+                "close": {"tp": 0.0, "fp": 0.0, "fn": 0.0, "tn": 0.0},
+            }
+            for k in ONTO_KEYS
+        }
+
+        j_both = []
+        j_concept = []
+        j_text = []
+        uri_acc = []
+        uri_cov = []
+        uri_pred = []
+
+        for r in rs:
+            conf = r["confusion"]
+            for tag, tot in (("exact", conf["exact_totals"]), ("close", conf["close_totals"])):
+                target = exact if tag == "exact" else close
+                target["tp"] += tot["tp"]
+                target["fp"] += tot["fp"]
+                target["fn"] += tot["fn"]
+                target["tn"] += tot["tn"]
+
+            for k in ONTO_KEYS:
+                tp, fp, fn, tn = conf["per_key_exact"][k]
+                per_key[k]["exact"]["tp"] += tp
+                per_key[k]["exact"]["fp"] += fp
+                per_key[k]["exact"]["fn"] += fn
+                per_key[k]["exact"]["tn"] += tn
+
+                tp2, fp2, fn2, tn2 = conf["per_key_close"][k]
+                per_key[k]["close"]["tp"] += tp2
+                per_key[k]["close"]["fp"] += fp2
+                per_key[k]["close"]["fn"] += fn2
+                per_key[k]["close"]["tn"] += tn2
+
+            j_both.append(r.get("j_both", 0.0))
+            j_concept.append(r.get("j_concept", 0.0))
+            j_text.append(r.get("j_text", 0.0))
+
+            uri_acc.append(r.get("uris_acc", 0.0))
+            uri_cov.append(r.get("uris_coverage", 0.0))
+            uri_pred.append(r.get("uris_predicted", 0))
+
+        p_e, r_e, f_e = prf(exact["tp"], exact["fp"], exact["fn"])
+        p_c, r_c, f_c = prf(close["tp"], close["fp"], close["fn"])
+
+        out: Dict[str, Any] = {
+            "Model": model,
+            "Temperature": temp,
+            "PromptVersion": pv,
+            "Shot": shot,
+            "LinkApproach": approach,
+            "LinkModelName": link_model,
+            "LinkThreshold": thr,
+            "P_exact": round(p_e, 3),
+            "R_exact": round(r_e, 3),
+            "F_exact": round(f_e, 3),
+            "P_close": round(p_c, 3),
+            "R_close": round(r_c, 3),
+            "F_close": round(f_c, 3),
+            "J_both_mean": round(float(np.mean(j_both)) if j_both else 0.0, 3),
+            "J_concept_mean": round(float(np.mean(j_concept)) if j_concept else 0.0, 3),
+            "J_text_mean": round(float(np.mean(j_text)) if j_text else 0.0, 3),
+            "URI_acc_mean": round(float(np.mean(uri_acc)) if uri_acc else 0.0, 3),
+            "URI_coverage_mean": round(float(np.mean(uri_cov)) if uri_cov else 0.0, 3),
+            "URI_predicted_mean": round(float(np.mean(uri_pred)) if uri_pred else 0.0, 3),
+        }
+
+        # per-key P/R/F (exact + close)
+        for k in ONTO_KEYS:
+            for tag in ("exact", "close"):
+                tp = per_key[k][tag]["tp"]
+                fp = per_key[k][tag]["fp"]
+                fn = per_key[k][tag]["fn"]
+                p, r_, f = prf(tp, fp, fn)
+                suf = "exact" if tag == "exact" else "close"
+                out[f"{k}_P_{suf}"] = round(p, 3)
+                out[f"{k}_R_{suf}"] = round(r_, 3)
+                out[f"{k}_F_{suf}"] = round(f, 3)
+
+        rows.append(out)
+
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df = df.sort_values(by=["F_exact", "URI_acc_mean"], ascending=[False, False])
+    return df
 
 
-def jaccard(a: Set[str], b: Set[str]) -> float:
-    return len(a & b) / len(a | b) if a or b else 1.0
+def build_excel(results: List[Dict[str, Any]]) -> pathlib.Path:
+    if not results:
+        raise RuntimeError("No results to write.")
+
+    out_xlsx = OUTBOOK_DIR / f"phaseOneThreeMerged_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
+
+    with pd.ExcelWriter(out_xlsx, engine="openpyxl") as wr:
+        # 1) ONE SHEET PER ONTO_KEY (same as randomShotsPhaseOne)
+        for key in ONTO_KEYS:
+            rows = []
+            for r in results:
+                gt = r["ground_truth_json"]
+                pred = r["predicted_json"]
+
+                # Make concept sheets readable (remove URI fields from display only)
+                gt_val = strip_all_uri_fields(gt.get(key, [] if key == "hasConstraint" else ""))
+                pred_val = strip_all_uri_fields(pred.get(key, [] if key == "hasConstraint" else ""))
+
+                rows.append(
+                    {
+                        "variable": r["variable"],
+                        "path": r["path"],
+                        "model": r["model"],
+                        "temperature": r["temperature"],
+                        "prompt_version": r["prompt_version"],
+                        "shot": r["shot"],
+                        "link_approach": r["link_approach"],
+                        "ground_truth": json.dumps(gt_val, ensure_ascii=False, indent=2),
+                        "predicted": json.dumps(pred_val, ensure_ascii=False, indent=2),
+                    }
+                )
+
+            pd.DataFrame(rows).to_excel(wr, sheet_name=f"{key} concepts"[:31], index=False)
+
+        # 2) LLM outputs (same sheet name as randomShotsPhaseOne)
+        json_rows = []
+        for r in results:
+            json_rows.append(
+                {
+                    "variable": r["variable"],
+                    "path": r["path"],
+                    "model": r["model"],
+                    "temperature": r["temperature"],
+                    "prompt_version": r["prompt_version"],
+                    "shot": r["shot"],
+                    "link_approach": r["link_approach"],
+                    "link_model_name": r["link_model_name"],
+                    "link_threshold": r["link_threshold"],
+                    # NEW: include the actual prompt text used
+                    "prompt": r["prompt"],
+                    # URI eval summary
+                    "uris_total": r["uris_total"],
+                    "uris_correct": r["uris_correct"],
+                    "uris_acc": round(r["uris_acc"], 3),
+                    "uris_coverage": round(r["uris_coverage"], 3),
+                    "uris_predicted": r["uris_predicted"],
+                    # Full JSONs (GT includes URIs, predicted includes URIs after enrichment)
+                    "ground_truth_json": json.dumps(r["ground_truth_json"], ensure_ascii=False, indent=2),
+                    "predicted_json": json.dumps(r["predicted_json"], ensure_ascii=False, indent=2),
+                    "predicted_json_with_uris": json.dumps(r["predicted_json_with_uris"], ensure_ascii=False, indent=2),
+                }
+            )
+
+        pd.DataFrame(json_rows).to_excel(wr, sheet_name="LLM outputs", index=False)
+
+        # 3) Summary (same sheet name as randomShotsPhaseOne)
+        summary = compute_summary_metrics(results)
+        summary.to_excel(wr, sheet_name="Summary", index=False)
+
+    logging.info("✓ Results saved → %s", out_xlsx.resolve())
+    return out_xlsx
 
 
 # --------------------------------------------------------------------------- #
-# 13 ▪ CLI
+# CLI
 # --------------------------------------------------------------------------- #
 def main() -> None:
-    parser = argparse.ArgumentParser(description="I-ADOPT LLM benchmark – shot × temperature (+ Wikidata URI eval)")
-    parser.add_argument(
-        "--data-dir", type=pathlib.Path, default=DATA_DIR, help="Folder with URI-enriched ground-truth JSON files"
-    )
-    parser.add_argument(
-        "--shot",
-        type=int,
-        choices=[0, 1, 3, 5],
-        default=None,
-        help="Prompting mode (0 / 1 / 3 / 5). If omitted, all four modes are executed.",
-    )
-    parser.add_argument("--max-vars", type=int, default=30, help="Debug: limit number of variables")
-    parser.add_argument("--only-model", action="append", help="Debug: restrict to one or more models")
-    parser.add_argument("--workers", type=int, default=96, help="Parallel requests")
-    parser.add_argument("--temps", type=float, nargs="+", help="Override the default temperature grid")
-    parser.add_argument(
-        "--approach",
-        type=str,
-        choices=["none", "naive", "embedding", "cross-encoder"],
-        help="Wikidata linking approach",
-    )
-    parser.add_argument(
-        "--prompt-version",
-        type=str,
-        choices=list(PROMPT_TEMPLATES.keys()),
-        help="If provided: run only this prompt version. If omitted: run all prompt versions.",
-    )
-    parser.add_argument(
-        "--model_name", type=str, default=EMBED_MODEL_NAME, help="Sentence Transformer / CrossEncoder model for linking"
-    )
-    parser.add_argument("--threshold", type=float, default=0.5, help="Score threshold (used by cross-encoder)")
+    parser = argparse.ArgumentParser(description="I-ADOPT benchmark (Phase 1 + Phase 3) – refactored output style")
+    parser.add_argument("--data-dir", type=pathlib.Path, default=DEFAULT_DATA_DIR)
+    parser.add_argument("--max-vars", type=int, default=0, help="0 = all")
+    parser.add_argument("--workers", type=int, default=96)
+    parser.add_argument("--only-model", action="append")
+    parser.add_argument("--temps", type=float, nargs="+")
+    parser.add_argument("--shot", type=int, choices=[0, 1, 3, 5], default=None)
+    parser.add_argument("--prompt-version", type=str, default=None)
+    parser.add_argument("--approach", type=str, choices=["none", "naive", "embedding", "cross-encoder"], default=None)
+    parser.add_argument("--model_name", type=str, default=EMBED_MODEL_NAME)
+    parser.add_argument("--threshold", type=float, default=0.5)
     args = parser.parse_args()
 
-    # NEW: prompt version(s)
-    prompt_versions = [args.prompt_version] if args.prompt_version else list(PROMPT_TEMPLATES.keys())
+    # prompt versions (programmatic)
+    prompt_versions = [args.prompt_version] if args.prompt_version else (list_prompt_versions() or [])
+    if not prompt_versions:
+        raise RuntimeError(f"No prompt templates found in {PROMPT_DIR}")
 
-    temps = args.temps or TEMPERATURES
     shots = [args.shot] if args.shot is not None else [0, 1, 3, 5]
-    # NEW: if approach not specified → run all three
     approaches = [args.approach] if args.approach else ["none", "naive", "embedding", "cross-encoder"]
-    all_rows: list[dict] = []
+
+    if "cross-encoder" in approaches:
+        logging.info("Pre-loading cross encoder model...")
+        global CROSS_ENCODER_MODEL
+        CROSS_ENCODER_MODEL = CrossEncoder(
+            "tomaarsen/Qwen3-Reranker-0.6B-seq-cls",
+            device="cpu",
+            # max_length=256,
+        )
+
+    models = args.only_model or MODEL_NAMES
+    temps = args.temps or TEMPERATURES
+    max_vars = args.max_vars if args.max_vars and args.max_vars > 0 else 0
+
+    all_results: List[Dict[str, Any]] = []
     for pv in prompt_versions:
         for approach in approaches:
             for shot in shots:
-                print(f"\n=== Running prompt_version={pv} | shot={shot} ===\n")
-                rows = evaluate(
-                    args.data_dir,
+                logging.info("=== RUN | prompt=%s | approach=%s | shot=%d ===", pv, approach, shot)
+                res = evaluate(
+                    data_dir=args.data_dir,
                     shot_mode=shot,
                     prompt_version=pv,
-                    max_vars=args.max_vars,
-                    models=args.only_model,
+                    approach=approach,
+                    models=models,
                     temps=temps,
                     workers=args.workers,
-                    approach=approach,
-                    model_name=args.model_name,
+                    max_vars=max_vars,
+                    link_model_name=args.model_name,
                     threshold=args.threshold,
                 )
-                # Tag each row with the approach used
-                for r in rows:
-                    r["LinkApproach"] = approach
-                all_rows.extend(rows)
+                all_results.extend(res)
 
-    df = pd.DataFrame(all_rows)
-
-    # per-variable sheet: use exact rows only, highest-F first
-    df_exact = df[df["Metric"] == "exact"]
-    df_sorted = df_exact.sort_values(by="F", ascending=False)
-
-    # --------- wide summary with exact & close side-by-side ------------------
-    def pick(rowset: pd.DataFrame, col: str, metric: str):
-        sub = rowset.loc[rowset["Metric"] == metric, col]
-        return sub.mean() if not sub.empty else float("nan")
-
-    summary_rows = []
-    for (model, shot, temp, approach), grp in df.groupby(["Model", "Shot", "Temp", "LinkApproach"]):
-
-        per_key_metrics = {}
-        # aggregate per ontology key
-        for key in ONTO_KEYS:
-            # exact
-            tp_exact = grp.loc[grp["Metric"] == "exact", key + "_TP"].sum()
-            fp_exact = grp.loc[grp["Metric"] == "exact", key + "_FP"].sum()
-            fn_exact = grp.loc[grp["Metric"] == "exact", key + "_FN"].sum()
-            prec_exact, rec_exact, f1_exact = prf(tp_exact, fp_exact, fn_exact)
-
-            # close
-            tp_close = grp.loc[grp["Metric"] == "close", key + "_TP"].sum()
-            fp_close = grp.loc[grp["Metric"] == "close", key + "_FP"].sum()
-            fn_close = grp.loc[grp["Metric"] == "close", key + "_FN"].sum()
-            prec_close, rec_close, f1_close = prf(tp_close, fp_close, fn_close)
-
-            per_key_metrics[key + "_F_exact"] = f1_exact
-            per_key_metrics[key + "_F_close"] = f1_close
-            per_key_metrics[key + "_P_exact"] = prec_exact
-            per_key_metrics[key + "_P_close"] = prec_close
-            per_key_metrics[key + "_R_exact"] = rec_exact
-            per_key_metrics[key + "_R_close"] = rec_close
-
-        # overall averages (just take mean across variables)
-        def avg(col: str, metric: str):
-            sub = grp.loc[grp["Metric"] == metric, col]
-            return sub.mean() if not sub.empty else float("nan")
-
-        summary_rows.append(
-            {
-                "Model": model,
-                "Shot": shot,
-                "Temp": temp,
-                "Approach": approach,
-                "F_exact": avg("F", "exact"),
-                "F_close": avg("F", "close"),
-                "P_exact": avg("P", "exact"),
-                "P_close": avg("P", "close"),
-                "R_exact": avg("R", "exact"),
-                "R_close": avg("R", "close"),
-                "J_both": avg("J_both", "exact"),
-                "J_concept": avg("J_concept", "exact"),
-                "J_text": avg("J_text", "exact"),
-                "URI_acc_mean": grp["URIs_acc"].mean() if "URIs_acc" in grp else float("nan"),
-                "URI_coverage_mean": grp["URIs_coverage"].mean() if "URIs_coverage" in grp else float("nan"),
-                "URI_predicted_mean": grp["URIs_predicted"].mean() if "URIs_predicted" in grp else float("nan"),
-                **per_key_metrics,
-            }
-        )
-
-    summary = pd.DataFrame(summary_rows).round(3).sort_values(by="F_exact", ascending=False)
-
-    out_xlsx = OUTBOOK_DIR / f"iadopt_metrics_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
-    with pd.ExcelWriter(out_xlsx, engine="openpyxl") as wr:
-        summary.to_excel(wr, sheet_name="summary", index=False)
-        df_sorted.to_excel(wr, sheet_name="per_variable", index=False)
-        df.to_excel(wr, sheet_name="all_rows", index=False)
-
-    logging.info("✓ Results saved → %s", out_xlsx.resolve())
-
-    # ---------- Optional: F-exact matrix and ranking (unchanged) ----------
-    df_exact = df[df["Metric"] == "exact"].copy()
-    df_exact["Prompt"] = df_exact["Shot"].astype(str) + "-shot | " + df_exact["Variable"]
-    prompt_matrix = df_exact.pivot_table(index="Prompt", columns="Model", values="F", aggfunc="first").round(3)
-    shot_mean = df_exact.pivot_table(index="Shot", columns="Model", values="F", aggfunc="mean").round(3)
-    shot_mean.index = shot_mean.index.map(lambda s: f"{int(s)}-shot | MEAN")
-    shot_mean = shot_mean.sort_index(key=lambda s: s.str.extract(r"(\d+)").astype(int)[0])
-    overall_means = pd.concat([shot_mean, prompt_matrix]).mean(axis=0)
-    col_order = overall_means.sort_values(ascending=False).index.tolist()
-    shot_mean = shot_mean[col_order]
-    prompt_matrix = prompt_matrix[col_order]
-    f_matrix = pd.concat([shot_mean, prompt_matrix])
-    best_pairs = (
-        df_exact.groupby(["Shot", "Temp", "Model"], as_index=False)["F"]
-        .mean()
-        .rename(columns={"F": "F_exact"})
-        .sort_values("F_exact", ascending=False)
-    )
-    best_pairs["Prompt"] = best_pairs["Shot"].astype(str) + "-shot"
-    best_pairs = best_pairs[["Prompt", "Temp", "Model", "F_exact"]]
-
-    out_matrix = OUTBOOK_DIR / f"iadopt_Fexact_matrix_{datetime.now():%Y%m%d_%H%M%S}.xlsx"
-    with pd.ExcelWriter(out_matrix, engine="openpyxl") as wr:
-        f_matrix.to_excel(wr, sheet_name="F_exact_matrix")
-        best_pairs.to_excel(wr, sheet_name="best_pairs", index=False)
-
-    logging.info("✓ F-exact matrix & ranking saved → %s", out_matrix.resolve())
-
-    # ---------- Append a quick preprocess summary ----------
-    counter = Counter()
-    with PREPROC_LOG_FILE.open("r", encoding="utf-8") as fh:
-        for line in fh:
-            line = line.strip()
-            if not line or line.startswith("===="):
-                continue
-            rec = json.loads(line)
-            counter["rows"] += 1
-            for flag in (
-                "non_json_prefix",
-                "non_json_suffix",
-                "unparsable_json",
-                "label_overwritten",
-                # "comment_overwritten",
-                "coerced_property_dict",
-            ):
-                counter[flag] += bool(rec.get(flag))
-            counter["missing_keys"] += len(rec.get("missing_keys", []))
-            counter["extra_keys"] += len(rec.get("extra_keys", []))
-
-    summary_lines = ["", "===== SUMMARY ====="] + [f"{k}: {v}" for k, v in counter.items()]
-    with PREPROC_LOG_FILE.open("a", encoding="utf-8") as fh:
-        fh.write("\n".join(summary_lines) + "\n")
-
-    logging.info("✓ Pre-processing log saved → %s", PREPROC_LOG_FILE.resolve())
+    build_excel(all_results)
 
 
 if __name__ == "__main__":

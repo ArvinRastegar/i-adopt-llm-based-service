@@ -1,0 +1,239 @@
+{
+  "created_at": "2026-02-12T15:59:53.982085+00:00",
+  "elapsed": 0.179928,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "2",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:59:53 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-fthsq",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "fdead3f3-be27-44ba-9a1b-1669c2c0b9f4",
+    "x-search-id": "6hb7ygrfa1dw36xeqbjwptxl3"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=relative+position"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=relative+position",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "relative position"
+    },
+    "search": [
+      {
+        "id": "Q23008351",
+        "title": "Q23008351",
+        "pageid": 25022579,
+        "concepturi": "http://www.wikidata.org/entity/Q23008351",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q23008351",
+        "display": {
+          "label": {
+            "value": "relative location",
+            "language": "en"
+          },
+          "description": {
+            "value": "location determined by its position relative to a subject",
+            "language": "en"
+          }
+        },
+        "label": "relative location",
+        "description": "location determined by its position relative to a subject",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "relative position"
+        },
+        "aliases": [
+          "relative position"
+        ]
+      },
+      {
+        "id": "Q120092801",
+        "title": "Q120092801",
+        "pageid": 114552915,
+        "concepturi": "http://www.wikidata.org/entity/Q120092801",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q120092801",
+        "display": {
+          "label": {
+            "value": "Relative position measurement",
+            "language": "en"
+          },
+          "description": {
+            "value": "US patent 11156119",
+            "language": "en"
+          }
+        },
+        "label": "Relative position measurement",
+        "description": "US patent 11156119",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Relative position measurement"
+        }
+      },
+      {
+        "id": "Q117481541",
+        "title": "Q117481541",
+        "pageid": 112246033,
+        "concepturi": "http://www.wikidata.org/entity/Q117481541",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q117481541",
+        "display": {
+          "label": {
+            "value": "Relative position encoding based networks for action recognition",
+            "language": "en"
+          },
+          "description": {
+            "value": "US patent 11468296",
+            "language": "en"
+          }
+        },
+        "label": "Relative position encoding based networks for action recognition",
+        "description": "US patent 11468296",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Relative position encoding based networks for action recognition"
+        }
+      },
+      {
+        "id": "Q59580943",
+        "title": "Q59580943",
+        "pageid": 59476817,
+        "concepturi": "http://www.wikidata.org/entity/Q59580943",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q59580943",
+        "display": {
+          "label": {
+            "value": "Relative-position localization",
+            "language": "en"
+          },
+          "description": {
+            "value": "doctoral thesis by Alexander V. Rau",
+            "language": "en"
+          }
+        },
+        "label": "Relative-position localization",
+        "description": "doctoral thesis by Alexander V. Rau",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Relative-position localization"
+        }
+      },
+      {
+        "id": "Q41903016",
+        "title": "Q41903016",
+        "pageid": 43209583,
+        "concepturi": "http://www.wikidata.org/entity/Q41903016",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q41903016",
+        "display": {
+          "label": {
+            "value": "Relative position and strengths of poly(A) sites as well as transcription termination are critical to membrane versus secreted mu-chain expression during B-cell development",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on July 1987",
+            "language": "en"
+          }
+        },
+        "label": "Relative position and strengths of poly(A) sites as well as transcription termination are critical to membrane versus secreted mu-chain expression during B-cell development",
+        "description": "scientific article published on July 1987",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Relative position and strengths of poly(A) sites as well as transcription termination are critical to membrane versus secreted mu-chain expression during B-cell development"
+        }
+      },
+      {
+        "id": "Q28296323",
+        "title": "Q28296323",
+        "pageid": 29993858,
+        "concepturi": "http://www.wikidata.org/entity/Q28296323",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q28296323",
+        "display": {
+          "label": {
+            "value": "Relative positions of two clusters of human \u03b1-L-fucosyltransferases in 19q (FUT1\u2013FUT2) and 19p (FUT6\u2013FUT3\u2013FUT5) within the microsatellite genetic map of chromosome 19",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on January 1, 1995",
+            "language": "en"
+          }
+        },
+        "label": "Relative positions of two clusters of human \u03b1-L-fucosyltransferases in 19q (FUT1\u2013FUT2) and 19p (FUT6\u2013FUT3\u2013FUT5) within the microsatellite genetic map of chromosome 19",
+        "description": "scientific article published on January 1, 1995",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Relative positions of two clusters of human \u03b1-L-fucosyltransferases in 19q (FUT1\u2013FUT2) and 19p (FUT6\u2013FUT3\u2013FUT5) within the microsatellite genetic map of chromosome 19"
+        }
+      },
+      {
+        "id": "Q36735395",
+        "title": "Q36735395",
+        "pageid": 38118119,
+        "concepturi": "http://www.wikidata.org/entity/Q36735395",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q36735395",
+        "display": {
+          "label": {
+            "value": "Relative position of the Cheirogaleidae in strepsirhine phylogeny: a comparison of morphological and molecular methods and results",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on May 1994",
+            "language": "en"
+          }
+        },
+        "label": "Relative position of the Cheirogaleidae in strepsirhine phylogeny: a comparison of morphological and molecular methods and results",
+        "description": "scientific article published on May 1994",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Relative position of the Cheirogaleidae in strepsirhine phylogeny: a comparison of morphological and molecular methods and results"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

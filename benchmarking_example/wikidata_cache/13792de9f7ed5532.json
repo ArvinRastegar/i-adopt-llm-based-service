@@ -1,0 +1,242 @@
+{
+  "created_at": "2026-02-12T15:55:42.443043+00:00",
+  "elapsed": 0.179951,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:55:42 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-6hvtp",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "b0055870-1388-40fa-a942-291ff8f3b7b9",
+    "x-search-id": "9ifg05dhsrmr6ie1cqw87oizr"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=speed"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=speed",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "speed"
+    },
+    "search": [
+      {
+        "id": "Q21482644",
+        "title": "Q21482644",
+        "pageid": 23527677,
+        "concepturi": "http://www.wikidata.org/entity/Q21482644",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q21482644",
+        "display": {
+          "label": {
+            "value": "Speed",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Speed",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Speed"
+        }
+      },
+      {
+        "id": "Q1207328",
+        "title": "Q1207328",
+        "pageid": 1149848,
+        "concepturi": "http://www.wikidata.org/entity/Q1207328",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1207328",
+        "display": {
+          "label": {
+            "value": "Speed",
+            "language": "en"
+          },
+          "description": {
+            "value": "Japanese female vocal/dance group",
+            "language": "en"
+          }
+        },
+        "label": "Speed",
+        "description": "Japanese female vocal/dance group",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Speed"
+        }
+      },
+      {
+        "id": "Q114834007",
+        "title": "Q114834007",
+        "pageid": 109499633,
+        "concepturi": "http://www.wikidata.org/entity/Q114834007",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q114834007",
+        "display": {
+          "label": {
+            "value": "IShowSpeed",
+            "language": "en"
+          },
+          "description": {
+            "value": "American YouTuber\u00a0and\u00a0online streamer",
+            "language": "en"
+          }
+        },
+        "label": "IShowSpeed",
+        "description": "American YouTuber\u00a0and\u00a0online streamer",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Speed"
+        },
+        "aliases": [
+          "Speed"
+        ]
+      },
+      {
+        "id": "Q3711325",
+        "title": "Q3711325",
+        "pageid": 3537196,
+        "concepturi": "http://www.wikidata.org/entity/Q3711325",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q3711325",
+        "display": {
+          "label": {
+            "value": "speed",
+            "language": "en"
+          },
+          "description": {
+            "value": "magnitude of velocity of motion",
+            "language": "en"
+          }
+        },
+        "label": "speed",
+        "description": "magnitude of velocity of motion",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "speed"
+        }
+      },
+      {
+        "id": "Q191924",
+        "title": "Q191924",
+        "pageid": 190154,
+        "concepturi": "http://www.wikidata.org/entity/Q191924",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q191924",
+        "display": {
+          "label": {
+            "value": "D-methamphetamine",
+            "language": "en"
+          },
+          "description": {
+            "value": "central nervous system stimulant",
+            "language": "en"
+          }
+        },
+        "label": "D-methamphetamine",
+        "description": "central nervous system stimulant",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "speed"
+        },
+        "aliases": [
+          "speed"
+        ]
+      },
+      {
+        "id": "Q10373684",
+        "title": "Q10373684",
+        "pageid": 11678226,
+        "concepturi": "http://www.wikidata.org/entity/Q10373684",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q10373684",
+        "display": {
+          "label": {
+            "value": "Speedfreaks",
+            "language": "en"
+          },
+          "description": {
+            "value": "Brazilian rapper and musician",
+            "language": "en"
+          }
+        },
+        "label": "Speedfreaks",
+        "description": "Brazilian rapper and musician",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Speedfreaks"
+        }
+      },
+      {
+        "id": "Q7575508",
+        "title": "Q7575508",
+        "pageid": 7493855,
+        "concepturi": "http://www.wikidata.org/entity/Q7575508",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q7575508",
+        "display": {
+          "label": {
+            "value": "Speed River",
+            "language": "en"
+          },
+          "description": {
+            "value": "watercourse in Ontario, Canada",
+            "language": "en"
+          }
+        },
+        "label": "Speed River",
+        "description": "watercourse in Ontario, Canada",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Speed River"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

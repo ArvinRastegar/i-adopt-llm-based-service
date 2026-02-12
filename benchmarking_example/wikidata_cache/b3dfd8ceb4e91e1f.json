@@ -1,0 +1,241 @@
+{
+  "created_at": "2026-02-12T15:58:22.212732+00:00",
+  "elapsed": 0.165813,
+  "encoding": "utf-8",
+  "headers": {
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:58:22 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-m2vz7",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "24030f9c-0bd5-4029-ac69-01ee1771be8b",
+    "x-search-id": "21nw2x5a3dggiq0wqwm1iqoi4"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=organic+carbon"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=organic+carbon",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "organic carbon"
+    },
+    "search": [
+      {
+        "id": "Q900291",
+        "title": "Q900291",
+        "pageid": 851099,
+        "concepturi": "http://www.wikidata.org/entity/Q900291",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q900291",
+        "display": {
+          "label": {
+            "value": "Total organic carbon",
+            "language": "en"
+          },
+          "description": {
+            "value": "concentration of organic carbon in a sample",
+            "language": "en"
+          }
+        },
+        "label": "Total organic carbon",
+        "description": "concentration of organic carbon in a sample",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "organic carbon"
+        },
+        "aliases": [
+          "organic carbon"
+        ]
+      },
+      {
+        "id": "Q414835",
+        "title": "Q414835",
+        "pageid": 392842,
+        "concepturi": "http://www.wikidata.org/entity/Q414835",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q414835",
+        "display": {
+          "label": {
+            "value": "carbonate ester",
+            "language": "en"
+          },
+          "description": {
+            "value": "ester derived from carbonic acid",
+            "language": "en"
+          }
+        },
+        "label": "carbonate ester",
+        "description": "ester derived from carbonic acid",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "organic carbonate"
+        },
+        "aliases": [
+          "organic carbonate"
+        ]
+      },
+      {
+        "id": "Q3198151",
+        "title": "Q3198151",
+        "pageid": 3053975,
+        "concepturi": "http://www.wikidata.org/entity/Q3198151",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q3198151",
+        "display": {
+          "label": {
+            "value": "Organic carbon to water partition coefficient",
+            "language": "en"
+          },
+          "description": {
+            "value": "Soil Adsorption Coefficient",
+            "language": "en"
+          }
+        },
+        "label": "Organic carbon to water partition coefficient",
+        "description": "Soil Adsorption Coefficient",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Organic carbon to water partition coefficient"
+        }
+      },
+      {
+        "id": "Q111027199",
+        "title": "Q111027199",
+        "pageid": 106029341,
+        "concepturi": "http://www.wikidata.org/entity/Q111027199",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q111027199",
+        "display": {
+          "label": {
+            "value": "Organic Carbon Reduction in Seawater Reverse Osmosis (SWRO) Plants, Jeddah, Saudi Arabia",
+            "language": "en"
+          },
+          "description": {
+            "value": "thesis",
+            "language": "en"
+          }
+        },
+        "label": "Organic Carbon Reduction in Seawater Reverse Osmosis (SWRO) Plants, Jeddah, Saudi Arabia",
+        "description": "thesis",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Organic Carbon Reduction in Seawater Reverse Osmosis (SWRO) Plants, Jeddah, Saudi Arabia"
+        }
+      },
+      {
+        "id": "Q107274698",
+        "title": "Q107274698",
+        "pageid": 102532054,
+        "concepturi": "http://www.wikidata.org/entity/Q107274698",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q107274698",
+        "display": {
+          "label": {
+            "value": "Organic carbon fraction",
+            "language": "en"
+          },
+          "description": {
+            "value": "Soil property that addresses its organic content and depends on its moisture",
+            "language": "en"
+          }
+        },
+        "label": "Organic carbon fraction",
+        "description": "Soil property that addresses its organic content and depends on its moisture",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Organic carbon fraction"
+        }
+      },
+      {
+        "id": "Q109538558",
+        "title": "Q109538558",
+        "pageid": 104678485,
+        "concepturi": "http://www.wikidata.org/entity/Q109538558",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q109538558",
+        "display": {
+          "label": {
+            "value": "Organic carbon rich sediments: benthic foraminifera as bio-indicators of depositional environments",
+            "language": "en"
+          },
+          "description": {
+            "value": "manuscript under review for journal Biogeosciences 20 May 2019",
+            "language": "en"
+          }
+        },
+        "label": "Organic carbon rich sediments: benthic foraminifera as bio-indicators of depositional environments",
+        "description": "manuscript under review for journal Biogeosciences 20 May 2019",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Organic carbon rich sediments: benthic foraminifera as bio-indicators of depositional environments"
+        }
+      },
+      {
+        "id": "Q107274546",
+        "title": "Q107274546",
+        "pageid": 102531909,
+        "concepturi": "http://www.wikidata.org/entity/Q107274546",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q107274546",
+        "display": {
+          "label": {
+            "value": "organic carbon-water partitioning coefficient",
+            "language": "en"
+          },
+          "description": {
+            "value": "chemical property of organic molecules that addresses their affinity to get sorbed onto the organic carbon fraction of soils",
+            "language": "en"
+          }
+        },
+        "label": "organic carbon-water partitioning coefficient",
+        "description": "chemical property of organic molecules that addresses their affinity to get sorbed onto the organic carbon fraction of soils",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "organic carbon-water partitioning coefficient"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

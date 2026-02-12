@@ -1,0 +1,239 @@
+{
+  "created_at": "2026-02-12T15:58:58.781808+00:00",
+  "elapsed": 0.298511,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:58:58 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-cftrz",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "c554f741-61b3-42fc-be03-1e7499c4a585",
+    "x-search-id": "9yluwi9elbea3wlamzwylr820"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=pH"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=pH",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "pH"
+    },
+    "search": [
+      {
+        "id": "Q928",
+        "title": "Q928",
+        "pageid": 1251,
+        "concepturi": "http://www.wikidata.org/entity/Q928",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q928",
+        "display": {
+          "label": {
+            "value": "Philippines",
+            "language": "en"
+          },
+          "description": {
+            "value": "archipelagic country in Southeast Asia",
+            "language": "en"
+          }
+        },
+        "label": "Philippines",
+        "description": "archipelagic country in Southeast Asia",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Philippines"
+        }
+      },
+      {
+        "id": "Q40936",
+        "title": "Q40936",
+        "pageid": 43247,
+        "concepturi": "http://www.wikidata.org/entity/Q40936",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q40936",
+        "display": {
+          "label": {
+            "value": "pH",
+            "language": "en"
+          },
+          "description": {
+            "value": "measure of the acidity of an aqueous solution",
+            "language": "en"
+          }
+        },
+        "label": "pH",
+        "description": "measure of the acidity of an aqueous solution",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "pH"
+        }
+      },
+      {
+        "id": "Q12204",
+        "title": "Q12204",
+        "pageid": 13780,
+        "concepturi": "http://www.wikidata.org/entity/Q12204",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q12204",
+        "display": {
+          "label": {
+            "value": "tuberculosis",
+            "language": "en"
+          },
+          "description": {
+            "value": "infectious disease caused by the bacterium Mycobacterium tuberculosis",
+            "language": "en"
+          }
+        },
+        "label": "tuberculosis",
+        "description": "infectious disease caused by the bacterium Mycobacterium tuberculosis",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "phthisis"
+        },
+        "aliases": [
+          "phthisis"
+        ]
+      },
+      {
+        "id": "Q2018386",
+        "title": "Q2018386",
+        "pageid": 1946499,
+        "concepturi": "http://www.wikidata.org/entity/Q2018386",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q2018386",
+        "display": {
+          "label": {
+            "value": "Physical Review Letters",
+            "language": "en"
+          },
+          "description": {
+            "value": "physics journal from the American Physical Society",
+            "language": "en"
+          }
+        },
+        "label": "Physical Review Letters",
+        "description": "physics journal from the American Physical Society",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Physical Review Letters"
+        }
+      },
+      {
+        "id": "Q1345",
+        "title": "Q1345",
+        "pageid": 1748,
+        "concepturi": "http://www.wikidata.org/entity/Q1345",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1345",
+        "display": {
+          "label": {
+            "value": "Philadelphia",
+            "language": "en"
+          },
+          "description": {
+            "value": "largest city in Pennsylvania, United States",
+            "language": "en"
+          }
+        },
+        "label": "Philadelphia",
+        "description": "largest city in Pennsylvania, United States",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Philadelphia"
+        }
+      },
+      {
+        "id": "Q42339",
+        "title": "Q42339",
+        "pageid": 44583,
+        "concepturi": "http://www.wikidata.org/entity/Q42339",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q42339",
+        "display": {
+          "label": {
+            "value": "Phaseolus vulgaris",
+            "language": "en"
+          },
+          "description": {
+            "value": "species of plant",
+            "language": "en"
+          }
+        },
+        "label": "Phaseolus vulgaris",
+        "description": "species of plant",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Phaseolus vulgaris"
+        }
+      },
+      {
+        "id": "Q827311",
+        "title": "Q827311",
+        "pageid": 780091,
+        "concepturi": "http://www.wikidata.org/entity/Q827311",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q827311",
+        "display": {
+          "label": {
+            "value": "Philip",
+            "language": "en"
+          },
+          "description": {
+            "value": "male given name",
+            "language": "en"
+          }
+        },
+        "label": "Philip",
+        "description": "male given name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Philip"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "created_at": "2026-02-12T15:54:59.827235+00:00",
+  "elapsed": 0.160352,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:54:59 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-txl8h",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "289acf65-40d2-4fa7-b652-5524449c5f9b",
+    "x-search-id": "dc6g07deikxf7upoxoj2wt2kd"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=flood+risk"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=flood+risk",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "flood risk"
+    },
+    "search": [
+      {
+        "id": "Q2288778",
+        "title": "Q2288778",
+        "pageid": 2210849,
+        "concepturi": "http://www.wikidata.org/entity/Q2288778",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q2288778",
+        "display": {
+          "label": {
+            "value": "flood risk",
+            "language": "en"
+          },
+          "description": {
+            "value": "risk of being flooded",
+            "language": "en"
+          }
+        },
+        "label": "flood risk",
+        "description": "risk of being flooded",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "flood risk"
+        }
+      },
+      {
+        "id": "Q5460077",
+        "title": "Q5460077",
+        "pageid": 5221417,
+        "concepturi": "http://www.wikidata.org/entity/Q5460077",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q5460077",
+        "display": {
+          "label": {
+            "value": "flood risk assessment",
+            "language": "en"
+          },
+          "description": {
+            "value": "assessment of the risk of flooding from all flooding mechanisms, identification of flood mitigation measures and recommendation on actions to be taken before and during a flood",
+            "language": "en"
+          }
+        },
+        "label": "flood risk assessment",
+        "description": "assessment of the risk of flooding from all flooding mechanisms, identification of flood mitigation measures and recommendation on actions to be taken before and during a flood",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "flood risk assessment"
+        }
+      },
+      {
+        "id": "Q100249377",
+        "title": "Q100249377",
+        "pageid": 97910289,
+        "concepturi": "http://www.wikidata.org/entity/Q100249377",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q100249377",
+        "display": {
+          "label": {
+            "value": "Flood Risk Management (Scotland) Act 2009",
+            "language": "en"
+          },
+          "description": {
+            "value": "Act of the Scottish Parliament",
+            "language": "en"
+          }
+        },
+        "label": "Flood Risk Management (Scotland) Act 2009",
+        "description": "Act of the Scottish Parliament",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flood Risk Management (Scotland) Act 2009"
+        }
+      },
+      {
+        "id": "Q60793879",
+        "title": "Q60793879",
+        "pageid": 60649112,
+        "concepturi": "http://www.wikidata.org/entity/Q60793879",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q60793879",
+        "display": {
+          "label": {
+            "value": "Flood risk management",
+            "language": "en"
+          },
+          "description": {
+            "value": "harm reduction approaches for floods",
+            "language": "en"
+          }
+        },
+        "label": "Flood risk management",
+        "description": "harm reduction approaches for floods",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flood risk management"
+        }
+      },
+      {
+        "id": "Q76541105",
+        "title": "Q76541105",
+        "pageid": 76026111,
+        "concepturi": "http://www.wikidata.org/entity/Q76541105",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q76541105",
+        "display": {
+          "label": {
+            "value": "Flood risk assessment for planning in Wales",
+            "language": "en"
+          },
+          "description": {
+            "value": "book (work)",
+            "language": "en"
+          }
+        },
+        "label": "Flood risk assessment for planning in Wales",
+        "description": "book (work)",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flood risk assessment for planning in Wales"
+        }
+      },
+      {
+        "id": "Q74749304",
+        "title": "Q74749304",
+        "pageid": 74354669,
+        "concepturi": "http://www.wikidata.org/entity/Q74749304",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q74749304",
+        "display": {
+          "label": {
+            "value": "Flood risk assessment for planning in Wales",
+            "language": "en"
+          },
+          "description": {
+            "value": "edition; published in 2003",
+            "language": "en"
+          }
+        },
+        "label": "Flood risk assessment for planning in Wales",
+        "description": "edition; published in 2003",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flood risk assessment for planning in Wales"
+        }
+      },
+      {
+        "id": "Q59639346",
+        "title": "Q59639346",
+        "pageid": 59534835,
+        "concepturi": "http://www.wikidata.org/entity/Q59639346",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q59639346",
+        "display": {
+          "label": {
+            "value": "Flood Risk Management and Levees: A\u00c2\u00a0Federal Primer",
+            "language": "en"
+          },
+          "description": {
+            "value": "Congressional Research Service report",
+            "language": "en"
+          }
+        },
+        "label": "Flood Risk Management and Levees: A\u00c2\u00a0Federal Primer",
+        "description": "Congressional Research Service report",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flood Risk Management and Levees: A\u00c2\u00a0Federal Primer"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

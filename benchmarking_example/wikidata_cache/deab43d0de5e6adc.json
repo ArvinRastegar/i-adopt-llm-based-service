@@ -1,0 +1,245 @@
+{
+  "created_at": "2026-02-12T15:45:09.468574+00:00",
+  "elapsed": 0.191242,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:45:09 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-fxvbx",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "01df6711-0186-4b2c-9967-053d153235c0",
+    "x-search-id": "eos902phfo25bdacxbgurfmh4"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=-pbUlJmbJ16IkFBsvuKwQQMFAAEBAFvd3YiOoNKFn1PAiASPyBgMd5696D1H_rix",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=surface"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=surface",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "surface"
+    },
+    "search": [
+      {
+        "id": "Q37497814",
+        "title": "Q37497814",
+        "pageid": 38872095,
+        "concepturi": "http://www.wikidata.org/entity/Q37497814",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q37497814",
+        "display": {
+          "label": {
+            "value": "Surface",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Surface",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Surface"
+        }
+      },
+      {
+        "id": "Q3064117",
+        "title": "Q3064117",
+        "pageid": 2928756,
+        "concepturi": "http://www.wikidata.org/entity/Q3064117",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q3064117",
+        "display": {
+          "label": {
+            "value": "face",
+            "language": "en"
+          },
+          "description": {
+            "value": "in geometry, a planar surface that forms part of the boundary of a solid object",
+            "language": "en"
+          }
+        },
+        "label": "face",
+        "description": "in geometry, a planar surface that forms part of the boundary of a solid object",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "surface"
+        },
+        "aliases": [
+          "surface"
+        ]
+      },
+      {
+        "id": "Q484298",
+        "title": "Q484298",
+        "pageid": 455852,
+        "concepturi": "http://www.wikidata.org/entity/Q484298",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q484298",
+        "display": {
+          "label": {
+            "value": "surface",
+            "language": "en"
+          },
+          "description": {
+            "value": "two-dimensional manifold, and, as such, may be an \"abstract surface\" not embedded in any Euclidean space",
+            "language": "en"
+          }
+        },
+        "label": "surface",
+        "description": "two-dimensional manifold, and, as such, may be an \"abstract surface\" not embedded in any Euclidean space",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "surface"
+        }
+      },
+      {
+        "id": "Q3783831",
+        "title": "Q3783831",
+        "pageid": 3607944,
+        "concepturi": "http://www.wikidata.org/entity/Q3783831",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q3783831",
+        "display": {
+          "label": {
+            "value": "physical surface",
+            "language": "en"
+          },
+          "description": {
+            "value": "two-dimensional boundary of three-dimensional object",
+            "language": "en"
+          }
+        },
+        "label": "physical surface",
+        "description": "two-dimensional boundary of three-dimensional object",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "surface of object"
+        },
+        "aliases": [
+          "surface of object"
+        ]
+      },
+      {
+        "id": "Q898756",
+        "title": "Q898756",
+        "pageid": 849582,
+        "concepturi": "http://www.wikidata.org/entity/Q898756",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q898756",
+        "display": {
+          "label": {
+            "value": "surface plasmon resonance",
+            "language": "en"
+          },
+          "description": {
+            "value": "physical phenomenon of electron resonance",
+            "language": "en"
+          }
+        },
+        "label": "surface plasmon resonance",
+        "description": "physical phenomenon of electron resonance",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "surface plasmon resonance"
+        }
+      },
+      {
+        "id": "Q135073623",
+        "title": "Q135073623",
+        "pageid": 128893973,
+        "concepturi": "http://www.wikidata.org/entity/Q135073623",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q135073623",
+        "display": {
+          "label": {
+            "value": "Surface",
+            "language": "en"
+          },
+          "description": {
+            "value": "video game developed by PurpleGoop",
+            "language": "en"
+          }
+        },
+        "label": "Surface",
+        "description": "video game developed by PurpleGoop",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Surface"
+        }
+      },
+      {
+        "id": "Q1074953",
+        "title": "Q1074953",
+        "pageid": 1023344,
+        "concepturi": "http://www.wikidata.org/entity/Q1074953",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1074953",
+        "display": {
+          "label": {
+            "value": "microscopy",
+            "language": "en"
+          },
+          "description": {
+            "value": "technical field of using microscopes to view samples and objects that cannot be seen with the unaided eye",
+            "language": "en"
+          }
+        },
+        "label": "microscopy",
+        "description": "technical field of using microscopes to view samples and objects that cannot be seen with the unaided eye",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "surface analysis"
+        },
+        "aliases": [
+          "surface analysis"
+        ]
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

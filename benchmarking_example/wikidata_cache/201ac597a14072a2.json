@@ -1,0 +1,236 @@
+{
+  "created_at": "2026-02-12T15:17:56.863483+00:00",
+  "elapsed": 0.169766,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:17:56 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-wwlvq",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "cf0391e3-ea38-4360-8ad8-666fc23f7b19",
+    "x-search-id": "24eom7j9m0t68dz6eei91vnv2"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "jG0MiilZfBIV3-XNPwUIdgMFAAEBAFvdiBIMw5plshyCugZAePPrf-xdwduQX6uQ"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=jG0MiilZfBIV3-XNPwUIdgMFAAEBAFvdiBIMw5plshyCugZAePPrf-xdwduQX6uQ",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=flux"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=flux",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "flux"
+    },
+    "search": [
+      {
+        "id": "Q29826132",
+        "title": "Q29826132",
+        "pageid": 31462450,
+        "concepturi": "http://www.wikidata.org/entity/Q29826132",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q29826132",
+        "display": {
+          "label": {
+            "value": "Flux",
+            "language": "en"
+          },
+          "description": {
+            "value": "family name",
+            "language": "en"
+          }
+        },
+        "label": "Flux",
+        "description": "family name",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flux"
+        }
+      },
+      {
+        "id": "Q3241795",
+        "title": "Q3241795",
+        "pageid": 3094208,
+        "concepturi": "http://www.wikidata.org/entity/Q3241795",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q3241795",
+        "display": {
+          "label": {
+            "value": "Flux",
+            "language": "en"
+          },
+          "description": {
+            "value": "graphics and animation software suite",
+            "language": "en"
+          }
+        },
+        "label": "Flux",
+        "description": "graphics and animation software suite",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flux"
+        }
+      },
+      {
+        "id": "Q5463013",
+        "title": "Q5463013",
+        "pageid": 5224313,
+        "concepturi": "http://www.wikidata.org/entity/Q5463013",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q5463013",
+        "display": {
+          "label": {
+            "value": "flux",
+            "language": "en"
+          },
+          "description": {
+            "value": "rate of turnover of molecules through a metabolic pathway",
+            "language": "en"
+          }
+        },
+        "label": "flux",
+        "description": "rate of turnover of molecules through a metabolic pathway",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "flux"
+        }
+      },
+      {
+        "id": "Q60376653",
+        "title": "Q60376653",
+        "pageid": 60250370,
+        "concepturi": "http://www.wikidata.org/entity/Q60376653",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q60376653",
+        "display": {
+          "label": {
+            "value": "Flux",
+            "language": "en"
+          },
+          "description": {
+            "value": "1993 edition",
+            "language": "en"
+          }
+        },
+        "label": "Flux",
+        "description": "1993 edition",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flux"
+        }
+      },
+      {
+        "id": "Q128801793",
+        "title": "Q128801793",
+        "pageid": 122777841,
+        "concepturi": "http://www.wikidata.org/entity/Q128801793",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q128801793",
+        "display": {
+          "label": {
+            "value": "Flux",
+            "language": "en"
+          },
+          "description": {
+            "value": "suite of text-to-image models",
+            "language": "en"
+          }
+        },
+        "label": "Flux",
+        "description": "suite of text-to-image models",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flux"
+        }
+      },
+      {
+        "id": "Q122351788",
+        "title": "Q122351788",
+        "pageid": 116671757,
+        "concepturi": "http://www.wikidata.org/entity/Q122351788",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q122351788",
+        "display": {
+          "label": {
+            "value": "Flux",
+            "language": "en"
+          },
+          "description": {
+            "value": "2019 video game",
+            "language": "en"
+          }
+        },
+        "label": "Flux",
+        "description": "2019 video game",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Flux"
+        }
+      },
+      {
+        "id": "Q6485344",
+        "title": "Q6485344",
+        "pageid": 6303646,
+        "concepturi": "http://www.wikidata.org/entity/Q6485344",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q6485344",
+        "display": {
+          "label": {
+            "value": "flux",
+            "language": "en"
+          },
+          "description": {
+            "value": "measure of the flow of something through a surface, in some cases per surface area",
+            "language": "en"
+          }
+        },
+        "label": "flux",
+        "description": "measure of the flow of something through a surface, in some cases per surface area",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "flux"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

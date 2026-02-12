@@ -1,0 +1,248 @@
+{
+  "created_at": "2026-02-12T15:59:15.820285+00:00",
+  "elapsed": 0.200037,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:59:15 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-gz5zp",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "e03f5da5-4632-44e2-8362-e675c47ad4df",
+    "x-search-id": "2nvz2iwnkm4sdnx6zjkpe926u"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=mother"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=mother",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "mother"
+    },
+    "search": [
+      {
+        "id": "Q7560",
+        "title": "Q7560",
+        "pageid": 8797,
+        "concepturi": "http://www.wikidata.org/entity/Q7560",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q7560",
+        "display": {
+          "label": {
+            "value": "mother",
+            "language": "en"
+          },
+          "description": {
+            "value": "female parent",
+            "language": "en"
+          }
+        },
+        "label": "mother",
+        "description": "female parent",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "mother"
+        }
+      },
+      {
+        "id": "Q30949692",
+        "title": "Q30949692",
+        "pageid": 32558946,
+        "concepturi": "http://www.wikidata.org/entity/Q30949692",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q30949692",
+        "display": {
+          "label": {
+            "value": "Mother",
+            "language": "en"
+          },
+          "description": {
+            "value": "South Korean television series",
+            "language": "en"
+          }
+        },
+        "label": "Mother",
+        "description": "South Korean television series",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Mother"
+        }
+      },
+      {
+        "id": "Q345",
+        "title": "Q345",
+        "pageid": 539,
+        "concepturi": "http://www.wikidata.org/entity/Q345",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q345",
+        "display": {
+          "label": {
+            "value": "Mary",
+            "language": "en"
+          },
+          "description": {
+            "value": "mother of Jesus Christ",
+            "language": "en"
+          }
+        },
+        "label": "Mary",
+        "description": "mother of Jesus Christ",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Mother of God"
+        },
+        "aliases": [
+          "Mother of God"
+        ]
+      },
+      {
+        "id": "Q2",
+        "title": "Q2",
+        "pageid": 130,
+        "concepturi": "http://www.wikidata.org/entity/Q2",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q2",
+        "display": {
+          "label": {
+            "value": "Earth",
+            "language": "en"
+          },
+          "description": {
+            "value": "third planet from the Sun in the Solar System",
+            "language": "en"
+          }
+        },
+        "label": "Earth",
+        "description": "third planet from the Sun in the Solar System",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Mother Earth"
+        },
+        "aliases": [
+          "Mother Earth"
+        ]
+      },
+      {
+        "id": "Q737547",
+        "title": "Q737547",
+        "pageid": 693658,
+        "concepturi": "http://www.wikidata.org/entity/Q737547",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q737547",
+        "display": {
+          "label": {
+            "value": "Motherwell",
+            "language": "en"
+          },
+          "description": {
+            "value": "town in North Lanarkshire, Scotland, UK",
+            "language": "en"
+          }
+        },
+        "label": "Motherwell",
+        "description": "town in North Lanarkshire, Scotland, UK",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Motherwell"
+        }
+      },
+      {
+        "id": "Q5465",
+        "title": "Q5465",
+        "pageid": 6427,
+        "concepturi": "http://www.wikidata.org/entity/Q5465",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q5465",
+        "display": {
+          "label": {
+            "value": "Cape Town",
+            "language": "en"
+          },
+          "description": {
+            "value": "city in the Western Cape, South Africa",
+            "language": "en"
+          }
+        },
+        "label": "Cape Town",
+        "description": "city in the Western Cape, South Africa",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Mother City"
+        },
+        "aliases": [
+          "Mother City"
+        ]
+      },
+      {
+        "id": "Q1132918",
+        "title": "Q1132918",
+        "pageid": 1079819,
+        "concepturi": "http://www.wikidata.org/entity/Q1132918",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q1132918",
+        "display": {
+          "label": {
+            "value": "National Museum of Art, Architecture and Design",
+            "language": "en"
+          },
+          "description": {
+            "value": "National Museum in Oslo",
+            "language": "en"
+          }
+        },
+        "label": "National Museum of Art, Architecture and Design",
+        "description": "National Museum in Oslo",
+        "match": {
+          "type": "alias",
+          "language": "en",
+          "text": "Mother institution for Nasjonalgalleriet"
+        },
+        "aliases": [
+          "Mother institution for Nasjonalgalleriet"
+        ]
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}

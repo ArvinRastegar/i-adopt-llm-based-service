@@ -1,0 +1,234 @@
+{
+  "created_at": "2026-02-12T15:57:11.491378+00:00",
+  "elapsed": 0.177384,
+  "encoding": "utf-8",
+  "headers": {
+    "accept-ranges": "bytes",
+    "age": "0",
+    "cache-control": "private, must-revalidate, max-age=0",
+    "content-disposition": "inline; filename=api-result.json",
+    "content-encoding": "gzip",
+    "content-security-policy": "default-src 'self'; script-src 'none'; object-src 'none'",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 12 Feb 2026 15:57:11 GMT",
+    "nel": "{ \"report_to\": \"wm_nel\", \"max_age\": 604800, \"failure_fraction\": 0.05, \"success_fraction\": 0.0}",
+    "report-to": "{ \"group\": \"wm_nel\", \"max_age\": 604800, \"endpoints\": [{ \"url\": \"https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0\" }] }",
+    "server": "mw-api-ext.eqiad.main-77c6d5c4cc-5b8rp",
+    "server-timing": "cache;desc=\"pass\", host;desc=\"cp3067\"",
+    "strict-transport-security": "max-age=106384710; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding,X-Subdomain,Treat-as-Untrusted,X-Forwarded-Proto,Cookie,Authorization,User-Agent",
+    "x-analytics": "",
+    "x-cache": "cp3067 miss, cp3067 pass",
+    "x-cache-status": "pass",
+    "x-client-ip": "195.37.187.157",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "x-request-id": "4b0ac80e-fb60-4d4c-850e-00677df95778",
+    "x-search-id": "boy75kxoj3ipno9rdjjjlsyce"
+  },
+  "reason": "OK",
+  "request": {
+    "body": "",
+    "cookies": {
+      "WMF-Last-Access": "12-Feb-2026",
+      "NetworkProbeLimit": "0.001",
+      "WMF-Last-Access-Global": "12-Feb-2026",
+      "GeoIP": "DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4",
+      "WMF-Uniq": "TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3"
+    },
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, zstd",
+      "Connection": "keep-alive",
+      "Cookie": "WMF-Last-Access=12-Feb-2026; NetworkProbeLimit=0.001; WMF-Last-Access-Global=12-Feb-2026; GeoIP=DE:BY:Garmisch-Partenkirchen:47.49:11.10:v4; WMF-Uniq=TLJSEjIc3Tj0UHEdtZh6lgMFAAEBAFvdm74W63vY_yOlJ9vjWiNFMUPPHGlo8Cw3",
+      "User-Agent": "IADOPT-Linker/1.0 (+benchmark script)"
+    },
+    "method": "GET",
+    "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=foraminifers"
+  },
+  "status_code": 200,
+  "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&search=foraminifers",
+  "_decoded_content": {
+    "searchinfo": {
+      "search": "foraminifers"
+    },
+    "search": [
+      {
+        "id": "Q107027",
+        "title": "Q107027",
+        "pageid": 109676,
+        "concepturi": "http://www.wikidata.org/entity/Q107027",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q107027",
+        "display": {
+          "label": {
+            "value": "Foraminifera",
+            "language": "en"
+          },
+          "description": {
+            "value": "phylum of amoeboid protists",
+            "language": "en"
+          }
+        },
+        "label": "Foraminifera",
+        "description": "phylum of amoeboid protists",
+        "match": {
+          "type": "alias",
+          "language": "ca",
+          "text": "Foramin\u00edfers"
+        },
+        "aliases": [
+          "Foramin\u00edfers"
+        ]
+      },
+      {
+        "id": "Q57848859",
+        "title": "Q57848859",
+        "pageid": 57763443,
+        "concepturi": "http://www.wikidata.org/entity/Q57848859",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q57848859",
+        "display": {
+          "label": {
+            "value": "Foraminifers and conodonts from the late Vis\u00e9an to early Bashkirian succession in the Saharan Tindouf Basin (southern Morocco): biostratigraphic refinements and implications for correlations in the western Palaeotethys",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article",
+            "language": "en"
+          }
+        },
+        "label": "Foraminifers and conodonts from the late Vis\u00e9an to early Bashkirian succession in the Saharan Tindouf Basin (southern Morocco): biostratigraphic refinements and implications for correlations in the western Palaeotethys",
+        "description": "scientific article",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Foraminifers and conodonts from the late Vis\u00e9an to early Bashkirian succession in the Saharan Tindouf Basin (southern Morocco): biostratigraphic refinements and implications for correlations in the western Palaeotethys"
+        }
+      },
+      {
+        "id": "Q75270917",
+        "title": "Q75270917",
+        "pageid": 74762329,
+        "concepturi": "http://www.wikidata.org/entity/Q75270917",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q75270917",
+        "display": {
+          "label": {
+            "value": "Foraminifers as indicators of marine pollution: a culture experiment with Rosalina leei",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on 01 January 2004",
+            "language": "en"
+          }
+        },
+        "label": "Foraminifers as indicators of marine pollution: a culture experiment with Rosalina leei",
+        "description": "scientific article published on 01 January 2004",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Foraminifers as indicators of marine pollution: a culture experiment with Rosalina leei"
+        }
+      },
+      {
+        "id": "Q60350170",
+        "title": "Q60350170",
+        "pageid": 60224201,
+        "concepturi": "http://www.wikidata.org/entity/Q60350170",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q60350170",
+        "display": {
+          "label": {
+            "value": "Foraminifers (Benthic)",
+            "language": "en"
+          }
+        },
+        "label": "Foraminifers (Benthic)",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Foraminifers (Benthic)"
+        }
+      },
+      {
+        "id": "Q60406894",
+        "title": "Q60406894",
+        "pageid": 60279462,
+        "concepturi": "http://www.wikidata.org/entity/Q60406894",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q60406894",
+        "display": {
+          "label": {
+            "value": "Foraminifers epibiontic on Eudendrium (Cnidaria: Hydrozoa) from the Mediterranean Sea",
+            "language": "en"
+          },
+          "description": {
+            "value": "scholarly article in Journal of the Marine Biological Association of the United Kingdom, vol. 88 no. 3, May 2008",
+            "language": "en"
+          }
+        },
+        "label": "Foraminifers epibiontic on Eudendrium (Cnidaria: Hydrozoa) from the Mediterranean Sea",
+        "description": "scholarly article in Journal of the Marine Biological Association of the United Kingdom, vol. 88 no. 3, May 2008",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Foraminifers epibiontic on Eudendrium (Cnidaria: Hydrozoa) from the Mediterranean Sea"
+        }
+      },
+      {
+        "id": "Q105645063",
+        "title": "Q105645063",
+        "pageid": 101009132,
+        "concepturi": "http://www.wikidata.org/entity/Q105645063",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q105645063",
+        "display": {
+          "label": {
+            "value": "Foraminifers of the Vis\u00e9an-Serpukhovian boundary interval in Western Palaeotethys: a review",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published on 16 January 2019",
+            "language": "en"
+          }
+        },
+        "label": "Foraminifers of the Vis\u00e9an-Serpukhovian boundary interval in Western Palaeotethys: a review",
+        "description": "scientific article published on 16 January 2019",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Foraminifers of the Vis\u00e9an-Serpukhovian boundary interval in Western Palaeotethys: a review"
+        }
+      },
+      {
+        "id": "Q104452476",
+        "title": "Q104452476",
+        "pageid": 99862192,
+        "concepturi": "http://www.wikidata.org/entity/Q104452476",
+        "repository": "wikidata",
+        "url": "//www.wikidata.org/wiki/Q104452476",
+        "display": {
+          "label": {
+            "value": "Foraminifers in the latest Tournaisian\u2013late Vis\u00e9an of southern France (southern Montagne Noire and Mouthoumet Massif)",
+            "language": "en"
+          },
+          "description": {
+            "value": "scientific article published in June 2018",
+            "language": "en"
+          }
+        },
+        "label": "Foraminifers in the latest Tournaisian\u2013late Vis\u00e9an of southern France (southern Montagne Noire and Mouthoumet Massif)",
+        "description": "scientific article published in June 2018",
+        "match": {
+          "type": "label",
+          "language": "en",
+          "text": "Foraminifers in the latest Tournaisian\u2013late Vis\u00e9an of southern France (southern Montagne Noire and Mouthoumet Massif)"
+        }
+      }
+    ],
+    "search-continue": 7,
+    "success": 1
+  }
+}
