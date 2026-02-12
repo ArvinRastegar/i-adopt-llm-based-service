@@ -1,0 +1,12 @@
+{
+  "label": "Determination of iron concentration in a soil sample",
+  "definition": "Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline as mass fraction",
+  "comment": "Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline as mass fraction",
+  "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q899138",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n03b974d245fa4ccfb7c9989e1007bcaab1",
+    "hasSource": "iron (II)",
+    "hasTarget": "soil"
+  }
+}

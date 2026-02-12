@@ -1,0 +1,14 @@
+{
+  "label": "Dynamic shear viscosity of polystyrene PS042",
+  "definition": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+  "comment": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+  "hasProperty": "dynamic shear viscosity",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q137640633",
+  "hasObjectOfInterest": "polystyrene PS042",
+  "hasConstraint": [
+    {
+      "label": "condition: under testing conditions of DIN 5810-1",
+      "on": "dynamic shear viscosity"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "label": "Electron density in the solar wind",
+  "definition": "Density (particle per cm3) of electrons measured in the Solar Wind.",
+  "comment": "density, electron, solar wind",
+  "hasProperty": "number density",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q108914962",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n8a78658bdd56413d8369d3e16dad6e46b1",
+    "hasSource": "electron",
+    "hasTarget": "solar wind"
+  }
+}

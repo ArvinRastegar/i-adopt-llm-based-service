@@ -1,0 +1,20 @@
+{
+  "label": "Weight without clothes",
+  "definition": "current weight in kilogram without clothes; in case of pregnancy: last weight before pregnancy",
+  "comment": "current weight in kilogram without clothes; in case of pregnancy: last weight before pregnancy",
+  "hasProperty": "mass",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11423",
+  "hasStatisticalModifier": "latest",
+  "hasObjectOfInterest": "person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q215627",
+  "hasConstraint": [
+    {
+      "label": "condition: without clothes",
+      "on": "person"
+    },
+    {
+      "label": "status. unpregnant",
+      "on": "person"
+    }
+  ]
+}

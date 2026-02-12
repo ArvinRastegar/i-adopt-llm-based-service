@@ -1,0 +1,23 @@
+{
+  "label": "Peak ground acceleration",
+  "definition": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "comment": "ground, maximum, acceleration, due to: seismic event, surface -> location: surface",
+  "hasProperty": "acceleration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q11376",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
+  "hasMatrix": "earth",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q2",
+  "hasObjectOfInterest": "ground",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q36133",
+  "hasConstraint": [
+    {
+      "label": "location: surface",
+      "on": "ground"
+    },
+    {
+      "label": "due to: seismic event",
+      "on": "acceleration"
+    }
+  ]
+}

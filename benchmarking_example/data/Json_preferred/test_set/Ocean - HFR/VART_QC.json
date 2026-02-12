@@ -1,0 +1,14 @@
+{
+  "label": "VART_QC Variance quality flag",
+  "definition": "QC flags for sea surface current velocity, good data flag for those whose temporal variance is smaller than a maximum variance threshold.",
+  "comment": "QC flags for sea surface current velocity, good data flag for those whose temporal variance is smaller than a maximum variance threshold.",
+  "hasProperty": "quality flag",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q137642315",
+  "hasObjectOfInterest": "sea surface current velocity",
+  "hasConstraint": [
+    {
+      "label": "threshold: good if termporal variance is smaller than a maximum variance threshold",
+      "on": "quality flag"
+    }
+  ]
+}

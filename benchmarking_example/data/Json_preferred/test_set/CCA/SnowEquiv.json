@@ -1,0 +1,18 @@
+{
+  "label": "Snow water equivalent",
+  "definition": "Snow Water Equivalent or Surface Snow Amount is the mass of water per unit area (kg/m²)",
+  "comment": "condition: if the snow melted, snow, water, surface density",
+  "hasProperty": "surface density",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q1907514",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "nd65c107da35c4d24a1044dcc1d20c494b1",
+    "hasSource": "water",
+    "hasTarget": "snow"
+  },
+  "hasConstraint": [
+    {
+      "label": "condition: if the snow melted",
+      "on": "snow"
+    }
+  ]
+}

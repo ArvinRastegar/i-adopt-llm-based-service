@@ -1,0 +1,21 @@
+{
+  "label": "Air daily maximum temperature at 1.7m",
+  "definition": "Thermodynamic temperature of the air in a height of 1.7 meter, daily maximum",
+  "comment": "Thermodynamic temperature of the air in a height of 1.7 meter, daily maximum",
+  "hasProperty": "thermodynamic temperature",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q264647",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q10578722",
+  "hasObjectOfInterest": "air",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q7391292",
+  "hasConstraint": [
+    {
+      "label": "reporting frequency: daily",
+      "on": "maximum"
+    },
+    {
+      "label": "location: 1.7 m above ground",
+      "on": "air"
+    }
+  ]
+}

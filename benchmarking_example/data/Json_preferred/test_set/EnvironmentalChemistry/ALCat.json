@@ -1,0 +1,18 @@
+{
+  "label": "Concentration of Al cations in water",
+  "definition": "Concentration of Al cations in water",
+  "comment": "composition: aluminium, mass concentration, cation, water",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n87457756d1a344a19a6aef0914b3b36bb1",
+    "hasSource": "cation",
+    "hasTarget": "water"
+  },
+  "hasConstraint": [
+    {
+      "label": "composition: aluminium",
+      "on": "cation"
+    }
+  ]
+}

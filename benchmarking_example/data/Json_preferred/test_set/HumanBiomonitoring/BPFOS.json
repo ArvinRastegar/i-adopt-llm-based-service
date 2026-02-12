@@ -1,0 +1,20 @@
+{
+  "label": "Percentage Branched Perfluorooctane sulfonic acid (BPFOS)",
+  "definition": "Percentage Branched Perfluorooctane sulfonic acid in blood",
+  "comment": "condition: branched isomers, blood, Perfluorooctane sulfonic acid, percentage, person",
+  "hasProperty": "percentage",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q1907514",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n03d47e1e3d9940e69f4ff382fb31acbfb1",
+    "hasSource": "Perfluorooctane sulfonic acid",
+    "hasTarget": "blood"
+  },
+  "hasConstraint": [
+    {
+      "label": "condition: branched isomers",
+      "on": "Perfluorooctane sulfonic acid"
+    }
+  ]
+}

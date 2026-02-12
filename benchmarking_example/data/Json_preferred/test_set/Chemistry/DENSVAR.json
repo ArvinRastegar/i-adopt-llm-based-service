@@ -1,0 +1,23 @@
+{
+  "label": "density of benzene",
+  "definition": "mass density of a 10.00 mL sample of ACS reagent grade (99.0 (v/v)) benzene at a room temperature",
+  "comment": "mass density; 10.00 mL sample; ACS reagent grade (99.0 (v/v)); benzene; at a room temperature",
+  "hasProperty": "mass density",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q29539",
+  "hasObjectOfInterest": "benzene (C6H6)",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q2270",
+  "hasConstraint": [
+    {
+      "label": "condition: at room temperature",
+      "on": "mass density"
+    },
+    {
+      "label": "size: 10.00 mL sample",
+      "on": "benzene (C6H6)"
+    },
+    {
+      "label": "quality: ACS reagent grade (99.0 (v/v))",
+      "on": "benzene (C6H6)"
+    }
+  ]
+}

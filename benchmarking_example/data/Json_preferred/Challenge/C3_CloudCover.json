@@ -1,0 +1,11 @@
+{
+  "label": "Cloud cover",
+  "definition": "The amount of sky estimated to be covered by all cloud types.",
+  "comment": "sky; cloud; amount covered -> area fraction; ADD: area per area",
+  "hasProperty": "area fraction",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n1a11051843434dcb8c06bbf32e1e45e3b1",
+    "hasSource": "cloud",
+    "hasTarget": "sky"
+  }
+}

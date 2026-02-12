@@ -1,0 +1,26 @@
+{
+  "label": "solubility of molecular oxygen from air in water",
+  "definition": "solubility of molecular oxygen from air in water with MilliQ (10.2MOhm) purity at local air conditions",
+  "comment": "solubility of molecular oxygen from air in water with MilliQ (10.2MOhm) purity at local air conditions",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "ne46e03ad27fb484dad0923f50da98783b1",
+    "hasSource": "molecular oxygen",
+    "hasTarget": "water"
+  },
+  "hasConstraint": [
+    {
+      "label": "condition: at local air conditions",
+      "on": "mass concentration"
+    },
+    {
+      "label": "origin: air",
+      "on": "molecular oxygen"
+    },
+    {
+      "label": "quality: purity 99.82 (w/w)",
+      "on": "water"
+    }
+  ]
+}

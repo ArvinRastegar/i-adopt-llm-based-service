@@ -1,0 +1,21 @@
+{
+  "label": "Chronic pain grade scale",
+  "definition": "Category: Clinical, Unit: descriptional/grade of a scale",
+  "comment": "Category: Clinical, Unit: descriptional/grade of a scale",
+  "hasProperty": "grade",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q18185",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/wiki/Q5",
+  "hasObjectOfInterest": "pain",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/wiki/Q81938",
+  "hasConstraint": [
+    {
+      "label": "temporal extent: chronic",
+      "on": "pain"
+    },
+    {
+      "label": "role: patient",
+      "on": "person"
+    }
+  ]
+}

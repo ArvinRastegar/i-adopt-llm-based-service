@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 """
-gt_json_maker.py · 2025-11-27
+gt_json_maker.py
 ------------------------------------
 
 • Reads ALL TTL files from a local folder (arbitrary names)
 • Converts each TTL variable to compact JSON
+• Preserves directory structure from TTL_INPUT_DIR into OUTDIR
+• Keeps constraint labels EXACTLY (no stripping of 'type:', 'size:', etc.)
 • Extracts:
     - label
     - definition (skos:definition)
@@ -29,14 +31,12 @@ from typing import Any, Dict, Optional
 
 
 # --------------------------------------------------------------------------- #
-# Output Folder
+# Paths
 # --------------------------------------------------------------------------- #
+TTL_INPUT_DIR = Path("/Users/rastegar-a/Documents/GitHub/I-ADOPT-Variables")
+
 OUTDIR = Path("/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/Json_preferred")
 OUTDIR.mkdir(parents=True, exist_ok=True)
-
-TTL_INPUT_DIR = Path(
-    "/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/benchmarking_example/data/variables_ttl_files"
-)
 
 
 # --------------------------------------------------------------------------- #
@@ -51,33 +51,19 @@ RDFS_NS = RDFS
 # URI normalization helper
 # --------------------------------------------------------------------------- #
 def _maybe_uri(node: Any) -> Optional[str]:
-    """
-    Normalize ANY Wikidata URI to canonical format:
-        https://www.wikidata.org/wiki/Qxxxx
-
-    Accepts:
-        - entity/Qxxxx
-        - wiki/Qxxxx
-        - malformed HTTP forms
-        - raw "wikidata.org/entity/Qxxx"
-    """
     if not isinstance(node, URIRef):
         return None
 
     raw = str(node).strip()
-
-    # fix common protocol errors
     raw = re.sub(r"^hhttps://", "https://", raw)
     raw = re.sub(r"^httpss://", "https://", raw)
     raw = raw.replace("http://", "https://")
 
-    # inject full domain if missing
     if raw.startswith("wikidata.org"):
         raw = "https://" + raw
     if raw.startswith("www.wikidata.org"):
         raw = "https://" + raw
 
-    # extract Q-id
     m = re.search(r"(Q[0-9]+)", raw)
     if not m:
         return None
@@ -97,12 +83,14 @@ def _label(g: Graph, node: URIRef | None):
 
 
 def _clean_constraint_label(label: str) -> str:
-    """Remove leading 'XXX:' if present."""
+    """
+    NEW BEHAVIOR:
+    Keep the full label (including 'type:', 'size:', etc.).
+    Only normalize whitespace.
+    """
     if not label:
         return label
-    if ":" in label:
-        return label.split(":", 1)[1].strip()
-    return label.strip()
+    return re.sub(r"\s+", " ", label.strip())
 
 
 # --------------------------------------------------------------------------- #
@@ -115,7 +103,6 @@ def _entity_representation(g: Graph, node: URIRef | None):
     def name(n):
         return _label(g, n) or str(n).split("/")[-1]
 
-    # Asymmetric
     if (node, RDF.type, IOP.AsymmetricSystem) in g:
         source = g.value(node, IOP.hasSource) or g.value(node, IOP.hasNumerator)
         target = g.value(node, IOP.hasTarget) or g.value(node, IOP.hasDenominator)
@@ -129,7 +116,6 @@ def _entity_representation(g: Graph, node: URIRef | None):
             "hasTarget": name(target) if target else None,
         }
 
-    # Symmetric
     if (node, RDF.type, IOP.SymmetricSystem) in g:
         parts = list(g.objects(node, IOP.hasPart))
         return {"SymmetricSystem": name(node), "hasPart": [name(p) for p in parts]}
@@ -192,19 +178,16 @@ def parse_variable(ttl: str) -> Dict[str, Any]:
         "comment": (str(g.value(root, RDFS.comment) or "").strip() or None),
     }
 
-    # ------------------------- Property -------------------------------------
     if prop := g.value(root, IOP.hasProperty):
         result["hasProperty"] = _label(g, prop)
         if u := _maybe_uri(prop):
             result["hasPropertyURI"] = u
 
-    # ------------------- Statistical Modifier (NEW) --------------------------
     if stat := g.value(root, IOP.hasStatisticalModifier):
         result["hasStatisticalModifier"] = _label(g, stat)
         if u := _maybe_uri(stat):
             result["hasStatisticalModifierURI"] = u
 
-    # --------------- Matrix / OOI / Context Objects -------------------------
     for pred, key in [
         (IOP.hasMatrix, "hasMatrix"),
         (IOP.hasObjectOfInterest, "hasObjectOfInterest"),
@@ -226,7 +209,7 @@ def parse_variable(ttl: str) -> Dict[str, Any]:
             for node in nodes:
                 result[key].append(_entity_representation(g, node))
 
-    # ---------------------------- Constraints --------------------------------
+    # Constraints (KEEP full label now)
     constraints = list(g.objects(root, IOP.hasConstraint))
     if constraints:
         out = []
@@ -236,7 +219,6 @@ def parse_variable(ttl: str) -> Dict[str, Any]:
 
             target_node = g.value(c, IOP.constrains)
 
-            # Guarantee a target:
             if target_node is None:
                 target_node = (
                     g.value(root, IOP.hasStatisticalModifier)
@@ -246,29 +228,29 @@ def parse_variable(ttl: str) -> Dict[str, Any]:
                     or root
                 )
 
-            target_label = _label(g, target_node)
-            if not target_label:
-                target_label = str(target_node).split("/")[-1]
-
+            target_label = _label(g, target_node) or str(target_node).split("/")[-1]
             out.append({"label": clean, "on": target_label})
 
         result["hasConstraint"] = out
 
-    # ---------------------- Clean output ------------------------------------
     return {k: v for k, v in result.items() if v is not None}
 
 
 # --------------------------------------------------------------------------- #
-# File conversion
+# File conversion (PRESERVE STRUCTURE)
 # --------------------------------------------------------------------------- #
 def convert_file(ttl_path: Path) -> Dict[str, Any]:
     ttl_text = ttl_path.read_text(encoding="utf-8")
     data = parse_variable(ttl_text)
 
-    out_path = OUTDIR / f"{ttl_path.stem}.json"
+    # Keep the same subfolder structure:
+    rel = ttl_path.relative_to(TTL_INPUT_DIR)  # e.g. sub/a/b/file.ttl
+    out_path = OUTDIR / rel.with_suffix(".json")  # e.g. OUTDIR/sub/a/b/file.json
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
     out_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print(f"✓ {ttl_path.stem}.json generated")
+    print(f"✓ {out_path.relative_to(OUTDIR)} generated")
     return data
 
 

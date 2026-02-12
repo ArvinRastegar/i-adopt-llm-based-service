@@ -1,0 +1,17 @@
+{
+  "label": "Point sources of U-236 from Pacific Proving Grounds ",
+  "definition": "Point sources of U-236 from Pacific Proving Grounds (U236PPG) in atoms kg-1",
+  "comment": "Point sources of U-236 from Pacific Proving Grounds (U236PPG) in atoms kg-1",
+  "hasProperty": "atoms per mass",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n69bebe4bcf544194be5e2c4dcc9ef378b1",
+    "hasSource": "Uranium 236",
+    "hasTarget": "soil"
+  },
+  "hasConstraint": [
+    {
+      "label": "origin: Pacific Proving Grounds",
+      "on": "n69bebe4bcf544194be5e2c4dcc9ef378b1"
+    }
+  ]
+}

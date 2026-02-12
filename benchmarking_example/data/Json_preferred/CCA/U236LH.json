@@ -1,0 +1,21 @@
+{
+  "label": "Realistic releases of U236 from La Hague",
+  "definition": "Realistic releases of U236 from La Hague (U236LH) in atoms kg-1",
+  "comment": "Realistic releases of U236 from La Hague (U236LH) in atoms kg-1",
+  "hasProperty": "atoms per mass",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "n9a697a144fe645309d816d31c44919c2b1",
+    "hasSource": "Uranium 236",
+    "hasTarget": "soil"
+  },
+  "hasConstraint": [
+    {
+      "label": "origin: La Hague facility",
+      "on": "n9a697a144fe645309d816d31c44919c2b1"
+    },
+    {
+      "label": "condition: released",
+      "on": "Uranium 236"
+    }
+  ]
+}

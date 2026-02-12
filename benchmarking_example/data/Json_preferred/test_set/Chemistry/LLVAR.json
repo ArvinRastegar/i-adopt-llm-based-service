@@ -1,0 +1,30 @@
+{
+  "label": "solubility of benzene in water",
+  "definition": "solubility (g/L) of 99.82 (w/w) pure benzene in deionized water at phase equilibrium and 298.15 K",
+  "comment": "solubility; 99.82 (w/w) pure; benzene; deionized; water; 298.15 K, ADD: dissolved",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://www.wikidata.org/wiki/Q589446",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "nd04bf6ff71de42bd913a79d74fefde14b1",
+    "hasSource": "benzene",
+    "hasTarget": "water"
+  },
+  "hasConstraint": [
+    {
+      "label": "condition: at 298.15 K thermodynamic temperature",
+      "on": "mass concentration"
+    },
+    {
+      "label": "state: dissolved",
+      "on": "benzene"
+    },
+    {
+      "label": "quality: dionized",
+      "on": "water"
+    },
+    {
+      "label": "quality: purity 99.82 (w/w)",
+      "on": "benzene"
+    }
+  ]
+}
