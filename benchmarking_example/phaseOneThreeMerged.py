@@ -34,7 +34,7 @@ from sentence_transformers import SentenceTransformer, CrossEncoder, util
 try:
     import requests_cache
 
-    _CACHE_SESSION = requests_cache.CachedSession("wikidata_cache", backend="filesystem", expire_after=None)
+    _CACHE_SESSION = requests_cache.CachedSession("wikidata_cache", backend="sqllite", expire_after=None)
     _REQUESTS = _CACHE_SESSION
 except Exception:
     _REQUESTS = requests
@@ -1167,14 +1167,14 @@ def main() -> None:
     parser.add_argument("--only-model", action="append")
     parser.add_argument("--temps", type=float, nargs="+")
     parser.add_argument("--shot", type=int, choices=[0, 1, 3, 5], default=None)
-    parser.add_argument("--prompt-version", type=str, default=None)
+    parser.add_argument("--prompt-version", type=str, nargs="+", default=None)
     parser.add_argument("--approach", type=str, choices=["none", "naive", "embedding", "cross-encoder"], default=None)
     parser.add_argument("--model_name", type=str, default=EMBED_MODEL_NAME)
     parser.add_argument("--threshold", type=float, default=0.5)
     args = parser.parse_args()
 
     # prompt versions (programmatic)
-    prompt_versions = [args.prompt_version] if args.prompt_version else (list_prompt_versions() or [])
+    prompt_versions = args.prompt_version if args.prompt_version else (list_prompt_versions() or [])
     if not prompt_versions:
         raise RuntimeError(f"No prompt templates found in {PROMPT_DIR}")
 

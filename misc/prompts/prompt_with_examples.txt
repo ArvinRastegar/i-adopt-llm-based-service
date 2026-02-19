@@ -1,0 +1,195 @@
+You are a knowledge engineer and a climate change scientist. I need you to model a climate change variable using the I-ADOPT framework. A variable is usually the result of a sensor measurement or of a laboratory analysis on a sample. The task is to generate Turtle code with a description of the variable according to the I-ADOPT ontology. See the following examples: 
+
+example 1:
+
+input variable: aphids incidence in an agricultural experimental plot
+
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+iadopt:Variable
+  rdfs:label "Variable" ;
+  a owl:Class .
+  
+envthes:30326
+  iadopt:hasProperty :incidence ;
+  iadopt:hasMatrix :agricultural_experimental_plot ;
+  skos:prefLabel "aphids incidence in an agricultural experimental plot"@en ;
+  a iadopt:Variable, skos:Concept ;
+  skos:inScheme envthes: ;
+  iadopt:hasObjectOfInterest :aphids .  
+
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasMatrix
+  rdfs:subPropertyOf iadopt:hasContextObject ;
+  rdfs:comment "A Variable might have an Entity in which the ObjectOfInterest is contained." ;
+  rdfs:label "hasMatrix" .
+  
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+
+:incidence a iadopt:Property ;
+        rdfs:label "Incidence" ;
+        rdfs:comment "The relative frequency of occurrence of something." .
+        
+:agricultural_experimental_plot a iadopt:Entity  ;
+        rdfs:label "agricultural experimental plot" ;
+        rdfs:comment "A site within which an agricultural experimental process is conducted" .
+        
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+ 
+:aphids a iadopt:Entity  ;
+        rdfs:label "Aphids" ;
+        rdfs:comment "" .
+```
+
+Example 2:
+ 
+input variable: area of slope 4-8% arable land of catchment
+
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+iadopt:Variable
+  rdfs:label "Variable" ;
+  a owl:Class .
+
+envthes:30220  
+  a iadopt:Variable, skos:Concept ;
+  iadopt:hasObjectOfInterest :arable_land ;
+  iadopt:hasProperty :area ;  
+  iadopt:hasContextObject :catchment ;
+  skos:inScheme envthes: ;
+  iadopt:hasConstraint :4_8percentage_slope  ;  
+  skos:prefLabel "area of slope 4-8% arable land of catchment"@en .
+
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+  
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasContextObject
+  rdfs:comment "A Variable has an Entity that provides additional background information regarding the ObjectOfInterest." ;
+  rdfs:label "hasContextObject" .
+
+iadopt:hasConstraint
+  rdfs:comment "A Variable has a Constraint, that confines an Entity involved in the observation." ;
+  rdfs:label "hasConstraint" .  
+   
+:arable_land a iadopt:Entity  ;
+        rdfs:label "arable land" ;
+        rdfs:comment "Land which is regularly manipulated by human activities, such as plowing or tilling, in order to grow crops." .  
+
+:catchment a iadopt:Entity,skos:Concept  ;
+        rdfs:label "catchment"@en;
+        rdfs:comment "the action of collecting water, especially the collection of rainfall over a natural drainage area" .
+        
+:area a iadopt:Property,skos:Concept ;
+        rdfs:label "area" ;
+        rdfs:comment "The extent of a 2-dimensional surface enclosed within a boundary." .
+  
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+   
+:4_8percentage_slope a iadopt:Constraint, skos:Concept ;
+        skos:prefLabel "4-8% slope"@en .
+```
+
+example 3
+
+input variable: concentration of endosulfane sulfate in wet flesh of ostrea edulis
+  
+output in turtle:
+
+```
+@prefix envthes: <http://vocabs.lter-europe.net/EnvThes/> .
+@prefix iadopt: <https://w3id.org/iadopt/ont/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <https://w3id.org/iadopt/ont/> .
+
+envthes:30209 a skos:Concept ;
+  iadopt:hasMatrix :flesh ;  
+  skos:inScheme envthes: ;
+  skos:prefLabel "concentration of endosulfane sulfate in wet flesh of ostrea edulis"@en ;
+  iadopt:hasProperty :concentration ;  
+  iadopt:hasContextObject :ostrea_edulis_linnaeus ;
+  iadopt:hasConstraint :wet ;
+  iadopt:hasObjectOfInterest :endosulfan_sulfate.
+
+iadopt:hasProperty
+  rdfs:comment "A Variable has a Property that characterizes an Entity." ;
+  rdfs:label "hasProperty" .
+
+iadopt:hasMatrix
+  rdfs:subPropertyOf iadopt:hasContextObject ;
+  rdfs:comment "A Variable might have an Entity in which the ObjectOfInterest is contained." ;
+  rdfs:label "hasMatrix" .
+
+iadopt:hasObjectOfInterest
+  rdfs:comment "A Variable has an Entity whose Property is observed." ;
+  rdfs:label "hasObjectOfInterest" .
+
+iadopt:hasContextObject
+  rdfs:comment "A Variable has an Entity that provides additional background information regarding the ObjectOfInterest." ;
+  rdfs:label "hasContextObject" .
+
+iadopt:hasConstraint
+  rdfs:comment "A Variable has a Constraint, that confines an Entity involved in the observation." ;
+  rdfs:label "hasConstraint" .
+  
+:flesh a iadopt:Entity, skos:Concept ; 
+        rdfs:label "flesh"@en;
+        skos:definition "The soft-body parts of an animal."@en .
+        
+:ostrea_edulis_linnaeus a iadopt:Entity ;
+        rdfs:label "Ostrea edulis Linnaeus" .
+
+:wet a iadopt:Constraint ;
+        rdfs:label "wet" ;
+        skos:definition "A wetness quality inhering in a bearer by virtue of the bearer's being covered by a liquid." .
+        
+:endosulfan_sulfate a iadopt:Entity, skos:Concept;
+        skos:prefLabel "endosulfan sulfate"@en . 
+
+:concentration a skos:Concept ;
+  skos:prefLabel "concentration"@en .   
+
+envthes:
+  skos:prefLabel "EnvThes"@en ;
+  a owl:Ontology, skos:ConceptScheme .
+```
+
+model the following variable:
+
+input variable: {variable}.
+description: {description}.
