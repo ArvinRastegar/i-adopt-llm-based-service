@@ -84,7 +84,9 @@
           "properties": {
             "AsymmetricSystem": { "type": "string" },
             "hasSource":        { "type": "string" },
-            "hasTarget":        { "type": "string" }
+            "hasTarget":        { "type": "string" },
+            "hasNumerator":     { "type": "string" },
+            "hasDenominator":   { "type": "string" }
           },
           "additionalProperties": false
         },

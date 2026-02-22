@@ -11,12 +11,17 @@ If a required key is not in the definition, output an empty string for it.
 
 Output only the JSON object.
 
-• Only extract what is explicitly stated in the definition.
-• hasProperty = the main measurable characteristic.
-• hasObjectOfInterest = the entity that has that property.
-• hasMatrix = the medium in which the object occurs (ONLY if explicitly stated). It must NOT be a method, location, or instrument.
-• hasConstraint = ONLY conditions explicitly stated in the definition.
-• If unsure: leave it empty. Do not guess.
+Extraction order:
+
+1. Copy definition exactly.
+2. Extract hasProperty (main measurable characteristic).
+3. Extract hasObjectOfInterest (entity with that property).
+4. Extract hasMatrix only if the definition states a medium.
+5. Extract hasConstraint last:
+   • Only explicit limiting phrases.
+   • label = short phrase
+   • on = EXACT string from hasProperty or an entity
+6. Never paraphrase or introduce new concepts.
 
 hasConstraint rules (STRICT):
 
