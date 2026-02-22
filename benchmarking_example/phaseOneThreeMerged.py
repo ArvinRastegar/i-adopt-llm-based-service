@@ -67,6 +67,7 @@ OUTBOOK_DIR.mkdir(exist_ok=True)
 
 MODEL_NAMES = [
     "qwen/qwen3-32b",
+    "qwen/qwen3.5-397b-a17b",
 ]
 
 TEMPERATURES = [0.5]
