@@ -1,0 +1,3 @@
+[submodule "external/I-ADOPT-patterns-playground"]
+	path = external/I-ADOPT-patterns-playground
+	url = https://github.com/mabablue/I-ADOPT-patterns-playground.git
