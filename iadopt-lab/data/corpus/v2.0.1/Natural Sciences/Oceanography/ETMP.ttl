@@ -1,0 +1,55 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/HFR> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/iadopt/ETMP>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Radial velocity (away from) standard deviation over the coverage period of water current relative to instrument in the water body by high frequency radar" ;
+    rdfs:comment 
+        """Standard deviation of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the coverage period""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/63" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q184395> ;
+    iop:hasStatisticalModifier 
+        <https://www.wikidata.org/entity/Q159375> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q240105> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "reference: relative to instrument" ;
+             iop:constrains <https://www.wikidata.org/entity/Q240105> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "temporal extent: over the temporal coverage period" ;
+             iop:constrains <https://www.wikidata.org/entity/Q159375> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "part: surface level" ;
+             iop:constrains <https://www.wikidata.org/entity/Q184395> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q184395>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sea water" .
+
+<https://www.wikidata.org/entity/Q159375>
+    a 
+        iop:StatisticalModifier ;
+    rdfs:label 
+        "standard deviation" .
+
+<https://www.wikidata.org/entity/Q240105>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "radial velocity" .

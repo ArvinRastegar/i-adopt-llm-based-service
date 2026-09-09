@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:21171d68ac4530e2bd43a74c04c52ee72c7a7ba44ffd0f826b0cc7d47361c4c5",
+  "source_iri": "http://example.org/iadopt/challenge/C17",
+  "source_path": "Life Sciences/Biology/C17_DHAMassFraction.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Biology",
+  "category_path": "Life Sciences/Biology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "d3bea9effe86021e7da28ec1b9f6e523e87b5051",
+  "source_byte_length": 1730,
+  "source_sha256": "d0cb177260ac63a6b9d585a0da6ba2107d2329fd55c30c8d079d219240b82331",
+  "gold_sha256": "d66e3ea73e0e34588bbbbc4d0bfed4ffc1f2321a084a0a411e338cca71590dc1",
+  "record_sha256": "0cd67814f0c1a48e87f4b235746ab8d24aa778fdd0be2bc5ee2a892af3023265",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

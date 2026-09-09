@@ -1,0 +1,21 @@
+{
+  "label": "EWCT Eastward velocity of water current in the water body by high frequency radar",
+  "definition": "Component of the sea surface current velocity that is directed eastward (positive values) or westward (negative values)",
+  "hasProperty": "linear velocity",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/LinearVelocity",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "sea water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q184395",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "direction: eastward",
+      "on": "linear velocity"
+    },
+    {
+      "label": "part: surface level",
+      "on": "sea water"
+    }
+  ]
+}

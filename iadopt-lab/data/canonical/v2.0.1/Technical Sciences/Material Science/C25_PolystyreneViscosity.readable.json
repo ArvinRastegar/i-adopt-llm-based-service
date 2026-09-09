@@ -1,0 +1,16 @@
+{
+  "label": "Dynamic shear viscosity of polystyrene PS042",
+  "definition": "Dynamic shear viscosity of polystyrene PS042 under the testing conditions of DIN 51810-1.",
+  "hasProperty": "dynamic viscosity",
+  "hasPropertyURI": "http://qudt.org/vocab/quantitykind/DynamicViscosity",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "polystyrene PS042",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: under testing conditions of DIN 5810-1",
+      "on": "dynamic viscosity"
+    }
+  ]
+}

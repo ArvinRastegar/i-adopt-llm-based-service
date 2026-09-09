@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:dd8a2e64f426a03fd3fd01019b26230b02d3e9bdcf58f5abd5cfd2691857e68d",
+  "source_iri": "http://example.org/iadopt/SS/DRS/firerisk",
+  "source_path": "Social Sciences/Disaster Risk Science/FireRisk.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Disaster Risk Science",
+  "category_path": "Social Sciences/Disaster Risk Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "79ea45956fa93879888c999523ee3406165e64d5",
+  "source_byte_length": 1668,
+  "source_sha256": "3d07fc4415d99cb3a4e0fb74ac136de9da62d22b25027f06b0f70518d850c144",
+  "gold_sha256": "d75c74b4f17ac0e4d4080b93922c5a0bd1a2c7bbcfc004e35499f823a56403ea",
+  "record_sha256": "6c45732d78f404ef57caec6d7aa9a02eddf0032af5b3ea825f814f238191409c",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

@@ -1,0 +1,29 @@
+commit: 2598bf91fa927b78a6529bae7864ef0f7d485b73
+demonstrations:
+- demonstration_position: 1
+  gold_sha256: 68e0b60dafd95055f97a3ebfb29c6b0a135c71430f130d1684bb02059e35ca4e
+  source_path: Natural Sciences/Atmospheric Science/C2_AirDailyMaximumTemperature.ttl
+  source_sha256: dd38b6063a2d7b9c707e439aaa74422dd6a20f14a547ae118642a7a077ad6709
+  variable_id: urn:iadopt-lab:variable:c51a8273fd7c9585fb0b04292e4caa3359f0aebbfca17a01c475087959f898bd
+- demonstration_position: 2
+  gold_sha256: db31a578b39135c8555ce38bfd97e744d3148e449c18b80bb9e0b5e5fd7f3980
+  source_path: Social Sciences/Demography/PersWelfare.ttl
+  source_sha256: 8a0d080b2ce2d48f55dbf155e5ab5dc9458fe6c8b493c48031b079da86d328e4
+  variable_id: urn:iadopt-lab:variable:d8164cf2a4d4be23ca63fc588e2850efbb8041ad653843e104594e7295140d5d
+- demonstration_position: 3
+  gold_sha256: de9efb45477a076b9b603d4a3304b8a48513a9a6c0ffe7f7fe69a3f136fafb8a
+  source_path: Life Sciences/Health Science/lactate.ttl
+  source_sha256: c41ca06666285f557dc955a8ac82b07ff9178ee8fa908d8ecb68089b468beee2
+  variable_id: urn:iadopt-lab:variable:3a580edca2d246b8cacb94c1a25f05c414f9bf30ebb89ad44d7d3243ddefd5ab
+- demonstration_position: 4
+  gold_sha256: 98333d6bd95d4840b894f7667b1e4aad6d448bfe339e930fc8dc6097dee69f51
+  source_path: Technical Sciences/Material Science/CirculationMode-Water.ttl
+  source_sha256: c822d18ea0303d81bc2ea27e0f8b5526dc164c196b6f01c422bf0d1fe4877594
+  variable_id: urn:iadopt-lab:variable:717337f051d717841411f05ae41c2b0a0a324cac1368e3345c586113deed2efb
+- demonstration_position: 5
+  gold_sha256: 6ceb74887998d82f57923bb81ef5a980cbfe4c1e628ef2b0de5d0698a8eeb3ff
+  source_path: Social Sciences/Disaster Risk Science/HeatStress.ttl
+  source_sha256: 6f2844bbe31b49ad933f92f44b78971289e7016b8b329e819c838404023b240d
+  variable_id: urn:iadopt-lab:variable:dba56f70c849f8cfa4504a0809eb2b26c5a98977be127d1751d7fe5299e51738
+manifest_sha256: adbbef33733743f7b0af05853987cc86baabad795857ea2325b080a5af76216a
+schema_version: demonstrations-v1

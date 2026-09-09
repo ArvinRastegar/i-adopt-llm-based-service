@@ -1,0 +1,22 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:0a391d2792b061bfbff2612a5dddfa79eaa489a291395190800f951f47cbf723",
+  "source_iri": "http://example.org/iadopt/healthcare/highesteducation",
+  "source_path": "Social Sciences/Demography/highest education.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Demography",
+  "category_path": "Social Sciences/Demography",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "8831b9cb20e72812d23c77cb5ead126554309202",
+  "source_byte_length": 1507,
+  "source_sha256": "77f77a1751d92c55d161c639f6ca7727a35be03711d17ddf9a063851bb3bd064",
+  "gold_sha256": "61b2db19eb64663ef9ce4942a8df75720efd2c5cc0bc14d3e114346d5dee1721",
+  "record_sha256": "3684ea7de153dd640659d330b1a657b850fe0c44ea0c0e3049a4c70ce2515bb8",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

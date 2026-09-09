@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:8a816547d513e441cc011c55b73bc5051ee086c3a1b888e4a7c8d41c7b4f3531",
+  "source_iri": "http://example.org/Env/SurfRunoff",
+  "source_path": "Natural Sciences/Hydrology/SurfRunoff.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Hydrology",
+  "category_path": "Natural Sciences/Hydrology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "c29956d716aa21770ee3a303dc33c755d3965943",
+  "source_byte_length": 1970,
+  "source_sha256": "bffb17cde2ad472ee41beea8533329f1fd654e768f8d09181722c7b12619a5ea",
+  "gold_sha256": "cd4a9fad53285556ec416c174a9e6a017103d6e2bfc3bd6a312c10dc07425d2c",
+  "record_sha256": "a5f32567762e8e84ed298038cf5530653284c2b3dcaf0b6c923c3ca8551355dc",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

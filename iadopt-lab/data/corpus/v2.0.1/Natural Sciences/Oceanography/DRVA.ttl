@@ -1,0 +1,39 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/HFR> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:RadVelDirHF
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "DRVA Direction of radial velocity of water current relative to instrument and to True North by high frequency radar" ;
+    rdfs:comment 
+        """The compass direction in degrees positive clockwise from TrueNorth of the component of water velocity in a water body along radial lines centered at the HFR antenna.""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/62" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <http://qudt.org/vocab/quantitykind/PlaneAngle> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "reference: True North" ;
+             iop:constrains <http://qudt.org/vocab/quantitykind/PlaneAngle> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "radial velocity of sea water" .
+
+<http://qudt.org/vocab/quantitykind/PlaneAngle>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "plane angle" .

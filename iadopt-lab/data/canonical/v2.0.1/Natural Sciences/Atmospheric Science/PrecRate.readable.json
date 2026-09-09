@@ -1,0 +1,30 @@
+{
+  "label": "Daily maximum hourly precipitation rate",
+  "definition": "Daily maximum hourly precipitation rate, measured in kg m⁻² s⁻¹",
+  "hasProperty": "mass flux density",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassFluxDensity",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/entity/Q10578722",
+  "hasObjectOfInterest": "water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q283",
+  "hasMatrix": {
+    "AsymmetricSystem": "atmosphere → ground",
+    "hasSource": "atmosphere",
+    "hasTarget": "ground"
+  },
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "process: precipitation",
+      "on": "water"
+    },
+    {
+      "label": "reporting frequency: daily",
+      "on": "maximum"
+    },
+    {
+      "label": "reporting frequency: hourly",
+      "on": "maximum"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:PercentChild
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Percentage of number of children" ;
+    rdfs:comment 
+        """Percentage of number of children under 10 years versus total number of people dwelling in the buildings within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/96" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/Ratio> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "age: < 10 years" ;
+             iop:constrains <https://www.wikidata.org/entity/Q215627> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: registered as resident" ;
+             iop:constrains _:b0 ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per statistical unit" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/Ratio> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q33829> ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q215627> .
+
+<https://qudt.org/vocab/quantitykind/Ratio>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "ratio" .
+
+<https://www.wikidata.org/entity/Q33829>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "population" .
+
+<https://www.wikidata.org/entity/Q215627>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "person" .

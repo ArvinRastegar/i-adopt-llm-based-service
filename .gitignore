@@ -2,15 +2,14 @@
 .env
 .DS_Store
 .log
-*.ttl
 benchmarking_outputs/onlyPhaseOne20251127_133804.xlsx
 benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_141104.log
 benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_142050.log
-.gitignore
+
 benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_142702.log
 benchmarking_example/benchmarking_logs/iadopt_preprocess_20251015_144738.log
 wikidata_cache.sqlite
-.gitignore
+
 benchmarking_example/spaCyFishing.py
 *.log
 !out/*.log
@@ -142,3 +141,66 @@ benchmarking_outputs/iadopt_metrics_20251112_110459.xlsx
 benchmarking_example/__pycache__/patternGuided.cpython-312.pyc
 benchmarking_example/__pycache__/phaseOneThreeMerged.cpython-312.pyc
 benchmarking_outputs/patternGuided_test_20260608_140716.xlsx
+benchmarking_example/data/Json_schema.json
+benchmarking_example/data/Json_schema.json
+benchmarking_example/data/Json_schema.json
+benchmarking_example/iadopt_benchmark_presentation_v2.ipynb
+benchmarking_example/patternGuided.py
+benchmarking_example/data/Json_schema.json
+benchmarking_example/iadopt_benchmark_presentation_v2.ipynb
+/benchmarking_outputs
+/benchmarking_example
+external/I-ADOPT-patterns-playground
+benchmarking_example/iadopt_benchmark_presentation_v2.ipynb
+.venv/
+.runtime/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+dist/
+outputs/*
+!outputs/README.md
+data/embeddings/
+
+# The repository-root .gitignore excludes *.ttl for the older benchmark project.
+# The pinned corpus snapshot is immutable source evidence and must be committed,
+# or a fresh clone cannot verify the corpus. A deeper .gitignore wins over the root.
+!data/corpus/**/*.ttl
+/benchmarking_example
+/benchmarking_example
+/external
+/iadopt-lab/data/canonical/v2.0.0
+
+# ---------------------------------------------------------------------------
+# iadopt-lab (consolidated here; the directory has no .gitignore of its own)
+#
+# .runtime/ holds generated PostgreSQL role passwords and must never be committed.
+# The pinned corpus snapshot under data/corpus/ IS committed on purpose: it is
+# immutable source evidence and a fresh clone cannot verify the corpus without it,
+# which is why the repo-wide *.ttl rule was removed rather than negated.
+# ---------------------------------------------------------------------------
+iadopt-lab/.runtime/
+iadopt-lab/outputs/*
+!iadopt-lab/outputs/README.md
+iadopt-lab/data/embeddings/
+
+# Python build and tool caches, repo-wide
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+dist/
+benchmarking_example/data/Json_schema.json
+benchmarking_example/iadopt_benchmark_presentation_v2.ipynb
+external/I-ADOPT-patterns-playground
+/external

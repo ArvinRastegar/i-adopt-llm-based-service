@@ -1,0 +1,20 @@
+{
+  "label": "Concentration of DDT impacted by industry",
+  "definition": "Concentration of DDT in a given year at a site impacted by industry, measured in ng/g.",
+  "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "DDT / soil",
+    "hasDenominator": "soil",
+    "hasNumerator": "DDT"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "source: industry",
+      "on": "DDT"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "label": "HRV Heart rate variabilty",
+  "definition": "HRV- Heart rate variability, standard deviation of time gaps between consecutive heartbeats (Normal-to-Normal intervals). Unit: milliseconds (ms)",
+  "hasProperty": "time",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Time",
+  "hasStatisticalModifier": "standard deviation",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/entity/Q175199",
+  "hasObjectOfInterest": "cardiac interbeat interval",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "part: normal-to-normal",
+      "on": "cardiac interbeat interval"
+    }
+  ]
+}

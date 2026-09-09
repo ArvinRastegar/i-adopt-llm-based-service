@@ -1,0 +1,18 @@
+{
+  "label": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
+  "definition": "Atmospheric optical thickness of particulate organic matter at 550nm.",
+  "hasProperty": "optical thickness",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q890809",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "organic particulates",
+  "hasMatrix": "aerosol",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q104541",
+  "hasContextObject": "atmosphere",
+  "hasContextObjectURI": "https://www.wikidata.org/entity/Q8104",
+  "hasConstraint": [
+    {
+      "label": "condition: at 550nm wavelength",
+      "on": "optical thickness"
+    }
+  ]
+}

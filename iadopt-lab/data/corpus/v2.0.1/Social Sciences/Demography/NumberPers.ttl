@@ -1,0 +1,51 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:NumberPers
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Total Number of people living in a statistical unit" ;
+    rdfs:comment 
+        """total number of people living within a statistical unit which is defined as a grouping of homogeneous neighboring building blocks in an urban area""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/95" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q215627> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/entity/Q702492> ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/Count> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "condition: registered as resident" ;
+             iop:constrains <https://www.wikidata.org/entity/Q215627> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per statistical unit" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/Count> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q215627>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "person" .
+
+<https://qudt.org/vocab/quantitykind/Count>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "count" .
+
+<https://www.wikidata.org/entity/Q702492>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "urban area" .

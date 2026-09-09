@@ -1,0 +1,51 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C22
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Current smoking status" ;
+    rdfs:comment 
+        """Smoking status current of a patient""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/28" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q662860> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/entity/Q5> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q813912> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "time: current" ;
+             iop:constrains <https://www.wikidata.org/entity/Q813912> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "role: patient" ;
+             iop:constrains <https://www.wikidata.org/entity/Q5> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q662860>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "smoking" .
+
+<https://www.wikidata.org/entity/Q5>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "person" .
+
+<https://www.wikidata.org/entity/Q813912>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "status" .

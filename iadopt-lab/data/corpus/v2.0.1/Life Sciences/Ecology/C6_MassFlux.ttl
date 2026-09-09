@@ -1,0 +1,62 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C6
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Mass flux of carbon into soil from vegetation due to senescence" ;
+    rdfs:comment 
+        """Mass flux of carbon into soil from vegetation due to senescence, measured in kg m-2 s-1. """ ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/12" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q623> ;
+    iop:hasMatrix 
+        _:b0 ;
+    iop:hasProperty 
+        <http://qudt.org/vocab/quantitykind/MassFluxDensity> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "process: senescence" ;
+             iop:constrains <https://www.wikidata.org/entity/Q187997> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q623>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "carbon" .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasSource 
+        <https://www.wikidata.org/entity/Q187997> ;
+    iop:hasTarget 
+        <https://www.wikidata.org/entity/Q36133> .
+
+<http://qudt.org/vocab/quantitykind/MassFluxDensity>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass flux density" .
+
+<https://www.wikidata.org/entity/Q187997>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "vegetation" .
+
+<https://www.wikidata.org/entity/Q36133>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "soil" .

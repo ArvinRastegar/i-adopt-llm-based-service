@@ -1,0 +1,22 @@
+{
+  "label": "Current smoking status",
+  "definition": "Smoking status current of a patient",
+  "hasProperty": "status",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q813912",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "smoking",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q662860",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "role: patient",
+      "on": "person"
+    },
+    {
+      "label": "time: current",
+      "on": "status"
+    }
+  ]
+}

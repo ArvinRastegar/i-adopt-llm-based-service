@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:1e8966f5353f9625d602da4a30952ce6b4e93d27cd2b697cbc207f5e2412edd3",
+  "source_iri": "http://example.org/iadopt/challenge/FractionFloodedBuilding",
+  "source_path": "Social Sciences/Disaster Risk Science/FractionFloodedBuilding.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Disaster Risk Science",
+  "category_path": "Social Sciences/Disaster Risk Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "4a6230fa39b01cc77c9cc217b2289811b64bdc39",
+  "source_byte_length": 1819,
+  "source_sha256": "8978493ec6b60fd4eed82c51adf815b1a4588dc3e3d0dad732e4c2d79f51a1df",
+  "gold_sha256": "85a2adc686add323e04ff7a92daffab6facc02aec79959be123126ae2eb986a9",
+  "record_sha256": "1a876756dc7d6156ecb1a9d1e013f7a196e53e30ebc97758275af21237429772",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

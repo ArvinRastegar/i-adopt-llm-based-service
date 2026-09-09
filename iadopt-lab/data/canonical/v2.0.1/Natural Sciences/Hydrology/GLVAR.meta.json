@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:8b4f1caa8c7add1f5a3d21c7cc9dc6ca911b9abe84e3a583725215f55d662aed",
+  "source_iri": "http://example.org/iadopt/challenge/glvar",
+  "source_path": "Natural Sciences/Hydrology/GLVAR.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Hydrology",
+  "category_path": "Natural Sciences/Hydrology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "71b4a5f83bf27f0650060fa95b2bc095a8993c78",
+  "source_byte_length": 2289,
+  "source_sha256": "e52f1e28c6fa7195fd3a22ca87dc2e3999b612428fb59a9674d188b1ae4048e6",
+  "gold_sha256": "5e34dcfc93e3b77642c543f7f86873381735ac77373cc581ea317be462363b3e",
+  "record_sha256": "8960ded60c425082141efd904308e86505cffd657039059fda6e5ce056af5449",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

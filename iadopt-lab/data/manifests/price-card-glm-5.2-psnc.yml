@@ -1,0 +1,11 @@
+currency: USD
+models:
+  psnc/GLM-5.2:
+    basis: Owner-reported no-charge PSNC access for this experiment
+    fx_to_reporting: '1'
+    mode: non_billed
+    provenance: D-028 and the campaign billing declaration; PSNC bills this deployment
+      at zero monetary cost to this account. Token usage, latency and retries are
+      still recorded in full.
+retrieved_at: '2026-09-09'
+schema_version: price-card-v1

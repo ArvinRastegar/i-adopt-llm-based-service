@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:be409fd08196b9beb4ca9dd34a086364956a118732d70f7e32470db1eabf09b1",
+  "source_iri": "http://example.org/iadopt/clinical/HRV",
+  "source_path": "Life Sciences/Health Science/HRV.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Health Science",
+  "category_path": "Life Sciences/Health Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "a659a5276305cd8d3cb70fa6f192df5fcf93cada",
+  "source_byte_length": 1731,
+  "source_sha256": "31044f19e0ccf4839a71d578ab2a639729033c89f2f86efe68a7c4a0155b964f",
+  "gold_sha256": "8611348e58832a21d72477477a78aff4253237c40d811cf594dfe2efdfe43b9c",
+  "record_sha256": "9150f088313812cd532c1faca45ee2c57d96e28502712071ab14bbc672622955",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

@@ -1,0 +1,62 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/iadopt/NS/SP/solarobs>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Partial Solar Obscuration" ;
+    rdfs:comment 
+        """Partial Solar Obscuration in percentage""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/171" ;
+   iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/entity/Q525> ;
+    iop:hasProperty 
+        uom:AreaFraction ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "process: eclipse" ;
+             iop:constrains <https://www.wikidata.org/entity/Q525> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        _:b1 ;
+    iop:hasDenominator 
+        _:b2 .
+
+<https://www.wikidata.org/entity/Q525>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sun" .
+
+uom:AreaFraction
+    a 
+        iop:Property ;
+    rdfs:label 
+        "area fraction" .
+
+_:b1
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "obscured area" .
+
+_:b2
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "total area" .

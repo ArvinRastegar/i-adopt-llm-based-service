@@ -1,0 +1,22 @@
+{
+  "label": "Resting systolic blood pressure",
+  "definition": "Resting systolic blood pressure in millimeters of mercury (mmHg)",
+  "hasProperty": "pressure",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Pressure",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "blood",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q7873",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q215627",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "locomotion state: resting",
+      "on": "person"
+    },
+    {
+      "label": "process: systole",
+      "on": "pressure"
+    }
+  ]
+}

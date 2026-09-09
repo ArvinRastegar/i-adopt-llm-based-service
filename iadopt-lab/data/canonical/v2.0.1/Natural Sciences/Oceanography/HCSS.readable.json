@@ -1,0 +1,17 @@
+{
+  "label": "HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+  "definition": "Variance of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the coverage period",
+  "hasProperty": "variance",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q175199",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "radial velocity of water current ",
+  "hasObjectOfInterestURI": "https://github.com/i-adopt/Corpus/blob/main/Natural%20Sciences/Oceanography/RDVA.ttl",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "temporal extent: over the coverage period",
+      "on": "variance"
+    }
+  ]
+}

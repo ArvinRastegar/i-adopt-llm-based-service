@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:7d6c1caebd3c452280950447af4540609b014535c0e213c6c3debec1974dda6e",
+  "source_iri": "http://example.org/iadopt/challenge/NumChild",
+  "source_path": "Social Sciences/Demography/NumChild.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Demography",
+  "category_path": "Social Sciences/Demography",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "439d88317ddf739c5ceb7e19da3bc0c6f36a427f",
+  "source_byte_length": 1998,
+  "source_sha256": "216a9a90fbecf36c68884f97276661c0d6b7303f280c898a0f4655a6617b8eda",
+  "gold_sha256": "a1c98453e943a0b3537c98f49e5705ffd12977045475accf04a635b55c96eb2b",
+  "record_sha256": "b94960bf5f9f3d9458eb047f4e714d3fc461c15c3773d2f0926c23f66fa73104",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

@@ -1,0 +1,18 @@
+{
+  "label": "Aircraft Angle of Attack.",
+  "definition": "Aircraft Angle of Attack measured in degrees. The angle at which a straight line from the leading edge to the trailing edge of an aircraft’s wing meets the relative wind. ",
+  "hasProperty": "plane angle",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/PlaneAngle",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "SymmetricSystem": "relative wind vector + wing chord line",
+    "hasPart": [
+      "relative wind vector",
+      "wing chord line"
+    ]
+  },
+  "hasMatrix": "aircraft",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q11436",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

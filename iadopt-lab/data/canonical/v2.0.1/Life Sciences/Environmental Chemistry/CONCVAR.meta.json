@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:e189d709bb080629b6f2950a197aa73858c4ccf00852cf9c0f7bdb006b71b264",
+  "source_iri": "http://example.org/iadopt/challenge/someVar",
+  "source_path": "Life Sciences/Environmental Chemistry/CONCVAR.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Environmental Chemistry",
+  "category_path": "Life Sciences/Environmental Chemistry",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "e26ced3cbe5367cb409fa5d5893c5df80eaf79d9",
+  "source_byte_length": 1522,
+  "source_sha256": "c54b6c96972ea583348e83b3a52793738d509ab5b35c3e8e7051931595192d7b",
+  "gold_sha256": "2a6fa2b9349d734e097e54f505174090dd5f2e6c52988537d506d4a97e0996f3",
+  "record_sha256": "a6d943feec7600f52a01044fe1b30b79919fadbcbf8cb25c9db415570dc176a1",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

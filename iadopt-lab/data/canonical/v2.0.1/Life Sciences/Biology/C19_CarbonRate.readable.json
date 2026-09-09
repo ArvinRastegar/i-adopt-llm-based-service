@@ -1,0 +1,35 @@
+{
+  "label": "Weight specific-ingestion Carbon rate at 15 °C",
+  "definition": "Weight specific-ingestion Carbon rate at 15 °C. The amount of carbon consumed by an organism at non-limiting concentration of food relative to the individual dry weight measured at 15°C. It is expressed as μg C mg DW−1 h−1",
+  "hasProperty": "mass fraction rate",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "Carbon / body",
+    "hasDenominator": "body",
+    "hasNumerator": "Carbon"
+  },
+  "hasMatrix": {
+    "AsymmetricSystem": "food → organism",
+    "hasSource": "food",
+    "hasTarget": "organism"
+  },
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: at 15°C temperature",
+      "on": "mass fraction rate"
+    },
+    {
+      "label": "condition: at non-limiting conditions",
+      "on": "food"
+    },
+    {
+      "label": "process: ingestion",
+      "on": "Carbon"
+    },
+    {
+      "label": "state: dry",
+      "on": "body"
+    }
+  ]
+}

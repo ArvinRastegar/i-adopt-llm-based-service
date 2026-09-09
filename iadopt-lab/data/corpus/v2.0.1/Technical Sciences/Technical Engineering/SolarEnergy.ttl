@@ -1,0 +1,47 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+
+ex:SolarEnergy
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Solar energy production of building per month" ;
+    rdfs:comment 
+        """Solar energy production of building in kWh""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/131" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q217941> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/entity/Q41176> ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/Energy> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "normalization: month" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/Energy> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q217941>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "solar panel" .
+
+<https://qudt.org/vocab/quantitykind/Energy>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "energy" .
+
+<https://www.wikidata.org/entity/Q41176>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "building" .

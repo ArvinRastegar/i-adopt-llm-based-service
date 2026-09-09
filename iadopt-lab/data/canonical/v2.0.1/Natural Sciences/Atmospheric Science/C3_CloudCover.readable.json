@@ -1,0 +1,15 @@
+{
+  "label": "Cloud cover",
+  "definition": "The amount of sky estimated to be covered by all cloud types.",
+  "hasProperty": "area fraction",
+  "hasPropertyURI": "http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "cloud / sky",
+    "hasDenominator": "sky",
+    "hasNumerator": "cloud"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

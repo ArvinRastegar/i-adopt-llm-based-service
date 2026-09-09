@@ -1,0 +1,18 @@
+{
+  "label": "Strike of bedding",
+  "definition": "Geographic azimuth (relative to true north) at a point observation location, of a horizontal line contained in a sedimentary rock bedding surface. The bedding surface must not be horizontal; the azimuth is reported such that the dip direction of the inclined bedding is to the right when facing in the azimuth direction.",
+  "hasProperty": "plane angle",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/PlaneAngle",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "SymmetricSystem": "bedding surface line + True North",
+    "hasPart": [
+      "bedding surface line",
+      "True North"
+    ]
+  },
+  "hasMatrix": "sedimentary rock",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q82480",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

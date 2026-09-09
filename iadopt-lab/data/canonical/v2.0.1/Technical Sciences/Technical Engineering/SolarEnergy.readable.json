@@ -1,0 +1,18 @@
+{
+  "label": "Solar energy production of building per month",
+  "definition": "Solar energy production of building in kWh",
+  "hasProperty": "energy",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Energy",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "solar panel",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q217941",
+  "hasMatrix": "",
+  "hasContextObject": "building",
+  "hasContextObjectURI": "https://www.wikidata.org/entity/Q41176",
+  "hasConstraint": [
+    {
+      "label": "normalization: month",
+      "on": "energy"
+    }
+  ]
+}

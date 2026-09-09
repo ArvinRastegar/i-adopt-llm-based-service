@@ -1,0 +1,24 @@
+{
+  "label": "Snow water equivalent",
+  "definition": "Snow Water Equivalent or Surface Snow Amount is the mass of water per unit area (kg/m²)",
+  "hasProperty": "surface density",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/SurfaceDensity",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "water / area",
+    "hasDenominator": "area",
+    "hasNumerator": "water"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "physical form: snow",
+      "on": "water"
+    },
+    {
+      "label": "state: solid",
+      "on": "water"
+    }
+  ]
+}

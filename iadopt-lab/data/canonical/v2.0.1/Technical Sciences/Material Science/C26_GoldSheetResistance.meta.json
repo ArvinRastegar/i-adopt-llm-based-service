@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:fedb7e476e30b8cb236e17415a872aeafadf626df6a8dcb44b066a1cf1e36154",
+  "source_iri": "http://example.org/iadopt/challenge/C26",
+  "source_path": "Technical Sciences/Material Science/C26_GoldSheetResistance.ttl",
+  "category": "Technical Sciences",
+  "subcategory": "Material Science",
+  "category_path": "Technical Sciences/Material Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "ca8560bc06729719b2bb3c5956f04ff8d42f28e0",
+  "source_byte_length": 1318,
+  "source_sha256": "423abe701b0c3f61d87bb93d66c49c425420b2d97216aa7dacd81b4a41a0a31d",
+  "gold_sha256": "cad47aa3999c1e003c531b17de880550745a30a296a73f9610ce252940b55e95",
+  "record_sha256": "b9bbc06437d2d1d99a67b4dd400397dcb419a0d5a7cab068c6af8ad9b1bca986",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

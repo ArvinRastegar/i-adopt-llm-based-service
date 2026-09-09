@@ -1,0 +1,22 @@
+{
+  "label": "Heat stress index",
+  "definition": "Heat stress index per district",
+  "hasProperty": "index",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q1738991",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "stress",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q123414",
+  "hasMatrix": "urban area",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q702492",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "cause: heat",
+      "on": "stress"
+    },
+    {
+      "label": "normalization: district",
+      "on": "index"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:a9e223c0f78dc8a8414c9b9d360d5e1db2d366c2aa648ff2b5ff16a831257abd",
+  "source_iri": "http://example.org/iadopt/challenge/ElderlyAlone",
+  "source_path": "Social Sciences/Demography/ElderlyAlone.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Demography",
+  "category_path": "Social Sciences/Demography",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "9321c91b8666808cc8e48dd585fc92bb887ae2de",
+  "source_byte_length": 2156,
+  "source_sha256": "ee79f104f0f024d2180f0d54214192099087fdf1e13ff715732fcebd3111e238",
+  "gold_sha256": "43d84cd437ee13f822c53b1b48145b06d0b56b33471c55212662b2a86a701ea2",
+  "record_sha256": "a25917f04e8aa8ae0e20eefbd301295ad7abf31413cdf11a663eedbb5a9a2073",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

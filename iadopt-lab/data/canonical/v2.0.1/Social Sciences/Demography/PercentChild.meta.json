@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:878175094008ac6deec037a29c435ac9fed4dbdc682b10e6a0c77d2c1ece6cbf",
+  "source_iri": "http://example.org/iadopt/challenge/PercentChild",
+  "source_path": "Social Sciences/Demography/PercentChild.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Demography",
+  "category_path": "Social Sciences/Demography",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "280f1e88d9376ff70577597bce3d34cd2648596e",
+  "source_byte_length": 2078,
+  "source_sha256": "be7c17b83e208684735d72664be095f20d524cdccf8ccabd32f7c58c07b452da",
+  "gold_sha256": "3b36ee60980480d33647b4ab7eeca29cfa2e8567236b698a17eeb95a3e32d638",
+  "record_sha256": "5fa20a52ea9c439fba7c20e8573360701aca799fd24c528898312cfff8ab0355",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

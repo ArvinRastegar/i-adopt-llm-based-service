@@ -1,0 +1,47 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:bpvar
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "boiling point of benzene" ;
+    rdfs:comment 
+        """thermodynamic temperature for the boiling point (at the liquid to gas phase transition) of a known purity 99.07 (w/w) liquid sample of benzene at atmospheric pressure""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/78" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q2270> ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "process: liquid to gas phase transition" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: at 1 atm pressure" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "purity: 99.07 (w/w)" ;
+             iop:constrains <https://www.wikidata.org/entity/Q2270> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q2270>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "benzene" .
+
+<https://qudt.org/vocab/quantitykind/ThermodynamicTemperature>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "thermodynamic temperature" .

@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:e8d2143d78c4c1199d8ba8e4c7383efc56ee9c46f184c12400fe906755eeb4ef",
+  "source_iri": "http://example.org/iadopt/env/Alcat",
+  "source_path": "Technical Sciences/Environmental Engineering/ALCat.ttl",
+  "category": "Technical Sciences",
+  "subcategory": "Environmental Engineering",
+  "category_path": "Technical Sciences/Environmental Engineering",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "5b060fc1c0106f8ed84ab52a8dbca9ebb1bdea0a",
+  "source_byte_length": 1524,
+  "source_sha256": "853a5f5e6a3be49b7bbffb2838d285a53e610d1fea57b3cbddae5b08d1f4aefd",
+  "gold_sha256": "c1cf9fe5664df205a03c54fe2314662367513ab5c0fcb94651d166bed512fa96",
+  "record_sha256": "0e27deb3bb61a718dbd50890034ae3a427faf68d1d56388dd62c4beafe4d92b2",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

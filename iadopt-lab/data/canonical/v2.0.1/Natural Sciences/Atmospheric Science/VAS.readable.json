@@ -1,0 +1,22 @@
+{
+  "label": "Northward Near-Surface Wind",
+  "definition": "Northward Near-Surface Wind (v-component), measured in m s⁻¹",
+  "hasProperty": "velocity",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Velocity",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "wind",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q8094",
+  "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q8104",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "direction: northward",
+      "on": "velocity"
+    },
+    {
+      "label": "part: near surface",
+      "on": "atmosphere"
+    }
+  ]
+}

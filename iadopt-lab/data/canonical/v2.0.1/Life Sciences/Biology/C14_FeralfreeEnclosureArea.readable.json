@@ -1,0 +1,17 @@
+{
+  "label": "Feral-free enclosure area",
+  "definition": "The total area (in ha) of feral-free enclosures. See https://linked.data.gov.au/def/nrm/d936bfd5-d2f9-5107-bbf7-2bd18bbab42b",
+  "hasProperty": "area",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Area",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "enclosure",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q858177",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: free of feral",
+      "on": "enclosure"
+    }
+  ]
+}

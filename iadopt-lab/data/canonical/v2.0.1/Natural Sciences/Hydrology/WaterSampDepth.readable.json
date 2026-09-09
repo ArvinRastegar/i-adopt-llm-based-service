@@ -1,0 +1,17 @@
+{
+  "label": "Water sampling depth ",
+  "definition": "Water sampling depth in cm (the distance from the top/surface to the bottom) from which the water was sampled",
+  "hasProperty": "depth",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Depth",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "water sampling",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q30032096",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "reference: from the surface to the bottom",
+      "on": "depth"
+    }
+  ]
+}

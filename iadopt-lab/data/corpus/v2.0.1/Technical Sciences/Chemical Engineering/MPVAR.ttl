@@ -1,0 +1,47 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:mpvar
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "melting point of naphthalene under standard conditions" ;
+    rdfs:comment 
+        """thermodynamic temperature for the melting point (at the solid to liquid phase transition) of a known purity (99.12 (w/w) sample of naphthalene at atmospheric pressure""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/79" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q179724> ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "process: solid to liquid phase transition" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "purity: of 99.12 (w/w)" ;
+             iop:constrains <https://www.wikidata.org/entity/Q179724> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "condition: at 1 atm pressure" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/ThermodynamicTemperature> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q179724>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "naphthalene (C10H8)" .
+
+<https://qudt.org/vocab/quantitykind/ThermodynamicTemperature>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "thermodynamic temperature" .

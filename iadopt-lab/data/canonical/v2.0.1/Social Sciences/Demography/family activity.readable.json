@@ -1,0 +1,18 @@
+{
+  "label": "Number of Hours of family activity per week",
+  "definition": "Number of Hours of family activity per week",
+  "hasProperty": "time",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Time",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "family activity",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q61788146",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "normalization: week",
+      "on": "time"
+    }
+  ]
+}

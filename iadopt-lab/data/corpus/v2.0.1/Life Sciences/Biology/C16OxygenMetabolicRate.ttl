@@ -1,0 +1,59 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C16
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Standard metabolic rate in mg of Oxygen per hour" ;
+    rdfs:comment 
+        """The measure of an ectotherm animal's baseline metabolic rate (i.e. non-active, non-stressed) measured by the milligrams of oxygen consumed in a period of time of one hour.""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/22" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q5203615> ;
+    iop:hasMatrix 
+        _:b0 ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/Mass> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "normalization: per hour" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/Mass> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "state: inactive" ;
+             iop:constrains _:b0 ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "state: unstressed" ;
+             iop:constrains _:b0 ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "process: metabolism" ;
+             iop:constrains <https://www.wikidata.org/entity/Q5203615> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q5203615>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "oxygen" .
+
+_:b0
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "ectotherm organism" .
+
+<https://qudt.org/vocab/quantitykind/Mass>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass" .

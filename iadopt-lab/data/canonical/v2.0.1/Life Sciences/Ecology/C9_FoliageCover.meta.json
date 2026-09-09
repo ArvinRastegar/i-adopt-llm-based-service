@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:4468d192503a3df852da9a2e6b2232d2cf888db8e57a183bb36b150f90a4dfb3",
+  "source_iri": "http://example.org/iadopt/challenge/C9",
+  "source_path": "Life Sciences/Ecology/C9_FoliageCover.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Ecology",
+  "category_path": "Life Sciences/Ecology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "054de05299ebd316c0c0444168515c60ad8fe5cd",
+  "source_byte_length": 1654,
+  "source_sha256": "20a5fbe3c7b0d7f9cfc4301657c63db0a9f6021b113805928ac355baf5895f2b",
+  "gold_sha256": "7b59fbb3eeda31b73ec71e0cbfe8be37addd7f93248f367d35769da23770f440",
+  "record_sha256": "0b06c8f5f008bd8662967defc955b1f24bdbd2e451809d312e03e152b66b81b4",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

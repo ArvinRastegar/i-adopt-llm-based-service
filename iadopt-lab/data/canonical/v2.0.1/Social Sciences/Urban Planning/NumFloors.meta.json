@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:d669d5b3b0e87ea025a415a71bc8fb405e5c55d5a8f00b2dd6d1ea4b886e2816",
+  "source_iri": "http://example.org/iadopt/ATM/irradiance",
+  "source_path": "Social Sciences/Urban Planning/NumFloors.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Urban Planning",
+  "category_path": "Social Sciences/Urban Planning",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "abd9611614529331c6f5df9806f0831df05b25f2",
+  "source_byte_length": 1533,
+  "source_sha256": "c6d307d3ad8cadbd0319e4e014e1c7134f84549d8ff887ef4299662dbd9936c0",
+  "gold_sha256": "42bbde3cdbcb6f75eb1b4b10e94f8c621b6eb1a423ae3e9d453d1777892cce2f",
+  "record_sha256": "523816338b8b0221ce8daff3ffecc2e6923ba8e0e39951773a256c0eae4e62ef",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

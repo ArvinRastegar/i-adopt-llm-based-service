@@ -1,0 +1,20 @@
+{
+  "label": "I129 deposition from Ringhals of Sweden",
+  "definition": "Number of I129 atoms per mass  of sea water in the artic from discharges  of the nuclear fuel reprocessing plant at Ringhals of Sweden (I129se40) in atoms kg-1",
+  "hasProperty": "number density per unit mass",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q139568528",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "Iodine-129 / sea water",
+    "hasDenominator": "sea water",
+    "hasNumerator": "Iodine-129"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "source: nuclear fuel reprocessing plant at Ringhals, Sweden",
+      "on": "Iodine-129"
+    }
+  ]
+}

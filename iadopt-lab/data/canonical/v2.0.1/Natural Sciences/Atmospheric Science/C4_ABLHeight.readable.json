@@ -1,0 +1,22 @@
+{
+  "label": "Atmospheric boundary layer height defined by temperature inversion",
+  "definition": "Atmospheric boundary layer height defined by temperature inversion, aboveground.",
+  "hasProperty": "height",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q208826",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "atmospheric boundary layer",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q1757268",
+  "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q8104",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "process: temperature inversion",
+      "on": "atmospheric boundary layer"
+    },
+    {
+      "label": "reference: above ground",
+      "on": "height"
+    }
+  ]
+}

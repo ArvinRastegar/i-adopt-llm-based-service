@@ -1,0 +1,17 @@
+{
+  "label": "Primary function of building",
+  "definition": "Primary function of building",
+  "hasProperty": "function",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q1724915",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "building",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q41176",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "order: primary",
+      "on": "function"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+
+ex:phvar
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "pH measurement of a sample of apple juice" ;
+    rdfs:comment 
+        """pH of a sample of apple juice using a solid-state pH electrode""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/87" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q40936> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/entity/Q618355> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q1738991> .
+
+<https://www.wikidata.org/entity/Q40936>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "pH" .
+
+<https://www.wikidata.org/entity/Q618355>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "apple juice" .
+
+<https://www.wikidata.org/entity/Q1738991>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "index" .

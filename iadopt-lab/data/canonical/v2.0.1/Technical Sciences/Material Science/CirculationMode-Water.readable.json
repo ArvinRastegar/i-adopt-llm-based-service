@@ -1,0 +1,13 @@
+{
+  "label": "Circulation-Mode-in-Pipe",
+  "definition": "Circulation mode (gravity, forced, ...) of water in canalisation pipe",
+  "hasProperty": "type",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q3707858",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "water circulation",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q11781111",
+  "hasMatrix": "sewer line",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q336169",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

@@ -1,0 +1,21 @@
+{
+  "label": "Percentage Branched Perfluorooctane sulfonic acid (BPFOS)",
+  "definition": "Percentage Branched Perfluorooctane sulfonic acid in blood",
+  "hasProperty": "volume fraction",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/VolumeFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "Perfluorooctane sulfonic acid / blood",
+    "hasDenominator": "blood",
+    "hasNumerator": "Perfluorooctane sulfonic acid"
+  },
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: branched isomers",
+      "on": "Perfluorooctane sulfonic acid"
+    }
+  ]
+}

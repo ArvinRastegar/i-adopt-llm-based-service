@@ -1,0 +1,13 @@
+{
+  "label": "Observation of Rhesusform in blood",
+  "definition": "Rhesusform in a blood sample",
+  "hasProperty": "phenotype",
+  "hasPropertyURI": "https://www.wikidata.org/enity/Q104053",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "RhD Antigen",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q21135390",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

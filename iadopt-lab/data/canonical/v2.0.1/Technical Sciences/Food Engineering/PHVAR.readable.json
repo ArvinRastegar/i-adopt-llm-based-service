@@ -1,0 +1,13 @@
+{
+  "label": "pH measurement of a sample of apple juice",
+  "definition": "pH of a sample of apple juice using a solid-state pH electrode",
+  "hasProperty": "index",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q1738991",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "pH",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q40936",
+  "hasMatrix": "apple juice",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q618355",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

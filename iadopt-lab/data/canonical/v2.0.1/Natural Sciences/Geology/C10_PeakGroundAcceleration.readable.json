@@ -1,0 +1,23 @@
+{
+  "label": "Peak ground acceleration",
+  "definition": "Peak acceleration measured on the earth surface when facing seismic events, like earthquakes.",
+  "hasProperty": "acceleration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Acceleration",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/entity/Q10578722",
+  "hasObjectOfInterest": "ground",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q36133",
+  "hasMatrix": "earth",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q2",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "event: seismic event",
+      "on": "acceleration"
+    },
+    {
+      "label": "part: surface",
+      "on": "ground"
+    }
+  ]
+}

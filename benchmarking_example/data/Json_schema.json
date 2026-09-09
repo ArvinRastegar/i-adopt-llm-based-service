@@ -37,7 +37,7 @@
       "description": "Medium in which the object occurs. Not a process or location."
     },
     "hasContextObject": {
-      "$ref": "#/$defs/entityOrSystem",
+      "type": "string",
       "description": "Optional contextual Entity or System that provides environmental or situational context (e.g., 'air', 'atmosphere')."
     },
     "hasConstraint": {
@@ -83,7 +83,7 @@
           ],
           "properties": {
             "AsymmetricSystem": { "type": "string" },
-            "hasSource":        { "type": "string" },
+            "hasSource":        { "type": "string" }, 
             "hasTarget":        { "type": "string" },
             "hasNumerator":     { "type": "string" },
             "hasDenominator":   { "type": "string" }

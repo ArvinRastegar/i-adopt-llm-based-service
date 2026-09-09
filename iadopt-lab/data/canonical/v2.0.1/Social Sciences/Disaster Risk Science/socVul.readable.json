@@ -1,0 +1,22 @@
+{
+  "label": "Social Vulnerability to pluvial floods of the residents",
+  "definition": "Social Vulnerability to pluvial floods of the residents",
+  "hasProperty": "index",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q1738991",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "social vulnerability",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q581445",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q215627",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "cause: pluvial flood",
+      "on": "social vulnerability"
+    },
+    {
+      "label": "role: resident",
+      "on": "person"
+    }
+  ]
+}

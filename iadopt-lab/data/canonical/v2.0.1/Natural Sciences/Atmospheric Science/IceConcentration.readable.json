@@ -1,0 +1,24 @@
+{
+  "label": "Ice water content in atmosphere",
+  "definition": "mass concentration of ice in atmosphere measured in g/m3",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassConcentration",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "water / atmosphere",
+    "hasDenominator": "atmosphere",
+    "hasNumerator": "water"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "physical form: ice",
+      "on": "water"
+    },
+    {
+      "label": "state: solid",
+      "on": "water"
+    }
+  ]
+}

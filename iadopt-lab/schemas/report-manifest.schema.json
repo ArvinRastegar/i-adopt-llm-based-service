@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:iadopt-lab:schema:report-manifest:1.0",
+  "title": "I-ADOPT Lab immutable report manifest",
+  "type": "object",
+  "required": ["schema_version", "campaign_id", "kind", "files", "final"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "campaign_id": {"type": "string", "format": "uuid"},
+    "kind": {"type": "string", "minLength": 1},
+    "final": {"type": "boolean"},
+    "ranking_id": {"type": "string", "format": "uuid"},
+    "population_hash": {"$ref": "#/$defs/sha256"},
+    "query_version": {"type": "string", "minLength": 1},
+    "exporter_version": {"type": "string", "minLength": 1},
+    "files": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "byte_length"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "byte_length": {"type": "integer", "minimum": 0},
+          "media_type": {"type": "string"},
+          "artifact_id": {"type": "string", "format": "uuid"},
+          "row_count": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": false,
+  "$defs": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

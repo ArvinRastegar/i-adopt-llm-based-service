@@ -1,0 +1,21 @@
+{
+  "label": "Blood lactate concentration",
+  "definition": "Blood lactate concentration at lactate tolerance threshold measured in mmol/l",
+  "hasProperty": "amount of substance concentration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/AmountOfSubstanceConcentration",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "lactate / blood",
+    "hasDenominator": "blood",
+    "hasNumerator": "lactate"
+  },
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q215627",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "criterium: lactate tolerance threshold ",
+      "on": "person"
+    }
+  ]
+}

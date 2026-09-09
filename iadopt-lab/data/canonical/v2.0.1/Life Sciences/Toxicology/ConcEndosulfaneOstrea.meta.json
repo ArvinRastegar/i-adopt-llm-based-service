@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:8d27743a45d71ccb81557972728e6d7ea00c992a3b0d2418017c1cc8164bc9aa",
+  "source_iri": "http://example.org/bio/example/EC1",
+  "source_path": "Life Sciences/Toxicology/ConcEndosulfaneOstrea.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Toxicology",
+  "category_path": "Life Sciences/Toxicology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "50472365c2176b3481490acab346b741379fcbb8",
+  "source_byte_length": 1920,
+  "source_sha256": "73182c9d9bf76545951d00da4656e9fd3913b7b9277fc1069314417a9b4bac58",
+  "gold_sha256": "b983c2c5762a780c972ead5481f2ba5e1e93dccd56e89661543cbc98987df7a3",
+  "record_sha256": "e27318be363b4c8cde0e642ea9f83e224571b2952d393fb257360b654303bd10",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:dd48a859a45f080afb4ad91bae5ffe6faca6e7977293938cfdebcfc817617c10",
+  "source_iri": "http://example.org/iadopt/challenge/phvar",
+  "source_path": "Technical Sciences/Food Engineering/PHVAR.ttl",
+  "category": "Technical Sciences",
+  "subcategory": "Food Engineering",
+  "category_path": "Technical Sciences/Food Engineering",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "9d0550e9192a47a719e499fc3c2367d4fac638a3",
+  "source_byte_length": 1157,
+  "source_sha256": "d283682a1d90846586f779e74d285ccba3a0e82926cb42fd411ece858d057cd8",
+  "gold_sha256": "cb9795f1344cc993340588be50bdad4dc0b4384e43e705ce47af4f9ac5938356",
+  "record_sha256": "43ca94fea0ff9e57c7433e1eaba7f4ffd80f1586c27dcb705d1709f1ab638c54",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

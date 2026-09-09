@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:1fb91561bbe2053641717975757bd26625f7ed3783ecec84fb9bf961c20d8c5c",
+  "source_iri": "http://example.org/iadopt/challenge/C15",
+  "source_path": "Life Sciences/Biology/C15_ForaminiferSize.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Biology",
+  "category_path": "Life Sciences/Biology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "f0ced2141e67fc956ab78a436dba187b6678203d",
+  "source_byte_length": 1555,
+  "source_sha256": "7316de3a723cf6c6fc310560d62700ecdeee87e191191cce123c1fe6232b20ae",
+  "gold_sha256": "4eb36c74b586fc56a1c686ec6c0a5cc4c8a2215058f94fc91413c05ce0674ce3",
+  "record_sha256": "b4b10153497396f4c923b392c6cca6daaeb48a1bb8e34205df1dc7b42047b0e4",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

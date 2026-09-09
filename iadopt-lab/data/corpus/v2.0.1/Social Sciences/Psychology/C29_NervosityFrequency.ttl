@@ -1,0 +1,47 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C29
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Nervosity feelings" ;
+    rdfs:comment 
+        """In the past 30 days, how often did you feel nervous?""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/35" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/entity/Q5> ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/Count> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "normalization: during last 30 days" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/Count> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "nevous feeling" .
+
+<https://www.wikidata.org/entity/Q5>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "person" .
+
+<https://qudt.org/vocab/quantitykind/Count>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "count" .

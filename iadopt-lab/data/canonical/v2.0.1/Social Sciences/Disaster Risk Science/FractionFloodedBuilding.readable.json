@@ -1,0 +1,25 @@
+{
+  "label": "Fraction of flooded area around building",
+  "definition": "Fraction of flooded area above 30 cm water level within a 5 m buffer around an affected building in an urban area",
+  "hasProperty": "area fraction",
+  "hasPropertyURI": "http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "flooded area / total area",
+    "hasDenominator": "total area",
+    "hasNumerator": "flooded area"
+  },
+  "hasMatrix": "urban area",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q702492",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: flooded > 30 cm above ground",
+      "on": "flooded area"
+    },
+    {
+      "label": "spatial extent: 5 m buffer around buildings",
+      "on": "flooded area / total area"
+    }
+  ]
+}

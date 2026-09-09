@@ -1,0 +1,32 @@
+{
+  "label": "solubility of molecular oxygen from air in water",
+  "definition": "solubility of molecular oxygen from air in water with MilliQ (10.2MOhm) purity at local air conditions",
+  "hasProperty": "amount of substance per mass",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/AmountOfSubstancePerMass",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "molecular oxygen / water",
+    "hasDenominator": "water",
+    "hasNumerator": "molecular oxygen"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: at local atmospheric pressure",
+      "on": "amount of substance per mass"
+    },
+    {
+      "label": "condition: at local temperature",
+      "on": "amount of substance per mass"
+    },
+    {
+      "label": "resistivity: 10.2 MΩ cm",
+      "on": "water"
+    },
+    {
+      "label": "source: air",
+      "on": "molecular oxygen"
+    }
+  ]
+}

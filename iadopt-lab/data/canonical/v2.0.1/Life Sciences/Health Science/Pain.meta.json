@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:aebc981b8a7c3b11c86873342ff8f898f1f176f006b22ce44d5e8d94e3045d30",
+  "source_iri": "http://example.org/iadopt/clinical/Pain",
+  "source_path": "Life Sciences/Health Science/Pain.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Health Science",
+  "category_path": "Life Sciences/Health Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "da71ec79ea59a51d1d6c9cbd3803f751fa820d8b",
+  "source_byte_length": 1521,
+  "source_sha256": "2cfe4d26b6f770957372a77caac7311d174c6669d6d87300c5989ce3c9d58102",
+  "gold_sha256": "4c4de10f6107aadee1105a586cd11d0a063deac543374e485ae3c89d060fbf15",
+  "record_sha256": "cbb46ed4d6abced0660d573eb78d8e0c6bc571f804089b13824b75b5395489fe",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

@@ -1,0 +1,15 @@
+{
+  "label": "Determination of iron concentration in a soil sample",
+  "definition": "Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthroline as mass fraction",
+  "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "iron / soil",
+    "hasDenominator": "soil",
+    "hasNumerator": "iron"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

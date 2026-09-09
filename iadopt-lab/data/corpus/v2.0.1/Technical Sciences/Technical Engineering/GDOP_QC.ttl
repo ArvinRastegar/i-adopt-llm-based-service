@@ -1,0 +1,39 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/HFR> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+
+ex:Variable
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Geometric dilution of precision (GDOP) threshold quality flag " ;
+    rdfs:comment 
+        """Quality Control flags resulting from setting a threshold on Geometric dilution of precision (GDOP). Setting a threshold on GDOP for total combination avoids the combination of radials with an intersection angle below a certain value.""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/50" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q616896> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q137642315> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "criterium: threshold value" ;
+             iop:constrains <https://www.wikidata.org/entity/Q137642315> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q616896>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "geometric dilution of precision" .
+
+<https://www.wikidata.org/entity/Q137642315>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "quality flag" .

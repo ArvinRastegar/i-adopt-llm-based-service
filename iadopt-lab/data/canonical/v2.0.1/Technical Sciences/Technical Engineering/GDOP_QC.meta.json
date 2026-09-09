@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:987bba365ef3af30223b59be3a4645f4b3eeebdb44d220a57297989b05b9d1b4",
+  "source_iri": "http://example.org/iadopt/HFRVariable",
+  "source_path": "Technical Sciences/Technical Engineering/GDOP_QC.ttl",
+  "category": "Technical Sciences",
+  "subcategory": "Technical Engineering",
+  "category_path": "Technical Sciences/Technical Engineering",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "b6426f56f2645850fa66abdb11bc637fdbe8b9c5",
+  "source_byte_length": 1572,
+  "source_sha256": "d8c5d894bc710176d7a45095c800ccfb6ce88912d3dd6d23dd832f6543a7811c",
+  "gold_sha256": "1ce33e827c5314c7311c9f496bf0c0ff75929d0059c42cbaa15e0c9084a056b1",
+  "record_sha256": "42460aec335e50ace9ee4061f96aecdf057e0b9963a52a38f770f43b03a2782b",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

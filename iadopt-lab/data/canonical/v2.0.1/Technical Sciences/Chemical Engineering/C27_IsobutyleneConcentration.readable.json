@@ -1,0 +1,15 @@
+{
+  "label": "Mass concentration of isobutylene in chloroform",
+  "definition": "Mass concentration of isobutylene in chloroform, measured in g/l.",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassConcentration",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "isobutylene / chloroform",
+    "hasDenominator": "chloroform",
+    "hasNumerator": "isobutylene"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

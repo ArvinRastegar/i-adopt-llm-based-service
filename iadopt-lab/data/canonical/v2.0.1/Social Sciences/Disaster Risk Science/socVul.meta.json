@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:3156d2522edc6464b49d91de55ab1f0db472eebe63229283ad583824e8381844",
+  "source_iri": "http://example.org/iadopt/CCA/primfunction",
+  "source_path": "Social Sciences/Disaster Risk Science/socVul.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Disaster Risk Science",
+  "category_path": "Social Sciences/Disaster Risk Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "236c5cebadd21ee327649f2126d3e343445f0957",
+  "source_byte_length": 1880,
+  "source_sha256": "582373b2ffcdfd816dacbc433ea938304c6e0070fff2492f1a6af940a99249da",
+  "gold_sha256": "87beef5f4df7be75bc8a4a1b0546e3cc8d2dbf80df7e45878edf0e0eb958f3f0",
+  "record_sha256": "4ff8d12568025f7800c465cf94e452922739d25a97b212fc776464b85c19804b",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

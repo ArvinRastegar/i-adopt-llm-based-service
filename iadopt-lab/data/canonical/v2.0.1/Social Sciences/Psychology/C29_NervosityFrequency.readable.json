@@ -1,0 +1,17 @@
+{
+  "label": "Nervosity feelings",
+  "definition": "In the past 30 days, how often did you feel nervous?",
+  "hasProperty": "count",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "nevous feeling",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "normalization: during last 30 days",
+      "on": "count"
+    }
+  ]
+}

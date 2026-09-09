@@ -1,0 +1,28 @@
+# Separate from the existing service. Setup pins IADOPT_POSTGRES_IMAGE to a digest.
+name: iadopt-lab
+services:
+  postgres:
+    image: ${IADOPT_POSTGRES_IMAGE:?Run the lab database setup first}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5433:5432"
+    environment:
+      POSTGRES_USER: iadopt_lab_bootstrap
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap_password
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    secrets:
+      - bootstrap_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iadopt_lab_bootstrap -d postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    shm_size: 128mb
+secrets:
+  bootstrap_password:
+    file: .runtime/postgres-bootstrap-password
+volumes:
+  postgres-data:

@@ -1,0 +1,12 @@
+{
+  "label": "Body Mass Index",
+  "definition": "Body mass index calculated by dividing body mass by height squared",
+  "hasProperty": "index",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q1738991",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "body mass",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

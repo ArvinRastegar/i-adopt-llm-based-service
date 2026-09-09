@@ -1,0 +1,27 @@
+{
+  "label": "Average number of persons without high school diploma during the last three years within a statistical unit",
+  "definition": "Average number of persons without high school diploma during the last three years residing in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "count",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "arithmetic mean",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/wiki/Q19033",
+  "hasObjectOfInterest": "person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q215627",
+  "hasMatrix": "",
+  "hasContextObject": "urban area",
+  "hasContextObjectURI": "https://www.wikidata.org/entity/Q702492",
+  "hasConstraint": [
+    {
+      "label": "condition: registered as resident in the previous three years",
+      "on": "person"
+    },
+    {
+      "label": "education: without high school diploma",
+      "on": "person"
+    },
+    {
+      "label": "normalization: per statistical unit",
+      "on": "count"
+    }
+  ]
+}

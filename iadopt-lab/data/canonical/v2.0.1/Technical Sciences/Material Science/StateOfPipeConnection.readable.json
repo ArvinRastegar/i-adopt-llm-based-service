@@ -1,0 +1,21 @@
+{
+  "label": "State of connection pipe",
+  "definition": "State (faulty, cracked, ... ) of pipe connection in plastic with a diametre of 30 cm.",
+  "hasProperty": "state",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q813912",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "pipe connection",
+  "hasObjectOfInterestURI": "https://example.org/data/PipeConnection",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "material type: plastic",
+      "on": "pipe connection"
+    },
+    {
+      "label": "size:diameter of 30 cm",
+      "on": "pipe connection"
+    }
+  ]
+}

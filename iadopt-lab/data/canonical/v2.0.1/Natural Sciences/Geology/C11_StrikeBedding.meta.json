@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:878908f20228224335acf3157a9fc32acc26f6f85629e31c18e1cc006e1005a7",
+  "source_iri": "http://example.org/iadopt/challenge/C11",
+  "source_path": "Natural Sciences/Geology/C11_StrikeBedding.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Geology",
+  "category_path": "Natural Sciences/Geology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "bb61bfa4c485109660d09335fe908d24b6cbe105",
+  "source_byte_length": 1824,
+  "source_sha256": "13b8ee4f228186cfcaad3688bcb6500174a296addd48314051efbca23482d0a9",
+  "gold_sha256": "a9038f8617bf0b4feeb2d7b50374d75f3c4e8e0c05e6f85b36bbf726142ddbfb",
+  "record_sha256": "c42ce1a4881ec337ff43d2c7284616bd270e82f9ab594b007849f8bc1fc5619d",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

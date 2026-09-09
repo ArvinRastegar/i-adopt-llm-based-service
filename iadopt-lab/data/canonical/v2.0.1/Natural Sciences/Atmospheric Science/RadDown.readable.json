@@ -1,0 +1,17 @@
+{
+  "label": "Surface long-wave (thermal) radiation downwards",
+  "definition": "Surface long-wave (thermal radiation downwards measured in Wm-2",
+  "hasProperty": "irradiance",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Irradiance",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "long wave radiation",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q82340792",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "direction: downwards",
+      "on": "long wave radiation"
+    }
+  ]
+}

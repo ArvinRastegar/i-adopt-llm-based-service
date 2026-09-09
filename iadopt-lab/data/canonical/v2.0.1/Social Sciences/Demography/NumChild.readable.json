@@ -1,0 +1,26 @@
+{
+  "label": "Number of children under the age of 10 years in a statistical unit",
+  "definition": "number of children under the age of 10 years in a statistical unit which is defined as a grouping of homogeneous neighboring building blocks in an urban area",
+  "hasProperty": "count",
+  "hasPropertyURI": "http://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q215627",
+  "hasMatrix": "",
+  "hasContextObject": "urban area",
+  "hasContextObjectURI": "https://www.wikidata.org/entity/Q702492",
+  "hasConstraint": [
+    {
+      "label": "age: < 10 years",
+      "on": "person"
+    },
+    {
+      "label": "condition: registered as resident",
+      "on": "person"
+    },
+    {
+      "label": "normalization: per statistical unit",
+      "on": "count"
+    }
+  ]
+}

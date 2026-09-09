@@ -1,0 +1,22 @@
+{
+  "label": "Water turbidity of stagnant surface water ",
+  "definition": "Water turbidity of stagnant surface water",
+  "hasProperty": "degree",
+  "hasPropertyURI": "http://purl.jp/bio/4/id/200906065003062504",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "turbidity",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q898574",
+  "hasMatrix": "water",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q283",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "part: surface",
+      "on": "water"
+    },
+    {
+      "label": "state: stagnant",
+      "on": "water"
+    }
+  ]
+}

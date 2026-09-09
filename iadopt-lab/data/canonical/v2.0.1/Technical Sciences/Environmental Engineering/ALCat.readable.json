@@ -1,0 +1,15 @@
+{
+  "label": "Concentration of Al cations in water",
+  "definition": "Concentration of Al cations in water",
+  "hasProperty": "amount of substance concentration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/AmountOfSubstanceConcentration",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "aluminium cation / water",
+    "hasDenominator": "water",
+    "hasNumerator": "aluminium cation"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

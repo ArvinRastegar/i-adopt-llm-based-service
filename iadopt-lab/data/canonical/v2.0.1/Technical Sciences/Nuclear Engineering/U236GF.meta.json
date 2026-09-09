@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:df36cf7940a82ca381cddb35720d6f50d4bf8dc22cc4d0432c366692e66edff9",
+  "source_iri": "http://example.org/CCA/U236GF",
+  "source_path": "Technical Sciences/Nuclear Engineering/U236GF.ttl",
+  "category": "Technical Sciences",
+  "subcategory": "Nuclear Engineering",
+  "category_path": "Technical Sciences/Nuclear Engineering",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "9515b4cbd9743184d909ad5b7b3f593a04e38182",
+  "source_byte_length": 2013,
+  "source_sha256": "6abb86965ab0d88dbefa59ff7b780f225e76f476bf9d08926ec9e2837eaf21b4",
+  "gold_sha256": "05c32d0c41888e56c827e124fe9d431cf9835fcd43e830703a87229b428b25cc",
+  "record_sha256": "41833e5994df3adc0ee7600178378b2f1df83cb23ae17c7abc8aec4de1119784",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

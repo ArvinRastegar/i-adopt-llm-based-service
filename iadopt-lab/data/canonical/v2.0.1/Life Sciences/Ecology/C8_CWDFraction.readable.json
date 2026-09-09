@@ -1,0 +1,20 @@
+{
+  "label": "Coarse woody debris abundance",
+  "definition": "Coarse woody debris (CWD) abundance per hectare measured from all the plots scaled to a hectare (m2/hectare).",
+  "hasProperty": "area fraction",
+  "hasPropertyURI": "http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "coarse woody debris / ground",
+    "hasDenominator": "ground",
+    "hasNumerator": "coarse woody debris"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "normalization: per hectare",
+      "on": "ground"
+    }
+  ]
+}

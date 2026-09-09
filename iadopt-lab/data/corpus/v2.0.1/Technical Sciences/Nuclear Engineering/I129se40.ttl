@@ -1,0 +1,56 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+
+<http://example.org/CCA/I129se40>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "I129 deposition from Ringhals of Sweden" ;
+    rdfs:comment 
+        """Number of I129 atoms per mass  of sea water in the artic from discharges  of the nuclear fuel reprocessing plant at Ringhals of Sweden (I129se40) in atoms kg-1""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/135" ;
+    rdfs:comment 
+        """Number of I129 atoms per mass  of sea water in the artic from discharges  of the nuclear fuel reprocessing plant at Ringhals of Sweden (I129se40) in atoms kg-1""" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q139568528> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "source: nuclear fuel reprocessing plant at Ringhals, Sweden" ;
+             iop:constrains <https://www.wikidata.org/entity/Q2515411> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q2515411> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q184395> .
+
+<https://www.wikidata.org/entity/Q139568528>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "number density per unit mass" .
+
+<https://www.wikidata.org/entity/Q2515411>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "Iodine-129" .
+
+<https://www.wikidata.org/entity/Q184395>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sea water" .

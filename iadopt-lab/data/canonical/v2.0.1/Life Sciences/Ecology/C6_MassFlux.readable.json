@@ -1,0 +1,21 @@
+{
+  "label": "Mass flux of carbon into soil from vegetation due to senescence",
+  "definition": "Mass flux of carbon into soil from vegetation due to senescence, measured in kg m-2 s-1. ",
+  "hasProperty": "mass flux density",
+  "hasPropertyURI": "http://qudt.org/vocab/quantitykind/MassFluxDensity",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "carbon",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q623",
+  "hasMatrix": {
+    "AsymmetricSystem": "vegetation → soil",
+    "hasSource": "vegetation",
+    "hasTarget": "soil"
+  },
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "process: senescence",
+      "on": "vegetation"
+    }
+  ]
+}

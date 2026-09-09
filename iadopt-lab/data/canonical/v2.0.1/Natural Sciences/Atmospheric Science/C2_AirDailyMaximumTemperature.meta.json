@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:c51a8273fd7c9585fb0b04292e4caa3359f0aebbfca17a01c475087959f898bd",
+  "source_iri": "http://example.org/iadopt/challenge/C2",
+  "source_path": "Natural Sciences/Atmospheric Science/C2_AirDailyMaximumTemperature.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Atmospheric Science",
+  "category_path": "Natural Sciences/Atmospheric Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "f14b48bcb0a08b89a47e0cde6ab16165749019b2",
+  "source_byte_length": 2002,
+  "source_sha256": "dd38b6063a2d7b9c707e439aaa74422dd6a20f14a547ae118642a7a077ad6709",
+  "gold_sha256": "68e0b60dafd95055f97a3ebfb29c6b0a135c71430f130d1684bb02059e35ca4e",
+  "record_sha256": "3f29c81a2e3d0fe2882aa483e960e7db698486ea70c6d26c45ecee3855769d81",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": 1
+}

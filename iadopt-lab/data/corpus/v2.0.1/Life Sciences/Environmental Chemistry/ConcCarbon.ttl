@@ -1,0 +1,54 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/iadopt/env/ConcCarbon>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Concentration of dissolved organic carbon in water" ;
+    rdfs:comment 
+        """Mass concentration of dissolved organic carbon in water""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/119" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/MassConcentration> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "state: dissolved" ;
+             iop:constrains <http://vocabs.lter-europe.net/EnvThes/20813> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q283> ;
+    iop:hasNumerator 
+        <http://vocabs.lter-europe.net/EnvThes/20813> .
+
+<https://qudt.org/vocab/quantitykind/MassConcentration>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass concentration" .
+
+<https://www.wikidata.org/entity/Q283>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "water" .
+
+<http://vocabs.lter-europe.net/EnvThes/20813>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "organic carbon" .

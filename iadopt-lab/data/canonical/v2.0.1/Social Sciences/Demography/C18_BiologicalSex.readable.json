@@ -1,0 +1,12 @@
+{
+  "label": "Biological sex",
+  "definition": "Biological sex [female | male | intersex | unknown]",
+  "hasProperty": "sex",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q290",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "organism",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q7239",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

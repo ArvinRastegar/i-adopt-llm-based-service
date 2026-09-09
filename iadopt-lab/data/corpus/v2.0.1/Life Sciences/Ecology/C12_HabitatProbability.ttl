@@ -1,0 +1,59 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C12
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Probablity of occurence of habitat" ;
+    rdfs:comment 
+        """Part of terrestrial Ecosystem distribution of terrestrial EUNIS Habitats EBV, probability of occurrence of EUNIS habitats within contiguous spatial units (grid cells of 100x100 m) across the EU over 1 year time. https://github.com/EuropaBON/EBV-Descriptions/entity/Terrestrial-Ecosystem-distribution-of-terrestrial-EUNIS-Habitats""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/18" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q52105> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/entity/Q3622002> ;
+    iop:hasProperty 
+        <https://lod.nal.usda.gov/nalt/137027> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "temporal reference: calendar year" ;
+             iop:constrains <https://lod.nal.usda.gov/nalt/137027> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "classification: EUNIS habitat type" ;
+             iop:constrains <https://www.wikidata.org/entity/Q52105> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "normalization: 100x100 m grid cell" ;
+             iop:constrains <https://lod.nal.usda.gov/nalt/137027> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "region: European Union" ;
+             iop:constrains <https://www.wikidata.org/entity/Q3622002> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q52105>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "habitat" .
+
+<https://lod.nal.usda.gov/nalt/137027>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "probability" .
+
+<https://www.wikidata.org/entity/Q3622002>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "geographical area" .

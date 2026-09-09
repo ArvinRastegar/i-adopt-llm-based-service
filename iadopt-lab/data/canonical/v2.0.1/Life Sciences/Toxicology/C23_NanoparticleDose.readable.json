@@ -1,0 +1,17 @@
+{
+  "label": "Cellular dose in vitro of nanomaterials (mass / cell)",
+  "definition": "the mass of nanomaterial internalised into the cell over the duration of the experiment, mass per cell",
+  "hasProperty": "mass",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Mass",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "nanomaterial",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q967847",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "normalization: per cell",
+      "on": "mass"
+    }
+  ]
+}

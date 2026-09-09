@@ -1,0 +1,18 @@
+{
+  "label": "Mean sea level pressure",
+  "definition": "Mean sea level pressure expressed in Pa",
+  "hasProperty": "atmospheric pressure",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/AtmosphericPressure",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "air",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q7391292",
+  "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q8104",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "reference: mean sea level",
+      "on": "air"
+    }
+  ]
+}

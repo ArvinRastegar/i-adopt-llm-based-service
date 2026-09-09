@@ -1,0 +1,16 @@
+{
+  "label": "Mass concentration of tbph in breast milk",
+  "definition": "Mass concentration of tbph in breast milk",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassConcentration",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "bis(2-ethylhexyl) tetrabromophthalate  / breast milk",
+    "hasDenominator": "breast milk",
+    "hasNumerator": "bis(2-ethylhexyl) tetrabromophthalate "
+  },
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

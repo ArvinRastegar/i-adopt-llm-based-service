@@ -1,0 +1,23 @@
+{
+  "label": "Air daily maximum temperature at 1.7m",
+  "definition": "Thermodynamic temperature of the air in a height of 1.7 meter aboveground, daily maximum in Celsium degrees.",
+  "hasProperty": "thermodynamic temperature",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/ThermodynamicTemperature",
+  "hasStatisticalModifier": "maximum",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/entity/Q10578722",
+  "hasObjectOfInterest": "air",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q7391292",
+  "hasMatrix": "atmosphere",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q8104",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "reference: 1.7 m  above ground",
+      "on": "air"
+    },
+    {
+      "label": "reporting frequency: daily",
+      "on": "maximum"
+    }
+  ]
+}

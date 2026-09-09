@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:b0f873292fd5c5cb027c9cd579cb8e3ee0caa43c8484a7ec13fcef359b9a4dc3",
+  "source_iri": "http://example.org/iadopt/env/SoilMoist",
+  "source_path": "Natural Sciences/Hydrology/SoilMoist.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Hydrology",
+  "category_path": "Natural Sciences/Hydrology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "c8ad94855aeed2b45ecdaf18e725678d351ba55d",
+  "source_byte_length": 1639,
+  "source_sha256": "48eb7e5538469c2218d9e8fd1685e0738893b4b8c90b9962327c9375fb0d7190",
+  "gold_sha256": "bea02d105aab4a5b44cc38a3d3eefbd404712481879bc88f10e839c3bf905422",
+  "record_sha256": "8ce0c64160ef2a840003a78add3145429d554137ef647f3a8be67d00d3463c19",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

@@ -1,0 +1,47 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/iadopt/healthcare/highesteducation>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Level of highest education" ;
+    rdfs:comment 
+        """level of highest education""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/111" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q8434> ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/entity/Q5> ;
+    iop:hasProperty 
+        <http://purl.jp/bio/4/id/200906065003062504> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "criteria: highest" ;
+             iop:constrains <http://purl.jp/bio/4/id/200906065003062504> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q8434>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "education" .
+
+<https://www.wikidata.org/entity/Q5>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "person" .
+
+<http://purl.jp/bio/4/id/200906065003062504>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "degree" .

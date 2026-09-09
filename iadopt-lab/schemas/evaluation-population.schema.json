@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iadopt-lab.local/schemas/evaluation-population-v1",
+  "title": "Complete evaluation population without train/test partitions",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "commit", "ordering", "member_count", "exclusion_count", "members", "exclusions", "manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "evaluation-population-v1"},
+    "commit": {"const": "2598bf91fa927b78a6529bae7864ef0f7d485b73"},
+    "ordering": {"const": "source-path-utf8-v1"},
+    "member_count": {"const": 97},
+    "exclusion_count": {"const": 5},
+    "manifest_sha256": {"$ref": "#/$defs/hash"},
+    "members": {"type": "array", "minItems": 97, "maxItems": 97, "uniqueItems": true, "items": {"$ref": "#/$defs/member"}},
+    "exclusions": {"type": "array", "minItems": 5, "maxItems": 5, "uniqueItems": true, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["variable_id", "source_path", "source_sha256", "gold_sha256", "reason", "position"],
+      "properties": {"variable_id": {"type": "string", "minLength": 1}, "source_path": {"type": "string", "minLength": 1}, "source_sha256": {"$ref": "#/$defs/hash"}, "gold_sha256": {"$ref": "#/$defs/hash"}, "reason": {"const": "fixed_demonstration"}, "position": {"type": "integer", "minimum": 1, "maximum": 5}}
+    }}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "member": {"type": "object", "additionalProperties": false, "required": ["variable_id", "source_path", "source_sha256", "gold_sha256"], "properties": {"variable_id": {"type": "string", "minLength": 1}, "source_path": {"type": "string", "minLength": 1}, "source_sha256": {"$ref": "#/$defs/hash"}, "gold_sha256": {"$ref": "#/$defs/hash"}}}
+  }
+}

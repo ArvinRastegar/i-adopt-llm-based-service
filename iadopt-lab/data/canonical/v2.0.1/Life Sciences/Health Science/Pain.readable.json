@@ -1,0 +1,18 @@
+{
+  "label": "Chronic pain grade scale",
+  "definition": "Category: Clinical, Unit: descriptional/grade of a scale",
+  "hasProperty": "degree",
+  "hasPropertyURI": "http://purl.jp/bio/4/id/200906065003062504",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "pain",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q81938",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "temporal extent: chronic",
+      "on": "pain"
+    }
+  ]
+}

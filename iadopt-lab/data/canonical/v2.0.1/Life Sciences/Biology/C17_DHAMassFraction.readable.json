@@ -1,0 +1,20 @@
+{
+  "label": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
+  "definition": "The amount of docosahexaenoic acid relative to dry weight in an organism.",
+  "hasProperty": "amount of substance per mass",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/AmountOfSubstancePerMass",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "docosahexaenoic acid / organism",
+    "hasDenominator": "organism",
+    "hasNumerator": "docosahexaenoic acid"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "state: dry",
+      "on": "organism"
+    }
+  ]
+}

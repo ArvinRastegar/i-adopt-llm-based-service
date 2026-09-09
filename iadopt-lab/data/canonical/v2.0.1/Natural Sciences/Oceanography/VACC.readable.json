@@ -1,0 +1,11 @@
+{
+  "label": "Northward velocity uncertainty of water current in the water body by high frequency radar",
+  "definition": "Uncertainty expressed using confidence interval of the component of the sea surface current velocity that is directed northward.",
+  "hasProperty": "confidence interval",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q208498",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "northward linear velocity of water",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

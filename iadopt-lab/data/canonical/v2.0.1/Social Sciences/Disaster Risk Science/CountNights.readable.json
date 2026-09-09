@@ -1,0 +1,18 @@
+{
+  "label": "Count of tropic nights",
+  "definition": "Count of tropic nights, with min temperature > 20 ° Celsius in urban areas",
+  "hasProperty": "count",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "night",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q575",
+  "hasMatrix": "urban area",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q702492",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "min temperature: > 20 ° C",
+      "on": "night"
+    }
+  ]
+}

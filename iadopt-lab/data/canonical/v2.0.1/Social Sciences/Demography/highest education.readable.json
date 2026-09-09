@@ -1,0 +1,18 @@
+{
+  "label": "Level of highest education",
+  "definition": "level of highest education",
+  "hasProperty": "degree",
+  "hasPropertyURI": "http://purl.jp/bio/4/id/200906065003062504",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "education",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q8434",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "criteria: highest",
+      "on": "degree"
+    }
+  ]
+}

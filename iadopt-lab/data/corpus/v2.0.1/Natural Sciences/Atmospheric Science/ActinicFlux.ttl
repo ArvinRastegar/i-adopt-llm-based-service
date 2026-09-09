@@ -1,0 +1,51 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:ActinicFlux
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Spectral upwelling actinic flux" ;
+    rdfs:comment 
+        """Upwelling component of actinic flux in wavelength range of 297-640 nm measured in photons/s/cm2/nm""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/8" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q18335> ;
+    iop:hasContextObject 
+        <https://www.wikidata.org/entity/Q8104> ;
+    iop:hasProperty 
+        <https://goldbook.iupac.org/terms/view/A00086> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "wavelength: 297-640 nm" ;
+             iop:constrains <https://www.wikidata.org/entity/Q18335> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "direction: upwelling" ;
+             iop:constrains <https://goldbook.iupac.org/terms/view/A00086> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q18335>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "radiation" .
+
+<https://goldbook.iupac.org/terms/view/A00086>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "actinic flux" .
+
+<https://www.wikidata.org/entity/Q8104>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "atmosphere" .

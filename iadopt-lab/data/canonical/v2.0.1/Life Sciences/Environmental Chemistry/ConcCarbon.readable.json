@@ -1,0 +1,20 @@
+{
+  "label": "Concentration of dissolved organic carbon in water",
+  "definition": "Mass concentration of dissolved organic carbon in water",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassConcentration",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "organic carbon / water",
+    "hasDenominator": "water",
+    "hasNumerator": "organic carbon"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "state: dissolved",
+      "on": "organic carbon"
+    }
+  ]
+}

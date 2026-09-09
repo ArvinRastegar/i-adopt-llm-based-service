@@ -1,0 +1,20 @@
+{
+  "label": "Moisture in upper soil portion",
+  "definition": "Moisture in upper soil portion measured in kg m-2",
+  "hasProperty": "mass per area",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassPerArea",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "water / soil",
+    "hasDenominator": "soil",
+    "hasNumerator": "water"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "part: upper soil",
+      "on": "soil"
+    }
+  ]
+}

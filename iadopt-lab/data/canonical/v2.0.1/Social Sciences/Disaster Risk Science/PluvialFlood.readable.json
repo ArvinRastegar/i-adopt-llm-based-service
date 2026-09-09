@@ -1,0 +1,22 @@
+{
+  "label": "Pluvial flood due to 100 year event",
+  "definition": "Pluvial flood expressed as water depth due to 100 year event in a statistical unit, defined by a grouping of homogeneous neighboring building blocks",
+  "hasProperty": "depth",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Depth",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q283",
+  "hasMatrix": "",
+  "hasContextObject": "urban area",
+  "hasContextObjectURI": "https://www.wikidata.org/entity/Q702492",
+  "hasConstraint": [
+    {
+      "label": "event: 100 year rain",
+      "on": "water"
+    },
+    {
+      "label": "normalization: per statistical unit",
+      "on": "depth"
+    }
+  ]
+}

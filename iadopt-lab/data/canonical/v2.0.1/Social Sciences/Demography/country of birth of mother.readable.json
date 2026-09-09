@@ -1,0 +1,18 @@
+{
+  "label": "Country of birth of mother",
+  "definition": "country of birth of mother",
+  "hasProperty": "country",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q6256",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "birth",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q14819852",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q215627",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "relationship: mother",
+      "on": "person"
+    }
+  ]
+}

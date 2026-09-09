@@ -1,0 +1,16 @@
+{
+  "label": "DRVA Direction of radial velocity of water current relative to instrument and to True North by high frequency radar",
+  "definition": "The compass direction in degrees positive clockwise from TrueNorth of the component of water velocity in a water body along radial lines centered at the HFR antenna.",
+  "hasProperty": "plane angle",
+  "hasPropertyURI": "http://qudt.org/vocab/quantitykind/PlaneAngle",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "radial velocity of sea water",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "reference: True North",
+      "on": "plane angle"
+    }
+  ]
+}

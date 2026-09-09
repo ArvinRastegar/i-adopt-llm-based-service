@@ -1,0 +1,21 @@
+{
+  "label": "Potential evaporation",
+  "definition": "Potential evaporation l m⁻² s⁻¹",
+  "hasProperty": "volumetric flux",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/VolumetricFlux",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "water vapour",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q190120",
+  "hasMatrix": {
+    "AsymmetricSystem": "soil → atmosphere",
+    "hasSource": "soil",
+    "hasTarget": "atmosphere"
+  },
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: at non-limiting water supply",
+      "on": "water vapour"
+    }
+  ]
+}

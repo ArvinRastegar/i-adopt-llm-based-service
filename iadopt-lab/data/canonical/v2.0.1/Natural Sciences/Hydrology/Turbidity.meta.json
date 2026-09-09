@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:4edf88dc05da570ff0a74d75b6ff939c6b1e117977a4ba2ffba0c74089389e3b",
+  "source_iri": "http://example.org/CCA/Turbidity",
+  "source_path": "Natural Sciences/Hydrology/Turbidity.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Hydrology",
+  "category_path": "Natural Sciences/Hydrology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "3d772931c6bc1d5b22f1741384ee6e655c843514",
+  "source_byte_length": 1668,
+  "source_sha256": "5cd4ae4caf44d3c708e61bdc8b65380b03a2202085cf399f0c316283b23b07a0",
+  "gold_sha256": "445abb98617d552785d4fc8c0e89af8925c2b1b2589511edc81814acc1978d26",
+  "record_sha256": "b3d16eb622a555e803587c0e6b630df2ad8da40884e3773d22dd8d399b4f1d3b",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

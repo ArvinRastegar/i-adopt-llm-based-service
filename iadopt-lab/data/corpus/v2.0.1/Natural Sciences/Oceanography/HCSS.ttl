@@ -1,0 +1,39 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:someVar
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar" ;
+    rdfs:comment 
+        """Variance of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the coverage period""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/64" ;
+    iop:hasObjectOfInterest 
+        <https://github.com/i-adopt/Corpus/blob/main/Natural%20Sciences/Oceanography/RDVA.ttl> ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q175199> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "temporal extent: over the coverage period" ;
+             iop:constrains <https://www.wikidata.org/entity/Q175199> ;
+        ] .
+
+<https://github.com/i-adopt/Corpus/blob/main/Natural%20Sciences/Oceanography/RDVA.ttl>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "radial velocity of water current " .
+
+<https://www.wikidata.org/entity/Q175199>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "variance" .

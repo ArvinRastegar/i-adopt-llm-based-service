@@ -1,0 +1,13 @@
+{
+  "label": "Observation of bloodtype in blood",
+  "definition": "Type of blood in a blood sample",
+  "hasProperty": "phenotype",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q104053",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "blood",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q7873",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

@@ -1,0 +1,56 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C11
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Strike of bedding" ;
+    rdfs:comment 
+        """Geographic azimuth (relative to true north) at a point observation location, of a horizontal line contained in a sedimentary rock bedding surface. The bedding surface must not be horizontal; the azimuth is reported such that the dip direction of the inclined bedding is to the right when facing in the azimuth direction.""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/17" ; 
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasMatrix 
+        <https://www.wikidata.org/entity/Q82480> ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/PlaneAngle> .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:SymmetricSystem ;
+    iop:hasPart 
+        _:b1 ,
+        <https://vocab.nerc.ac.uk/collection/S20/current/S2000002/> .
+
+<https://www.wikidata.org/entity/Q82480>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sedimentary rock" .
+
+<https://qudt.org/vocab/quantitykind/PlaneAngle>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "plane angle" .
+
+_:b1
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "bedding surface line" .
+
+<https://vocab.nerc.ac.uk/collection/S20/current/S2000002/>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "True North" .

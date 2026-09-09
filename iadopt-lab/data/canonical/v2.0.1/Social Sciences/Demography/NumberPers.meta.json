@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:5382e8c971d5accb754b9b3c8c5052ac2a94ddc4c18bf7c14b05a8986546d509",
+  "source_iri": "http://example.org/iadopt/challenge/NumberPers",
+  "source_path": "Social Sciences/Demography/NumberPers.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Demography",
+  "category_path": "Social Sciences/Demography",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "09dfd423552567ba48d66770a241c19801d93845",
+  "source_byte_length": 1820,
+  "source_sha256": "a0508aa1df729e1c247af09f2eed114fcff603295b80eccc731933450a018226",
+  "gold_sha256": "cd0e7c76034bb6a27e9fc3260dfc63204981f72d51fdf90230b5956d4d412b5f",
+  "record_sha256": "fbb7d709a7aaffaef930df51885c6a924cf5f76d141025fff6631ab75f5c4b6e",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

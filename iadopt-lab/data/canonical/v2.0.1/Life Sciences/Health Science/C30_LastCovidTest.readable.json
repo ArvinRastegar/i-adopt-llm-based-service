@@ -1,0 +1,26 @@
+{
+  "label": "Date of last PCR-test by certified laboratory",
+  "definition": "date of last COVID-19 PCR test performed by a certified laboratory",
+  "hasProperty": "calendar date",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q205892",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "PCR-test",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q104462307",
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "agent: certified laboratory",
+      "on": "PCR-test"
+    },
+    {
+      "label": "event: latest",
+      "on": "PCR-test"
+    },
+    {
+      "label": "purpose: SARS-CoV2",
+      "on": "PCR-test"
+    }
+  ]
+}

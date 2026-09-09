@@ -1,0 +1,17 @@
+{
+  "label": "Cellular dose in vitro of nanomaterials (particle / cell)",
+  "definition": "Count of nanomaterial particles internalised into the cell over the duration of the experiment, entity per cell",
+  "hasProperty": "count",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "nanomaterial particle",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q967847",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "normalization: per cell",
+      "on": "count"
+    }
+  ]
+}

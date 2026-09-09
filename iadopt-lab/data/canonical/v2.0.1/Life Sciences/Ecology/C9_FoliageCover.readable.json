@@ -1,0 +1,20 @@
+{
+  "label": "Foliage projective cover in the lower canopy strata",
+  "definition": "The proportion (percentage) of the ground area covered by foliage (or photosynthetic tissue) in the lower canopy strata.",
+  "hasProperty": "area fraction",
+  "hasPropertyURI": "http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "foliage / ground",
+    "hasDenominator": "ground",
+    "hasNumerator": "foliage"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "part: lower canopy strata",
+      "on": "foliage"
+    }
+  ]
+}

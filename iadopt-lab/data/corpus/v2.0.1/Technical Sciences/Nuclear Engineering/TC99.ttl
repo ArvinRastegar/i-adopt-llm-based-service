@@ -1,0 +1,49 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/iadopt/CCA/TC99SF>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Radioactivity_content_of_TC99SF" ;
+    rdfs:comment 
+        """Radioactivity content of Technetium-99 in sea water from discharges of the nuclear fuel reprocessing plant at Sellafield, UK. Technetium-99 is a radioactive isotope of element Technetium, with a half-life of about 211k years. Units: Becquerel per kilogram (Bq kg-1).""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/164" ;
+  iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <http://qudt.org/vocab/quantitykind/MassicActivity> .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q1961418> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q184395> .
+
+<http://qudt.org/vocab/quantitykind/MassicActivity>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "Massic Activity" .
+
+<https://www.wikidata.org/entity/Q1961418>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "Technetium-99" .
+
+<https://www.wikidata.org/entity/Q184395>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sea water" .

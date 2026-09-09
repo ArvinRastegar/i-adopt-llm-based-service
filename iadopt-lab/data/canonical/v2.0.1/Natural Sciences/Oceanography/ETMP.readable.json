@@ -1,0 +1,26 @@
+{
+  "label": "Radial velocity (away from) standard deviation over the coverage period of water current relative to instrument in the water body by high frequency radar",
+  "definition": "Standard deviation of the component of water velocity in a water body along radial lines centered at the HFR antenna, evaluated over the coverage period",
+  "hasProperty": "radial velocity",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q240105",
+  "hasStatisticalModifier": "standard deviation",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/entity/Q159375",
+  "hasObjectOfInterest": "sea water",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q184395",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "part: surface level",
+      "on": "sea water"
+    },
+    {
+      "label": "reference: relative to instrument",
+      "on": "radial velocity"
+    },
+    {
+      "label": "temporal extent: over the temporal coverage period",
+      "on": "standard deviation"
+    }
+  ]
+}

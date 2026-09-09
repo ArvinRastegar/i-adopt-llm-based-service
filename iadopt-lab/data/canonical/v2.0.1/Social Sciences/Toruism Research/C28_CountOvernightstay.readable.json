@@ -1,0 +1,22 @@
+{
+  "label": "Overnight stays in 3-star hotel near the sea shore",
+  "definition": "Number of nights in a 3-star hotel near the sea shore",
+  "hasProperty": "count",
+  "hasPropertyURI": "http://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "night",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q575",
+  "hasMatrix": "hotel",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q27686",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "rating: three star",
+      "on": "hotel"
+    },
+    {
+      "label": "vicinity: near the sea shore",
+      "on": "hotel"
+    }
+  ]
+}

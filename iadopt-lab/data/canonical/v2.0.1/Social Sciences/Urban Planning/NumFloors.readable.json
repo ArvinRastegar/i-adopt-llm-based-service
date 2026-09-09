@@ -1,0 +1,18 @@
+{
+  "label": "Number of floors above ground of building",
+  "definition": "Number of floors above ground of building",
+  "hasProperty": "count",
+  "hasPropertyURI": "http://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "storey",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q831691",
+  "hasMatrix": "building",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q41176",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "reference: above ground",
+      "on": "storey"
+    }
+  ]
+}

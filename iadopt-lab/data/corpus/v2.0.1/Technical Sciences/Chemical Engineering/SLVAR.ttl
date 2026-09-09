@@ -1,0 +1,62 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:slvar
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "solubility of naphthalene in water at room temperature" ;
+    rdfs:comment 
+        """solubility measurement of napathalene in deionized water at room temperature by monitoring absorption at 279 nm, measured in mg/L""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/84" ;
+   iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/MassConcentration> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "condition: at room temperature" ;
+             iop:constrains <https://qudt.org/vocab/quantitykind/MassConcentration> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "state: dissolved" ;
+             iop:constrains <https://www.wikidata.org/entity/Q179724> ;
+        ] ,
+        [ a iop:Constraint ;
+             rdfs:label "resistivity: > 1 MOhm cm" ;
+             iop:constrains <https://www.wikidata.org/entity/Q283> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q179724> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q283> .
+
+<https://qudt.org/vocab/quantitykind/MassConcentration>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass concentration" .
+
+<https://www.wikidata.org/entity/Q179724>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "naphthalene (C10H8)" .
+
+<https://www.wikidata.org/entity/Q283>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "water" .

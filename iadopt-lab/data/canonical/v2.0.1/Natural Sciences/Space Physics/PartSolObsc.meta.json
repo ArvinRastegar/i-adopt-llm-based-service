@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:97c0d174694730417df0203456a0f37230e2c0ce5f274b935f6d98b43fdbe3e6",
+  "source_iri": "http://example.org/iadopt/NS/SP/solarobs",
+  "source_path": "Natural Sciences/Space Physics/PartSolObsc.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Space Physics",
+  "category_path": "Natural Sciences/Space Physics",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "26b1673be6ff62dde2f6573df375588188fe686e",
+  "source_byte_length": 1598,
+  "source_sha256": "b86a40de0116bc117bfc38ef9b4394654093ed7011b1f9d72bbbae723c5bdc92",
+  "gold_sha256": "45b1b92396ee77327442f3914698afed2a7ee5eecb76fc31eae76de96f81d572",
+  "record_sha256": "e289ec83018361c855b7dc944bccd6b508a8a160c0aef497da1d53effffa587c",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

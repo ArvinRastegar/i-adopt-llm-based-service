@@ -1,0 +1,21 @@
+{
+  "label": "Partial Solar Obscuration",
+  "definition": "Partial Solar Obscuration in percentage",
+  "hasProperty": "area fraction",
+  "hasPropertyURI": "http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "obscured area / total area",
+    "hasDenominator": "total area",
+    "hasNumerator": "obscured area"
+  },
+  "hasMatrix": "sun",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q525",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "process: eclipse",
+      "on": "sun"
+    }
+  ]
+}

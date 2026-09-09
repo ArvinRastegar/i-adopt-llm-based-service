@@ -1,0 +1,39 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/iadopt/ATM/irradiance>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Surface long-wave (thermal) radiation downwards" ;
+    rdfs:comment 
+        """Surface long-wave (thermal radiation downwards measured in Wm-2""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/109" ;
+    iop:hasObjectOfInterest 
+        <https://www.wikidata.org/entity/Q82340792> ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/Irradiance> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "direction: downwards" ;
+             iop:constrains <https://www.wikidata.org/entity/Q82340792> ;
+        ] .
+
+<https://www.wikidata.org/entity/Q82340792>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "long wave radiation" .
+
+<https://qudt.org/vocab/quantitykind/Irradiance>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "irradiance" .

@@ -1,0 +1,387 @@
+# I-ADOPT Lab experiment parameters
+#
+# The only human-edited experiment configuration. `load_parameters` validates it
+# against schemas/parameters.schema.json before any database or provider mutation;
+# unknown fields and incompatible combinations are errors. Check readiness with
+# `iadopt-lab preflight` before planning or running a campaign.
+#
+# Never put credentials in this file. Values such as OPENROUTER_API_KEY,
+# PSNC_API_KEY, PSNC_API_BASE_URL, and DATABASE_URL are read from the named
+# environment variables. The planned CLI may explicitly load the repository-root
+# .env with --env-file ../.env when invoked from iadopt-lab/. Existing process
+# environment values win; never execute, copy, hash, or persist the secret file.
+
+schema_version: "2.1"
+
+campaign:
+  # Human-readable name. PostgreSQL assigns an immutable campaign identifier.
+  name: "corpus-v2-decomposition-documentation-draft"
+
+  # Choose [psnc], [openrouter], or [psnc, openrouter]. Order is display-only.
+  # One run/resume invocation covers every enabled model of these providers.
+  # Each task calls its own provider/model; there is no provider failover.
+  # Scoped to a single-provider live run. Second run: PSNC, GLM-5.2.
+  providers: [psnc]
+
+  # Live execution must remain false until exact models, reasoning mappings,
+  # evaluation-population manifest, price evidence, and pre-run estimate pass
+  # preflight and the owner separately authorizes live execution.
+  live_calls_enabled: true
+
+# D-030: Corpus release v2.0.1. The release, commit and tree here must stay in
+# step with schemas/parameters.schema.json, the ingestion constants, and every
+# materialized manifest; they are changed together, never individually.
+dataset:
+  repository: "https://github.com/i-adopt/Corpus"
+  release: "v2.0.1"
+  commit: "2598bf91fa927b78a6529bae7864ef0f7d485b73"
+  tree: "df665d32bb2433a60742c80a4a53908dc7ebde0c"
+  expected_turtle_files: 102
+  definition_predicate: "http://www.w3.org/2000/01/rdf-schema#comment"
+  category_from_release_path: true
+
+demonstrations:
+  manifest: "data/manifests/demonstrations-v2.0.1.yml"
+  exclude_all_from_scoring: true
+
+evaluation_population:
+  # All five demonstration variables are excluded. Every other variable in the
+  # 102-variable Corpus v2.0.1 release is evaluated for every configuration.
+  manifest: "data/manifests/evaluation-population-v2.0.1.yml"
+  expected_variable_count: 97
+  exclude_all_demonstrations: true
+
+ranking:
+  enabled: true
+
+  # Accepted under D-023: sum contributions over all 97 variables to calculate
+  # micro Close F1 separately for each repetition, then average those unrounded
+  # repetition values. This is not the mean of 97 per-variable F1 values.
+  # With D-029's one repetition, the mean equals that single micro Close F1.
+  policy_version: "mean-repetition-micro-close-f1-v1"
+
+  # A configuration is provider + model + reasoning profile + prompt + shots +
+  # temperature + all other frozen scientific parameters. Repetition is a
+  # repeated observation of that configuration, not a separate parameter set.
+  primary_metric: "mean_repetition_micro_close_f1"
+  direction: "descending"
+  # Equal unrounded primary values share competition rank (1, 2, 2, 4).
+  # The analysis columns below do not break ties.
+  tie_policy: "shared_rank"
+  secondary_metrics:
+    - "mean_repetition_micro_exact_f1"
+    - "valid_response_rate"
+
+  # Preserve per-variable/component/repetition Exact and Close precision, recall,
+  # F1 and their underlying confusion contributions in PostgreSQL. Descriptive
+  # statistics under D-024 over per-variable scores (mean, median, variance, mode, standard
+  # deviation, range, IQR) and uncertainty analyses are deferred until the
+  # database is populated; none is required to generate or rank this campaign.
+
+  # A configuration is rankable only after every expected variable/repetition
+  # has a terminal scored result and no unresolved operational failure.
+  require_complete_population: true
+  retain_every_result: true
+
+providers:
+  psnc:
+    adapter: "psnc_chat_completions"
+    api_key_env: "PSNC_API_KEY"
+    base_url_env: "PSNC_API_BASE_URL"
+    default_base_url: "https://llm.hpc.psnc.pl/v1"
+    chat_completions_path: "/chat/completions"
+    client_library: "openai"
+    # Measured, not guessed. An isolating test showed max_tokens makes no difference
+    # (6 concurrent failed 4 of 6 at both 16,000 and 100,000) and that a single request
+    # with a tiny prompt returns in 4.4s while the real 1,478-token 5-shot prompt takes
+    # 120.6s. Prefill on this deployment is the expensive part, and contention on top of
+    # it pushed requests past the timeout. Concurrency is therefore held at 2.
+    timeout_seconds: 900
+    max_concurrency: 2
+    requests_per_minute: 100
+    # Scaled with the 100,000-token ceiling. The conservative admission bound is
+    # roughly 103,000 tokens per request, so 600,000 would have gated dispatch to
+    # about six requests a minute regardless of concurrency. PSNC publishes no
+    # token-rate limit; this is a self-imposed guard sized to permit the configured
+    # concurrency rather than to model a real provider ceiling.
+    tokens_per_minute: 3000000
+
+    billing:
+      # The owner reports PSNC access is free for this experiment. Record that
+      # basis in the billing manifest; this is not a universal price claim.
+      mode: "non_billed"
+      basis: "Owner-reported no-charge PSNC access for this experiment"
+      maximum_provider_cost:
+        amount: null  # No spending cap; non_billed independently establishes zero cost.
+        currency: "EUR"
+
+    # These are the three exact IDs supplied by the owner, in supplied order.
+    # Enabled selects a model; it does not authorize calls or assert availability.
+    # Unknown capabilities/profiles block freezing a plan and live execution.
+    # Add/remove/rename models before a new campaign; three is not a fixed limit.
+    models:
+      - id: "GLM-5.2"
+        display_name: "GLM-5.2 on PSNC"
+        enabled: true
+        # PSNC exposes no upstream revision for this deployment; recorded as a
+        # limitation rather than invented. The returned model id is stored per response.
+        revision: null
+        # Authoritative: LiteLLM's /model/info reports context_window 1048576 for this
+        # deployment. Earlier probing had only established a 103,840-token lower bound
+        # because /v1/models omits the field; /model/info carries it.
+        context_window_tokens: 1048576
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          # Probed directly: response_format json_object returns HTTP 200 with a
+          # null content field, so native structured output does not work here.
+          structured_output: false
+          # Probed directly: GLM-5.2 always reasons and returns it in the vLLM
+          # `reasoning_content` field (417 characters even on a trivial prompt).
+          # It cannot be turned off: sending reasoning.enabled=true returns HTTP 200
+          # with an empty response, and chat_template_kwargs changes prose only.
+          # Reasoning is therefore always on but not controllable, so no
+          # disabled/enabled comparison is possible on this deployment. See D-036.
+          reasoning_control: false
+          evidence:
+            source: "Direct probes of https://llm.hpc.psnc.pl/v1 chat/completions for GLM-5.2"
+            verified_at: "2026-09-09"
+        reasoning_profiles:
+          - mode: "not_applicable"
+            request_fields: {}
+
+      - id: "Qwen3.8-27B"
+        display_name: "Qwen3.8 27B on PSNC"
+        enabled: false  # Out of scope for this run.
+        revision: null
+        context_window_tokens: null
+        capabilities: null
+        reasoning_profiles: []
+
+      - id: "DeepSeek-V4-Flash"
+        display_name: "DeepSeek V4 Flash on PSNC"
+        enabled: false  # Out of scope for this run.
+        revision: null
+        context_window_tokens: null
+        capabilities: null
+        reasoning_profiles: []
+
+  openrouter:
+    adapter: "openrouter_chat_completions"
+    api_key_env: "OPENROUTER_API_KEY"
+    base_url: "https://openrouter.ai/api/v1"
+    chat_completions_path: "/chat/completions"
+    client_library: "openai"
+    # Self-imposed operational guards, not published OpenRouter limits: OpenRouter
+    # meters by credit rather than a documented RPM/TPM. Sized for the grid-wide
+    # 100,000-token ceiling (D-038): the conservative admission bound is about
+    # 103,000 tokens per request, so 600,000 would gate dispatch to five requests a
+    # minute regardless of concurrency, and a 180s timeout risks the ambiguous
+    # deliveries seen on PSNC. Both scaled to match the PSNC block so the two
+    # providers stay comparable.
+    timeout_seconds: 900
+    max_concurrency: 8
+    requests_per_minute: 100
+    tokens_per_minute: 3000000
+
+    billing:
+      mode: "metered"
+      basis: "Frozen OpenRouter model price evidence required before live use"
+      maximum_provider_cost:
+        amount: null  # No spending cap required; show the estimate before live use.
+        currency: "EUR"
+
+    # D-032: three OpenRouter models, independent of the PSNC list.
+    # openai/gpt-4o-mini replaces inclusionai/ling-3.0-flash; the two Qwen
+    # entries are unchanged. Unlike the other five selections it is a hosted
+    # closed-weight model, so metered price evidence is mandatory before live use.
+    # Names, list length, and selected providers may change before a new campaign.
+    models:
+      - id: "qwen/qwen3-8b"
+        display_name: "Qwen3 8B on OpenRouter"
+        enabled: false  # Out of scope for the first live run.
+        revision: null
+        context_window_tokens: null
+        capabilities: null
+        reasoning_profiles: []
+
+      - id: "qwen/qwen3-32b"
+        display_name: "Qwen3 32B on OpenRouter"
+        enabled: true
+        # OpenRouter does not expose a pinnable upstream revision for this model;
+        # it routes across providers (DeepInfra, SiliconFlow). Recorded as a
+        # limitation rather than invented. The returned model id is stored per response.
+        revision: null
+        context_window_tokens: 131072
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: true
+          evidence:
+            source: "OpenRouter model page parameter table for qwen/qwen3-32b"
+            verified_at: "2026-09-08"
+        # Reasoning ON. Empirically the OpenRouter route for this model always emits
+        # thinking tokens: probes of `reasoning.enabled=false`, `reasoning.max_tokens=0`
+        # and `chat_template_kwargs.enable_thinking=false` each still produced 565-1112
+        # characters of reasoning. A "disabled" profile is therefore not achievable on
+        # this deployment and is not declared. See D-034.
+        reasoning_profiles:
+          - mode: "enabled"
+            request_fields:
+              reasoning:
+                enabled: true
+
+      - id: "openai/gpt-4o-mini"
+        display_name: "GPT-4o mini on OpenRouter"
+        enabled: false  # Out of scope for the first live run.
+        revision: null
+        context_window_tokens: null
+        capabilities: null
+        reasoning_profiles: []
+
+# Before freezing a plan, replace capabilities:null with verified booleans for
+# temperature, seed, structured_output, and reasoning_control. A reasoning-
+# capable model needs two reasoning_profiles (disabled/enabled) with exact native
+# request_fields; an incapable model needs not_applicable with request_fields:{}.
+# Do not infer capabilities from a model name or from example calls that omit
+# reasoning controls. Draft live:false allows unknown capability profiles; plan
+# and live preflight must reject them. See docs/model-catalog.md.
+
+parameter_grid:
+  # Scoped to a single configuration for the first live run. The full grid
+  # (3 prompts x 4 shot counts x 4 temperatures) returns for the real campaign.
+  prompt_variants:
+    - "strict-minimal"
+
+  # Non-zero values select an ordered prefix of the approved five demonstrations.
+  shot_counts: [5]
+  temperatures: [0.5]
+
+  # D-029: one repetition at EVERY temperature for all selected providers/models.
+  # This reduces tasks/calls by 75% versus the former 1-at-zero/5-at-nonzero grid.
+  # Keep both fields and repetition identities for future campaign configurability.
+  # Retries are separate: a task still permits at most three provider requests.
+  repetitions:
+    temperature_zero: 1
+    nonzero_temperature: 1
+
+  # These scientific values were not yet approved. Null blocks live preflight;
+  # the final values must be capability-valid for every enabled model.
+  top_p: 1.0
+  # Sized from measured evidence, not set high and hoped for. A ceiling is free in
+  # billing terms but NOT in time: with 100,000 allowed, GLM-5.2 kept reasoning until
+  # our 900s timeout killed the request, and 18 of 31 requests died that way, each
+  # burning a worker slot for 15 minutes and producing nothing.
+  #
+  # Every successful GLM-5.2 response recorded so far fits well inside 16,000: the
+  # largest is 8,605 completion tokens and the run before it peaked at 5,613. At the
+  # observed 20-28 tokens per second, 16,000 caps a single request near 800 seconds,
+  # inside the timeout, so a runaway is truncated rather than left to hang. That makes
+  # truncation improbable while keeping the run bounded. See D-040.
+  max_output_tokens: 16000
+
+generation:
+  output_schema: "schemas/lexical-decomposition.schema.json"
+
+  # Disabled to keep the main comparison protocol common across models/providers.
+  provider_native_structured_output: false
+
+  # Three provider requests TOTAL per fully resolved variable task:
+  # Attempt 1 is initial. Attempts 2/3 may correct content-invalid responses or
+  # resend after a classified safe transient failure; all share this total of 3.
+  max_generation_attempts_per_task: 3
+
+  # SDK/provider clients may not add inner generation retries.
+  provider_sdk_auto_retries: 0
+
+  correction_attempt:
+    preserve_scientific_parameters: true
+    include_previous_raw_response: true
+    include_validation_errors: true
+
+  retryable_results:
+    - "empty_response"
+    - "html_response"
+    - "no_json_found"
+    - "json_parse_error"
+    - "schema_validation_error"
+    - "semantic_validation_error"
+    - "classified_transient_provider_error"
+
+evaluation:
+  # Accepted D-022 protocol: one-to-one system-member partial credit in both
+  # simple/system directions and system/system comparisons. Container labels
+  # are excluded; matched/missing/extra counts determine fractional TP/FN/FP.
+  # Code hash and embedding artifact must still be frozen before execution.
+  scorer_version: "january-derived-member-credit-v1"
+  similarity_model: "sentence-transformers/all-MiniLM-L6-v2"
+  similarity_model_revision: "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  similarity_threshold: 0.80
+  score_symmetric_system_identifier: false
+  score_asymmetric_system_identifier: false
+  terminal_invalid_prediction: "explicit_empty"
+
+database:
+  dsn_env: "DATABASE_URL"
+  required_major_version: 16
+
+  # This is a mandatory versioned protocol, not a switch for dropping evidence.
+  # It requires full prompts, sanitized requests, raw responses, extraction and
+  # validation evidence, predictions, item/component scores, every repetition,
+  # Exact/Close precision/recall/F1 with confusion contributions and denominators,
+  # every aggregate/rank, usage/cost, and state history.
+  evidence_policy: "complete-v1"
+
+cost_accounting:
+  # Covers every selected provider/model: metered prices or documented zero-cost
+  # non_billed access. Inactive providers need no credentials/pricing evidence.
+  # Unknown price is never zero. Null blocks live campaign authorization.
+  price_card_manifest: "data/manifests/price-card-glm-5.2-psnc.yml"
+  # Prices are published in USD; reporting in USD avoids inventing an FX rate.
+  reporting_currency: "USD"
+  require_complete_price_evidence_before_live: true
+  # D-027: disclose model/provider totals, token and retry assumptions, expected
+  # scenarios and a conditional worst-case estimate before any live execution.
+  # An estimate is not a spending ceiling. No paid calibration is implicit.
+  require_pre_run_estimate: true
+  estimate_policy_version: "pre-run-estimate-v1"
+
+execution:
+  # One invocation advances all selected grids through generation, validation,
+  # scoring, aggregation, ranking, and required reports, with durable checkpoints.
+  continue_until_complete: true
+  continue_unaffected_providers: true
+  scheduler: "provider_fair"
+
+  # Worker count is operational and still needs to be frozen for a live campaign.
+  worker_count: 2
+  resume_enabled: true
+  task_lease_seconds: 300
+  heartbeat_seconds: 30
+
+  # Optional only: null means no enforced monetary ceiling, not missing approval
+  # or zero cost. Zero means an actual zero ceiling if explicitly configured.
+  # Account for every call; atomically enforce only non-null optional caps.
+  # The owner receives a cost estimate and authorizes live work before dispatch.
+  maximum_campaign_cost:
+    amount: null
+    currency: "EUR"
+
+reporting:
+  group_by:
+    - "evaluation_population"
+    - "provider"
+    - "model"
+    - "reasoning_profile"
+    - "prompt_variant"
+    - "shot_count"
+    - "temperature"
+    - "repetition"
+    - "category"
+    - "subcategory"
+    - "component"
+    - "configuration_rank"
+    - "rankability_status"

@@ -1,0 +1,25 @@
+{
+  "label": "Weight without clothes",
+  "definition": "current weight in kilogram without clothes; in case of pregnancy: last weight before pregnancy",
+  "hasProperty": "mass",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q11423",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "person",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q215627",
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "event: latest",
+      "on": "mass"
+    },
+    {
+      "label": "state: naked",
+      "on": "person"
+    },
+    {
+      "label": "state: not pregnant",
+      "on": "person"
+    }
+  ]
+}

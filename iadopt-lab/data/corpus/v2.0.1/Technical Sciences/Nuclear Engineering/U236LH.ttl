@@ -1,0 +1,55 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+<http://example.org/CCA/U236LH>
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Number of Uranium-236 atoms in sea water" ;
+    rdfs:comment 
+        """Number of Uranium-236 atoms per unit mass in sea water from discharges of the nuclear fuel reprocessing plant at La Hage, France. Uranium-236 is a radioactive isotope of element Iodine, with a half-life of about 23.4 million years.
+        Units: atoms kg-1""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/134" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://www.wikidata.org/entity/Q139568528> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "source: nuclear fuel reprocessing plant La Hague, France" ;
+             iop:constrains <https://www.wikidata.org/entity/Q5955496> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q184395> ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q5955496> .
+
+<https://www.wikidata.org/entity/Q139568528>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "number density per unit mass" .
+
+<https://www.wikidata.org/entity/Q184395>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "sea water" .
+
+<https://www.wikidata.org/entity/Q5955496>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "Uranium-236" .

@@ -1,0 +1,25 @@
+{
+  "label": "Global fallout of U‑236 (U236GF)",
+  "definition": "Global fallout of U‑236 (U236GF) in atoms kg-1 in the artic sea",
+  "hasProperty": "number density per unit mass",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q139568528",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "Uranium‑236 / sea water",
+    "hasDenominator": "sea water",
+    "hasNumerator": "Uranium‑236"
+  },
+  "hasMatrix": "arctic ocean",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q788",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "process: fallout",
+      "on": "Uranium‑236"
+    },
+    {
+      "label": "source: global",
+      "on": "Uranium‑236"
+    }
+  ]
+}

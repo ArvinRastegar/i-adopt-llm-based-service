@@ -1,0 +1,54 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C17
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)" ;
+    rdfs:comment 
+        """The amount of docosahexaenoic acid relative to dry weight in an organism.""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/23" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/AmountOfSubstancePerMass> ;
+    iop:hasConstraint 
+        [ a iop:Constraint ;
+             rdfs:label "state: dry" ;
+             iop:constrains <https://www.wikidata.org/entity/Q7239> ;
+        ] .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q423345> ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q7239> .
+
+<https://qudt.org/vocab/quantitykind/AmountOfSubstancePerMass>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "amount of substance per mass" .
+
+<https://www.wikidata.org/entity/Q423345>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "docosahexaenoic acid" .
+
+<https://www.wikidata.org/entity/Q7239>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "organism" .

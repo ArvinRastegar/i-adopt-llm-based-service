@@ -1,0 +1,49 @@
+@prefix iop: <https://w3id.org/iadopt/ont/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/iadopt/challenge/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix uom: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@prefix iopp: <https://w3id.org/iadopt/pattern/> .
+@prefix patt: <http://example.org/iadopt/pattern> .
+
+ex:C27
+    a 
+        iop:Variable ;
+    rdfs:label 
+        "Mass concentration of isobutylene in chloroform" ;
+    rdfs:comment 
+        """Mass concentration of isobutylene in chloroform, measured in g/l.""" ;
+    ex:issue "https://github.com/mabablue/I-ADOPT-examples-playground/issues/33" ;
+    iop:hasObjectOfInterest 
+        _:b0 ;
+    iop:hasProperty 
+        <https://qudt.org/vocab/quantitykind/MassConcentration> .
+
+_:b0
+    a 
+        iop:Entity ,
+        iop:AsymmetricSystem ;
+    iop:hasDenominator 
+        <https://www.wikidata.org/entity/Q172275> ;
+    iop:hasNumerator 
+        <https://www.wikidata.org/entity/Q776976> .
+
+<https://qudt.org/vocab/quantitykind/MassConcentration>
+    a 
+        iop:Property ;
+    rdfs:label 
+        "mass concentration" .
+
+<https://www.wikidata.org/entity/Q172275>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "chloroform" .
+
+<https://www.wikidata.org/entity/Q776976>
+    a 
+        iop:Entity ;
+    rdfs:label 
+        "isobutylene" .

@@ -1,0 +1,19 @@
+{
+  "label": "BPM Mean heart rate",
+  "definition": "mean heart rate, beats per minute (ECG-derived)",
+  "hasProperty": "count",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/Count",
+  "hasStatisticalModifier": "mean",
+  "hasStatisticalModifierURI": "https://www.wikidata.org/entity/Q2796622",
+  "hasObjectOfInterest": "heart beat",
+  "hasObjectOfInterestURI": "http://purl.bioontology.org/ontology/RCD/X76JX",
+  "hasMatrix": "person",
+  "hasMatrixURI": "hhttps://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "normalization: per minute",
+      "on": "count"
+    }
+  ]
+}

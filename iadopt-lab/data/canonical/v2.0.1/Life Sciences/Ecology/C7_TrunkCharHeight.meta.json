@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:92a52afc878553041b4682672dc8abfc92c0896f95c73336360d8a796744527f",
+  "source_iri": "http://example.org/iadopt/challenge/C7",
+  "source_path": "Life Sciences/Ecology/C7_TrunkCharHeight.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Ecology",
+  "category_path": "Life Sciences/Ecology",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "9a2f92b5bc6272d7138dfbceea9cf7c52b31c85d",
+  "source_byte_length": 1876,
+  "source_sha256": "af1dcc7b41986df1226e4a07552cf23a6dcc69c90493fed194a2cad638d77a56",
+  "gold_sha256": "7e73c77a7e7ad6f7f3f5c21de6338404dc5e0e62f440411f382a252266d4f216",
+  "record_sha256": "b935c57b07eea623b76d387dc4b1c5c5bfb8908018de9b732a820bf526f066dc",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

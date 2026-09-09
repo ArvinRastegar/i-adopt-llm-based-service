@@ -1,0 +1,28 @@
+{
+  "label": "solubility of naphthalene in water at room temperature",
+  "definition": "solubility measurement of napathalene in deionized water at room temperature by monitoring absorption at 279 nm, measured in mg/L",
+  "hasProperty": "mass concentration",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassConcentration",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "naphthalene (C10H8) / water",
+    "hasDenominator": "water",
+    "hasNumerator": "naphthalene (C10H8)"
+  },
+  "hasMatrix": "",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "condition: at room temperature",
+      "on": "mass concentration"
+    },
+    {
+      "label": "resistivity: > 1 MOhm cm",
+      "on": "water"
+    },
+    {
+      "label": "state: dissolved",
+      "on": "naphthalene (C10H8)"
+    }
+  ]
+}

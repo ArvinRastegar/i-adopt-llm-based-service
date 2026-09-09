@@ -1,0 +1,18 @@
+{
+  "label": "Flood risk index related to mobility and accessibility of an urban area",
+  "definition": "Flood risk index related to mobility and accessibility when streets around the houses are flooded",
+  "hasProperty": "index",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q1738991",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "risk",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q104493",
+  "hasMatrix": "urban area",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q702492",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "cause: pluvial flood to mobility and accessibility of an urban area",
+      "on": "risk"
+    }
+  ]
+}

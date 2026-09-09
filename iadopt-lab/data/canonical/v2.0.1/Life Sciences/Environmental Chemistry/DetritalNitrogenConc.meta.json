@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:f8d903201bc77e3994d801fb2cda158b7cc1a89a71de3c1babcabe2cb8726168",
+  "source_iri": "http://example.org/iadopt/challenge/nitrCon",
+  "source_path": "Life Sciences/Environmental Chemistry/DetritalNitrogenConc.ttl",
+  "category": "Life Sciences",
+  "subcategory": "Environmental Chemistry",
+  "category_path": "Life Sciences/Environmental Chemistry",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "8f3e55721c555d32ac75276048612da14d89ca99",
+  "source_byte_length": 2050,
+  "source_sha256": "f56891596c243251d4213ef88d1822ceeb7bcc9777a94ea0d0d04c27308c11f5",
+  "gold_sha256": "d7982299eaf2834a0116ae6e4443d5fa910ecd90a7091aa8d88780d6d59faad9",
+  "record_sha256": "c6e66009a314bf4f6e06ccfa4edd23a9c8d1a4290ba3ae977725ecf36ce2d827",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

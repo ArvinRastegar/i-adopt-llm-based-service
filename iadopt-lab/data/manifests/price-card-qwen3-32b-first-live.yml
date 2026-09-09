@@ -1,0 +1,16 @@
+currency: USD
+models:
+  openrouter/qwen/qwen3-32b:
+    basis: OpenRouter listed pay-as-you-go price for qwen/qwen3-32b
+    fx_to_reporting: '1'
+    input_per_million: '0.14'
+    mode: metered
+    note: Priced at the most expensive routed provider (SiliconFlow) so the estimate
+      is an upper bound rather than a best case.
+    output_per_million: '0.57'
+    provenance: OpenRouter model page for qwen/qwen3-32b, read 2026-09-08; listed
+      $0.08 input / $0.28 output per 1M tokens. OpenRouter routes across upstream
+      providers (DeepInfra $0.08/$0.28, SiliconFlow $0.14/$0.57), so actual cost can
+      exceed the listed floor.
+retrieved_at: '2026-09-08'
+schema_version: price-card-v1

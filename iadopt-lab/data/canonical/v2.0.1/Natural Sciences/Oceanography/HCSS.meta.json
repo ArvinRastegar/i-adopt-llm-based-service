@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:d0bdb658e4dd94099f168ce241e60f31580a3d7828c32150d3cb70497f2d0883",
+  "source_iri": "http://example.org/iadopt/challenge/someVar",
+  "source_path": "Natural Sciences/Oceanography/HCSS.ttl",
+  "category": "Natural Sciences",
+  "subcategory": "Oceanography",
+  "category_path": "Natural Sciences/Oceanography",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "301ddbd82560eb4ea00f6acfdb272418724a57d6",
+  "source_byte_length": 1630,
+  "source_sha256": "d55cee861232361c5aeb167971559236e5de20cce440e0b6bbe7d4b434be10a8",
+  "gold_sha256": "0c9becb3b43055d3e38e24605719b5cec7789f4f95389a3b03c12237b2f24d4e",
+  "record_sha256": "b5849b20129bdbda1a037df7bc064120e081af931d0c4592111d341b6c4325a4",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

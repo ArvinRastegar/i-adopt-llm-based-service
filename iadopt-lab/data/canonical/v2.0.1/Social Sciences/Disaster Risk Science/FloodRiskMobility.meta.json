@@ -1,0 +1,23 @@
+{
+  "schema_version": "corpus-record-v2",
+  "variable_id": "urn:iadopt-lab:variable:e3641426a8b3febb4bf69bf5bc59f8f4f66294a1c12ace90ce5ec878bbfc1772",
+  "source_iri": "http://example.org/iadopt/challenge/FloodRiskMobility",
+  "source_path": "Social Sciences/Disaster Risk Science/FloodRiskMobility.ttl",
+  "category": "Social Sciences",
+  "subcategory": "Disaster Risk Science",
+  "category_path": "Social Sciences/Disaster Risk Science",
+  "repository": "https://github.com/i-adopt/Corpus",
+  "tag": "v2.0.1",
+  "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+  "tree": "df665d32bb2433a60742c80a4a53908dc7ebde0c",
+  "git_blob": "4e1bdeb3babffb6c7c9805bb529774c63801f769",
+  "source_byte_length": 1642,
+  "source_sha256": "ce02ac67de701cc52b44b0d58fbfc54eca881f8df2cc8744c73d813f4952a56a",
+  "gold_sha256": "f7954fb5a520ef3eb38cb90f9ea7c6c6e7dc3f74b53105a2e8d86f8f9c29ee53",
+  "record_sha256": "d2c28710d0765d1f2639edca8853572d2bfd1b6d17c24bf6136bcdffdcc295cf",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+  "importer_version": "corpus-lexical-v1",
+  "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
+  "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",
+  "demonstration_position": null
+}

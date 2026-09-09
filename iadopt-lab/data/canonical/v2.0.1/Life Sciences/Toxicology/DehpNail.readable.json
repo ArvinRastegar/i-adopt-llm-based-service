@@ -1,0 +1,16 @@
+{
+  "label": "Mass ratio of dehp in nail",
+  "definition": "Mass ratio of dehp in nail, measured for a person.",
+  "hasProperty": "mass fraction",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MassFraction",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": {
+    "AsymmetricSystem": "diethylhexyl phthalate  / nail",
+    "hasDenominator": "nail",
+    "hasNumerator": "diethylhexyl phthalate "
+  },
+  "hasMatrix": "person",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q5",
+  "hasContextObject": "",
+  "hasConstraint": []
+}

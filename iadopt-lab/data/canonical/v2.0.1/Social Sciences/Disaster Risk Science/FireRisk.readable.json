@@ -1,0 +1,22 @@
+{
+  "label": "Fire risk per district",
+  "definition": "Fire risk in urban areas per district.",
+  "hasProperty": "index",
+  "hasPropertyURI": "https://www.wikidata.org/entity/Q1738991",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "risk",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q104493",
+  "hasMatrix": "urban area",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q702492",
+  "hasContextObject": "",
+  "hasConstraint": [
+    {
+      "label": "cause: fire",
+      "on": "risk"
+    },
+    {
+      "label": "normalization: district",
+      "on": "index"
+    }
+  ]
+}

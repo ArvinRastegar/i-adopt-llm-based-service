@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iadopt-lab.local/schemas/corpus-manifest-v1",
+  "title": "Corpus v2.0.1 immutable provenance manifest",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "repository", "tag", "commit", "tree", "license", "source_lock_sha256", "importer_version", "importer_sha256", "lexical_schema_sha256", "regression_counts", "file_count", "demonstrations_sha256", "evaluation_population_sha256", "files", "manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "corpus-manifest-v1"},
+    "repository": {"const": "https://github.com/i-adopt/Corpus"},
+    "tag": {"const": "v2.0.1"},
+    "commit": {"const": "2598bf91fa927b78a6529bae7864ef0f7d485b73"},
+    "tree": {"const": "df665d32bb2433a60742c80a4a53908dc7ebde0c"},
+    "license": {"type": "object", "additionalProperties": false, "required": ["identifier", "source"], "properties": {"identifier": {"const": "CC-BY-4.0"}, "source": {"const": "https://doi.org/10.5281/zenodo.22011435"}}},
+    "source_lock_sha256": {"$ref": "#/$defs/hash"},
+    "importer_version": {"const": "corpus-lexical-v1"},
+    "importer_sha256": {"$ref": "#/$defs/hash"},
+    "lexical_schema_sha256": {"$ref": "#/$defs/hash"},
+    "file_count": {"const": 102},
+    "demonstrations_sha256": {"$ref": "#/$defs/hash"},
+    "evaluation_population_sha256": {"$ref": "#/$defs/hash"},
+    "manifest_sha256": {"$ref": "#/$defs/hash"},
+    "regression_counts": {"const": {"variables": 102, "matrix": 51, "context_object": 11, "statistical_modifier": 9, "variables_with_constraints": 85, "constraints": 157, "symmetric_systems": 2, "symmetric_parts": 4, "asymmetric_systems": 36, "ratio_systems": 31, "source_target_systems": 5}},
+    "files": {"type": "array", "minItems": 102, "maxItems": 102, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false,
+      "required": ["source_path", "git_blob", "source_sha256", "source_byte_length", "variable_id", "category", "subcategory", "category_path", "gold_sha256", "record_sha256"],
+      "properties": {
+        "source_path": {"type": "string", "pattern": "^[^/]+/[^/]+/.+\\.ttl$"},
+        "git_blob": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "source_sha256": {"$ref": "#/$defs/hash"},
+        "source_byte_length": {"type": "integer", "minimum": 1},
+        "variable_id": {"type": "string", "minLength": 1},
+        "category": {"type": "string", "minLength": 1},
+        "subcategory": {"type": "string", "minLength": 1},
+        "category_path": {"type": "string", "minLength": 3},
+        "gold_sha256": {"$ref": "#/$defs/hash"},
+        "record_sha256": {"$ref": "#/$defs/hash"}
+      }}}
+  },
+  "$defs": {"hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

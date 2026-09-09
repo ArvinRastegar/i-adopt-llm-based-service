@@ -1,0 +1,27 @@
+{
+  "label": "estimation of the energy of reaction upon combustion of hexanol",
+  "definition": "energy released upon combustion of 99.98(w/w) pure hexanol in air at atmospheric pressure and atmospheric oxygen level.",
+  "hasProperty": "molar energy",
+  "hasPropertyURI": "https://qudt.org/vocab/quantitykind/MolarEnergy",
+  "hasStatisticalModifier": "",
+  "hasObjectOfInterest": "hexanol (C6H14O)",
+  "hasObjectOfInterestURI": "https://www.wikidata.org/entity/Q76933",
+  "hasMatrix": "combustion reaction",
+  "hasMatrixURI": "https://www.wikidata.org/entity/Q133235",
+  "hasContextObject": "air",
+  "hasContextObjectURI": "https://www.wikidata.org/entity/Q7391292",
+  "hasConstraint": [
+    {
+      "label": "condition: at 1 atm pressure",
+      "on": "combustion reaction"
+    },
+    {
+      "label": "condition: at atmospheric oxygen level",
+      "on": "combustion reaction"
+    },
+    {
+      "label": "purity: 99.98(w/w)",
+      "on": "hexanol (C6H14O)"
+    }
+  ]
+}
