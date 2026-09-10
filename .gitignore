@@ -189,6 +189,10 @@ data/embeddings/
 iadopt-lab/.runtime/
 iadopt-lab/outputs/*
 !iadopt-lab/outputs/README.md
+# Shot-count ablation results: a 15 MB raw JSONL and its Excel workbook. Ignored for
+# the same reason official rankings are - they are large, regenerated evidence that
+# lives on disk, not in Git. The runner and its documentation ARE tracked.
+iadopt-lab/experiments/output/
 iadopt-lab/data/embeddings/
 
 # Python build and tool caches, repo-wide
