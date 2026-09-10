@@ -1,0 +1,11 @@
+type: Variable Design Pattern
+id: https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP35.yaml
+name: matrix (natural process)
+comment: A phenomenon in which the object is involved.
+design: The phenomena must be repesented with a simple matrix.
+involved_components:
+  - matrix
+associated_pattern: []
+associated_mapping: ~
+example: combustion
+gh_issue: https://github.com/mabablue/I-ADOPT-examples-playground/issues/81

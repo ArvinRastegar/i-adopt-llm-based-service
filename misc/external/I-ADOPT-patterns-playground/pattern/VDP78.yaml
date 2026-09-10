@@ -1,0 +1,13 @@
+type: Variable Design Pattern
+id: https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP78.yaml
+name: constraint (time)
+comment: provides time-specific information about the constrained component
+design:
+involved_components:
+  - property 
+  - object of interest
+constrained_component: ~
+associated_pattern: []
+associated_mapping: ~
+example: time (latest)
+gh_issue: https://github.com/mabablue/I-ADOPT-examples-playground/issues/36

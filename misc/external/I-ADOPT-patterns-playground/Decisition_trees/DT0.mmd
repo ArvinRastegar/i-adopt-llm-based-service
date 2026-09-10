@@ -1,0 +1,25 @@
+---
+title: PROPERTY QUALITATIVE
+---
+flowchart TD
+    A[Property] --> B{Are units associated <br> with the result values?}:::white
+    B --> |false|C{Are the results <br> numbers?}:::white
+    B --> |true|D[<a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/Decisition_trees/DT1.mmd'>DT1</a><br> quantitative property] 
+    C --> |false|E{Are the result values <br> binary?}:::white
+    C --> |true|H{Are the numbers normalized?}:::white
+    H --> |true|HI{Are the numbers normalized to a standard range?}:::white
+    HI --> |true|HJ{Is it a proportion?}:::white
+    HJ --> |true|HM{Comparing two areas?}:::white
+    HM --> |true|HO[COVER <br> <a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP15.yaml'>VDP15</a>]
+    HM --> |false|HP[FRACTION <br> <a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP21.yaml'>VDP21</a>]
+    HJ --> |false|HN[INDEX <br> <a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP25.yaml'>VDP25</a>]
+    HI --> |false|HL[RATIOLESS DIMENSIONLESS  <br> DERIVED <br> <a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP05.yaml'>VDP05</a>]
+    H --> |false|HK[<a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP24.yaml'>VDP24</a><br> count property] 
+    E --> |true|F[<a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP22.yaml'>VDP22</a><br> binary property] 
+    E --> |false|I{Are the result values <br> ordinal?}:::white
+    I --> |true|J[<a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP11.yaml'>VDP11</a><br> ordinal property] 
+    I --> |false|K[<a href='https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP12.yaml'>VDP12</a><br> nominal property] 
+   classDef blue fill:#90D5FF
+   classDef satblue fill:#57B9FF 
+   classDef white fill:#f3f6f4
+   classDef green fill:#6aa84f

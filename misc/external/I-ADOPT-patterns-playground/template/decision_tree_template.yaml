@@ -1,0 +1,21 @@
+type: "Decision Tree"
+id: URI
+name: ""
+root:
+  question: ""
+  branches:
+    - response: true
+      question: ""
+      branches:
+        - response: true
+          pattern: URL
+          decomposition: true
+        - response: true
+          pattern: URL
+          decomposition: true
+    - response: false
+      pattern: ""
+      decomposition: true
+  question: ""
+  branches:
+    - response: false

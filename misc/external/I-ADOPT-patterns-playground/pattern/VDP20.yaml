@@ -1,0 +1,16 @@
+type: Variable Design Pattern
+id: https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP20.yaml
+name: property (ratioless derived)
+comment: Derived property without ratio. 
+design: Use property with a single object of interest.
+instances:
+  - angle
+  - direction
+involved_components:
+  - property
+  - object of interest (single)
+associated_patterns: 
+  - https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP28.yaml
+associated_mapping: ~
+example: aircraft angle of attack
+gh_issue: https://github.com/mabablue/I-ADOPT-examples-playground/issues/104

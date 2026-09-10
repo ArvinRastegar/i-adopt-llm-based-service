@@ -1,0 +1,14 @@
+type: Variable Design Pattern
+id: https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP68.yaml
+name: constraint (datum)
+comment: provides a reference point or information for the constrained component
+design: Needs to constrain a property (length)
+involved_components:
+  - constraint
+constrained_component: 
+  - property
+associated_patterns:
+  - https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP16.yaml
+associated_mapping: ~
+example: datum (above ground)
+gh_issue: https://github.com/mabablue/I-ADOPT-examples-playground/issues/10

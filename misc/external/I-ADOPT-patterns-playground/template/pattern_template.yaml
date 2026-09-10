@@ -1,0 +1,20 @@
+type: Variable Design Pattern
+id: URI
+name: "..."
+rules:
+  decomposition: true/false
+affected:
+  components:
+    - OoI / ...
+    - OoI / ...
+  constrained:
+    - OoI / ...
+    - OoI / ...
+associated_pattern: 
+  - URI
+  - URI
+associated_mapping: 
+  - URI
+  - URI
+example: ""
+gh_issue: URL

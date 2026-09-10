@@ -1,0 +1,13 @@
+type: Variable Design Pattern
+id: https://github.com/mabablue/I-ADOPT-patterns-playground/blob/main/pattern/VDP81.yaml
+name: constraint (range)
+comment: provides the range of allowed values
+design: constraint on property
+involved_components:
+  - constraint
+constrained_component:
+  - property
+associated_pattern: []
+associated_mapping: ~
+example: range (297-640 nm wavelength)
+gh_issue: https://github.com/mabablue/I-ADOPT-examples-playground/issues/103
