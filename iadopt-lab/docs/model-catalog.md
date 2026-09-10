@@ -12,6 +12,8 @@ These are the exact identifiers supplied by the experiment owner. The OpenRouter
 | OpenRouter | 1 | `qwen/qwen3-8b` | Qwen3 8B |
 | OpenRouter | 2 | `qwen/qwen3-32b` | Qwen3 32B |
 | OpenRouter | 3 | `openai/gpt-4o-mini` | GPT-4o mini |
+| OpenRouter | 4 | `mistralai/ministral-8b-2512` | Ministral 8B |
+| OpenRouter | 5 | `meta-llama/llama-3.1-8b-instruct` | Llama 3.1 8B Instruct |
 
 D-032 withdrew `inclusionai/ling-3.0-flash` and selected `openai/gpt-4o-mini` in its place; the two Qwen entries are unchanged. The count stays at six selected models across two providers, so D-029's grid arithmetic is unaffected.
 
@@ -23,6 +25,70 @@ Source for the original supply: owner-supplied 294-line Python example, SHA-256 
 entry with a missing capability profile is still only valid as an unfinished non-live
 configuration: the planner reports the gap rather than skipping the model or assuming
 reasoning is unsupported.
+
+### Reasoning as an experimental dimension
+
+`reasoning` is a real experiment parameter, not a hidden request option. The experiment
+states **what** it wants — `enabled` or `disabled` — and each model's `reasoning_profiles`
+entry says **how** that provider expresses it. `reasoning_mode` participates in
+`configuration_id` and the task fingerprint, so the two arms are distinct tasks and every
+report separates them.
+
+Only models with a measured, working control get both arms. A model that cannot reason gets
+`not_applicable` and exactly one arm, because two identical arms would be a meaningless
+doubling of cost.
+
+| Provider | Model | disabled | enabled | Mechanism |
+|---|---|:--:|:--:|---|
+| PSNC | `GLM-5.2` | yes | **excluded** | `enable_thinking` false / true; enabled excluded by D-044 |
+| PSNC | `Qwen3.8-27B` | yes | **excluded** | `enable_thinking` false / true; enabled excluded by D-044 |
+| PSNC | `DeepSeek-V4-Flash` | — | — | `not_applicable`; emits no reasoning |
+| OpenRouter | `qwen/qwen3-8b` | yes | yes | `reasoning.enabled` false / true |
+| OpenRouter | `qwen/qwen3-32b` | yes | yes | **`/no_think` suffix to disable, `reasoning.enabled=true` to enable** |
+| OpenRouter | `openai/gpt-4o-mini` | — | — | `not_applicable`; emits no reasoning |
+| OpenRouter | `mistralai/ministral-8b-2512` | — | — | `not_applicable`; emits no reasoning |
+| OpenRouter | `meta-llama/llama-3.1-8b-instruct` | — | — | `not_applicable`; emits no reasoning |
+
+`qwen/qwen3-32b` is the reason the mechanism is per-model and per-direction rather than one
+switch negated: disabling needs the prompt suffix because OpenRouter drops
+`chat_template_kwargs`, while enabling works through the ordinary request field.
+
+Measured cost of turning reasoning on, three real 5-shot prompts per model:
+
+| Model | Latency off → on | Output tokens off → on | Valid JSON |
+|---|---|---|---|
+| `GLM-5.2` | 3.3s → **233.2s** | 80 → 3,111 | 3/3 → 2/3 |
+| `Qwen3.8-27B` | 2.2s → 57.7s | 98 → 3,529 | 3/3 → 2/3 |
+| `qwen/qwen3-8b` | ~1s → 20.1s | ~90 → 875 | 3/3 → 3/3 |
+| `qwen/qwen3-32b` | 3.0s → 33.1s | 90 → 1,291 | 3/3 → 3/3 |
+
+Reasoning is 6x to 70x slower and produces 9x to 39x more output tokens, which is what
+drives the separate execution settings per campaign. The PSNC validity drop from 3/3 to 2/3
+is a small sample and should not be read as a finding yet, but it is worth watching: if it
+holds at scale, reasoning costs validity as well as time.
+
+### Execution settings and why
+
+Settings are frozen per campaign rather than per model, because the output ceiling is
+grid-wide and campaigns are the unit of freezing. Every remaining arm turned out to need
+the same settings, so the remaining work is **one** campaign rather than several.
+
+| Setting | Value | Why |
+|---|---:|---|
+| Concurrency | 8 | Both reasoning-on Qwen models completed 16/16 under a 120s timeout at concurrency 8, and maximum latency FELL from 4 to 8 (105.6s and 94.6s versus 117.0s and 96.5s), so the gateway is not saturating. Not pushed higher because `qwen/qwen3-8b` is rate-limited upstream by Alibaba |
+| Worker count | 8 | Matched to the provider gate so the pool can fill it |
+| Timeout | 120s | Owner-set. Every included arm fits: measured maxima are 117.0s (qwen3-8b), 96.5s (qwen3-32b) and ~14s (z-ai/glm-5.2); the two non-reasoning models run 1.5-3.9s |
+| Max output | 8,000 | Above every measured output by at least 6.7x, and under `qwen/qwen3-8b`'s published 8,192 cap, which is the binding limit across the five arms |
+
+Excluded rather than given their own settings: **PSNC reasoning-on for `GLM-5.2` and
+`Qwen3.8-27B`** (D-044, D-045) — at 120s, GLM timed out on 12/16 and Qwen3.8-27B on 8-9/16,
+at every concurrency tried including 1 with a 20s cooldown, because latency tracks output
+length at ~60 tokens/sec rather than server load.
+
+An earlier revision of this table proposed concurrency 24 and a 900s timeout for PSNC
+reasoning-on. That carried a number validated with reasoning *off*, where calls take 2.6s,
+into a workload where they take 233s and hold a slot 90 times longer. Re-measuring at the
+owner's 120s timeout showed the workload does not fit at any concurrency.
 
 ### Measured reasoning controls
 

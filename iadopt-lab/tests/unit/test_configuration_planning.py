@@ -77,11 +77,22 @@ def _full_grid_configuration(providers, controlled):
     return resolve_configuration(_snapshot(data))
 
 
+# 3 prompts x 4 shot counts x 4 temperatures = 48 configurations per model and reasoning
+# profile, over 97 variables. The catalog now holds 3 PSNC and 5 OpenRouter models, so the
+# counts below are 48 x 97 x models, doubled where every model exposes controlled reasoning.
+# OpenRouter holds 6 since z-ai/glm-5.2 was added to carry GLM's reasoning arm (D-045).
+# Hard-coded on purpose: adding a model should force a deliberate update here rather than
+# quietly changing the size of the documented grid.
+_PSNC_MODELS, _OPENROUTER_MODELS, _CELL = 3, 6, 48 * 97
+
+
 @pytest.mark.parametrize("providers,controlled,expected_calls", [
-    (["psnc"], False, 13968), (["openrouter"], False, 13968),
-    (["psnc", "openrouter"], False, 27936),
-    (["psnc"], True, 27936), (["openrouter"], True, 27936),
-    (["psnc", "openrouter"], True, 55872),
+    (["psnc"], False, _CELL * _PSNC_MODELS),
+    (["openrouter"], False, _CELL * _OPENROUTER_MODELS),
+    (["psnc", "openrouter"], False, _CELL * (_PSNC_MODELS + _OPENROUTER_MODELS)),
+    (["psnc"], True, _CELL * _PSNC_MODELS * 2),
+    (["openrouter"], True, _CELL * _OPENROUTER_MODELS * 2),
+    (["psnc", "openrouter"], True, _CELL * (_PSNC_MODELS + _OPENROUTER_MODELS) * 2),
 ])
 def test_current_one_repetition_grid_counts(providers, controlled, expected_calls):
     """Count each selected provider's own models with singleton runs at every temperature.
@@ -119,8 +130,11 @@ def test_draft_keeps_all_models_and_blocks_plan_without_capabilities():
         for model in profile["models"]:
             model.update(enabled=True, capabilities=None, reasoning_profiles=[])
     resolved = resolve_configuration(_snapshot(data))
-    assert sum(len(profile["models"]) for profile in resolved.data["providers"].values()) == 6
-    assert len(resolved.issues) >= 6
+    # 3 PSNC + 5 OpenRouter. Every catalog entry survives resolution when enabled, and
+    # each one lacking capabilities contributes at least one blocking issue.
+    catalog = sum(len(profile["models"]) for profile in resolved.data["providers"].values())
+    assert catalog == _PSNC_MODELS + _OPENROUTER_MODELS
+    assert len(resolved.issues) >= catalog
     assert original.data["parameter_grid"]["repetitions"] == {"temperature_zero": 1, "nonzero_temperature": 1}
     with pytest.raises(ConfigurationError, match="draft"):
         expand_campaign(resolved, _targets(), artifact_identities=ARTIFACTS)

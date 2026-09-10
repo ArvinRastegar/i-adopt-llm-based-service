@@ -570,3 +570,59 @@ def test_an_exhausted_transient_error_fails_the_task_not_the_provider():
 
     assert ("set_provider_state", "paused") not in calls, "a 429 must not pause the provider"
     assert ("release", "operational_failed") in calls
+
+
+def test_an_empty_poll_does_not_abandon_queued_work(monkeypatch):
+    """Queued tasks must survive a moment when nothing happens to be claimable.
+
+    A provider cooldown that expires between the claim attempt and the delay calculation
+    leaves no work to claim and no wait to report. Breaking on that first empty poll
+    abandoned 9,929 queued tasks mid-campaign. The loop must back off and look again, and
+    give up only after several consecutive polls find nothing.
+    """
+    from iadopt_lab import workflow
+    from iadopt_lab.workflow import _IDLE_POLLS_BEFORE_STOP, run_campaign
+
+    polls = {"claims": 0}
+
+    class Repo:
+        def get_campaign(self, campaign_id):
+            # Work remains, but none of it is claimable right now.
+            return {"id": campaign_id, "mode": "synthetic", "state": "running",
+                    "configuration": {"lab_plan_sha256": "plan-hash"},
+                    "authorizations": [], "providers": [{"provider": "psnc", "state": "ready",
+                                                         "cooldown_until": None}],
+                    "states": {"queued": 500, "complete": 10}}
+
+        def reconcile(self, campaign_id):
+            return {"repaired": [], "ambiguous": []}
+
+        def set_campaign_state(self, campaign_id, state):
+            return {"state": state}
+
+        def claim_tasks(self, *args, **kwargs):
+            polls["claims"] += 1
+            return []
+
+    services = _services(Repo())
+    services.bundle = {"plan": {"mode": "synthetic", "sha256": "plan-hash",
+                                "counts": {"tasks": 510}},
+                       "configuration": {"campaign": {"live_calls_enabled": False,
+                                                      "providers": ["psnc"]},
+                                         "execution": {"worker_count": 2, "task_lease_seconds": 300,
+                                                       "heartbeat_seconds": 30},
+                                         "providers": {"psnc": {"max_concurrency": 2,
+                                                                "requests_per_minute": 60,
+                                                                "tokens_per_minute": 100000}}}}
+    monkeypatch.setattr(workflow, "verify_bundle", lambda *a, **k: None)
+    # Collapse the back-off waits so the test is fast; bind the real sleep first, or the
+    # replacement calls itself.
+    real_sleep = asyncio.sleep
+    monkeypatch.setattr(workflow.asyncio, "sleep", lambda *a, **k: real_sleep(0))
+
+    result = asyncio.run(run_campaign("c1", services))
+
+    # It gave up eventually, but only after repeated looks, and it said why.
+    assert result["stop_reason"] == "no_claimable_work"
+    assert polls["claims"] >= _IDLE_POLLS_BEFORE_STOP, (
+        f"gave up after {polls['claims']} polls; must retry at least {_IDLE_POLLS_BEFORE_STOP}")

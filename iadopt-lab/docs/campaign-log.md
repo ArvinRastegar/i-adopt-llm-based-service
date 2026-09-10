@@ -59,43 +59,152 @@ The first reasoning-off campaign, run to validate D-041. 97 tasks, Close F1 **0.
 against qwen3-32b's 0.316 measured earlier *with* reasoning on. This is the evidence that
 disabling reasoning is not a quality trade-off.
 
-## Interrupted campaign
-
 ### `844df00e` — OpenRouter full grid
 
-Same grid as `5cdc9417`, on OpenRouter, metered. Stopped by the operator partway.
+The main OpenRouter result. Same grid as `5cdc9417`, metered, reasoning off. It ran to
+completion; an earlier revision of this log described it as interrupted, which was wrong.
 
 | | |
 |---|---|
 | Provider / models | OpenRouter: `openai/gpt-4o-mini`, `qwen/qwen3-32b`, `qwen/qwen3-8b` |
-| Scope | 10,476 tasks planned |
-| Progress at stop | 7,906 complete, 144 operational failures, ~2,400 outstanding |
-| Cost | **$1.55 spent** of a $25 hard cap; projected $2.05 for the full run |
-| State | resumable — `iadopt-lab resume` continues it if `parameters.yml` is unchanged |
+| Scope | 108 configurations x 97 variables = **10,476 tasks** |
+| Outcome | 10,332 complete, 144 operational failures, **75/108 rankable** |
+| Cost | **$2.03** against a $25 hard cap |
+| Export | `ranking_id 7bdfd213`; JSON under `outputs/` (gitignored) |
 
-Two things a reader needs to know about this campaign:
+| Model | Rankable | Mean Close F1 | Best |
+|---|---|---|---|
+| `qwen/qwen3-32b` | 36/36 | 0.291 | **0.371** |
+| `qwen/qwen3-8b` | 3/36 | 0.347 | 0.362 |
+| `openai/gpt-4o-mini` | 36/36 | 0.225 | 0.294 |
 
-**No configuration finished.** Task claim order is by fingerprint (a content hash), so the
-scheduler spreads work uniformly across the grid rather than completing configurations one
-at a time. At the stop, per-configuration completion ranged from 55 to 80 of 97 with a
-median of 68 — every one of the 108 configurations was short. Under
-`ranking.require_complete_population` that means the 7,906 finished tasks currently yield
-**zero rankable configurations**. The work is durable and resume picks it up, but a partial
-stop here is not a partial result.
+Best configuration: **qwen/qwen3-32b, constraint-decomposition, 3 shots, T=0.0 — 0.371**.
 
-**All 144 failures are `qwen/qwen3-8b`**, rate-limited upstream by Alibaba
-(`"temporarily rate-limited upstream … add your own key to accumulate your rate limits"`).
-The other two models had zero failures. At a 6.8% task failure rate spread evenly, 31 of
-its 36 configurations already contained at least one failure, so qwen3-8b is expected to be
-largely unrankable even after a full resume. That is a provider account limit, not
-something the code can fix.
+**All 144 failures are `qwen/qwen3-8b`**, rate-limited upstream by Alibaba. The other two
+models had zero. `ranking.require_complete_population` needs all 97 variables, so a 6.8%
+task failure rate spread evenly left only 3 of its 36 configurations rankable — its mean
+above is over 3 configurations, not 36, and is not comparable with the other rows.
 
-Resuming requires `parameters.yml` untouched. Adding a model changes the configuration
-hash, hence the plan hash, hence the campaign identity — `resume` will refuse with
-`Frozen inputs resolve to campaign X, not Y` rather than silently continuing. To add models
-without discarding this work, finish this campaign first and run the new models as a
-separate campaign on the identical grid; per-configuration scores remain comparable because
-the corpus, prompts, scorer and population are unchanged.
+**This campaign only produced results because of the `tasks_terminal` fix (D-042).**
+Finalization previously refused while any task was incomplete, and a non-retryable
+operational failure can never reach `complete`. Without that change these 144 failures
+would have discarded all 10,332 successful results.
+
+Against PSNC on the same grid: best PSNC 0.391 versus OpenRouter 0.371, and PSNC ran free.
+
+## Planned continuation campaign
+
+All remaining work is **one OpenRouter campaign**. Everything left shares a provider,
+ceiling, timeout and concurrency, so it runs as a single resumable unattended job rather
+than several. See [Continuation strategy](#continuation-strategy) for why it cannot extend
+the finished campaigns instead.
+
+| Model | Reasoning | Measured out tok | Measured latency | Tasks | Expected |
+|---|---|---:|---:|---:|---|
+| `meta-llama/llama-3.1-8b-instruct` | `not_applicable` | 125 | 3.9s | 3,492 | $0.25 |
+| `mistralai/ministral-8b-2512` | `not_applicable` | 46 | 1.5s | 3,492 | $0.67 |
+| `qwen/qwen3-8b` | `enabled` | 1,187 | 29.9s | 3,492 | $2.39 |
+| `qwen/qwen3-32b` | `enabled` | 1,065 | 32.4s | 3,492 | $1.38 |
+| `z-ai/glm-5.2` | `enabled` | 772 | 14.0s | 3,492 | $3.81 |
+
+**17,460 tasks.** Realistic cost **$8.26** from per-model measured usage ($9.92 with a 20%
+retry allowance); the disclosed
+estimate is **$13.71** because it conservatively applies 1,200 output tokens to every
+model, including ones measured at 46. Cap **$40**, roughly 3x the conservative figure.
+
+Settings: concurrency 8, timeout 120s, ceiling 8,000. Every measured output is at least
+6.7x below the ceiling, and 8,000 stays under `qwen/qwen3-8b`'s published 8,192 cap.
+Concurrency 8 is measured, not assumed: both reasoning-on Qwen models completed 16/16
+under a 120s timeout at concurrency 8, and maximum latency *fell* from concurrency 4 to 8
+on both, so the gateway is not saturating.
+
+### What is deliberately excluded
+
+| Excluded | Why |
+|---|---|
+| PSNC `GLM-5.2` reasoning-on | 233s per call, 12/16 timeouts at 120s (D-044) |
+| PSNC `Qwen3.8-27B` reasoning-on | ~150s median, and 2/5 exceeded 120s even at concurrency 1 with a 20s cooldown (D-045) |
+| OpenRouter `qwen/qwen3.8-27b` | $37.86 for its 3,492 tasks, against a $5 per-model budget (D-045) |
+| OpenRouter `openai/gpt-4o-mini` reasoning | Emits no reasoning; its `not_applicable` arm is complete in `844df00e` |
+
+The PSNC exclusions were tested rather than assumed. Cooldown was the specific hypothesis —
+that PSNC throttles burst-like traffic — and it was disproven: at concurrency 1 with 20s
+spacing, latency still tracked output length at ~60 tokens/sec, ranging 10.9s to 274.7s.
+There is no queue to drain. D-045 has the measurements.
+
+## Reading the results: the GLM reasoning confound
+
+**This caveat is required whenever GLM reasoning results are reported, quoted or plotted.**
+
+GLM-5.2 appears in the results with both reasoning arms, as it should:
+
+| provider | model_id | reasoning_mode |
+|---|---|---|
+| `psnc` | `GLM-5.2` | `disabled` |
+| `openrouter` | `z-ai/glm-5.2` | `enabled` |
+
+Both rows are legitimate and both stay in the rankings, tables, exports and plots. The
+reasoning dimension is a real experimental parameter and is displayed normally.
+
+**But for GLM-5.2 specifically, reasoning state is confounded with deployment.** The
+disabled arm ran on PSNC and the enabled arm runs on OpenRouter, because PSNC's GLM reasons
+for 3,111 output tokens over 233 seconds and cannot fit the 120s timeout, while the same
+model family through OpenRouter reasons for 772 tokens in 14 seconds (D-044, D-045). Two
+things changed between those arms, not one, so a difference between them cannot be
+attributed to reasoning alone.
+
+The exports make this checkable rather than requiring trust: `provider` and
+`reasoning_mode` are adjacent columns in every CSV and Excel export, and the two arms even
+carry different `model_id` values, so they never silently collapse into a single "GLM-5.2"
+row. A reader who wants to treat them as one model has to do so deliberately.
+
+The other reasoning-capable models are **not** affected. `qwen/qwen3-8b` and
+`qwen/qwen3-32b` run both arms on OpenRouter, so for those two the comparison is clean and
+reasoning is the only thing that changed.
+
+**Practical note when assembling the comparison:** the two GLM arms live in *different
+campaigns*, so they never appear in a single ranking export. The disabled arm is in
+`5cdc9417` (PSNC, 3,492 completed tasks, the authoritative one); the enabled arm will be in
+the new OpenRouter campaign. Putting them side by side means joining two exports on
+`model_id` + `reasoning_mode`, which is also the moment to carry the caveat above across.
+Note that `GLM-5.2 disabled` also appears in several superseded campaigns (`ee138ed5`,
+`d6d7da21`, `fd88566b`, `2264f8fc`); use `5cdc9417` and ignore the rest.
+
+
+### Continuation strategy
+
+The existing campaigns cannot be extended with new models or a reasoning dimension. Task
+identity is `_hash({campaign, run, variable, source, gold})` and the run fingerprint itself
+contains `campaign_id`, so identity is doubly campaign-scoped and there is no cross-campaign
+deduplication. Adding a model to `parameters.yml` changes the configuration hash, hence the
+plan hash, hence the campaign — every task would be re-created as `queued` and the ~21,000
+already completed and paid for would run again.
+
+The continuation therefore scopes each new campaign to only the combinations that have no
+valid result, using `enabled:` flags and the `reasoning_profiles` list in `parameters.yml`.
+Nothing already completed appears in any of the three plans.
+
+Adding `reasoning = enabled` is safe for the same reason it is useful: `reasoning_mode` was
+always part of the run parameters, so it already participates in `configuration_id` and the
+task fingerprint. Adding an `enabled` profile to a model creates additional configurations
+and leaves every existing `disabled` identity byte-identical. `tests/unit/test_reasoning_dimension.py`
+pins exactly that, including that the grid doubles rather than shifts.
+
+### Historical reasoning labels
+
+One integrity note. Five `GLM-5.2` runs carry `reasoning_mode: not_applicable` but actually
+reasoned: they predate D-041, when GLM was believed to have no controllable reasoning. They
+hold 23 completed tasks, all in abandoned development campaigns, and no reported result
+depends on them. They are left unmodified rather than relabelled, because rewriting stored
+evidence to match a later understanding is worse than recording the discrepancy here.
+
+Conversely, `d4296797` correctly records `reasoning_mode: enabled` for `qwen/qwen3-32b` with
+97 completed tasks — the reasoning-on baseline that D-041 compares against. It used
+`max_output_tokens: 5000` against the current plan's 8,000, so it is a different
+configuration. Those 97 tasks are the one place the new plan overlaps completed work by
+model/prompt/shots/temperature (1 of 180 combinations, 0.56%, about $0.04). Re-running
+them is deliberate: mixing two output ceilings inside one model's 36-configuration grid
+would be inconsistent, and that campaign was never finalized.
 
 ## Superseded and abandoned campaigns
 

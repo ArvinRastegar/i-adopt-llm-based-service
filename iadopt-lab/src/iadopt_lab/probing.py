@@ -66,9 +66,11 @@ _HIDDEN_REASONING_SLACK = 50
 # off, and demanding an exact zero rejected `/no_think` on qwen3-32b for a 2-character
 # residue - after it had cut reasoning from 1,526 characters and 350 tokens to 2 and 35.
 _RESIDUAL_REASONING_CHARS = 16
-# Small enough that a runaway thinking model is truncated in seconds rather than
-# holding the probe open, large enough that a normal answer completes.
-_PROBE_MAX_TOKENS = 512
+# Large enough that a reasoning model's UNCONTROLLED baseline can finish, small enough that
+# a runaway is still cut short. 512 was too small: z-ai/glm-5.2 hit it mid-reasoning, and
+# the truncation made an otherwise clean verdict read as `inconclusive_truncated` when the
+# off-switch had in fact worked (0 reasoning characters in 33 tokens).
+_PROBE_MAX_TOKENS = 4096
 # The probe prompt has to provoke reasoning, or a model that would think hard on the real
 # task looks quiet here and any switch appears to work. A two-word prompt measured nothing:
 # this asks for the same shape of work the campaign does, while staying a throwaway that

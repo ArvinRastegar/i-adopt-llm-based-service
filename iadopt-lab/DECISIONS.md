@@ -569,6 +569,93 @@ Related: D-040 fixed the ceiling at 16,000; D-042 made a campaign able to finali
 terminal operational failures recorded, so a truncation no longer denies results for every
 other configuration.
 
+### D-044 — PSNC reasoning-enabled is excluded; the 120s timeout is the binding constraint
+
+**Status:** Accepted from measurement; narrows the reasoning dimension added in this pass
+
+The reasoning dimension was to cover four models: `GLM-5.2` and `Qwen3.8-27B` on PSNC,
+`qwen/qwen3-8b` and `qwen/qwen3-32b` on OpenRouter. The two PSNC models are excluded.
+
+The owner set a 120-second request timeout for the unattended run. PSNC reasoning-enabled
+generation does not fit inside it. Measured with reasoning on, 16 real 5-shot prompts per
+level, at exactly that timeout:
+
+| Model | Concurrency | Succeeded | Timed out |
+|---|---:|---:|---:|
+| GLM-5.2 | 2 | 4 of 16 | **12** |
+| Qwen3.8-27B | 4 | 7 of 16 | **9** |
+| Qwen3.8-27B | 8 | 8 of 16 | **8** |
+
+Lowering concurrency does not help, and that is the important part. Going from 4 to 8 on
+Qwen3.8-27B *improved* the result slightly (7 to 8 successes), which shows the failures are
+not queuing behind a saturated server: they are single generations that need longer than
+120 seconds to emit ~3,100-3,500 reasoning tokens. An earlier sequential measurement put
+GLM-5.2 at 233s per call with nothing competing. No concurrency setting makes a 233-second
+generation finish in 120.
+
+The consequence of running them anyway would not be slowness but emptiness. A timeout is a
+transient failure consuming one of a task's three attempts, so a ~50-75% per-attempt
+failure rate leaves most tasks operationally failed, and under
+`ranking.require_complete_population` a configuration with one failed task is unrankable.
+Essentially every PSNC reasoning-enabled configuration would produce no rankable result
+while consuming days of wall time. This is the same trap as temperature 2.0 in D-043.
+
+OpenRouter reasoning-enabled is unaffected and stays in scope. At the same 120s timeout it
+completed 16 of 16 at both concurrency 4 and 8, with p50 26-41s and maximum 94-117s.
+Maximum latency *fell* moving from 4 to 8 on both models, so concurrency 8 is used.
+
+This narrows the experiment rather than settling a question. Whether reasoning helps these
+two PSNC models is still open; answering it needs a timeout near 600-900s, which the owner
+has excluded for an unattended run. The measurements above are recorded so the decision can
+be revisited without repeating them.
+
+Supersedes the reasoning-enabled scope sketched for campaign B1; see docs/campaign-log.md.
+
+### D-045 — PSNC reasoning latency is generation length, not throttling; GLM-5.2 moves to OpenRouter
+
+**Status:** Accepted from measurement; completes D-044
+
+D-044 excluded PSNC reasoning-enabled work because it timed out at 120s. The open question
+was *why*: if PSNC were throttling traffic that looks like a burst, spacing calls out would
+fix it and the exclusion would be wrong. It was tested directly and it is not throttling.
+
+`Qwen3.8-27B`, reasoning on, **concurrency 1 with a 20-second cooldown between calls** —
+maximally spaced, nothing competing, 900s timeout:
+
+| Call | Latency | Output tokens |
+|---|---:|---:|
+| 1 | 33.3s | 2,026 |
+| 2 | 10.9s | 660 |
+| 3 | 243.0s | 14,751 |
+| 4 | 97.2s | 5,943 |
+| 5 | 274.7s | 16,000 (truncated at the ceiling) |
+
+Latency is a straight function of output length at roughly 60 tokens per second, and
+nothing else. Two of five calls exceeded 120s with zero contention, and one hit the 16,000
+ceiling. Cooldown cannot help because there is no queue to drain: the model simply decides
+how much to reason, and sometimes that is 16,000 tokens. This also explains the earlier
+confusion where concurrency 1 looked fast (10-33s) while concurrency 8 showed a 157s
+median — that was sampling variance in output length, not load.
+
+The same reading resolves the concurrency question. Median latency was flat from
+concurrency 8 (157.4s) to 16 (146.6s), which is what a server that is *not* saturating
+looks like. Concurrency was never the problem and lowering it was never the fix.
+
+**GLM-5.2 moves to OpenRouter as `z-ai/glm-5.2`.** The same model reasons far more briefly
+there: 772 output tokens in 14.0s, against 3,111 tokens and 233s on PSNC, with 3/3 valid
+JSON. That fits the 120s timeout comfortably and costs $3.81 for its 3,492 tasks.
+
+`qwen/qwen3.8-27b` on OpenRouter was evaluated as the equivalent move for the other PSNC
+model and **rejected on cost**: measured 3,391 output tokens per call at $3.00 per million
+output tokens gives $37.86 for 3,492 tasks, against a $5 per-model budget. It is not in the
+plan. The reasoning arm for that model therefore has no home in this experiment, and that
+gap is deliberate rather than overlooked.
+
+One consequence worth recording: the reasoning-enabled arm now uses `z-ai/glm-5.2` while
+the reasoning-disabled arm used PSNC `GLM-5.2`. These are the same model family on
+different deployments, so the two arms are NOT a controlled comparison of reasoning alone.
+Any reading of that pair has to treat deployment as a confound.
+
 ## Still to freeze
 
 These operational or campaign-specific values must still be frozen for a live campaign:

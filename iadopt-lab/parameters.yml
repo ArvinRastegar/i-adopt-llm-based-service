@@ -110,7 +110,12 @@ providers:
     # 8 is a 2.96x speedup over 2 with no failures and no median-latency cost; only the
     # tail grows, from 4.6s to 6.4s, which is far inside the timeout. Repeating level 2
     # afterwards returned 24.9s, faster than its first run, so the load left no degradation.
-    timeout_seconds: 900
+    # 120s, set by the owner. Adequate for every reasoning-OFF campaign here (PSNC calls
+    # are 0.7-3.3s) and deliberately NOT adequate for reasoning-on: measured at 120s,
+    # GLM-5.2 timed out on 12 of 16 calls and Qwen3.8-27B on 8-9 of 16, at every
+    # concurrency tried. PSNC reasoning-enabled is therefore excluded rather than run
+    # with a timeout it would fail. See D-044.
+    timeout_seconds: 120
     max_concurrency: 24
     # Both guards are self-imposed - PSNC publishes neither - and both must be sized to
     # permit the configured concurrency, or admission throttles the campaign against its
@@ -219,13 +224,23 @@ providers:
     # minute regardless of concurrency, and a 180s timeout risks the ambiguous
     # deliveries seen on PSNC. Both scaled to match the PSNC block so the two
     # providers stay comparable.
-    timeout_seconds: 900
-    # 4, not 8. Measured: at 8 the upstream behind qwen/qwen3-8b (Alibaba) returned HTTP
+    # 120s, set by the owner for the unattended run. Measured against it: OpenRouter
+    # reasoning-on calls have p50 26-41s and max 94-117s, so 120s clears the observed tail
+    # with little margin. PSNC reasoning-on does NOT fit and is excluded; see D-044.
+    timeout_seconds: 120
+    # 8, not 4. Measured: at 8 the upstream behind qwen/qwen3-8b (Alibaba) returned HTTP
     # 429 on 37 of 664 calls while the other two models had none, and each 429 consumes one
     # of that task's three attempts. Cooldown is per-PROVIDER, not per-model, so one
     # model's upstream limit stalls the whole gateway - halving concurrency is the lever
     # available without per-model gating.
-    max_concurrency: 4
+    #   qwen3-8b   conc 4 -> 16/16 ok, 0 timeouts, max 117.0s,  5.69 tasks/min
+    #   qwen3-8b   conc 8 -> 16/16 ok, 0 timeouts, max 105.6s,  7.16 tasks/min
+    #   qwen3-32b  conc 4 -> 14/16 ok, 0 timeouts, max  96.5s,  5.35 tasks/min
+    #   qwen3-32b  conc 8 -> 16/16 ok, 0 timeouts, max  94.6s, 10.15 tasks/min
+    # Maximum latency FELL from 4 to 8 on both models, so the gateway is not saturating at
+    # 8 and the higher rate is free. Held at 8 rather than pushed further because qwen3-8b
+    # is rate-limited upstream by Alibaba (144 failures in campaign 844df00e).
+    max_concurrency: 8
     requests_per_minute: 100
     tokens_per_minute: 3000000
 
@@ -244,9 +259,73 @@ providers:
     # closed-weight model, so metered price evidence is mandatory before live use.
     # Names, list length, and selected providers may change before a new campaign.
     models:
+      - id: "meta-llama/llama-3.1-8b-instruct"
+        display_name: "meta-llama/llama-3.1-8b-instruct on OPENROUTER"
+        enabled: true
+        # Emitted no reasoning in either probe, so there is no control to declare. This
+        # records two clean observations, not a guarantee the model never reasons.
+        revision: null
+        context_window_tokens: 131072
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: false
+          max_output_tokens: 117964
+          evidence:
+            source: "iadopt-lab probe-models against https://openrouter.ai/api/v1: context_length, max_completion_tokens and per-token pricing from the OpenRouter /models catalog; reasoning behaviour, structured output and parameter acceptance from live chat/completions probes on 2026-09-10. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
+            verified_at: "2026-09-10"
+        reasoning_profiles:
+          - mode: "not_applicable"
+            request_fields: {}
+      - id: "mistralai/ministral-8b-2512"
+        display_name: "mistralai/ministral-8b-2512 on OPENROUTER"
+        enabled: true
+        # Emitted no reasoning in either probe, so there is no control to declare.
+        revision: null
+        context_window_tokens: 262144
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: false
+          max_output_tokens: 209715
+          evidence:
+            source: "iadopt-lab probe-models against https://openrouter.ai/api/v1: context_length, max_completion_tokens and per-token pricing from the OpenRouter /models catalog; reasoning behaviour, structured output and parameter acceptance from live chat/completions probes on 2026-09-10. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
+            verified_at: "2026-09-10"
+        reasoning_profiles:
+          - mode: "not_applicable"
+            request_fields: {}
+      - id: "z-ai/glm-5.2"
+        display_name: "z-ai/glm-5.2 on OPENROUTER"
+        enabled: true
+        # GLM-5.2 reached through OpenRouter instead of PSNC. On PSNC this model reasons for
+        # 3,111 output tokens and 233s per call, which cannot fit the 120s timeout (D-044).
+        # Through OpenRouter the same model reasons far more briefly: measured 772 output
+        # tokens in 14.0s, 3/3 valid JSON, on real 5-shot prompts. That is the whole reason
+        # this entry exists.
+        revision: null
+        context_window_tokens: 1048576
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: true
+          max_output_tokens: 128000
+          evidence:
+            source: "iadopt-lab probe-models and direct measurement against https://openrouter.ai/api/v1 on 2026-09-10: context_length, max_completion_tokens and per-token pricing from the /models catalog; reasoning behaviour and token usage from live chat/completions calls on real 5-shot prompts."
+            verified_at: "2026-09-10"
+        reasoning_profiles:
+          - mode: "enabled"
+            request_fields:
+              reasoning:
+                enabled: true
       - id: "openai/gpt-4o-mini"
         display_name: "openai/gpt-4o-mini on OPENROUTER"
-        enabled: true
+        enabled: false  # Complete in campaign 844df00e; see docs/campaign-log.md
         # Emitted no reasoning in either probe, so there is no control to declare. This records two clean observations, not a guarantee the model never reasons.
         revision: null
         context_window_tokens: 128000
@@ -266,6 +345,9 @@ providers:
       - id: "qwen/qwen3-32b"
         display_name: "qwen/qwen3-32b on OPENROUTER"
         enabled: true
+        # Reasoning-ENABLED arm. The disabled arm is complete in campaign 844df00e.
+        # Measured with reasoning on: 32.4s, 1,065 output tokens, 16/16 under a 120s
+        # timeout at concurrency 8.
         # Reasoning switched off: 3243 characters of thinking with no control, 0 with enable_thinking=false.
         revision: null
         context_window_tokens: 131072
@@ -280,12 +362,20 @@ providers:
             source: "iadopt-lab probe-models against https://openrouter.ai/api/v1: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
             verified_at: "2026-09-10"
         reasoning_profiles:
-          - mode: "disabled"
-            request_fields: {}
-            prompt_suffix: "\n/no_think"
+          # Enable and disable use DIFFERENT channels on this model. Disabling needs the
+          # `/no_think` prompt suffix because OpenRouter drops chat-template arguments;
+          # enabling works through the ordinary request field. Only the enabled arm runs
+          # here - the disabled arm is already complete in campaign 844df00e.
+          - mode: "enabled"
+            request_fields:
+              reasoning:
+                enabled: true
       - id: "qwen/qwen3-8b"
         display_name: "qwen/qwen3-8b on OPENROUTER"
         enabled: true
+        # Reasoning-ENABLED arm. The disabled arm is complete in campaign 844df00e.
+        # Measured with reasoning on: 29.9s, 1,187 output tokens, 16/16 under a 120s
+        # timeout at concurrency 8.
         # Reasoning switched off: 1184 characters of thinking with no control, 0 with enable_thinking=false.
         revision: null
         context_window_tokens: 131072
@@ -300,10 +390,12 @@ providers:
             source: "iadopt-lab probe-models against https://openrouter.ai/api/v1: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
             verified_at: "2026-09-10"
         reasoning_profiles:
-          - mode: "disabled"
+          # Only the enabled arm runs here; the disabled arm is complete in campaign
+          # 844df00e, where this model also produced all 144 upstream rate-limit failures.
+          - mode: "enabled"
             request_fields:
               reasoning:
-                enabled: false
+                enabled: true
 # Before freezing a plan, replace capabilities:null with verified booleans for
 # temperature, seed, structured_output, and reasoning_control. A reasoning-
 # capable model needs two reasoning_profiles (disabled/enabled) with exact native
@@ -443,7 +535,9 @@ execution:
 
   # Matched to psnc.max_concurrency so the pool can actually fill the provider gate;
   # a smaller worker count would cap dispatch below the measured provider capacity.
-  worker_count: 4
+  # Matched to the OpenRouter gate so the pool can fill it; both campaigns that remain
+  # run against OpenRouter.
+  worker_count: 8
   resume_enabled: true
   task_lease_seconds: 300
   heartbeat_seconds: 30
@@ -458,7 +552,13 @@ execution:
     # exceed it, so the campaign pauses on budget instead of overspending. Currency is USD
     # to match cost_accounting.reporting_currency and the price card; leaving it EUR while
     # every amount was USD would have compared different units.
-    amount: 25
+    # $40. Expected spend is $8.50 from per-model measured token usage, or $13.71 on the
+    # disclosed estimate, which conservatively assumes 1,200 output tokens for every model
+    # including ones measured at 46. $40 is ~3x the conservative figure and ~5x the
+    # realistic one, while still stopping far below the $204.95 theoretical worst case.
+    # Raised from $25 because 1.8x headroom is too thin for an unattended multi-day run:
+    # hitting the cap pauses the campaign, and a pause nobody is watching wastes the night.
+    amount: 40
     currency: "USD"
 
 reporting:
