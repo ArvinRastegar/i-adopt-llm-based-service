@@ -15,7 +15,7 @@ This is the layout as built. It is flatter than the tree originally planned here
 ```text
 iadopt-lab/
 ├── README.md                            # status, workflow, commands
-├── DECISIONS.md                         # D-001 … D-032
+├── DECISIONS.md                         # D-001 … D-043
 ├── TECHNICAL_SPECIFICATION.md
 ├── THIRD_PARTY_NOTICES.md
 ├── parameters.yml                       # the only human-edited configuration
@@ -28,7 +28,8 @@ iadopt-lab/
 ├── data/
 │   ├── corpus/<tag>/                    # immutable TTL bytes, v2.0.0 and v2.0.1 retained
 │   ├── canonical/<tag>/                 # per variable: record, .meta.json, .readable.json
-│   └── manifests/                       # corpus, source lock, demonstrations, population, prompts
+│   └── manifests/                       # corpus, source lock, demonstrations, population,
+│                                        #   prompts, and one frozen price card per provider
 ├── migrations/                          # 0001_initial.sql, 0002_coordination_integrity.sql
 ├── src/
 │   ├── iadopt_lab/
@@ -39,6 +40,8 @@ iadopt-lab/
 │   │   ├── artifacts.py                 # input bundle and drift verification
 │   │   ├── planning.py                  # deterministic grid expansion
 │   │   ├── costing.py                   # pre-run cost estimate
+│   │   ├── evidence.py                  # derives the estimate's inputs from plan + price card
+│   │   ├── probing.py                   # measures model capabilities; rewrites parameters.yml
 │   │   ├── workflow.py                  # attempt advancement, resume, bounded execution
 │   │   ├── reporting.py                 # ranking, summaries, exports
 │   │   ├── local_database.py            # local PostgreSQL preparation
@@ -50,11 +53,27 @@ iadopt-lab/
 │   │   └── persistence/repository.py    # transactions, evidence, leases, migrations
 │   └── iadopt_eval/                     # core.py (pure scorer), embeddings.py
 └── tests/
-    ├── unit/                            # 8 modules
+    ├── unit/                            # 11 modules
     ├── scorer_regression/               # January parity
     ├── integration/                     # PostgreSQL; skipped without a test DSN
     └── recovery/                        # lease and resume; skipped without a test DSN
 ```
+
+### 2.0 Modules added after the first live runs
+
+Two modules exist that the original plan did not anticipate. Both were added because live
+execution exposed a gap the offline design could not have seen.
+
+`probing.py` measures what a deployment actually supports. `parameters.yml` gates live
+execution on per-model capability fields and forbids inferring them from a model name, but
+nothing filled them in, so they were being typed by hand. It probes each model and writes
+the result back, so those fields carry an observation instead of an assumption. It is one
+of only two commands that contact a provider.
+
+`evidence.py` derives the cost-estimate document `costing.estimate_campaign_cost` consumes.
+That document was previously hand-built, which does not scale past one model and let the
+estimate be priced from different evidence than the runner reserves against. It now reads
+the same frozen price card and takes the output ceiling from the plan.
 
 ### 2.1 Consolidations against the original plan
 

@@ -6,7 +6,7 @@ The goal is deliberately narrow: take the exact definition of each variable in C
 
 ## Current status
 
-**Implemented, and live runs have been executed.** The evaluator, corpus ingestion, prompt rendering, extraction, validation, provider adapters, planning, workflow, persistence, migrations and reporting are implemented. The suite passes at **299 tests with the PostgreSQL database configured** (285 without it, the remainder skipping).
+**Implemented, and live runs have been executed.** The evaluator, corpus ingestion, prompt rendering, extraction, validation, provider adapters, planning, workflow, persistence, migrations and reporting are implemented. The suite passes at **263 unit tests without a database**, and more with `IADOPT_LAB_TEST_DATABASE_URL` configured, which adds the PostgreSQL integration and recovery modules. Counts move as tests are added; treat the command output as authoritative over any number quoted in prose.
 
 `campaign.live_calls_enabled` is `true`. Real provider calls have been made and scored: a complete 97-variable campaign against `qwen/qwen3-32b` on OpenRouter, and partial campaigns against `GLM-5.2` on PSNC. Those results are experimental output from a scoped single-configuration campaign, not the full parameter grid.
 
@@ -20,11 +20,23 @@ Known limitations are listed in `docs/read-only-review-2026-09-09.md` together w
 iadopt-lab preflight            # draft readiness; --live applies the full dispatch gate
 iadopt-lab ingest --source-repository <clone>
 iadopt-lab verify               # re-check every materialized artifact
+iadopt-lab probe-models --provider psnc --write   # measure model capabilities; rewrites parameters.yml
 iadopt-lab plan --synthetic     # expand the grid; omit --synthetic for the real population
+iadopt-lab evidence --plan <p> --out <e> --ceiling-basis "<observation>"
 iadopt-lab estimate --plan <p> --evidence <e>
 iadopt-lab report --plan <p> --observations <o> --format csv --out <name>
 iadopt-lab database prepare|start|init|migrate
 ```
+
+Two of these need care. **`probe-models` makes live provider requests** — three short throwaway
+calls per model, never a corpus prompt — and with `--write` it rewrites the
+`providers.<name>.models` block of `parameters.yml` in place, leaving the rest of the file
+byte-identical. It exists because capability fields gate live execution and must not be inferred
+from a model name: it measures each model's default reasoning, whether the off-switch changes it,
+and whether structured output is enforced, and writes back disabled any model whose evidence is
+contradictory or inconclusive. **`evidence`** produces the document `estimate` consumes, tokenizing
+every planned prompt and reading the same frozen price card the runner reserves against. Its
+`--ceiling-basis` marks the output ceiling verified. Without it a metered campaign is blocked; a fully evidenced non-billed one proceeds with a recorded warning, since zero cost does not bound tokens or runtime.
 
 ## Plain-language workflow
 
@@ -115,4 +127,6 @@ The work is split into two explicit gates:
 1. **Documentation gate:** complete and review every input, output, invariant, failure mode, and reproducibility decision.
 2. **Implementation gate:** write code, migrations, schemas, tests, and the offline dry run only after separate approval.
 
-The scientific and flexible provider-execution policies in D-021–D-026 are accepted; D-027 replaces mandatory monetary caps with pre-run cost disclosure, D-028 records the credential source and proposed local database preparation, and D-029 sets one repetition at every temperature. The scorer protocol is `january-derived-member-credit-v1`. Source code, dependencies, and embedding artifacts still need to be implemented, locked, and verified. The six model IDs are recorded; live execution waits for deployment availability/capability evidence, reasoning mappings, population manifest, sampling values, operational limits, price evidence, estimate disclosure, and separate live authorization.
+Both gates are passed. The scientific and flexible provider-execution policies in D-021–D-026 are accepted; D-027 replaces mandatory monetary caps with pre-run cost disclosure, D-028 records the credential source and local database preparation, and D-029 sets one repetition at every temperature. The scorer protocol is `january-derived-member-credit-v1`. Source, dependencies and embedding artifacts are implemented, locked and verified, and campaigns have run against both providers.
+
+What still gates each *new* live campaign, rather than the project as a whole: capability evidence measured per model by `iadopt-lab probe-models`, a price card covering every enabled model, a disclosed estimate bound to the frozen plan, and explicit `--authorize` with a named `--actor`. These are per-campaign preconditions, not outstanding implementation work.

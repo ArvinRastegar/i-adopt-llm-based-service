@@ -1,0 +1,38 @@
+# Frozen price evidence for OpenRouter, generated from the gateway's own catalog
+# rather than transcribed by hand. Unlike the PSNC card these are METERED rates:
+# every call costs real money, and an unverified output ceiling blocks the campaign
+# instead of merely warning. Regenerate when rates change; do not edit in place.
+currency: USD
+models:
+  openrouter/openai/gpt-4o-mini:
+    basis: OpenRouter published per-token pricing for this model id
+    fx_to_reporting: '1'
+    input_per_million: '0.15'
+    mode: metered
+    output_per_million: '0.6'
+    provenance: Fetched from https://openrouter.ai/api/v1/models on 2026-09-09; prompt=0.00000015
+      and completion=0.0000006 USD per token, converted to per-million. OpenRouter
+      routes across upstream providers and does not pin one, so these are the gateway's
+      quoted rates, not a single provider's.
+  openrouter/qwen/qwen3-32b:
+    basis: OpenRouter published per-token pricing for this model id
+    fx_to_reporting: '1'
+    input_per_million: '0.08'
+    mode: metered
+    output_per_million: '0.28'
+    provenance: Fetched from https://openrouter.ai/api/v1/models on 2026-09-09; prompt=0.00000008
+      and completion=0.00000028 USD per token, converted to per-million. OpenRouter
+      routes across upstream providers and does not pin one, so these are the gateway's
+      quoted rates, not a single provider's.
+  openrouter/qwen/qwen3-8b:
+    basis: OpenRouter published per-token pricing for this model id
+    fx_to_reporting: '1'
+    input_per_million: '0.117'
+    mode: metered
+    output_per_million: '0.455'
+    provenance: Fetched from https://openrouter.ai/api/v1/models on 2026-09-09; prompt=0.000000117
+      and completion=0.000000455 USD per token, converted to per-million. OpenRouter
+      routes across upstream providers and does not pin one, so these are the gateway's
+      quoted rates, not a single provider's.
+retrieved_at: '2026-09-09'
+schema_version: price-card-v1

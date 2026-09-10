@@ -2,7 +2,7 @@
 
 ## Current selection and evidence
 
-These are the exact identifiers supplied by the experiment owner. The OpenRouter list reflects the revision accepted in D-032; the PSNC list is unchanged from the owner's original supply. They are the intended first campaign models, not automatically verified provider availability or capability declarations.
+These are the exact identifiers supplied by the experiment owner. The OpenRouter list reflects the revision accepted in D-032; the PSNC list is unchanged from the owner's original supply. Capabilities are no longer assumed: `iadopt-lab probe-models` measures each one against the live deployment and writes the result into `parameters.yml`. The measured state is recorded below.
 
 | Provider | Position | Exact API model ID | Display name |
 |---|---:|---|---|
@@ -19,7 +19,44 @@ D-032 withdrew `inclusionai/ling-3.0-flash` and selected `openai/gpt-4o-mini` in
 
 Source for the original supply: owner-supplied 294-line Python example, SHA-256 `901c0cdc1f774ad7cc0177586f77ff25548a9bc3813d629bfe6f48e2929569c1`. It was read, not executed. The D-032 revision was supplied directly as three OpenRouter identifiers and has no separate attachment. Credential-related lines were excluded from displayed evidence, and the raw attachment is not copied into the experiment directory. Its sample prompts and sample responses are not experiment artifacts.
 
-All six catalog entries have `enabled: true` to record selection, while `campaign.live_calls_enabled` remains false. Their deployment revisions, capabilities, and exact reasoning controls remain unresolved. An enabled entry with a missing capability profile is valid only as an unfinished non-live configuration: the planner must report that missing information, never silently skip the model, assume reasoning is unsupported, or freeze an incomplete scientific grid.
+`campaign.live_calls_enabled` is now true and all six models have measured capabilities. An
+entry with a missing capability profile is still only valid as an unfinished non-live
+configuration: the planner reports the gap rather than skipping the model or assuming
+reasoning is unsupported.
+
+### Measured reasoning controls
+
+Every model needed a different switch, and none could have been guessed from the name. Run
+`iadopt-lab probe-models --provider <name> --write` to re-measure; it rewrites only the
+`models` block.
+
+| Provider | Model | Reasoning switch that works | Evidence |
+|---|---|---|---|
+| PSNC | `GLM-5.2` | `chat_template_kwargs.enable_thinking=false` | 355 chars of reasoning uncontrolled, 0 with it (D-041) |
+| PSNC | `Qwen3.8-27B` | `chat_template_kwargs.enable_thinking=false` | 147 chars uncontrolled, 0 with it |
+| PSNC | `DeepSeek-V4-Flash` | none needed | emits no reasoning in either probe, so `not_applicable` |
+| OpenRouter | `qwen/qwen3-8b` | `reasoning.enabled=false` | 1,184 chars uncontrolled, 0 with it |
+| OpenRouter | `qwen/qwen3-32b` | **`/no_think` prompt suffix** | 3,243 chars uncontrolled, 2 with it |
+| OpenRouter | `openai/gpt-4o-mini` | none needed | emits no reasoning, so `not_applicable` |
+
+The qwen3-32b row is the one worth remembering. `enable_thinking` is Qwen's documented
+switch and it works on PSNC, because that is vLLM applying the chat template locally.
+OpenRouter routes to upstream providers (DeepInfra, SiliconFlow) that forward the message
+but drop `chat_template_kwargs` before the tokenizer, so the switch never arrives. Qwen's
+`/no_think` travels inside the prompt, which routing cannot strip. Measured over 6 real
+prompts: 37.2s and 1,353 completion tokens without it, 3.0s and 90 with it, same answer
+validity. This is why reasoning profiles support `prompt_suffix` as well as `request_fields`.
+
+Two traps the prober now guards against, both of which produced wrong answers first:
+
+- **Route-dependent switches.** `reasoning.enabled=false` silences qwen3-32b on SiliconFlow
+  and not on DeepInfra. A single probe call caught a lucky route and recorded a control the
+  campaign would not get. Each candidate is now tried three times and accepted only if
+  every attempt is clean.
+- **Hidden but billed reasoning.** `include_reasoning=false` returns zero reasoning
+  characters while still generating and charging for 1,069 completion tokens. Suppressing
+  the field is not suppressing the cost, so a switch whose completion tokens far exceed its
+  visible answer is rejected.
 
 ## Choose one provider or both
 

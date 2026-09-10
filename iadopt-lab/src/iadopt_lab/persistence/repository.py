@@ -67,6 +67,16 @@ class BudgetError(PersistenceError):
     """An optional cost cap or required cost evidence prevents admission."""
 
 
+class ProviderIneligible(PersistenceError):
+    """The provider is cooling down or paused, so no new attempt may be allocated.
+
+    Distinct from a generic persistence failure because it is expected and recoverable:
+    one worker setting a cooldown while others are mid-dispatch is normal at any
+    concurrency above one. The runner returns those tasks to the queue and waits, rather
+    than treating a few seconds of backoff as a campaign failure.
+    """
+
+
 class RateLimitError(PersistenceError):
     """A shared provider rate window needs a persisted pre-dispatch cooldown."""
 
@@ -141,6 +151,46 @@ def _clean(value: Any) -> Any:
     ):
         raise PersistenceError("Credential-bearing connection/header evidence is prohibited")
     return json.loads(_canonical(value))
+
+
+_CREDENTIAL_STRING = re.compile(r"(?:postgres(?:ql)?://[^\s]+:[^\s]+@|Bearer\s+\S+)", re.I)
+_REDACTED = "[redacted: credential-shaped evidence]"
+
+
+def _redact(value: Any) -> tuple[Any, list[str]]:
+    """Normalize provider-supplied evidence, replacing credential-shaped content in place.
+
+    `_clean` refuses evidence carrying a credential-shaped key or string. That is right for
+    material this project constructs, where such a key is a bug worth hearing about loudly.
+    It is wrong for metadata whose shape a provider chose: refusing rolled back the entire
+    transaction, so a response already received - and on a metered route already paid for -
+    was discarded because of the *name* of one field beside it. The offending value is
+    replaced and never stored, and every substitution is recorded so the redaction is itself
+    evidence rather than a silent edit.
+
+    Input is a mapping/list/scalar; output is (JSON-normalized copy, replaced paths).
+    """
+    replaced: list[str] = []
+
+    def walk(node: Any, path: str) -> Any:
+        if isinstance(node, Mapping):
+            result = {}
+            for key, child in node.items():
+                where = f"{path}.{key}" if path else str(key)
+                if str(key).lower() in _SECRET_KEYS:
+                    replaced.append(where)
+                    result[key] = _REDACTED
+                else:
+                    result[key] = walk(child, where)
+            return result
+        if isinstance(node, (list, tuple)):
+            return [walk(child, f"{path}[{index}]") for index, child in enumerate(node)]
+        if isinstance(node, str) and _CREDENTIAL_STRING.search(node):
+            replaced.append(path or "<root>")
+            return _REDACTED
+        return node
+
+    return json.loads(_canonical(walk(value, ""))), replaced
 
 
 def _require(record: Mapping[str, Any], *keys: str) -> None:
@@ -1036,7 +1086,7 @@ class Repository:
                 ).fetchone()["due"]
             )
             if not eligible:
-                raise PersistenceError("This provider is not eligible for new dispatch")
+                raise ProviderIneligible("This provider is not eligible for new dispatch")
             self._rate_admission(conn, task, provider, evidence)
             if body.get("model") != run["model_id"] or (
                 "provider" in evidence and evidence["provider"] != run["provider"]
@@ -1322,7 +1372,11 @@ class Repository:
             raw = raw.encode("utf-8")
         if raw is not None:
             raw = bytes(raw)
-        metadata = _clean(metadata)
+        # Provider metadata is redacted rather than rejected: raw evidence preservation must
+        # not depend on the provider's choice of field names. See `_redact`.
+        metadata, redactions = _redact(metadata)
+        if redactions:
+            metadata["evidence_redactions"] = redactions
         delivery = metadata.get(
             "delivery", "response_received" if raw is not None else "ambiguous_delivery"
         )
@@ -1428,12 +1482,29 @@ class Repository:
             cost = metadata.get("cost", {})
             if isinstance(cost, (int, float, str)):
                 cost = {"amount": cost, "state": "actual"}
-            amount = Decimal(0) if non_billed else _money(cost.get("amount"), nullable=True)
+            # Interpreting the money must never be able to roll back the raw evidence that
+            # explains it. This row and the response row share one transaction and the
+            # response is immutable afterwards, so a rejected amount used to discard an
+            # answer the account had already been charged for. An amount that cannot be
+            # interpreted is recorded as unresolved instead, with the offending value kept
+            # verbatim for later reconciliation.
+            unresolved_amount = None
+            if non_billed:
+                amount = Decimal(0)
+            else:
+                try:
+                    amount = _money(cost.get("amount"), nullable=True)
+                except BudgetError as error:
+                    amount, unresolved_amount = None, {
+                        "rejected_amount": str(cost.get("amount")),
+                        "reason": str(error)}
             state = (
                 "confirmed_zero"
                 if non_billed
                 else "ambiguous"
                 if delivery == "ambiguous_delivery"
+                else "unavailable"
+                if unresolved_amount is not None
                 else cost.get("state", "unavailable" if amount is None else "estimated")
             )
             if state not in {"confirmed_zero", "actual", "estimated", "unavailable", "ambiguous"}:
@@ -1445,6 +1516,8 @@ class Repository:
                 "billing_basis": provider["billing_basis"],
                 "usage_available": metadata.get("usage") is not None,
             }
+            if unresolved_amount is not None:
+                settlement["unresolved_amount"] = unresolved_amount
             conn.execute(
                 "INSERT INTO cost_settlement(attempt_id,amount,state,evidence,evidence_hash) VALUES(%s,%s,%s,%s,%s)",
                 (attempt_id, amount, state, Jsonb(settlement), _hash(settlement)),
@@ -2095,6 +2168,21 @@ class Repository:
                         ambiguous.append(str(task["id"]))
                     elif latest["delivery"] == "not_dispatched" and latest["response"] is None:
                         next_state = "request_persisted"
+                    elif (
+                        latest["response"]
+                        and latest["response"]["delivery"] == "rejected"
+                        and (latest["response"]["evidence"] or {}).get("outcome")
+                        == "classified_transient_provider_error"
+                        and len(attempts) < 3
+                    ):
+                        # The runner decides to retry a safe transient rejection only after
+                        # the response commits. A crash between those two writes left the
+                        # task in the operational_failed state store_response had set, which
+                        # claim_tasks excludes, so a recoverable throttling event blocked its
+                        # task permanently with attempts still unspent. The receipt is
+                        # durable, so that decision is re-derived here on exactly the runner's
+                        # condition rather than being lost with the process.
+                        next_state = "retry_pending"
                 if task["lease_token"] is not None or next_state != task["state"]:
                     conn.execute(
                         "UPDATE task SET state=%s,worker_id=NULL,lease_token=NULL,lease_expires_at=NULL,row_version=row_version+1,updated_at=clock_timestamp() WHERE id=%s",

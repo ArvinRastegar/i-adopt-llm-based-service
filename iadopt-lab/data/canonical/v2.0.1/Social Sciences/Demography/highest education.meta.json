@@ -15,6 +15,7 @@
   "source_sha256": "77f77a1751d92c55d161c639f6ca7727a35be03711d17ddf9a063851bb3bd064",
   "gold_sha256": "61b2db19eb64663ef9ce4942a8df75720efd2c5cc0bc14d3e114346d5dee1721",
   "record_sha256": "3684ea7de153dd640659d330b1a657b850fe0c44ea0c0e3049a4c70ce2515bb8",
+  "definition_predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
   "importer_version": "corpus-lexical-v1",
   "importer_sha256": "ef691374219ae9737277ed56213dd722fd7c2c202c7775bdba69f90487950dcd",
   "lexical_schema_sha256": "a3b5ec8ae6bcde4bd79c5ba29b5f8947ad5537f7b9517b499d053926c34c7a8b",

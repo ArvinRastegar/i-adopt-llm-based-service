@@ -136,3 +136,36 @@ def test_invalid_money_quantities(value):
     """
     with pytest.raises(LabError):
         decimal_value(value)
+
+
+def test_price_card_must_cover_every_planned_model(tmp_path):
+    """The blocker: a ready zero-cost estimate preceded a mid-run crash on model two.
+
+    `cost_policy` raises for an uncovered model, and it raises from inside the worker
+    pool where the failure cancels unrelated in-flight tasks. The check therefore has to
+    happen once, up front, against the whole plan - and a non-billed provider is not
+    exempt, because an evidenced zero is still evidence.
+    """
+    import yaml
+
+    from iadopt_lab.cli import _live_services
+    from iadopt_lab.domain import LabError
+
+    card = tmp_path / "card.yml"
+    card.write_text(yaml.safe_dump({"currency": "USD", "models": {"psnc/Covered": {
+        "mode": "non_billed", "basis": "free", "provenance": "declared",
+        "fx_to_reporting": "1"}}}), encoding="utf-8")
+    data = {"parameter_grid": {"max_output_tokens": 16000},
+            "cost_accounting": {"price_card_manifest": card.name}}
+    plan = {"counts": {"by_model": [{"provider": "psnc", "model_id": "Covered"},
+                                    {"provider": "psnc", "model_id": "Absent"}]}}
+
+    with pytest.raises(LabError, match="psnc/Absent"):
+        _live_services(tmp_path, data, plan)
+
+    # The covered-only plan builds, and reserves an evidenced zero rather than failing.
+    plan["counts"]["by_model"] = [{"provider": "psnc", "model_id": "Covered"}]
+    _, cost_policy, _ = _live_services(tmp_path, data, plan)
+    reservation = cost_policy({"provider": "psnc", "run": {"model_id": "Covered"}},
+                              {"messages": [{"role": "user", "content": "hi"}]})
+    assert reservation["reservation_amount"] == "0" and reservation["bounded"] is True

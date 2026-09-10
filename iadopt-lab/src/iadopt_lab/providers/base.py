@@ -17,6 +17,8 @@ from openai import APIConnectionError, APIStatusError, APITimeoutError, AsyncOpe
 from ..canonical import sanitize_provider_request
 from ..domain import LabError, ProviderResult
 
+# Distinguishes an absent `content` field from an explicit null one.
+_ABSENT = object()
 NATIVE_FIELDS = {"reasoning", "reasoning_effort", "enable_thinking", "chat_template_kwargs", "include_reasoning"}
 SAFE_HEADERS = {"content-type", "retry-after", "x-request-id", "request-id", "x-ratelimit-limit-requests",
                 "x-ratelimit-remaining-requests", "x-ratelimit-reset-requests"}
@@ -159,19 +161,29 @@ class OpenAICompatibleAdapter:
                 # one, or `{}` is treated as a well-formed completion.
                 message = choices[0].get("message")
                 if isinstance(message, dict):
-                    well_formed_choice = True
-                    assistant = message.get("content") if isinstance(message.get("content"), str) else None
                     # Providers name the reasoning channel differently: OpenRouter
                     # returns `reasoning`, vLLM deployments such as PSNC return
                     # `reasoning_content`. Reading only one silently discards the
                     # other provider's reasoning evidence, which the evidence policy
                     # requires retaining. Order is fixed so the field chosen is
-                    # deterministic when a provider ever returns both.
+                    # deterministic when a provider ever returns both. This is read
+                    # before the completion contract is checked, because reasoning is
+                    # evidence worth keeping even from an envelope we go on to reject.
                     for field in ("reasoning", "reasoning_content"):
                         value = message.get(field)
                         if isinstance(value, str) and value:
                             reasoning = value
                             break
+                    # A completion is established by a `content` field of the right type,
+                    # not by the mere presence of a message object. `{"message": {}}` is a
+                    # structure with no completion in it; treating it as a well-formed
+                    # empty answer let a malformed envelope be scored as the model
+                    # answering nothing. An explicit null stays well-formed: that is how a
+                    # reasoning-only or genuinely empty completion is expressed.
+                    content = message.get("content", _ABSENT)
+                    if content is None or isinstance(content, str):
+                        well_formed_choice = True
+                        assistant = content if isinstance(content, str) else None
         if outcome == "response_received":
             # Only a well-formed completion may reach content validation. Everything a
             # provider can return at HTTP 200 that is *not* the model's answer has to be
@@ -181,12 +193,15 @@ class OpenAICompatibleAdapter:
             if not isinstance(envelope, dict):
                 # Valid JSON that is not an object at all (a list, a number, a string).
                 outcome, delivery = "unparsable_envelope", "rejected"
-            elif isinstance(envelope.get("error"), (dict, str)) and not well_formed_choice:
-                # A provider error object returned with a 200 status.
+            elif isinstance(envelope.get("error"), (dict, str)) and not assistant:
+                # A provider error object returned with a 200 status. It wins whenever no
+                # answer text accompanies it: an envelope carrying an error and an empty
+                # completion is the gateway reporting a failure, not the model replying.
                 outcome, delivery = "provider_error_envelope", "rejected"
             elif not well_formed_choice:
-                # No choices, or a choice carrying no message object: the completion
-                # structure is missing, which is not the same as an empty answer.
+                # No choices, a choice carrying no message object, or a message with no
+                # `content` field or a non-string one: the completion structure is
+                # missing, which is not the same as an empty answer.
                 outcome, delivery = "invalid_envelope", "rejected"
             elif finish == "length":
                 # The generation budget was exhausted. Whether it stopped before any

@@ -410,6 +410,17 @@
                         },
                         "request_fields": {
                           "type": "object"
+                        },
+                        "prompt_suffix": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
@@ -701,6 +712,17 @@
                         },
                         "request_fields": {
                           "type": "object"
+                        },
+                        "prompt_suffix": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [

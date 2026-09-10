@@ -333,7 +333,9 @@ Because `workflow.py` is part of the implementation index, this change alters th
 
 ### D-036 — GLM-5.2 on PSNC: reasoning is always on and not controllable
 
-**Status:** Accepted from measurement before the second live run
+**Status:** SUPERSEDED by D-041. The conclusion below is wrong: the probe behind it tested
+only `enable_thinking: true` and never the false case. Retained unedited as the record of
+what was believed before the second live run, and of how the error was made.
 
 PCSS publishes no per-model capability table. Its documentation describes a LiteLLM-compatible OpenAI-shaped API at `https://llm.hpc.psnc.pl`, lists models through `/v1/models`, and states token quotas by user type, but gives no context window, rate limit, or parameter support matrix. Capabilities were therefore established by direct probe rather than declaration.
 
@@ -361,7 +363,9 @@ The adapter now reads `reasoning`, then `reasoning_content`, in that fixed order
 
 ### D-038 — Reasoning is uncapped; the output ceiling is set high enough that truncation cannot recur
 
-**Status:** Accepted from the owner's explicit instruction
+**Status:** SUPERSEDED by D-040 for the ceiling value, and by D-041 for its premise that
+neither model can stop reasoning. The reasoning below was sound given D-036; the premise
+was not. Retained unedited as dated history.
 
 `max_output_tokens` is a single budget shared by a model's private reasoning and its visible answer, not a limit on the answer. Neither selected model can stop reasoning (D-034, D-036), so whenever reasoning exhausted the budget, generation halted before the answer began. The result was an empty `content` field, indistinguishable in the evidence from a model that produced nothing useful. Four GLM-5.2 responses show the pattern exactly: each stopped at the 5,000 ceiling having emitted 17,635-20,510 characters of reasoning and **zero characters of answer**.
 
@@ -429,6 +433,143 @@ expansion. Those three conditions are documented at the call site, and a deploym
 violates them requires the bound to be re-established.
 
 ## Values to freeze before live execution
+
+### D-040 — The output ceiling is 16,000 tokens, not 100,000
+
+**Status:** Accepted from measurement, superseding D-038's ceiling
+
+D-038 raised `max_output_tokens` to 100,000 on the premise that reasoning could not be
+stopped, so the only defence against truncation was headroom. D-041 removes that premise.
+With reasoning disabled the ceiling stops being a reasoning budget and becomes what it was
+always meant to be: a bound on a runaway.
+
+A ceiling is free in billing terms but not in time. At 100,000 the runner had no way to
+stop a request that would never finish: 18 of 31 GLM-5.2 requests were killed by the 900s
+timeout, each holding a worker slot for fifteen minutes and producing nothing.
+
+16,000 is sized from evidence rather than chosen for comfort. Every successful GLM-5.2
+response recorded fits well inside it — the largest is 8,605 completion tokens, and the
+campaign that followed peaked at 197 with reasoning off. At the observed 20-28 tokens per
+second, 16,000 caps a single request near 800 seconds, inside the timeout, so a runaway is
+truncated and classified rather than left to hang.
+
+The ceiling is now taken from the plan rather than from current parameters wherever it is
+used as evidence, so a stale plan cannot borrow a number it was never expanded with.
+
+### D-041 — GLM-5.2 and Qwen3.8-27B reasoning IS controllable on PSNC
+
+**Status:** Accepted from measurement, superseding D-036
+
+D-036 concluded that GLM-5.2's reasoning could not be disabled. That conclusion came from
+probing `chat_template_kwargs.enable_thinking: true` and inferring the false case, which
+was never sent. Measured directly on one real 5-shot prompt:
+
+| Request | Latency | Completion tokens | Reasoning | Answer |
+|---|---|---|---|---|
+| No reasoning control | 367.8s | 16,000 (truncated) | 66,697 chars | **0 chars** |
+| `enable_thinking: false` | 2.7s | 81 | 0 chars | 356 chars |
+
+136 times faster, and the difference between no answer and a complete one. The full
+97-variable campaign that followed scored **Close F1 0.387** with reasoning off, ahead of
+qwen3-32b's 0.316 with reasoning fully on, so this is not a quality trade.
+
+`enable_thinking` is the only control this deployment honours. `reasoning.enabled: false`
+returns an empty response; `reasoning.effort` at `minimal` and `low`, the flat
+`reasoning_effort` field, and `reasoning.max_tokens` were each measured and none holds a
+call under 30 seconds. The effort scale runs backwards — `minimal` produced 5,798
+characters of thinking against `low`'s 1,773 — and a 512-token budget overshot 24-fold at
+12,428 characters, which is how we know the `reasoning` object is not interpreted here.
+
+Qwen3.8-27B honours the same switch (111 characters of thinking uncontrolled, 0 with it).
+DeepSeek-V4-Flash emits no reasoning in either probe, so it declares `not_applicable`: that
+records the absence of a control, **not** a measurement that the model never reasons.
+
+D-034's matching claim for qwen3-32b on OpenRouter rests on the same flawed method and has
+not been re-tested. It should not be relied on until it is.
+
+### D-042 — Remediation of the 2026-09-09 read-only audit
+
+**Status:** Accepted; implemented in this pass
+
+Thirteen findings were independently verified against source before any change. Twelve were
+real. The load-bearing ones and what changed:
+
+- **Price-card coverage** blocked nothing and would have crashed the three-model campaign
+  on its first non-GLM task, because `cost_policy` raises for an uncovered model *before*
+  reading the billing mode, from inside the worker pool where the failure cancels unrelated
+  in-flight work. The card now covers every enabled model, coverage is checked once against
+  the whole plan before dispatch, and the estimate reads that same card instead of deriving
+  its own — which is why a "ready" $0 estimate could previously precede that crash.
+- **Probe verdicts** treated a *failed* baseline as evidence a model never reasons, and
+  would have written `not_applicable` for a model that reasons — sending no switch at all.
+  Reasoning observed under the switch is now decisive first; an unusable or truncated
+  baseline is `inconclusive` rather than favourable.
+- **Received evidence** could be discarded by the outage that caused the failure: a failing
+  heartbeat cancelled the commit-retry loop mid-backoff. Commits now run as shielded tasks
+  the campaign awaits, so cancelling a worker stops dispatch without stopping preservation.
+- **Envelope classification** accepted any message dictionary as a completion, so
+  `{"message": {}}` was scored as the model answering nothing. A completion now requires a
+  `content` field of string or null type; reasoning is retained even from rejected
+  envelopes.
+- **Report binding** compared a plan's scorer hash to itself, which holds for any checkout.
+  It is now recomputed from evaluator source plus the loaded backend. Category denominators
+  came from all 102 records, marking demonstration categories incomplete in a fully scored
+  97-target report; they now come from the planned population, and wholly absent categories
+  are represented rather than omitted.
+- **The freeze bundle** was never persisted despite the documented contract; one
+  `experiment-bundle` artifact, including the original `parameters.yml` bytes, is now
+  registered and linked before work becomes dispatchable.
+- **Authorization** asserted an approval nothing expressed and named a `--authorize` flag
+  that did not exist. That flag now exists and is required for live dispatch, `--actor` is
+  required, and the estimate's own hash and model coverage are verified before the receipt
+  is written.
+- **Resume** could not recover a durably stored transient rejection; `reconcile` now
+  re-derives the runner's retry decision on exactly its condition.
+
+Two findings were judged overstated and are recorded rather than acted on as defects:
+treating `probe-models` as an unauthorized live entry point (three short calls, no scored
+generation), and the criticism of `not_applicable` accounting, which was nonetheless
+reworded to stop implying an unmeasured absence of reasoning.
+
+### D-043 — Temperature 2.0 is dropped from the PSNC full-grid campaign
+
+**Status:** Accepted from measurement; narrows D-029's temperature set for this campaign
+
+D-029 sets one repetition at every temperature in `[0, 0.5, 1, 2]`. This campaign runs
+`[0, 0.5, 1]`. The reason is measured, not preference.
+
+With reasoning disabled, temperature 2.0 flattens the sampling distribution far enough that
+the stop token rarely wins, so generation runs toward the output ceiling instead of
+terminating. Measured on 24 real 5-shot prompts per model against the 16,000-token ceiling:
+
+| Temperature | Latency per call | Completion tokens | Truncated |
+|---|---|---|---|
+| 0.0-1.0, all three models | 0.7-6.3s | 55-133 | 0 of 32 |
+| 2.0, DeepSeek-V4-Flash | up to 172s | avg 6,997, max 16,000 | ~40% |
+| 2.0, GLM-5.2 | up to 134s | avg 3,801 | observed |
+| 2.0, Qwen3.8-27B | up to 31s | avg 284 | not observed |
+
+The consequence is not merely slowness. A response truncated at the ceiling is a
+non-retryable operational failure by design: resending the identical request would truncate
+again, and scoring it as a model-quality zero would blame the model for a capacity stop. So
+its task never reaches `complete`, and under `ranking.require_complete_population` a single
+such task makes its whole configuration unrankable. At a ~40% per-call truncation rate over
+97 variables, effectively every temperature-2.0 configuration is unrankable. That quarter of
+the grid would have consumed the large majority of the runtime to produce almost no rankable
+result.
+
+This is a scope decision, not a finding that temperature 2.0 is uninteresting. That the
+models fail to terminate at 2.0 is itself a result worth reporting. Restoring 2.0 requires
+first settling whether a runaway generation with reasoning disabled is an operational
+failure or a model-quality outcome — with reasoning off it is arguably the latter, since
+nothing but the model's own distribution is producing those tokens. That question is
+deliberately left open rather than resolved by whichever classification is convenient.
+
+Related: D-040 fixed the ceiling at 16,000; D-042 made a campaign able to finalize with
+terminal operational failures recorded, so a truncation no longer denies results for every
+other configuration.
+
+## Still to freeze
 
 These operational or campaign-specific values must still be frozen for a live campaign:
 

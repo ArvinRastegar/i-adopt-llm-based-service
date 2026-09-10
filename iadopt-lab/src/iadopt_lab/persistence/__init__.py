@@ -5,6 +5,7 @@ from .repository import (
     BudgetError,
     EvidenceConflict,
     PersistenceError,
+    ProviderIneligible,
     RateLimitError,
     Repository,
     StaleLeaseError,
@@ -13,6 +14,7 @@ from .repository import (
 
 __all__ = [
     "AttemptLimitError",
+    "ProviderIneligible",
     "BudgetError",
     "EvidenceConflict",
     "PersistenceError",

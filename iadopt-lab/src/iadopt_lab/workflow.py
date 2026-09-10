@@ -24,6 +24,7 @@ from .persistence import (
     BudgetError,
     EvidenceConflict,
     PersistenceError,
+    ProviderIneligible,
     RateLimitError,
     Repository,
 )
@@ -133,6 +134,9 @@ class Services:
     cost_policy: Callable[[dict, dict], dict] | None = None
     token_bound: Callable[[dict, dict], int] | None = None
     settlement_policy: Callable[[dict, dict], dict] | None = None
+    # In-flight evidence preservation. A commit registers itself here so the campaign can
+    # wait for it even when the task that started it was cancelled; see `_commit_response`.
+    preservation: set = field(default_factory=set)
 
 
 async def _db(services: Services, method: str, *args: Any, **kwargs: Any) -> Any:
@@ -168,11 +172,20 @@ def _base_prompt(task: dict, services: Services) -> Any:
     """
     return render_base_prompt(load_prompt_version(task["run"]["prompt_variant"], services.root),
         task["variable"]["definition"], load_schema_bytes(services.root),
-        services.bundle["demonstrations"][:task["run"]["shot_count"]], target_id=task["variable"]["variable_id"])
+        services.bundle["demonstrations"][:task["run"]["shot_count"]],
+        target_id=task["variable"]["variable_id"],
+        control_suffix=task["run"].get("reasoning_prompt_suffix") or "")
 
 
 # Roughly two minutes of scheduled waiting. Long enough to ride out a database restart
 # or a brief pool exhaustion; short enough that a genuine outage still surfaces.
+# Task states from which no further work is possible. `operational_failed` covers a
+# non-retryable provider outcome such as truncation at the output ceiling;
+# `ambiguous_delivery` covers a dispatch whose fate is unknown and which must never be
+# resent. Both are terminal outcomes to be reported, not scored.
+_TERMINAL_TASK_STATES = ("complete", "operational_failed", "ambiguous_delivery")
+_IDLE_POLLS_BEFORE_STOP = 6
+
 _COMMIT_BACKOFF_SECONDS = (0.0, 0.5, 2.0, 5.0, 10.0, 20.0, 40.0, 45.0)
 
 
@@ -184,27 +197,42 @@ async def _commit_response(services: Services, attempt: dict, payload: dict) -> 
     three-request budget is fixed. A single failed insert must therefore not discard it.
     The commit is idempotent on attempt identity, so repeating it is safe.
 
+    The loop runs as a task registered on `services.preservation` and is awaited through
+    `asyncio.shield`, because the outage that fails a commit usually also fails the lease
+    heartbeat, and a failing heartbeat cancels this task's supervisor. Shielding only the
+    individual database await left the surrounding retry loop cancellable, so the process
+    could stop trying to store an answer it had already been charged for while waiting out
+    a recoverable outage. Cancelling the caller now stops further dispatch and leaves
+    preservation running; `run_campaign` waits for it before returning.
+
     Args: services: injected repository; attempt: owning attempt row; payload: exact evidence.
     Returns: The stored response record.
     Raises: The final PersistenceError if every attempt to store the evidence fails.
     Side effects: Retries the same durable write with linear backoff; never re-dispatches.
     """
-    last: Exception | None = None
-    for delay in _COMMIT_BACKOFF_SECONDS:
-        if delay:
-            await asyncio.sleep(delay)
-        try:
-            return await asyncio.shield(_db(services, "store_response", attempt, payload))
-        except EvidenceConflict:
-            # Two different payloads claiming one immutable identity. Waiting cannot
-            # resolve that, and retrying would only delay a real integrity failure.
-            raise
-        except (PersistenceError, psycopg.Error) as error:
-            # psycopg.Error covers connection loss and pool timeouts, which the
-            # repository does not wrap: catching only PersistenceError left exactly the
-            # transient outage this loop exists for able to bypass it.
-            last = error
-    raise last if last else PersistenceError("Response evidence was not stored")
+
+    async def preserve() -> Any:
+        last: Exception | None = None
+        for delay in _COMMIT_BACKOFF_SECONDS:
+            if delay:
+                await asyncio.sleep(delay)
+            try:
+                return await _db(services, "store_response", attempt, payload)
+            except EvidenceConflict:
+                # Two different payloads claiming one immutable identity. Waiting cannot
+                # resolve that, and retrying would only delay a real integrity failure.
+                raise
+            except (PersistenceError, psycopg.Error) as error:
+                # psycopg.Error covers connection loss and pool timeouts, which the
+                # repository does not wrap: catching only PersistenceError left exactly the
+                # transient outage this loop exists for able to bypass it.
+                last = error
+        raise last if last else PersistenceError("Response evidence was not stored")
+
+    task = asyncio.ensure_future(preserve())
+    services.preservation.add(task)
+    task.add_done_callback(services.preservation.discard)
+    return await asyncio.shield(task)
 
 
 async def _heartbeat(lease: dict, services: Services, stopped: asyncio.Event) -> None:
@@ -312,7 +340,26 @@ async def _advance_task(lease: dict, services: Services) -> dict:
             gate = services.gates.get(task["provider"])
             if gate is not None:
                 gate.next_ready = max(gate.next_ready, time.monotonic() + wait)
-            return await _db(services, "release", lease, "retry_pending", {"code": "rate_limited"})
+            # `retry_pending` asserts a previous attempt exists and is being retried, and
+            # the repository refuses that state without the attempt evidence to support it.
+            # Admission runs BEFORE any attempt row is allocated, so a first-attempt
+            # throttle has none: a task that has consumed nothing belongs back in the queue
+            # it came from. Releasing it as a retry raised AttemptLimitError out of the
+            # worker, through the pool, into the campaign's cancel-everything path - so
+            # ordinary, expected throttling failed the campaign and left unrelated
+            # in-flight requests recorded as ambiguous deliveries.
+            resting = "retry_pending" if task["attempt_count"] else "queued"
+            return await _db(services, "release", lease, resting, {"code": "rate_limited"})
+        except ProviderIneligible:
+            # A provider cooldown set by ONE worker while others are already past the
+            # eligibility check. That is normal at any concurrency above one: a single
+            # transient blip anywhere puts the provider into a few seconds of backoff, and
+            # every worker mid-dispatch then finds it ineligible. Letting that propagate
+            # meant one blip in 4,745 calls reached the pool's failure path and cancelled
+            # every other in-flight request, ending the campaign. No attempt row was
+            # allocated, so nothing is consumed; the task waits with the provider.
+            resting = "retry_pending" if task["attempt_count"] else "queued"
+            return await _db(services, "release", lease, resting, {"code": "provider_cooldown"})
         _checkpoint(services, "request_persisted", task)
     dispatched = await _db(services, "mark_dispatched", attempt, lease)
     if not dispatched["dispatch_allowed"]:
@@ -352,7 +399,13 @@ async def _advance_task(lease: dict, services: Services) -> dict:
         await _db(services, "set_provider_state", task["campaign_id"], task["provider"], "cooldown",
                   {"code": response.outcome}, datetime.now(UTC) + timedelta(seconds=seconds))
         return await _db(services, "release", lease, "retry_pending", {"code": response.outcome})
-    if response.delivery != "ambiguous_delivery":
+    # Pausing the provider stops the whole campaign, so it is reserved for failures that
+    # say something is wrong with the deployment. A classified transient error does not:
+    # it is the recoverable case by definition. Reaching here with one means a single task
+    # ran out of its three attempts, which is that task's failure, not the provider's - and
+    # pausing over it blocked 10,348 queued tasks because one hit a 429.
+    if (response.delivery != "ambiguous_delivery"
+            and response.outcome != "classified_transient_provider_error"):
         await _db(services, "set_provider_state", task["campaign_id"], task["provider"], "paused",
                   {"code": response.outcome, "http_status": response.status_code})
     return await _db(services, "release", lease,
@@ -469,8 +522,7 @@ def _attempt_projection(attempt: dict) -> dict[str, Any]:
     }
 
 
-async def finalize_campaign(campaign_id: str, services: Services, *,
-                            outputs: bool = True) -> dict[str, Any]:
+async def finalize_campaign(campaign_id: str, services: Services) -> dict[str, Any]:
     """Rank the completed campaign, persist its evidence and mark it complete.
 
     Finishing every task is not finishing the campaign: without this step the database
@@ -482,7 +534,6 @@ async def finalize_campaign(campaign_id: str, services: Services, *,
     and completing an already complete campaign is safe.
 
     Args: campaign_id: frozen campaign; services: verified bundle and repository;
-        outputs: whether to write the derived export beneath `outputs/`.
     Returns: Ranking summary with the stored identities and final campaign state.
     Raises: LabError if tasks are incomplete; persistence errors on evidence conflict.
     Side effects: Writes ranking, report and campaign state; optionally one export file.
@@ -491,20 +542,31 @@ async def finalize_campaign(campaign_id: str, services: Services, *,
 
     plan = services.bundle["plan"]
     tasks = await asyncio.to_thread(services.repository.list_tasks, campaign_id)
-    incomplete = [task["task_id"] for task in tasks if task["state"] != "complete"]
-    if incomplete:
-        raise LabError(f"Cannot finalize: {len(incomplete)} task(s) are not complete")
+    unfinished = [task["task_id"] for task in tasks
+                  if task["state"] not in _TERMINAL_TASK_STATES]
+    if unfinished:
+        raise LabError(f"Cannot finalize: {len(unfinished)} task(s) can still advance")
+    # Terminal failures are reported, not silently dropped and not scored. A configuration
+    # missing any of its population fails `require_complete_population` and is ranked
+    # nowhere; the ranking already records that as an explicit not-rankable reason.
+    failed = [task["task_id"] for task in tasks if task["state"] != "complete"]
 
     # Take the scorer version and threshold from the frozen evaluator constants, not from
     # an evaluated task: reading them out of the evidence being checked would make the
     # check agree with whatever produced that evidence.
     from iadopt_eval.core import CLOSE_THRESHOLD, SCORER_VERSION
 
+    # The scorer hash is recomputed from this checkout's evaluator source and the loaded
+    # backend rather than copied out of the plan. Copying it compared the plan to itself,
+    # which holds for any checkout and so could not detect a report produced by different
+    # evaluator source or a different similarity backend from the one the plan froze.
+    from .artifacts import scorer_identity_hash
+
     scorer_identity = {
         "scorer_version": SCORER_VERSION,
         "similarity_identity": services.bundle["similarity_identity"],
         "close_threshold": CLOSE_THRESHOLD,
-        "plan_scorer": plan.get("artifact_identities", {}).get("scorer"),
+        "plan_scorer": scorer_identity_hash(services.root, services.bundle["similarity_identity"]),
     }
     categories = {task["variable"]["variable_id"]: {
         "category": task["variable"]["category"],
@@ -521,14 +583,15 @@ async def finalize_campaign(campaign_id: str, services: Services, *,
          "reason": row["reason"]} for row in report["configurations"]]}
     stored = await asyncio.to_thread(services.repository.save_ranking, campaign_id, ranking)
 
-    files = []
-    if outputs:
-        # Re-exporting identical content is a no-op; only genuinely different bytes at
-        # the same destination raise, which keeps finalization safe to repeat.
-        written = await asyncio.to_thread(
-            export_report, report, "json", f"ranking-{campaign_id}.json",
-            outputs_root=services.root / "outputs")
-        files = list(written["files"])
+    # Re-exporting identical content is a no-op; only genuinely different bytes at the
+    # same destination raise, which keeps finalization safe to repeat. Exporting is not
+    # optional: `save_report` requires a non-empty file list, so the former `outputs=False`
+    # branch could only ever produce a manifest the repository rejects. No caller used it,
+    # and a switch that cannot succeed is worse than no switch.
+    written = await asyncio.to_thread(
+        export_report, report, "json", f"ranking-{campaign_id}.json",
+        outputs_root=services.root / "outputs")
+    files = list(written["files"])
     manifest = {"schema_version": "1.0", "campaign_id": campaign_id,
                 "kind": "configuration-ranking", "files": files, "final": report["complete"]}
     await asyncio.to_thread(services.repository.save_report, campaign_id, manifest)
@@ -539,7 +602,8 @@ async def finalize_campaign(campaign_id: str, services: Services, *,
     return {"campaign_id": campaign_id, "state": state, "ranking_id": stored["id"],
             "policy_version": report["policy_version"],
             "configurations": report["configuration_count"],
-            "rankable": report["rankable_count"], "complete": report["complete"]}
+            "rankable": report["rankable_count"], "complete": report["complete"],
+            "operationally_failed_tasks": len(failed)}
 
 
 async def run_campaign(campaign_id: str, services: Services, *, stop_after: int | None = None) -> dict:
@@ -576,6 +640,10 @@ async def run_campaign(campaign_id: str, services: Services, *, stop_after: int 
         config["providers"][name]["tokens_per_minute"]) for name in selected}
     worker, advancements, rotation = "worker-" + str(uuid.uuid4()), 0, 0
     stop_reason = "blocked"
+    # Consecutive idle polls tolerated before concluding nothing can advance. Each is
+    # followed by a short backoff, so this rides out a cooldown expiring mid-check without
+    # spinning if the campaign really is stuck.
+    idle_polls = 0
     # Streaming worker pool: a finished task frees its slot immediately instead of the
     # whole batch waiting on its slowest member. Provider fairness, per-provider
     # concurrency and the rate gates are unchanged; only the wait boundary moves.
@@ -620,6 +688,7 @@ async def run_campaign(campaign_id: str, services: Services, *, stop_after: int 
                 if claimed is None:
                     break
                 lease, name = claimed
+                idle_polls = 0
                 inflight[asyncio.create_task(run_task(lease, services))] = name
                 counts[name] += 1
             if inflight:
@@ -630,8 +699,20 @@ async def run_campaign(campaign_id: str, services: Services, *, stop_after: int 
                     break
                 continue
             campaign = await _db(services, "get_campaign", campaign_id)
-            if campaign["states"].get("complete", 0) == services.bundle["plan"]["counts"]["tasks"]:
+            states = campaign["states"]
+            total = services.bundle["plan"]["counts"]["tasks"]
+            if states.get("complete", 0) == total:
                 stop_reason = "tasks_complete"
+                break
+            # Some failures are terminal by design: a response truncated at the output
+            # ceiling is an operational failure that must NOT be retried (the same request
+            # would truncate again) and must NOT be scored as a model-quality zero. Such a
+            # task can never reach `complete`, so waiting for a fully complete population
+            # meant one truncation anywhere denied results for the entire campaign. When
+            # nothing remains that could still advance, that is a finished campaign with
+            # recorded failures, not a stalled one.
+            if sum(states.get(name, 0) for name in _TERMINAL_TASK_STATES) == total:
+                stop_reason = "tasks_terminal"
                 break
             delays = [gate.next_ready - time.monotonic() for gate in services.gates.values() if gate.next_ready > time.monotonic()]
             for profile in campaign["providers"]:
@@ -645,16 +726,35 @@ async def run_campaign(campaign_id: str, services: Services, *, stop_after: int 
                     if remaining > 0:
                         delays.append(remaining)
             if delays:
+                idle_polls = 0
                 await asyncio.sleep(min(30.0, max(0.01, min(delays))))
                 continue
-            break
+            # Nothing was claimable and no wait is known, yet work remains. Usually that is
+            # a race rather than a dead end: a cooldown that expired between the claim
+            # attempt and this check leaves no delay to report while the tasks it was
+            # holding are now claimable again. Breaking immediately abandoned 9,929 queued
+            # tasks after one upstream rate-limit. Back off briefly and look again, and
+            # give up only after several consecutive polls find nothing at all.
+            idle_polls += 1
+            if idle_polls >= _IDLE_POLLS_BEFORE_STOP:
+                stop_reason = "no_claimable_work"
+                break
+            await asyncio.sleep(min(5.0, 0.5 * idle_polls))
     finally:
         # A failure must not leave leases held by orphaned coroutines.
         for pending in inflight:
             pending.cancel()
         if inflight:
             await asyncio.gather(*inflight, return_exceptions=True)
-    if stop_reason != "tasks_complete":
+        # Cancelling a worker stops it dispatching; it must not stop it storing an answer
+        # already received. Those commits are shielded, so they outlive their task and are
+        # awaited here instead - otherwise the loop closes on a write still in flight and
+        # paid-for evidence is lost at exactly the moment the campaign is failing.
+        if services.preservation:
+            await asyncio.gather(*tuple(services.preservation), return_exceptions=True)
+    # A campaign that stopped with terminal failures is finished, not paused: pausing it
+    # would invite a resume that can never make progress.
+    if stop_reason not in {"tasks_complete", "tasks_terminal"}:
         await _db(services, "set_campaign_state", campaign_id, "paused")
     campaign = await _db(services, "get_campaign", campaign_id)
     return {"campaign_id": campaign_id, "state": campaign["state"], "states": campaign["states"],

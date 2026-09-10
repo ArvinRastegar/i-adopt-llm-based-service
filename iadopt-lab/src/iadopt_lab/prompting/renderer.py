@@ -151,11 +151,21 @@ def _rendered(content: str, metadata: dict[str, Any]) -> RenderedPrompt:
 
 def render_base_prompt(template: PromptVersion, target_definition: str, schema: bytes,
                        demonstrations: Iterable[dict[str, Any]] = (), *,
-                       target_id: str | None = None) -> RenderedPrompt:
+                       target_id: str | None = None,
+                       control_suffix: str = "") -> RenderedPrompt:
     """Render the exact frozen schema, approved examples and one target definition.
 
     Args: verified template, exact target definition, exact runtime schema bytes,
-    zero/one/three/five ordered example records, optional non-model-visible target ID.
+    zero/one/three/five ordered example records, optional non-model-visible target ID,
+    and an optional deployment control suffix.
+
+    The control suffix exists because not every reasoning switch is a request field. Qwen
+    models accept `/no_think` in the prompt itself, and on a routing gateway that is the
+    only channel that survives: OpenRouter forwards the message but drops
+    `chat_template_kwargs`, so the template-level switch never reaches the tokenizer. The
+    suffix is appended after the scientific content, never interleaved with it, and is
+    recorded in the metadata so the prompt hash covers it and no evidence shows a prompt
+    that differs from the bytes actually sent.
     Actions: verify artifacts and prefix membership, insert each placeholder once,
     retaining target text byte-for-byte and keeping all target gold/provenance out.
     Returns: RenderedPrompt with one user message and component/final hashes.
@@ -186,7 +196,13 @@ def render_base_prompt(template: PromptVersion, target_definition: str, schema: 
     values = {"schema": schema_text, "demonstrations": _json(demo_payload), "target_definition": target_definition}
     import re
     content = re.sub(r"\{\{(schema|demonstrations|target_definition)\}\}", lambda match: values[match.group(1)], template.text)
+    if control_suffix:
+        if not isinstance(control_suffix, str):
+            raise TypeError("Control suffix must be text")
+        content = content + control_suffix
     metadata = {"renderer_version": RENDERER_VERSION, "prompt_id": template.prompt_id,
+                "control_suffix": control_suffix or None,
+                "control_suffix_sha256": _hash(control_suffix.encode("utf-8")) if control_suffix else None,
                 "prompt_version": template.version, "template_sha256": template.sha256,
                 "historical_sha256": template.historical_sha256, "schema_sha256": _hash(schema),
                 "target_definition_sha256": _hash(target_definition.encode("utf-8")),

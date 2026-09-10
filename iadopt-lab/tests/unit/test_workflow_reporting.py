@@ -6,7 +6,9 @@ completeness from the rows it was handed, and a saved manifest escaping verifica
 """
 
 import asyncio
+import contextlib
 import json
+import shutil
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -17,6 +19,7 @@ import yaml
 from test_provider_transport import _exchange
 
 from iadopt_lab.corpus.ingestion import load_canonical_records
+from iadopt_lab.domain import LabError
 from iadopt_lab.reporting import build_category_summary, build_configuration_ranking
 from iadopt_lab.workflow import _attempt_projection, build_observations
 
@@ -137,18 +140,39 @@ def test_ranking_rejects_observations_scored_by_another_backend():
     assert report["scorer_binding"] == "verified-against-plan"
 
 
+def _isolated_lab(tmp_path):
+    """Build a lab root that shares the real corpus but owns its manifests.
+
+    The corpus is large, so everything is symlinked except `data/manifests`, which is
+    copied and therefore writable. Tampering used to be done to the repository's own
+    manifest and undone in a `finally`; a killed process or a parallel run left the real
+    file short of a member, which is a corrupted checkout rather than a failed test.
+    """
+    root = tmp_path / "lab"
+    root.mkdir()
+    for entry in ROOT.iterdir():
+        if entry.name != "data":
+            (root / entry.name).symlink_to(entry)
+    (root / "data").mkdir()
+    for entry in (ROOT / "data").iterdir():
+        if entry.name != "manifests":
+            (root / "data" / entry.name).symlink_to(entry)
+    shutil.copytree(ROOT / "data/manifests", root / "data/manifests")
+    return root
+
+
 def test_verify_detects_a_tampered_population_manifest(tmp_path):
     """Deleting or editing a saved manifest must fail verification, not pass silently."""
-    manifest = ROOT / "data/manifests/evaluation-population-v2.0.1.yml"
-    original = manifest.read_bytes()
-    try:
-        tampered = yaml.safe_load(original)
-        tampered["members"] = tampered["members"][:-1]
-        manifest.write_text(yaml.safe_dump(tampered, sort_keys=True, allow_unicode=True), encoding="utf-8")
-        with pytest.raises(ValueError, match="evaluation-population"):
-            load_canonical_records(ROOT)
-    finally:
-        manifest.write_bytes(original)
+    root = _isolated_lab(tmp_path)
+    manifest = root / "data/manifests/evaluation-population-v2.0.1.yml"
+    assert len(load_canonical_records(root)) == 102
+
+    tampered = yaml.safe_load(manifest.read_bytes())
+    tampered["members"] = tampered["members"][:-1]
+    manifest.write_text(yaml.safe_dump(tampered, sort_keys=True, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match="evaluation-population"):
+        load_canonical_records(root)
+    # The repository's own manifest was never touched, so no restore step can be skipped.
     assert len(load_canonical_records(ROOT)) == 102
 
 
@@ -260,3 +284,289 @@ def test_synthetic_artifacts_describe_the_planned_population():
     inputs = collect_input_artifacts(ROOT, records, targets,
                                      {"backend": "synthetic-equality-only-v1", "synthetic": True})
     assert inputs["identities"]["population"] == content_hash(sorted(r["variable_id"] for r in targets))
+
+
+# --- Fixes from the 2026-09-09 read-only audit -----------------------------------
+
+
+@pytest.mark.parametrize("message,expected", [
+    ({}, ("rejected", "invalid_envelope")),
+    ({"role": "assistant"}, ("rejected", "invalid_envelope")),
+    ({"content": 42}, ("rejected", "invalid_envelope")),
+    ({"content": ["a", "list"]}, ("rejected", "invalid_envelope")),
+    ({"content": None}, ("response_received", "empty_response")),
+    ({"content": ""}, ("response_received", "empty_response")),
+])
+def test_a_message_object_is_not_itself_a_completion(message, expected):
+    """`{"message": {}}` is a missing completion structure, not an empty answer.
+
+    Treating any dictionary as well-formed meant three malformed envelopes exhausted a
+    task's three attempts and were scored as the model answering nothing.
+    """
+    envelope = {"choices": [{"finish_reason": "stop", "message": message}]}
+    result, _ = _exchange("psnc", lambda request: httpx.Response(200, json=envelope))
+    assert (result.delivery, result.outcome) == expected
+
+
+def test_an_error_object_beside_an_empty_completion_is_a_provider_error():
+    envelope = {"error": {"message": "gateway failure"},
+                "choices": [{"finish_reason": "stop", "message": {"content": ""}}]}
+    result, _ = _exchange("psnc", lambda request: httpx.Response(200, json=envelope))
+    assert (result.delivery, result.outcome) == ("rejected", "provider_error_envelope")
+
+
+def test_a_real_answer_survives_a_stray_error_field():
+    envelope = {"error": None, "choices": [
+        {"finish_reason": "stop", "message": {"content": '{"hasProperty": []}'}}]}
+    result, _ = _exchange("psnc", lambda request: httpx.Response(200, json=envelope))
+    assert result.delivery == "response_received" and result.assistant_text
+
+
+def test_reasoning_is_retained_even_from_a_rejected_envelope():
+    """Reasoning is evidence; a malformed completion must not discard it."""
+    envelope = {"choices": [{"finish_reason": "stop",
+                             "message": {"reasoning_content": "thinking out loud"}}]}
+    result, _ = _exchange("psnc", lambda request: httpx.Response(200, json=envelope))
+    assert result.outcome == "invalid_envelope"
+    assert result.to_dict()["reasoning_text"] == "thinking out loud"
+
+
+def test_a_commit_survives_cancellation_of_its_supervisor():
+    """The outage that fails a commit usually fails the heartbeat that cancels it too."""
+    from iadopt_lab.persistence import PersistenceError
+    from iadopt_lab.workflow import _commit_response
+
+    attempts, stored = {"count": 0}, {}
+
+    class SlowRepository:
+        def store_response(self, attempt, payload):
+            attempts["count"] += 1
+            if attempts["count"] == 1:
+                raise PersistenceError("connection lost")
+            stored.update(payload)
+            return {"id": "response-1"}
+
+    services = _services(SlowRepository())
+
+    async def scenario():
+        commit = asyncio.ensure_future(
+            _commit_response(services, {"id": "attempt-1"}, {"raw_body": b"paid bytes"}))
+        await asyncio.sleep(0.05)
+        commit.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await commit
+        # Cancelling the caller stops dispatch; the shielded preservation task continues.
+        await asyncio.gather(*tuple(services.preservation), return_exceptions=True)
+
+    asyncio.run(scenario())
+    assert stored["raw_body"] == b"paid bytes"
+    assert attempts["count"] == 2
+
+
+def test_absent_categories_are_represented_not_omitted():
+    """A run that scored nothing for a whole category must not look like no such category."""
+    rows = [_observation("v1", category="Physics", subcategory="Optics")]
+    summary = build_category_summary(rows, population_categories={
+        "v1": {"category": "Physics", "category_path": "Physics/Optics"},
+        "v9": {"category": "Biology", "category_path": "Biology/Cells"}})
+    biology = [row for row in summary if row["category"] == "Biology"]
+    assert biology, "a category with no observations disappeared from the summary"
+    assert all(row["observed_variables"] == 0 and not row["complete"] for row in biology)
+    assert all(row["missing_variable_ids"] == ["v9"] for row in biology)
+
+
+def test_scorer_hash_is_recomputed_from_source_not_copied_from_the_plan():
+    """Comparing a plan's hash to itself holds for any checkout and proves nothing."""
+    from iadopt_lab.artifacts import scorer_identity_hash
+
+    backend = {"backend": "sentence-transformers/all-MiniLM-L6-v2", "revision": "abc"}
+    first = scorer_identity_hash(ROOT, backend)
+    assert first == scorer_identity_hash(ROOT, backend)
+    # A different similarity backend must produce a different scorer identity.
+    assert first != scorer_identity_hash(ROOT, {**backend, "revision": "different"})
+
+
+def test_a_first_attempt_throttle_returns_the_task_to_the_queue():
+    """Admission runs before an attempt row exists, so a throttle there has no evidence.
+
+    Releasing such a task as `retry_pending` asserts a retry of an attempt that was never
+    made; the repository refuses it, and the resulting AttemptLimitError propagated out of
+    the worker into the campaign's cancel-everything path. Ordinary throttling then failed
+    the whole campaign and left unrelated in-flight requests as ambiguous deliveries.
+    """
+    from iadopt_lab.persistence import RateLimitError
+    from iadopt_lab.workflow import _advance_task
+
+    released = []
+
+    class ThrottlingRepository:
+        def get_task(self, task_id):
+            return {"id": task_id, "state": "queued", "prediction": None, "attempts": [],
+                    "attempt_count": 0, "provider": "psnc", "model_id": "M",
+                    "variable": {"variable_id": "v1", "definition": "d", "category": "C",
+                                 "subcategory": "S", "category_path": "C/S"},
+                    "run": {"model_id": "M", "prompt_variant": "strict-minimal", "shot_count": 0,
+                            "temperature": 0.5, "top_p": 1.0, "max_output_tokens": 16,
+                            "reasoning_fields": {}, "configuration": {"model_id": "M"}}}
+
+        def start_attempt(self, lease, request):
+            raise RateLimitError(5.0)
+
+        def release(self, lease, state=None, detail=None):
+            released.append((state, detail))
+            return {"state": state}
+
+    services = _services(ThrottlingRepository())
+    services.bundle = {
+        "demonstrations": (), "plan": {"mode": "live", "population": ["v1"]},
+        "configuration": {"providers": {"psnc": {"models": [
+            {"id": "M", "context_window_tokens": 1048576}]}}}}
+    services.token_bound = lambda task, body: 10
+    services.cost_policy = lambda task, body: {"reservation_amount": "0", "bounded": True}
+
+    asyncio.run(_advance_task({"id": "t1", "provider": "psnc"}, services))
+    # Queued, not retry_pending: nothing was consumed, so there is no retry to pend.
+    assert released == [("queued", {"code": "rate_limited"})]
+
+
+def test_finalization_proceeds_with_terminal_operational_failures():
+    """One truncation must not deny results for an entire campaign.
+
+    A response truncated at the output ceiling is an operational failure that is
+    deliberately not retryable — the same request would truncate again — and is
+    deliberately not scored as a model-quality zero. Its task therefore can never reach
+    `complete`. Refusing to finalize while any task is incomplete meant a single such
+    task discarded every result the campaign did produce; at temperature 2 that is not
+    hypothetical, it is routine.
+    """
+    from iadopt_lab.workflow import _TERMINAL_TASK_STATES, finalize_campaign
+
+    assert set(_TERMINAL_TASK_STATES) == {"complete", "operational_failed", "ambiguous_delivery"}
+
+    class Repo:
+        def __init__(self, states):
+            self.states = states
+
+        def list_tasks(self, campaign_id):
+            return [{"task_id": f"t{i}", "state": s} for i, s in enumerate(self.states)]
+
+    def finalize(states):
+        services = _services(Repo(states))
+        services.bundle = {"plan": {}, "similarity_identity": {}}
+        return asyncio.run(finalize_campaign("c1", services))
+
+    # Still-advancing work blocks finalization, as before.
+    with pytest.raises(LabError, match="can still advance"):
+        finalize(["complete", "queued"])
+    with pytest.raises(LabError, match="can still advance"):
+        finalize(["complete", "retry_pending"])
+
+    # Terminal failures get past the gate: the failure here is the *next* step needing a
+    # real plan, which proves the incompleteness check no longer rejects them.
+    for terminal in ("operational_failed", "ambiguous_delivery"):
+        with pytest.raises(Exception) as caught:
+            finalize(["complete", terminal])
+        assert "can still advance" not in str(caught.value)
+
+
+def test_a_provider_cooldown_returns_the_task_instead_of_failing_the_campaign():
+    """One transient blip must not cancel every other in-flight request.
+
+    A cooldown is set by whichever worker saw the blip, while the others are already past
+    the eligibility check. At concurrency 24 that is the normal case, not a rare race: the
+    next worker to allocate an attempt finds the provider ineligible. Letting that
+    propagate ended a 10,476-task campaign after one failure in 4,745 calls.
+    """
+    from iadopt_lab.persistence import ProviderIneligible
+    from iadopt_lab.workflow import _advance_task
+
+    released = []
+
+    def repo_for(attempt_count):
+        class Repo:
+            def get_task(self, task_id):
+                return {"id": task_id, "state": "queued" if not attempt_count else "retry_pending",
+                        "prediction": None, "attempts": [], "attempt_count": attempt_count,
+                        "provider": "psnc", "model_id": "M",
+                        "variable": {"variable_id": "v1", "definition": "d", "category": "C",
+                                     "subcategory": "S", "category_path": "C/S"},
+                        "run": {"model_id": "M", "prompt_variant": "strict-minimal",
+                                "shot_count": 0, "temperature": 0.5, "top_p": 1.0,
+                                "max_output_tokens": 16, "reasoning_fields": {},
+                                "configuration": {"model_id": "M"}}}
+
+            def start_attempt(self, lease, request):
+                raise ProviderIneligible("This provider is not eligible for new dispatch")
+
+            def release(self, lease, state=None, detail=None):
+                released.append((state, detail))
+                return {"state": state}
+        return Repo()
+
+    for attempts, expected in ((0, "queued"), (1, "retry_pending")):
+        released.clear()
+        services = _services(repo_for(attempts))
+        services.bundle = {
+            "demonstrations": (), "plan": {"mode": "live", "population": ["v1"]},
+            "configuration": {"providers": {"psnc": {"models": [
+                {"id": "M", "context_window_tokens": 1048576}]}}}}
+        services.token_bound = lambda task, body: 10
+        services.cost_policy = lambda task, body: {"reservation_amount": "0", "bounded": True}
+        asyncio.run(_advance_task({"id": "t1", "provider": "psnc"}, services))
+        assert released == [(expected, {"code": "provider_cooldown"})]
+
+
+def test_an_exhausted_transient_error_fails_the_task_not_the_provider():
+    """A 429 that runs out of retries is that task's failure, not the deployment's.
+
+    Pausing the provider stops every queued task. One rate-limited task exhausting its
+    three attempts blocked 10,348 others; only a failure that says something is wrong with
+    the deployment itself should pause it.
+    """
+    from iadopt_lab.workflow import _advance_task
+
+    calls = []
+
+    class Repo:
+        def get_task(self, task_id):
+            return {"id": task_id, "state": "request_persisted", "prediction": None,
+                    "attempt_count": 3, "provider": "openrouter", "model_id": "M",
+                    "attempts": [{"id": "a3", "attempt_number": 3, "validation": None,
+                                  "response": None, "request_body": {"model": "M"},
+                                  "delivery": "not_dispatched"}],
+                    "variable": {"variable_id": "v1", "definition": "d", "category": "C",
+                                 "subcategory": "S", "category_path": "C/S"},
+                    "run": {"model_id": "M", "prompt_variant": "strict-minimal", "shot_count": 0,
+                            "temperature": 0.5, "top_p": 1.0, "max_output_tokens": 16,
+                            "reasoning_fields": {}, "configuration": {"model_id": "M"}}}
+
+        def mark_dispatched(self, attempt, lease=None):
+            return {"dispatch_allowed": True}
+
+        def store_response(self, attempt, payload):
+            return {"id": "r1"}
+
+        def set_provider_state(self, *args, **kwargs):
+            calls.append(("set_provider_state", args[2]))
+            return {}
+
+        def release(self, lease, state=None, detail=None):
+            calls.append(("release", state))
+            return {"state": state}
+
+    class Adapter:
+        async def send_once(self, body):
+            from iadopt_lab.providers.base import ProviderResult
+            return ProviderResult(
+                provider="openrouter", requested_model="M", request=body, raw_response="429",
+                raw_response_base64="", assistant_text=None, status_code=429,
+                outcome="classified_transient_provider_error", delivery="rejected",
+                started_at="", finished_at="", latency_seconds=0.0)
+
+    services = _services(Repo())
+    services.bundle = {"demonstrations": (), "plan": {"mode": "live", "population": ["v1"]}}
+    services.adapters = {"openrouter": Adapter()}
+    asyncio.run(_advance_task({"id": "t1", "provider": "openrouter"}, services))
+
+    assert ("set_provider_state", "paused") not in calls, "a 429 must not pause the provider"
+    assert ("release", "operational_failed") in calls

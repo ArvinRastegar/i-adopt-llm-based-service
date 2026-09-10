@@ -41,7 +41,9 @@ def estimate_campaign_cost(plan: dict, prompt_artifacts: dict, billing_evidence:
             reasoning_accounting_evidence. Output includes billed reasoning tokens.
     Returns:
         Hashed estimate with provider/model totals, assumptions and readiness issues.
-        A conditional bound requires an evidenced all-in output ceiling, not a guess.
+        A conditional token bound requires an evidenced all-in output ceiling.
+        Fully evidenced non-billed plans may proceed with a disclosed ceiling warning:
+        zero monetary cost does not establish a token or runtime bound.
     Raises:
         LabError: Mismatched plan, invalid quantities or inconsistent retry fractions.
     Side Effects:
@@ -49,7 +51,7 @@ def estimate_campaign_cost(plan: dict, prompt_artifacts: dict, billing_evidence:
     """
     if prompt_artifacts.get("plan_sha256") != plan["sha256"]:
         raise LabError("Prompt estimate is not bound to this plan")
-    issues, rows = [], []
+    issues, rows, warnings = [], [], []
     currency = billing_evidence.get("currency")
     if not currency:
         issues.append("Reporting currency is missing")
@@ -66,7 +68,16 @@ def estimate_campaign_cost(plan: dict, prompt_artifacts: dict, billing_evidence:
     if not assumptions.get("reasoning_accounting_evidence"):
         issues.append("Billed reasoning/output-token accounting is unverified")
     if assumptions.get("ceiling_verified") is not True:
-        issues.append("All-in output/reasoning ceiling is not verified")
+        cards = [billing_evidence.get("models", {}).get(
+            count["provider"] + "/" + count["model_id"], {})
+            for count in plan["counts"]["by_model"]]
+        if cards and all(card.get("mode") == "non_billed" and card.get("basis")
+                         and card.get("provenance") for card in cards):
+            warnings.append("All-in output/reasoning ceiling is not verified; monetary "
+                            "cost is zero under the documented non-billed access. "
+                            "Token consumption and runtime are not guaranteed bounded by this estimate.")
+        else:
+            issues.append("All-in output/reasoning ceiling is not verified")
     by_run = prompt_artifacts.get("input_tokens_by_run", {})
     for count in plan["counts"]["by_model"]:
         key = count["provider"] + "/" + count["model_id"]
@@ -121,7 +132,7 @@ def estimate_campaign_cost(plan: dict, prompt_artifacts: dict, billing_evidence:
                if all(row[field] is not None for row in members) else None
                for field in ("expected_cost", "conditional_maximum_cost")}})
     estimate = {"version": "pre-run-estimate-v1", "plan_sha256": plan["sha256"], "ready": not issues,
-        "currency": currency, "issues": sorted(set(issues)), "assumptions": assumptions,
+        "currency": currency, "issues": sorted(set(issues)), "warnings": warnings, "assumptions": assumptions,
         "prompt_evidence_sha256": content_hash(prompt_artifacts), "billing_evidence": billing_evidence,
         "by_model": rows, "by_provider": by_provider,
         "totals": {"initial_calls": plan["counts"]["initial_calls"], "maximum_calls": plan["counts"]["maximum_calls"],

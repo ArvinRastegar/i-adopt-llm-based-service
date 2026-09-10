@@ -1,0 +1,36 @@
+# Frozen price evidence for the PSNC deployment.
+#
+# Coverage is the point of this file: `cost_policy` refuses to reserve against a model
+# with no entry here, and it refuses BEFORE consulting the billing mode, so a non-billed
+# provider does not exempt a model from needing evidence. One entry is required per
+# enabled model, or the campaign cannot dispatch that model's first task.
+#
+# `non_billed` is an evidenced zero, not an unknown price treated as free. Its basis is
+# the owner's reported no-charge access; token usage, latency and retries are recorded
+# in full regardless. A metered model needs input_per_million, output_per_million and
+# fx_to_reporting instead, and must never be added here without published rates.
+currency: USD
+models:
+  psnc/GLM-5.2:
+    basis: Owner-reported no-charge PSNC access for this experiment
+    fx_to_reporting: '1'
+    mode: non_billed
+    provenance: D-028 and the campaign billing declaration; PSNC bills this deployment
+      at zero monetary cost to this account. Token usage, latency and retries are
+      still recorded in full.
+  psnc/Qwen3.8-27B:
+    basis: Owner-reported no-charge PSNC access for this experiment
+    fx_to_reporting: '1'
+    mode: non_billed
+    provenance: D-028 and the campaign billing declaration; the same no-charge access
+      covers every model on this deployment. Token usage, latency and retries are
+      still recorded in full.
+  psnc/DeepSeek-V4-Flash:
+    basis: Owner-reported no-charge PSNC access for this experiment
+    fx_to_reporting: '1'
+    mode: non_billed
+    provenance: D-028 and the campaign billing declaration; the same no-charge access
+      covers every model on this deployment. Token usage, latency and retries are
+      still recorded in full.
+retrieved_at: '2026-09-09'
+schema_version: price-card-v1

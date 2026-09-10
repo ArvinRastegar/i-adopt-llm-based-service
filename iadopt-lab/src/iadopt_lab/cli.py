@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -23,7 +24,10 @@ EXIT_FAILED = 1
 _MESSAGE_OVERHEAD_TOKENS = 256
 # Stop reasons that mean the campaign's work is done. `already_complete` is the runner
 # recognizing finished work, which is a success for an idempotent resume.
-_SUCCESSFUL_STOPS = frozenset({"tasks_complete", "already_complete"})
+# Stop reasons meaning the campaign is finished. `tasks_terminal` is finished WITH
+# recorded operational failures: every remaining task is in a state no further work
+# can advance, so refusing to finalize would discard the results that did succeed.
+_SUCCESSFUL_STOPS = frozenset({"tasks_complete", "already_complete", "tasks_terminal"})
 
 
 def _root(value: str | None) -> Path:
@@ -212,6 +216,7 @@ def cmd_report(args: argparse.Namespace) -> int:
     """
     from iadopt_eval.core import CLOSE_THRESHOLD, SCORER_VERSION
 
+    from .artifacts import scorer_identity_hash
     from .corpus.ingestion import load_canonical_records
     from .reporting import build_configuration_ranking, export_report
 
@@ -225,15 +230,23 @@ def cmd_report(args: argparse.Namespace) -> int:
     resolved = _configuration(root)
     _, similarity_identity = _similarity_for(root, resolved.data, plan.get("mode") == "synthetic")
     records = load_canonical_records(root)
+    # Recomputed from this checkout's evaluator source and the backend actually loaded,
+    # never copied from the plan. Copying it made the binding check compare the plan to
+    # itself, which passes for any checkout and so proves nothing about the report.
+    scorer = scorer_identity_hash(root, similarity_identity)
+    # Denominators come from the population the plan selected, not the whole corpus. The
+    # five demonstrations are excluded from scoring by design, so counting them as
+    # expected members reported a fully scored campaign as missing coverage.
+    population = set(plan.get("population") or ())
     report = build_configuration_ranking(
         plan, observations,
         scorer_identity={"scorer_version": SCORER_VERSION,
                          "similarity_identity": similarity_identity,
                          "close_threshold": CLOSE_THRESHOLD,
-                         "plan_scorer": plan.get("artifact_identities", {}).get("scorer")},
+                         "plan_scorer": scorer},
         population_categories={row["variable_id"]: {"category": row["category"],
                                                     "category_path": row["category_path"]}
-                               for row in records})
+                               for row in records if row["variable_id"] in population})
     written = None
     if args.out:
         written = export_report(report, args.format, args.out, outputs_root=root / "outputs")
@@ -362,6 +375,19 @@ def _live_services(root: Path, data: dict, plan: dict) -> tuple[Any, Any, Any]:
     card_path = Path(data["cost_accounting"]["price_card_manifest"])
     card = yaml.safe_load((root / card_path).read_bytes())
 
+    # Coverage is checked here, once, against the whole plan. `cost_policy` raises for an
+    # uncovered model, and it raises from inside the worker pool, where the failure
+    # cancels unrelated in-flight tasks. Discovering a missing card entry on the first
+    # task of the second model is the worst possible moment: the estimate has already
+    # reported the campaign ready, and part of the work is already dispatched. A
+    # non-billed provider is not exempt - an evidenced zero is still evidence.
+    missing = sorted({f"{count['provider']}/{count['model_id']}" for count in plan["counts"]["by_model"]}
+                     - set(card.get("models") or {}))
+    if missing:
+        raise LabError(f"Frozen price card {card_path.as_posix()} has no entry for: "
+                       + ", ".join(missing)
+                       + ". Every planned model needs price evidence before dispatch.")
+
     def token_bound(task: dict, body: dict) -> int:
         """Bound one request's tokens from exact message bytes plus the output ceiling.
 
@@ -454,11 +480,13 @@ def _live_services(root: Path, data: dict, plan: dict) -> tuple[Any, Any, Any]:
     return token_bound, cost_policy, settlement_policy
 
 
-def _authorize(repository: Any, campaign_id: str, plan: dict, estimate: dict, actor: str) -> str:
+def _authorize(repository: Any, campaign_id: str, plan: dict, estimate: dict, actor: str,
+               channel: str) -> str:
     """Record the disclosed estimate and the operator's explicit live approval.
 
     Args: repository: open repository; campaign_id: planned live campaign;
-        plan: frozen plan; estimate: a usable pre-run-estimate-v1 result; actor: approver.
+        plan: frozen plan; estimate: a usable pre-run-estimate-v1 result; actor: approver;
+        channel: the exact invocation that carried the approval, recorded verbatim.
     Returns: The stored authorization identifier.
     Raises: LabError when the estimate is unusable; persistence errors on plan mismatch.
     Side effects: Writes one immutable live_authorization row. It records approval; it
@@ -466,12 +494,28 @@ def _authorize(repository: Any, campaign_id: str, plan: dict, estimate: dict, ac
     """
     from datetime import UTC, datetime
 
+    from .canonical import content_hash
     from .persistence.repository import _clean, _hash
 
     if not estimate.get("ready") or estimate.get("issues"):
         raise LabError("Refusing to authorize an estimate that reports issues")
     if estimate.get("plan_sha256") != plan["sha256"]:
         raise LabError("Estimate is bound to a different plan")
+    # The estimate carries its own hash, so an edited file can keep a matching plan hash
+    # and a `ready` flag while its numbers say something else. Recomputing that hash is
+    # what makes the receipt describe the document actually disclosed.
+    claimed = estimate.get("sha256")
+    recomputed = content_hash({key: value for key, value in estimate.items() if key != "sha256"})
+    if claimed != recomputed:
+        raise LabError("Estimate contents do not match the hash it carries; it was edited "
+                       "after it was produced")
+    # An estimate priced from one set of cards while the runner reserves against another
+    # is not a disclosure of this campaign's cost. Both must name the same models.
+    priced = set((estimate.get("billing_evidence") or {}).get("models") or {})
+    planned = {f"{count['provider']}/{count['model_id']}" for count in plan["counts"]["by_model"]}
+    if priced != planned:
+        raise LabError("Estimate prices " + ", ".join(sorted(priced)) + " but the plan runs "
+                       + ", ".join(sorted(planned)))
     fingerprint = repository.get_campaign(campaign_id)["plan"]["fingerprint"]
     receipt = {"plan_fingerprint": fingerprint, "policy_version": "pre-run-estimate-v1",
                "usable": True, "price_evidence": estimate["by_model"],
@@ -482,7 +526,7 @@ def _authorize(repository: Any, campaign_id: str, plan: dict, estimate: dict, ac
     now = datetime.now(UTC).isoformat()
     stored = repository.record_live_authorization(
         campaign_id, receipt,
-        {"estimate_hash": digest, "disclosed_at": now, "channel": "iadopt-lab run --authorize"},
+        {"estimate_hash": digest, "disclosed_at": now, "channel": channel},
         {"estimate_hash": digest, "plan_fingerprint": fingerprint, "authorized_at": now,
          "actor": actor, "explicit": True})
     return stored["id"]
@@ -508,8 +552,26 @@ def _similarity_for(root: Path, data: dict, synthetic: bool) -> tuple[Any, dict]
     return backend, backend.identity
 
 
+def _provider_endpoint(profile: dict, secrets: Any) -> str | None:
+    """Resolve the one effective base URL for a provider, from its declared override.
+
+    Probing and generation must describe the same deployment. When they resolve the URL
+    differently, capability evidence can be measured against one endpoint and written into
+    a configuration that dispatches to another, and nothing downstream would notice.
+
+    Args: profile: Provider block from parameters.yml; secrets: loaded runtime secrets.
+    Returns: The override URL when one is configured and set, otherwise None so the
+        caller falls back to the frozen profile default.
+    Raises: Nothing.
+    Side effects: Reads an already-loaded secret value; never logs it.
+    """
+    name = profile.get("base_url_env")
+    return (secrets.get(name) or None) if name else None
+
+
 def _prepare_campaign(root: Path, *, synthetic: bool, dsn: str | None, env_file: str | None,
                       estimate: dict | None = None, actor: str | None = None,
+                      channel: str | None = None,
                       expected_campaign: str | None = None) -> tuple[str, Any, Any]:
     """Freeze one campaign end to end and return it ready to advance.
 
@@ -555,8 +617,13 @@ def _prepare_campaign(root: Path, *, synthetic: bool, dsn: str | None, env_file:
     if not synthetic:
         import os
 
-        # The credential name is declared per provider in parameters.yml, never guessed.
-        names = [data["providers"][name]["api_key_env"] for name in data["campaign"]["providers"]]
+        # Credential and endpoint names are declared per provider in parameters.yml, never
+        # guessed. The base-URL override is read here as well as in probing: leaving it out
+        # meant `PSNC_API_BASE_URL` steered capability probes while generation silently used
+        # the frozen default, so the two could describe different deployments.
+        names = [value for name in data["campaign"]["providers"]
+                 for value in (data["providers"][name]["api_key_env"],
+                               data["providers"][name].get("base_url_env")) if value]
         secrets = load_runtime_secrets(env_file, names, os.environ)
         for name in data["campaign"]["providers"]:
             profile = data["providers"][name]
@@ -564,7 +631,8 @@ def _prepare_campaign(root: Path, *, synthetic: bool, dsn: str | None, env_file:
             if not key:
                 raise LabError(f"{profile['api_key_env']} is not available for provider {name}")
             factory = psnc if name == "psnc" else openrouter
-            adapters[name] = factory.create_adapter(profile, key)
+            adapters[name] = factory.create_adapter(
+                profile, key, base_url_override=_provider_endpoint(profile, secrets))
 
     repository = Repository(_database_url(root, dsn))
     if expected_campaign is not None:
@@ -580,8 +648,28 @@ def _prepare_campaign(root: Path, *, synthetic: bool, dsn: str | None, env_file:
         {"repository": data["dataset"]["repository"], "release": data["dataset"]["release"],
          "commit": data["dataset"]["commit"], "tree": data["dataset"]["tree"],
          "expected_count": len(records)}, _corpus_rows(root, records))
+    # Persist the freeze before anything becomes dispatchable. The plan hash can detect
+    # drift but cannot recover the bytes that drifted, so a campaign whose checkout is
+    # later lost or changed had no route back to what it actually ran. `register_campaign`
+    # accepted artifact references all along and `get_campaign_artifact` reads exactly one
+    # row of a kind, so the whole freeze is registered as a single `experiment-bundle`.
+    import base64
+
+    from .canonical import canonical_json_bytes
+
+    freeze = {"version": "experiment-bundle-v1", "plan": plan,
+              "identities": inputs["identities"], "artifact_index": inputs["index"],
+              "runtime": inputs["runtime"], "similarity_identity": similarity_identity,
+              "configuration_sha256": resolved.sha256,
+              "files": {row["path"]: base64.b64encode(row["content"]).decode("ascii")
+                        for row in inputs["artifacts"]}}
+    stored = repository.register_artifact(
+        "experiment-bundle", canonical_json_bytes(freeze),
+        {"plan_sha256": plan["sha256"], "mode": plan["mode"],
+         "configuration_sha256": resolved.sha256, "file_count": len(inputs["artifacts"])})
     campaign_id = repository.register_campaign({**data, "lab_plan_sha256": plan["sha256"]},
-                                               mode=plan["mode"])
+                                               mode=plan["mode"],
+                                               artifact_refs=[stored["id"]])
     registered = {row["variable_id"]: row for row in corpus["variables"]}
     repository.plan_tasks(campaign_id, plan["runs"],
                           [registered[vid] for vid in plan["population"]])
@@ -591,7 +679,7 @@ def _prepare_campaign(root: Path, *, synthetic: bool, dsn: str | None, env_file:
         (services.token_bound, services.cost_policy,
          services.settlement_policy) = _live_services(root, data, plan)
         if estimate is not None:
-            _authorize(repository, campaign_id, plan, estimate, actor or "operator")
+            _authorize(repository, campaign_id, plan, estimate, actor, channel)
     return campaign_id, services, plan
 
 
@@ -660,9 +748,20 @@ def cmd_run(args: argparse.Namespace) -> int:
     estimate = json.loads(Path(args.estimate).read_bytes()) if args.estimate else None
     if estimate is None:
         raise LabError("Live execution requires --estimate naming a disclosed pre-run estimate")
+    # Authorization is recorded as an explicit act, so it has to be one. Inferring it from
+    # the presence of an estimate file meant the stored receipt asserted an approval that
+    # nothing in the invocation expressed, and named a `--authorize` flag that did not
+    # exist. An identified approver is required for the same reason: `operator` records
+    # that somebody ran a command, not who accepted the cost.
+    if not args.authorize:
+        raise LabError("Live dispatch requires --authorize, confirming the disclosed estimate "
+                       "in " + str(args.estimate) + " has been reviewed and accepted")
+    if not args.actor:
+        raise LabError("Live dispatch requires --actor naming who authorizes this campaign")
     campaign_id, services, plan = _prepare_campaign(root, synthetic=False, dsn=args.dsn,
                                                     env_file=args.env_file,
-                                                    estimate=estimate, actor=args.actor)
+                                                    estimate=estimate, actor=args.actor,
+                                                    channel="iadopt-lab run --authorize")
     try:
         result = _advance(campaign_id, services, stop_after=None)
     finally:
@@ -694,6 +793,122 @@ def cmd_resume(args: argparse.Namespace) -> int:
     # A campaign already finished is a success: resume is idempotent by design, and
     # exiting non-zero here made automation treat completed work as a failure.
     return EXIT_OK if result["stop_reason"] in _SUCCESSFUL_STOPS else EXIT_FAILED
+
+
+def cmd_probe_models(args: argparse.Namespace) -> int:
+    """Measure per-model capabilities against a live deployment and report the evidence.
+
+    parameters.yml refuses to infer capabilities from a model name, so the fields that
+    gate live execution have to come from observation. This command supplies them. It
+    sends three short throwaway probes per model, never a corpus prompt, and freezes
+    nothing; --write only edits the models block of the named provider.
+
+    Args: args: Namespace with root, provider, env_file, model, concurrency, timeout,
+        write and json flags.
+    Returns: EXIT_OK when at least one model can run with reasoning off.
+    Raises: LabError for a missing provider block, credentials, or an unreadable catalog.
+    Side effects: Three provider requests per model, and with --write one edit to parameters.yml.
+    """
+    import asyncio
+
+    from .configuration import load_parameters, load_runtime_secrets
+    from .probing import (
+        chat_models,
+        fetch_catalog,
+        models_block,
+        probe_provider,
+        write_models_block,
+    )
+
+    root = _root(args.root)
+    data = load_parameters(root / "parameters.yml").data
+    provider = (data.get("providers") or {}).get(args.provider)
+    if provider is None:
+        raise LabError(f"No providers.{args.provider} block in parameters.yml")
+
+    names = [name for name in (provider.get("api_key_env"), provider.get("base_url_env")) if name]
+    secrets = load_runtime_secrets(args.env_file or str(root.parent / ".env"), names, os.environ)
+    api_key = secrets.get(provider.get("api_key_env") or "")
+    if not api_key:
+        raise LabError(f"{provider.get('api_key_env')} is not set; pass --env-file")
+    base_url = (_provider_endpoint(provider, secrets)
+                or provider.get("base_url") or provider.get("default_base_url"))
+    if not base_url:
+        raise LabError(f"No base URL for provider {args.provider}")
+
+    catalog = chat_models(fetch_catalog(base_url=base_url, api_key=api_key))
+    if args.model:
+        wanted = set(args.model)
+        missing = wanted - {entry["id"] for entry in catalog}
+        if missing:
+            raise LabError("Provider catalog has no chat model named: " + ", ".join(sorted(missing)))
+        catalog = [entry for entry in catalog if entry["id"] in wanted]
+    if not catalog:
+        raise LabError("Provider catalog lists no chat-capable models")
+
+    results = asyncio.run(probe_provider(
+        base_url=base_url, api_key=api_key,
+        path=provider.get("chat_completions_path") or "/chat/completions",
+        models=catalog, concurrency=args.concurrency, timeout_seconds=args.timeout))
+
+    block = models_block(results, provider_label=args.provider.upper(), base_url=base_url)
+    if args.write:
+        write_models_block(root / "parameters.yml", args.provider, block)
+
+    usable = [row["id"] for row in results if row["usable"]]
+    if args.json:
+        _emit({"provider": args.provider, "probed": len(results), "usable": usable,
+               "results": results, "models_block": block}, True)
+        return EXIT_OK if usable else EXIT_FAILED
+
+    print(f"Probed {len(results)} chat models on {args.provider}\n")
+    print(f"{'model':32} {'verdict':26} {'default':>9} {'off':>7} {'lat':>7}  use")
+    for row in results:
+        base_reasoning = row["baseline"].get("reasoning_chars")
+        off_reasoning = row["switched"].get("reasoning_chars")
+        print(f"{row['id']:32} {row['verdict']:26} "
+              f"{'-' if base_reasoning is None else str(base_reasoning) + 'ch':>9} "
+              f"{'-' if off_reasoning is None else str(off_reasoning) + 'ch':>7} "
+              f"{row['switched'].get('seconds', 0):6.1f}s  {'yes' if row['usable'] else 'NO'}")
+    print(f"\n{len(usable)} of {len(results)} models can run with reasoning off.")
+    if args.write:
+        print(f"Wrote the providers.{args.provider}.models block to parameters.yml.")
+    else:
+        print("\nRe-run with --write to apply this block, or paste it yourself:\n")
+        print(block)
+    return EXIT_OK if usable else EXIT_FAILED
+
+
+def cmd_evidence(args: argparse.Namespace) -> int:
+    """Derive the cost-estimate evidence document for a frozen plan.
+
+    Every prompt in the plan is rendered and tokenized, and billing comes from the frozen
+    price card the runner reserves against, so the estimate cannot report a campaign ready
+    on evidence execution lacks. The ceiling assertion is not derived: without
+    --ceiling-basis the estimate reports it unverified, which blocks a metered campaign and
+    leaves a fully evidenced non-billed one carrying a recorded warning instead.
+
+    Args: args: Namespace with root, plan, out, tokenizer, assumption and ceiling flags.
+    Returns: EXIT_OK when the document is written.
+    Raises: LabError for an unavailable tokenizer, a null ceiling, or underivable billing.
+    Side effects: Reads corpus/prompt/schema files and writes the evidence JSON. No network.
+    """
+    from .evidence import build_cost_evidence
+
+    root = _root(args.root)
+    plan = json.loads(Path(args.plan).read_bytes())
+    document = build_cost_evidence(
+        plan, _configuration(root).data, root=root, tokenizer_id=args.tokenizer,
+        expected_output_tokens=args.expected_output_tokens,
+        attempt2_fraction=args.attempt2_fraction, attempt3_fraction=args.attempt3_fraction,
+        correction_error_tokens=args.correction_error_tokens,
+        ceiling_basis=args.ceiling_basis)
+    Path(args.out).write_text(json.dumps(document, indent=2, sort_keys=True), encoding="utf-8")
+    counts = [len(v) for v in document["prompt_artifacts"]["input_tokens_by_run"].values()]
+    _emit({"out": args.out, "runs": len(counts), "targets_per_run": counts[0] if counts else 0,
+           "models": sorted(document["billing_evidence"]["models"]),
+           "ceiling_verified": document["assumptions"]["ceiling_verified"]}, args.json)
+    return EXIT_OK
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -732,6 +947,22 @@ def build_parser() -> argparse.ArgumentParser:
     estimate.add_argument("--evidence", required=True, help="Prompt/billing/assumption evidence JSON")
     estimate.set_defaults(handler=cmd_estimate)
 
+    evidence = commands.add_parser("evidence", help="Derive the cost-estimate evidence document")
+    evidence.add_argument("--plan", required=True, help="Expanded plan JSON from `plan --out`")
+    evidence.add_argument("--out", required=True, help="Path to write the evidence document")
+    evidence.add_argument("--tokenizer", default="Qwen/Qwen3-32B",
+                          help="Locally cached tokenizer used to count prompt tokens")
+    evidence.add_argument("--expected-output-tokens", type=int, default=150)
+    evidence.add_argument("--attempt2-fraction", default="0.15")
+    evidence.add_argument("--attempt3-fraction", default="0.05")
+    evidence.add_argument("--correction-error-tokens", type=int, default=800)
+    evidence.add_argument("--ceiling-basis",
+                          help="The specific observation establishing that the planned output "
+                               "ceiling bounds all-in generation. Supplying it marks the ceiling "
+                               "verified; without it a metered campaign is blocked and a "
+                               "non-billed one carries a recorded warning.")
+    evidence.set_defaults(handler=cmd_evidence)
+
     report = commands.add_parser("report", help="Rank configurations and export results")
     report.add_argument("--plan", required=True, help="Frozen plan JSON")
     report.add_argument("--observations", required=True, help="Stored observation rows JSON")
@@ -749,6 +980,9 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--env-file", help="Explicit credential file supplying provider API keys")
     run.add_argument("--estimate", help="Disclosed pre-run estimate JSON; required for live dispatch")
     run.add_argument("--actor", help="Person recorded as granting explicit live authorization")
+    run.add_argument("--authorize", action="store_true",
+                     help="Confirm the disclosed estimate is accepted. Required for live dispatch; "
+                          "the stored authorization receipt records this exact invocation.")
     run.set_defaults(handler=cmd_run)
 
     resume = commands.add_parser("resume", help="Continue an interrupted campaign")
@@ -757,6 +991,17 @@ def build_parser() -> argparse.ArgumentParser:
     resume.add_argument("--env-file", help="Explicit credential file supplying provider API keys")
     resume.add_argument("--synthetic", action="store_true", help="Resume a synthetic campaign")
     resume.set_defaults(handler=cmd_resume)
+
+    probe = commands.add_parser("probe-models",
+                                help="Measure provider model capabilities and emit evidence")
+    probe.add_argument("--provider", default="psnc", help="Provider key under providers: in parameters.yml")
+    probe.add_argument("--env-file", help="Explicit credential file supplying provider API keys")
+    probe.add_argument("--model", action="append", help="Probe only this model id; repeatable")
+    probe.add_argument("--concurrency", type=int, default=2, help="Models probed in parallel")
+    probe.add_argument("--timeout", type=float, default=120.0, help="Per-probe request timeout")
+    probe.add_argument("--write", action="store_true",
+                       help="Apply the resulting models block to parameters.yml")
+    probe.set_defaults(handler=cmd_probe_models)
 
     database = commands.add_parser("database", help="Manage the isolated local PostgreSQL instance")
     database.add_argument("action", choices=("prepare", "start", "init", "migrate"))

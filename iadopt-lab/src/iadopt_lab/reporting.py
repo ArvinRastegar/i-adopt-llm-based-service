@@ -263,7 +263,10 @@ def build_category_summary(observations: Iterable[Mapping[str, Any]],
     """
     rows = _observations(observations)
     groups: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
+    contexts: dict[str, dict[str, Any]] = {}
+    context_keys = ("provider", "model_id", "configuration_id", "repetition", "reasoning_mode")
     for row in rows:
+        contexts.setdefault(row["run_id"], {key: row.get(key) for key in context_keys})
         groups[(row["run_id"], "category", row["category"], "", row["category"])].append(row)
         groups[(row["run_id"], "subcategory", row["category"], row["subcategory"], row["category_path"])].append(row)
     # Expected membership must come from frozen corpus metadata. Deriving it from the
@@ -274,9 +277,19 @@ def build_category_summary(observations: Iterable[Mapping[str, Any]],
     for variable_id, meta in (population_categories or {}).items():
         expected_members[("category", meta["category"], meta["category"])].append(variable_id)
         expected_members[("subcategory", meta["category"], meta["category_path"])].append(variable_id)
+    # A category that produced no rows at all must still appear. Building groups only from
+    # observations made a run that scored nothing for a whole category indistinguishable
+    # from one where that category does not exist, which silently hides the worst case.
+    if population_categories is not None:
+        present = {(run_id, scope, category, path)
+                   for run_id, scope, category, _subcategory, path in groups}
+        for run_id in contexts:
+            for scope, category, path in expected_members:
+                if (run_id, scope, category, path) not in present:
+                    groups[(run_id, scope, category, "", path)] = []
     results = []
     for (run_id, scope, category, subcategory, path), members in sorted(groups.items()):
-        context = {key: members[0].get(key) for key in ("provider", "model_id", "configuration_id", "repetition", "reasoning_mode")}
+        context = contexts[run_id]
         if any(any(row.get(key) != value for key, value in context.items()) for row in members):
             raise ValueError("Run context changes inside a category summary")
         record = {"version": "category-summary-v1", "run_id": run_id, **context, "scope": scope,

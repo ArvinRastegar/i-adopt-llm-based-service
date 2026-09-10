@@ -4,23 +4,85 @@
 
 This runbook describes how I-ADOPT Lab is prepared, verified, executed, interrupted, resumed, and reported.
 
-The offline stages are executable today through the `iadopt-lab` command. The execution stages are implemented but gated: `run` and `resume` need a prepared PostgreSQL database, and live dispatch additionally needs verified model capabilities, frozen sampling values, price evidence, a disclosed estimate, and separate authorization. No provider request has been made.
+The offline stages are executable today through the `iadopt-lab` command. The execution stages are implemented but gated: `run` and `resume` need a prepared PostgreSQL database, and live dispatch additionally needs verified model capabilities, frozen sampling values, price evidence covering every planned model, a disclosed estimate, and explicit `--authorize` with a named `--actor`. Live campaigns have been executed against both providers; see D-039 to D-042 for what was run and measured.
 
 ```bash
 iadopt-lab preflight                                  # what is still unfrozen
 iadopt-lab ingest --source-repository <clone>         # materialize the pinned corpus
 iadopt-lab verify                                     # recheck every hash
+iadopt-lab probe-models --provider psnc --write        # LIVE: measure model capabilities
 iadopt-lab plan --synthetic                           # expand the grid offline
 iadopt-lab database prepare | start | init | migrate  # isolated local PostgreSQL
+iadopt-lab evidence --plan <p> --out <e>              # derive the cost-estimate evidence
 iadopt-lab estimate --plan <p> --evidence <e>         # pre-run cost disclosure
 iadopt-lab report --plan <p> --observations <o>       # rank and export
+iadopt-lab run --estimate <e> --authorize --actor <name>   # LIVE: execute the campaign
+iadopt-lab resume                                     # continue an interrupted campaign
 ```
+
+`probe-models` and `run` are the only commands that contact a provider. `probe-models` sends
+three short throwaway calls per model and, with `--write`, rewrites the models block of
+`parameters.yml`; it is capability work, not scored generation, and produces no benchmark
+prediction. `run` refuses to dispatch without `--authorize` and a named `--actor`, and refuses a
+plan whose price card does not cover every planned model.
 
 The runbook separates three activities that must never be confused:
 
 1. **Offline verification:** deterministic tests and a mock-provider dry run; no OpenRouter or PSNC request.
 2. **Live canary:** a small, separately authorized provider test used only to verify the frozen wire contract and cost recording.
 3. **Scientific campaign:** the complete parameter grid over all 97 non-demonstration variables, executed only from a frozen campaign record.
+
+## 1a. The actual command sequence
+
+This is the order that was used for the campaigns in [campaign log](campaign-log.md). Every
+step gates the next, so a failure stops before anything downstream runs. Run from
+`iadopt-lab/`.
+
+```bash
+# 0. Database, once per machine. Both are idempotent.
+iadopt-lab database start
+iadopt-lab database migrate
+
+# 1. Measure model capabilities and write them into parameters.yml. LIVE: a few short
+#    throwaway calls per model. Omit --write to review the verdicts first.
+iadopt-lab probe-models --provider psnc --env-file ../.env --write
+
+# 2. Configuration must resolve with zero issues before planning.
+iadopt-lab preflight
+
+# 3. Expand the frozen grid.
+iadopt-lab plan --out outputs/plan.json
+
+# 4. Derive the estimate's inputs. --ceiling-basis is the observation establishing that the
+#    output ceiling bounds generation; without it a metered campaign is blocked and a
+#    non-billed one carries a recorded warning.
+iadopt-lab evidence --plan outputs/plan.json --out outputs/evidence.json   --ceiling-basis "<the measurement that justifies the ceiling>"
+
+# 5. Disclose the cost. Note --json is a GLOBAL flag and precedes the subcommand.
+iadopt-lab --json estimate --plan outputs/plan.json --evidence outputs/evidence.json   > outputs/estimate.json
+
+# 6. Execute. LIVE. --authorize and --actor are both required.
+iadopt-lab run --env-file ../.env --estimate outputs/estimate.json --authorize --actor <name>
+
+# Interrupted? Resume continues from durable checkpoints, provided parameters.yml and the
+# implementation are unchanged.
+iadopt-lab resume --env-file ../.env
+```
+
+Four things about this sequence are easy to get wrong:
+
+- **`preflight --live` cannot pass from the command line.** Its five gates
+  (`artifacts_verified`, `database_verified`, `credentials_present`, `estimate_disclosed`,
+  `live_authorized`) are runtime facts injected by the runner, and the CLI passes none, so
+  they always report missing. Use plain `preflight` to check the configuration; `run`
+  enforces the live gates itself.
+- **`--json` is global**, so `iadopt-lab --json estimate …`, not `estimate … --json`.
+- **Changing anything re-plans.** The campaign identity covers `parameters.yml` and the
+  implementation file index, so any edit to either produces a different campaign and
+  `resume` will refuse the old one rather than silently continuing it.
+- **Switching provider** means editing `campaign.providers` and pointing
+  `cost_accounting.price_card_manifest` at that provider's card. The cards are
+  `price-card-psnc.yml` (non-billed) and `price-card-openrouter.yml` (metered).
 
 ## 2. Roles and approval boundaries
 
@@ -256,9 +318,12 @@ Reports always name explicit campaign, evaluation-population, evaluation, and ra
 
 Promote a result for paper use only when every expected task is complete, no operational failure is hidden, denominators reconcile, hashes verify, a backup restore has been tested, and the report can be regenerated from PostgreSQL facts.
 
-## 16. Planned command surface
+## 16. Command surface
 
-These names are interface contracts for the later implementation, not commands available today:
+Every command below exists and is implemented. `score` and `rank`, which earlier revisions
+of this table listed as separate commands, were never built as such: scoring happens inside
+the workflow as each task terminates, and ranking happens inside `finalize_campaign` and
+`report`. They are listed here as the boundaries they became, not as pending work.
 
 | Command | Input | Main output | Provider calls |
 |---|---|---|---:|
@@ -268,8 +333,10 @@ These names are interface contracts for the later implementation, not commands a
 | `dry-run` | Mock fixture manifest | Synthetic end-to-end campaign | 0 |
 | `run` | Planned campaign ID with one or both providers | Continued progress through all planned work, scoring, ranking, and final reports; explicit incomplete status if blocked | Yes, only for authorized live campaigns |
 | `resume` | Existing campaign ID with immutable provider/model selection | Reconciliation and the same continued execution over all safe unfinished work | Only for eligible unfinished tasks |
-| `score` | Prediction set and scorer version | Immutable evaluation run | 0 |
-| `rank` | Complete evaluation run and ranking policy | Immutable complete-configuration ranking | 0 |
-| `report` | Explicit campaign/evaluation IDs | Hashed derived artifacts | 0 |
+| `report` | Frozen plan and observations | Ranking plus hashed derived export | 0 |
+| `evidence` | Frozen plan and the price card | Cost-estimate input document | 0 |
+| `estimate` | Plan and evidence document | Disclosed pre-run cost estimate | 0 |
+| `probe-models` | Provider and model IDs | Measured capabilities written to `parameters.yml` | **Yes** — short throwaway probes |
+| `database` | Action name | Local PostgreSQL prepared, started, initialized or migrated | 0 |
 
-The root `main.py` will only route these commands. Scientific algorithms, concurrency, retry policy, provider mappings, SQL, and scoring remain in their dedicated modules.
+The root `main.py` only routes these commands. Scientific algorithms, concurrency, retry policy, provider mappings, SQL, and scoring remain in their dedicated modules.

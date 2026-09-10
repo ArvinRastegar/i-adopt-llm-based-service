@@ -52,7 +52,8 @@ def expand_campaign(configuration: Configuration, targets: list[dict] | tuple[di
                     sorted(grid["shot_counts"]), sorted(grid["temperatures"])):
                 parameters = {"provider": provider_name, "model_id": model["id"],
                     "model_revision": model["revision"], "reasoning_mode": reasoning["mode"],
-                    "reasoning_fields": reasoning["request_fields"], "prompt_variant": prompt,
+                    "reasoning_fields": reasoning["request_fields"],
+                    "reasoning_prompt_suffix": reasoning.get("prompt_suffix"), "prompt_variant": prompt,
                     "shot_count": shots, "temperature": temperature, "top_p": grid["top_p"],
                     "max_output_tokens": grid["max_output_tokens"], "artifacts": artifact_identities,
                     "generation_policy": data["generation"], "evaluation_policy": data["evaluation"],

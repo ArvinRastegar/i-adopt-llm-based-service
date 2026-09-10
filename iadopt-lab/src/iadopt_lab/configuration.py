@@ -153,14 +153,21 @@ def resolve_configuration(raw: Configuration, environment_capabilities: Mapping 
             if not modes or len(modes) != len(set(modes)) or not set(modes) <= allowed:
                 raise ConfigurationError("Reasoning profiles disagree with declared capabilities")
             for profile in model["reasoning_profiles"]:
-                if profile["mode"] == "not_applicable" and profile["request_fields"]:
-                    raise ConfigurationError("Not-applicable reasoning must send no native fields")
-                if profile["mode"] != "not_applicable" and not profile["request_fields"]:
-                    raise ConfigurationError("Both controlled reasoning mappings must be explicit")
+                # A control may be a request field, a prompt suffix, or both. Qwen's
+                # `/no_think` is the prompt-suffix case: on a routing gateway it is the only
+                # channel that survives, because the gateway forwards the message but drops
+                # chat-template arguments.
+                suffix = profile.get("prompt_suffix")
+                if profile["mode"] == "not_applicable" and (profile["request_fields"] or suffix):
+                    raise ConfigurationError("Not-applicable reasoning must send no control of any kind")
+                if profile["mode"] != "not_applicable" and not profile["request_fields"] and not suffix:
+                    raise ConfigurationError("A controlled reasoning mode needs an explicit request field or prompt suffix")
                 from .providers.base import NATIVE_FIELDS
                 if set(profile["request_fields"]) - NATIVE_FIELDS:
                     raise ConfigurationError("Reasoning profile contains unsupported or overriding fields")
-            if len(model["reasoning_profiles"]) == 2 and model["reasoning_profiles"][0]["request_fields"] == model["reasoning_profiles"][1]["request_fields"]:
+            if len(model["reasoning_profiles"]) == 2 and all(
+                    model["reasoning_profiles"][0].get(field) == model["reasoning_profiles"][1].get(field)
+                    for field in ("request_fields", "prompt_suffix")):
                 raise ConfigurationError("Enabled and disabled reasoning mappings must differ")
             model["reasoning_profiles"].sort(key=lambda p: p["mode"])
             if not caps["temperature"]:

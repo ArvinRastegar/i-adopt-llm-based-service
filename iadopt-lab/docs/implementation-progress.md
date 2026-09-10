@@ -28,7 +28,7 @@ Implementation is complete for the scoped campaigns described below, and live ru
 
 ### Verified state as of the D-030/D-031/D-032 documentation pass
 
-The offline suite passes: 285 passed with 14 skipped, and 299 passed with no skips when the PostgreSQL test database is configured. All 14 skips are the PostgreSQL integration and recovery tests, which require `IADOPT_LAB_TEST_DATABASE_URL` and did not run in this environment; the largest single module is therefore unexercised here. `resolve_configuration` against the current `parameters.yml` reports eight draft-readiness issues — six missing model capability declarations, `top_p`, and `max_output_tokens` — which is the expected pre-freeze state.
+**Dated 2026-09-08; superseded by D-039 to D-042 and by the current suite.** As of that date the offline suite passed: 285 passed with 14 skipped, and 299 passed with no skips when the PostgreSQL test database was configured. All 14 skips are the PostgreSQL integration and recovery tests, which require `IADOPT_LAB_TEST_DATABASE_URL` and did not run in this environment; the largest single module is therefore unexercised here. `resolve_configuration` against the current `parameters.yml` reports eight draft-readiness issues — six missing model capability declarations, `top_p`, and `max_output_tokens` — which is the expected pre-freeze state.
 
 ### Executed after that pass
 

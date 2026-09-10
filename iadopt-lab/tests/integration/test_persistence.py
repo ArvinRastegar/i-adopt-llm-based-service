@@ -528,3 +528,31 @@ def test_sql_identity_and_attempt_counter_cannot_be_rewritten(repo):
     with pytest.raises(psycopg.IntegrityError), repo.pool.connection() as conn:
         conn.execute("UPDATE task SET fingerprint=%s WHERE id=%s", ("f" * 64, lease["id"]))
     assert repo.get_task(lease["id"])["attempt_count"] == 1
+
+
+def test_provider_metadata_never_blocks_raw_preservation(repo):
+    """A field the provider happened to name `password` must not discard a paid answer.
+
+    Rejecting it rolled back the whole transaction, taking the raw response with it. The
+    value is replaced and never stored; the substitution is recorded as evidence.
+    """
+    campaign, _, _ = fixture_campaign(repo)
+    lease = repo.claim_tasks(campaign, "redaction-worker")[0]
+    attempt = repo.start_attempt(lease, request_for(lease))
+    assert repo.mark_dispatched(attempt)["dispatch_allowed"]
+
+    raw = b'{"choices": [{"message": {"content": "{}"}}]}'
+    stored = repo.store_response(attempt, {
+        "raw_response": raw.decode(),
+        "raw_response_base64": base64.b64encode(raw).decode(),
+        "assistant_text": "{}",
+        "delivery": "response_received",
+        "provider_detail": {"password": "hunter2", "region": "eu"},
+        "usage": {"prompt_tokens": 10, "completion_tokens": 2}})
+
+    assert repo.list_attempts(lease["id"])[0]["response"]["raw_body"] == raw
+    evidence = stored["evidence"]
+    assert evidence["provider_detail"]["password"] == "[redacted: credential-shaped evidence]"
+    assert evidence["provider_detail"]["region"] == "eu"
+    assert evidence["evidence_redactions"] == ["provider_detail.password"]
+    repo.release(lease)

@@ -20,8 +20,9 @@ campaign:
   # Choose [psnc], [openrouter], or [psnc, openrouter]. Order is display-only.
   # One run/resume invocation covers every enabled model of these providers.
   # Each task calls its own provider/model; there is no provider failover.
-  # Scoped to a single-provider live run. Second run: PSNC, GLM-5.2.
-  providers: [psnc]
+  # Scoped to OpenRouter for this campaign, mirroring the PSNC grid so the two are
+  # comparable: same prompts, shot counts, temperatures and reasoning-off condition.
+  providers: [openrouter]
 
   # Live execution must remain false until exact models, reasoning mappings,
   # evaluation-population manifest, price evidence, and pre-run estimate pass
@@ -91,20 +92,37 @@ providers:
     default_base_url: "https://llm.hpc.psnc.pl/v1"
     chat_completions_path: "/chat/completions"
     client_library: "openai"
-    # Measured, not guessed. An isolating test showed max_tokens makes no difference
-    # (6 concurrent failed 4 of 6 at both 16,000 and 100,000) and that a single request
-    # with a tiny prompt returns in 4.4s while the real 1,478-token 5-shot prompt takes
-    # 120.6s. Prefill on this deployment is the expensive part, and contention on top of
-    # it pushed requests past the timeout. Concurrency is therefore held at 2.
+    # Measured, not guessed, and re-measured after D-041. The old limit of 2 was set while
+    # reasoning was on and single calls ran 120-900s, where contention pushed requests past
+    # the timeout. With reasoning disabled the workload is different: calls are ~2.6s, so
+    # prefill contention no longer dominates. Re-measured on GLM-5.2 with 24 real 5-shot
+    # prompts per level:
+    #
+    #   concurrency 2   28.2s wall    51 calls/min   p50 2.2s   max 4.6s   0 failures
+    #   concurrency 4   18.0s wall    80 calls/min   p50 2.6s   max 5.5s   0 failures
+    #   concurrency 8    9.0s wall   160 calls/min   p50 2.3s   max 6.4s   0 failures
+    #
+    # Raised to 24 for the full grid, measured separately at temperature 2 where calls
+    # are long rather than frequent: 24 real prompts with 24 slots ran all 24 in flight
+    # for 207s with zero failures. At that temperature the request RATE is low (a slot
+    # is held ~200s), so concurrency, not the rate guard, is the binding constraint.
+    #
+    # 8 is a 2.96x speedup over 2 with no failures and no median-latency cost; only the
+    # tail grows, from 4.6s to 6.4s, which is far inside the timeout. Repeating level 2
+    # afterwards returned 24.9s, faster than its first run, so the load left no degradation.
     timeout_seconds: 900
-    max_concurrency: 2
-    requests_per_minute: 100
-    # Scaled with the 100,000-token ceiling. The conservative admission bound is
-    # roughly 103,000 tokens per request, so 600,000 would have gated dispatch to
-    # about six requests a minute regardless of concurrency. PSNC publishes no
-    # token-rate limit; this is a self-imposed guard sized to permit the configured
-    # concurrency rather than to model a real provider ceiling.
-    tokens_per_minute: 3000000
+    max_concurrency: 24
+    # Both guards are self-imposed - PSNC publishes neither - and both must be sized to
+    # permit the configured concurrency, or admission throttles the campaign against its
+    # own settings rather than against the provider. At concurrency 8 the measured rate is
+    # ~160 requests/minute, and the conservative admission bound is ~22,200 tokens per
+    # request (about 5,900 prompt bytes + 256 overhead + the 16,000 ceiling), so ~160
+    # requests/minute is ~3.5M tokens/minute. The previous 100 rpm / 3M tpm were sized for
+    # concurrency 2 and gated BOTH, which is what turned throttling into a campaign
+    # failure. These values leave headroom for the fastest observed model rather than
+    # tracking the average.
+    requests_per_minute: 1200
+    tokens_per_minute: 40000000
 
     billing:
       # The owner reports PSNC access is free for this experiment. Record that
@@ -113,60 +131,81 @@ providers:
       basis: "Owner-reported no-charge PSNC access for this experiment"
       maximum_provider_cost:
         amount: null  # No spending cap; non_billed independently establishes zero cost.
-        currency: "EUR"
+        # USD, matching cost_accounting.reporting_currency and the price cards. A provider
+        # cap declared in a different unit from the campaign is refused at registration,
+        # and a null amount in the wrong currency is still a mismatch.
+        currency: "USD"
 
-    # These are the three exact IDs supplied by the owner, in supplied order.
+    # The three exact IDs supplied by the owner. Capabilities below are written by
+    # `iadopt-lab probe-models --provider psnc --model ... --write`, which sorts the
+    # entries by id and measures each model instead of inferring it: one probe with no
+    # reasoning field to learn the model's default, one with
+    # chat_template_kwargs.enable_thinking=false to learn whether the switch changes
+    # that default, and one with response_format to test native structured output. A
+    # model whose reasoning could not be switched off is written back disabled, with
+    # the measurement that disqualified it recorded beside it.
     # Enabled selects a model; it does not authorize calls or assert availability.
     # Unknown capabilities/profiles block freezing a plan and live execution.
     # Add/remove/rename models before a new campaign; three is not a fixed limit.
     models:
-      - id: "GLM-5.2"
-        display_name: "GLM-5.2 on PSNC"
+      - id: "DeepSeek-V4-Flash"
+        display_name: "DeepSeek-V4-Flash on PSNC"
         enabled: true
-        # PSNC exposes no upstream revision for this deployment; recorded as a
-        # limitation rather than invented. The returned model id is stored per response.
+        # Emitted no reasoning in either probe, so there is no control to declare. This records two clean observations, not a guarantee the model never reasons.
         revision: null
-        # Authoritative: LiteLLM's /model/info reports context_window 1048576 for this
-        # deployment. Earlier probing had only established a 103,840-token lower bound
-        # because /v1/models omits the field; /model/info carries it.
         context_window_tokens: 1048576
         capabilities:
           temperature: true
           top_p: true
           seed: true
-          # Probed directly: response_format json_object returns HTTP 200 with a
-          # null content field, so native structured output does not work here.
-          structured_output: false
-          # Probed directly: GLM-5.2 always reasons and returns it in the vLLM
-          # `reasoning_content` field (417 characters even on a trivial prompt).
-          # It cannot be turned off: sending reasoning.enabled=true returns HTTP 200
-          # with an empty response, and chat_template_kwargs changes prose only.
-          # Reasoning is therefore always on but not controllable, so no
-          # disabled/enabled comparison is possible on this deployment. See D-036.
+          structured_output: true
           reasoning_control: false
           evidence:
-            source: "Direct probes of https://llm.hpc.psnc.pl/v1 chat/completions for GLM-5.2"
+            source: "iadopt-lab probe-models against https://llm.hpc.psnc.pl: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
             verified_at: "2026-09-09"
         reasoning_profiles:
           - mode: "not_applicable"
             request_fields: {}
-
+      - id: "GLM-5.2"
+        display_name: "GLM-5.2 on PSNC"
+        enabled: true
+        # Reasoning switched off: 355 characters of thinking with no control, 0 with enable_thinking=false.
+        revision: null
+        context_window_tokens: 1048576
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: true
+          evidence:
+            source: "iadopt-lab probe-models against https://llm.hpc.psnc.pl: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
+            verified_at: "2026-09-09"
+        reasoning_profiles:
+          - mode: "disabled"
+            request_fields:
+              chat_template_kwargs:
+                enable_thinking: false
       - id: "Qwen3.8-27B"
-        display_name: "Qwen3.8 27B on PSNC"
-        enabled: false  # Out of scope for this run.
+        display_name: "Qwen3.8-27B on PSNC"
+        enabled: true
+        # Reasoning switched off: 147 characters of thinking with no control, 0 with enable_thinking=false.
         revision: null
-        context_window_tokens: null
-        capabilities: null
-        reasoning_profiles: []
-
-      - id: "DeepSeek-V4-Flash"
-        display_name: "DeepSeek V4 Flash on PSNC"
-        enabled: false  # Out of scope for this run.
-        revision: null
-        context_window_tokens: null
-        capabilities: null
-        reasoning_profiles: []
-
+        context_window_tokens: 262144
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: true
+          evidence:
+            source: "iadopt-lab probe-models against https://llm.hpc.psnc.pl: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
+            verified_at: "2026-09-09"
+        reasoning_profiles:
+          - mode: "disabled"
+            request_fields:
+              chat_template_kwargs:
+                enable_thinking: false
   openrouter:
     adapter: "openrouter_chat_completions"
     api_key_env: "OPENROUTER_API_KEY"
@@ -181,7 +220,12 @@ providers:
     # deliveries seen on PSNC. Both scaled to match the PSNC block so the two
     # providers stay comparable.
     timeout_seconds: 900
-    max_concurrency: 8
+    # 4, not 8. Measured: at 8 the upstream behind qwen/qwen3-8b (Alibaba) returned HTTP
+    # 429 on 37 of 664 calls while the other two models had none, and each 429 consumes one
+    # of that task's three attempts. Cooldown is per-PROVIDER, not per-model, so one
+    # model's upstream limit stalls the whole gateway - halving concurrency is the lever
+    # available without per-model gating.
+    max_concurrency: 4
     requests_per_minute: 100
     tokens_per_minute: 3000000
 
@@ -189,8 +233,10 @@ providers:
       mode: "metered"
       basis: "Frozen OpenRouter model price evidence required before live use"
       maximum_provider_cost:
-        amount: null  # No spending cap required; show the estimate before live use.
-        currency: "EUR"
+        # Null here: the binding limit is the campaign-wide cap, so the budget is not
+        # split per provider. Currency must still match the campaign's reporting unit.
+        amount: null
+        currency: "USD"
 
     # D-032: three OpenRouter models, independent of the PSNC list.
     # openai/gpt-4o-mini replaces inclusionai/ling-3.0-flash; the two Qwen
@@ -198,20 +244,29 @@ providers:
     # closed-weight model, so metered price evidence is mandatory before live use.
     # Names, list length, and selected providers may change before a new campaign.
     models:
-      - id: "qwen/qwen3-8b"
-        display_name: "Qwen3 8B on OpenRouter"
-        enabled: false  # Out of scope for the first live run.
-        revision: null
-        context_window_tokens: null
-        capabilities: null
-        reasoning_profiles: []
-
-      - id: "qwen/qwen3-32b"
-        display_name: "Qwen3 32B on OpenRouter"
+      - id: "openai/gpt-4o-mini"
+        display_name: "openai/gpt-4o-mini on OPENROUTER"
         enabled: true
-        # OpenRouter does not expose a pinnable upstream revision for this model;
-        # it routes across providers (DeepInfra, SiliconFlow). Recorded as a
-        # limitation rather than invented. The returned model id is stored per response.
+        # Emitted no reasoning in either probe, so there is no control to declare. This records two clean observations, not a guarantee the model never reasons.
+        revision: null
+        context_window_tokens: 128000
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: false
+          max_output_tokens: 16384
+          evidence:
+            source: "iadopt-lab probe-models against https://openrouter.ai/api/v1: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
+            verified_at: "2026-09-10"
+        reasoning_profiles:
+          - mode: "not_applicable"
+            request_fields: {}
+      - id: "qwen/qwen3-32b"
+        display_name: "qwen/qwen3-32b on OPENROUTER"
+        enabled: true
+        # Reasoning switched off: 3243 characters of thinking with no control, 0 with enable_thinking=false.
         revision: null
         context_window_tokens: 131072
         capabilities:
@@ -220,28 +275,35 @@ providers:
           seed: true
           structured_output: true
           reasoning_control: true
+          max_output_tokens: 16384
           evidence:
-            source: "OpenRouter model page parameter table for qwen/qwen3-32b"
-            verified_at: "2026-09-08"
-        # Reasoning ON. Empirically the OpenRouter route for this model always emits
-        # thinking tokens: probes of `reasoning.enabled=false`, `reasoning.max_tokens=0`
-        # and `chat_template_kwargs.enable_thinking=false` each still produced 565-1112
-        # characters of reasoning. A "disabled" profile is therefore not achievable on
-        # this deployment and is not declared. See D-034.
+            source: "iadopt-lab probe-models against https://openrouter.ai/api/v1: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
+            verified_at: "2026-09-10"
         reasoning_profiles:
-          - mode: "enabled"
+          - mode: "disabled"
+            request_fields: {}
+            prompt_suffix: "\n/no_think"
+      - id: "qwen/qwen3-8b"
+        display_name: "qwen/qwen3-8b on OPENROUTER"
+        enabled: true
+        # Reasoning switched off: 1184 characters of thinking with no control, 0 with enable_thinking=false.
+        revision: null
+        context_window_tokens: 131072
+        capabilities:
+          temperature: true
+          top_p: true
+          seed: true
+          structured_output: true
+          reasoning_control: true
+          max_output_tokens: 8192
+          evidence:
+            source: "iadopt-lab probe-models against https://openrouter.ai/api/v1: context_window and parameter support from the LiteLLM /model/info catalog; reasoning control, structured output and parameter acceptance from live chat/completions probes. Sampling capabilities record that the deployment ACCEPTED the parameter and that its catalog lists it, not that the value was shown to change the output."
+            verified_at: "2026-09-10"
+        reasoning_profiles:
+          - mode: "disabled"
             request_fields:
               reasoning:
-                enabled: true
-
-      - id: "openai/gpt-4o-mini"
-        display_name: "GPT-4o mini on OpenRouter"
-        enabled: false  # Out of scope for the first live run.
-        revision: null
-        context_window_tokens: null
-        capabilities: null
-        reasoning_profiles: []
-
+                enabled: false
 # Before freezing a plan, replace capabilities:null with verified booleans for
 # temperature, seed, structured_output, and reasoning_control. A reasoning-
 # capable model needs two reasoning_profiles (disabled/enabled) with exact native
@@ -255,10 +317,24 @@ parameter_grid:
   # (3 prompts x 4 shot counts x 4 temperatures) returns for the real campaign.
   prompt_variants:
     - "strict-minimal"
+    - "constraint-decomposition"
+    - "matrix-decomposition"
 
   # Non-zero values select an ordered prefix of the approved five demonstrations.
-  shot_counts: [5]
-  temperatures: [0.5]
+  shot_counts: [0, 1, 3, 5]
+  # Temperature 2.0 is dropped from this campaign. It was measured, not assumed: at 2.0
+  # the sampling distribution is flat enough that the stop token rarely wins, so generation
+  # runs toward the output ceiling. Measured against the 16,000-token ceiling with reasoning
+  # off, on 24 real 5-shot prompts per model:
+  #
+  #   temperature 0.0-1.0   0.7-6.3s per call    55-133 completion tokens   0/32 truncated
+  #   temperature 2.0       up to 95.8s          up to 6,997 tokens         ~40% truncated
+  #
+  # A truncated response is a non-retryable operational failure, so under
+  # ranking.require_complete_population every temperature-2.0 configuration would be
+  # unrankable. It would have consumed most of the runtime to produce almost no rankable
+  # result. See D-043; restoring 2.0 needs the truncation question settled first.
+  temperatures: [0.0, 0.5, 1.0]
 
   # D-029: one repetition at EVERY temperature for all selected providers/models.
   # This reduces tasks/calls by 75% versus the former 1-at-zero/5-at-nonzero grid.
@@ -281,7 +357,13 @@ parameter_grid:
   # observed 20-28 tokens per second, 16,000 caps a single request near 800 seconds,
   # inside the timeout, so a runaway is truncated rather than left to hang. That makes
   # truncation improbable while keeping the run bounded. See D-040.
-  max_output_tokens: 16000
+  # 8,000 for the OpenRouter campaign, down from the 16,000 used on PSNC (D-040). Not a
+  # scientific change: it is bounded by qwen/qwen3-8b, whose provider caps completion at
+  # 8,192, and the ceiling has never been approached. Across 10,946 PSNC calls with
+  # reasoning off the largest completion was 254 tokens, so 8,000 still leaves ~30x
+  # headroom while keeping one ceiling shared by every model in the grid rather than a
+  # per-model limit that would make the runs incomparable.
+  max_output_tokens: 8000
 
 generation:
   output_schema: "schemas/lexical-decomposition.schema.json"
@@ -339,7 +421,10 @@ cost_accounting:
   # Covers every selected provider/model: metered prices or documented zero-cost
   # non_billed access. Inactive providers need no credentials/pricing evidence.
   # Unknown price is never zero. Null blocks live campaign authorization.
-  price_card_manifest: "data/manifests/price-card-glm-5.2-psnc.yml"
+  # One card covering every enabled PSNC model. `cost_policy` refuses a model with
+  # no entry, and refuses before reading the billing mode, so a non-billed provider
+  # does not exempt a model from carrying evidence.
+  price_card_manifest: "data/manifests/price-card-openrouter.yml"
   # Prices are published in USD; reporting in USD avoids inventing an FX rate.
   reporting_currency: "USD"
   require_complete_price_evidence_before_live: true
@@ -356,8 +441,9 @@ execution:
   continue_unaffected_providers: true
   scheduler: "provider_fair"
 
-  # Worker count is operational and still needs to be frozen for a live campaign.
-  worker_count: 2
+  # Matched to psnc.max_concurrency so the pool can actually fill the provider gate;
+  # a smaller worker count would cap dispatch below the measured provider capacity.
+  worker_count: 4
   resume_enabled: true
   task_lease_seconds: 300
   heartbeat_seconds: 30
@@ -367,8 +453,13 @@ execution:
   # Account for every call; atomically enforce only non-null optional caps.
   # The owner receives a cost estimate and authorizes live work before dispatch.
   maximum_campaign_cost:
-    amount: null
-    currency: "EUR"
+    # Hard cap set by the owner for the OpenRouter campaign. Enforced atomically at
+    # admission: a reservation is refused once spent + reserved + this attempt would
+    # exceed it, so the campaign pauses on budget instead of overspending. Currency is USD
+    # to match cost_accounting.reporting_currency and the price card; leaving it EUR while
+    # every amount was USD would have compared different units.
+    amount: 25
+    currency: "USD"
 
 reporting:
   group_by:

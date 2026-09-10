@@ -75,6 +75,13 @@ def collect_input_artifacts(project_root: str | Path, records: list[dict] | tupl
         "dependency_lock_sha256": index["uv.lock"]}
     runtime_bytes = canonical_json_bytes(runtime)
     artifacts.append({"kind": "runtime", "path": "runtime-v1.json", "content": runtime_bytes})
+    # The original YAML is evidence in its own right: the resolved configuration stored in
+    # the plan cannot reproduce the comments recording why each value was chosen. It is
+    # appended after the index is built, and so stays out of the implementation identity -
+    # a comment-only edit should preserve the bytes without invalidating a running
+    # campaign's resume, which compares that identity.
+    artifacts.append({"kind": "configuration", "path": "parameters.yml",
+                      "content": (root / "parameters.yml").read_bytes()})
     identities = {
         "corpus": content_hash([{"variable_id": row["variable_id"], "source": row["source_sha256"],
                                 "gold": row["gold_sha256"]} for row in sorted(records, key=lambda r: r["variable_id"])]),
@@ -86,6 +93,30 @@ def collect_input_artifacts(project_root: str | Path, records: list[dict] | tupl
         "runtime": sha256_bytes(runtime_bytes), "implementation": content_hash(index)}
     return {"identities": identities, "index": index, "runtime": runtime, "artifacts": artifacts,
             "similarity_identity": similarity_identity}
+
+
+def scorer_identity_hash(project_root: str | Path, similarity_identity: dict) -> str:
+    """Recompute the scorer artifact hash from current source and the loaded backend.
+
+    A report claims to be a particular plan's scientific result. Copying that plan's own
+    scorer hash and comparing it back to itself cannot support the claim: it holds whatever
+    the current checkout and backend are. Recomputing the hash here and comparing it to the
+    plan's frozen value is what actually detects a report produced by different evaluator
+    source or a different similarity backend from the one the plan froze.
+
+    Must stay byte-identical to the `scorer` identity in `collect_input_artifacts`.
+
+    Args: project_root: Lab root; similarity_identity: identity of the loaded backend.
+    Returns: The scorer artifact hash for this checkout and backend.
+    Raises: LabError when no evaluator source is present.
+    Side effects: Reads evaluator source files.
+    """
+    root = Path(project_root).resolve()
+    source = {path.relative_to(root).as_posix(): sha256_bytes(path.read_bytes())
+              for path in sorted((root / "src/iadopt_eval").rglob("*.py")) if path.is_file()}
+    if not source:
+        raise LabError("No evaluator source found to identify the scorer")
+    return content_hash({"source": source, "similarity": similarity_identity})
 
 
 def verify_bundle(project_root: str | Path, bundle: dict) -> None:

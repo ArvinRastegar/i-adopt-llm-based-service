@@ -2,11 +2,11 @@
 
 ## 1. Purpose and authority
 
-This document defines how I-ADOPT Lab will persist corpus provenance, campaign configuration, provider evidence, retry state, predictions, evaluator evidence, usage, cost, and reports. It refines section 12 of `TECHNICAL_SPECIFICATION.md`; that specification remains authoritative if the two documents ever conflict.
+This document defines how I-ADOPT Lab persists corpus provenance, campaign configuration, provider evidence, retry state, predictions, evaluator evidence, usage, cost, and reports. It refines section 12 of `TECHNICAL_SPECIFICATION.md`; that specification remains authoritative if the two documents ever conflict.
 
 PostgreSQL 16 is the authoritative store for experiment relationships, mutable workflow state, immutable evidence, and evaluation results. Files under `data/` are reproducible corpus/manifests, and files under `outputs/` are derived exports. Neither is a substitute for a PostgreSQL backup.
 
-AWS is not required. The proposed local deployment and DBeaver connection are described in [Local database setup](local-database.md): a dedicated PostgreSQL 16 instance, loopback-only host access, persistent storage, separate roles, and verified backups. No database is provisioned during this documentation step.
+AWS is not required. The proposed local deployment and DBeaver connection are described in [Local database setup](local-database.md): a dedicated PostgreSQL 16 instance, loopback-only host access, persistent storage, separate roles, and verified backups. The database is provisioned and in use: campaigns have been executed against both providers and their evidence is stored. See [campaign log](campaign-log.md) for which campaigns exist and what each one holds.
 
 The database design has four non-negotiable goals:
 
