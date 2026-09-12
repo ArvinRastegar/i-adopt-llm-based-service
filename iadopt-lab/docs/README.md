@@ -18,6 +18,20 @@ Start with the root `README.md` for the experiment in plain language. The root `
 | `test-plan.md` | How will every requirement and failure mode be verified? |
 | `reproducibility.md` | Which hashes/evidence/backups make a campaign reconstructable? |
 | `runbook.md` | How will an operator prepare, dry-run, canary, run, resume, and report a campaign? |
+| `unattended-execution.md` | How is a multi-hour campaign launched so it survives a closed laptop, and what do its stop reasons mean? |
+| `execution-evidence.md` | What does preparation freeze, and which gates stand between a plan and a live call? |
+
+## Execution record
+
+These describe work that was actually carried out. They are written in the past tense and are not revised when later code changes; a correction belongs in a new entry, not in an old one.
+
+| Document | Question it answers |
+|---|---|
+| `implementation-progress.md` | What has been built and run so far, and which gaps remain open? |
+| `campaign-log.md` | Which campaigns actually executed, why each exists, and what did it produce? |
+| `migration-v2.0.1.md` | What did the Corpus v2.0.1 re-import change, and what did executing it reveal? |
+| `read-only-review-2026-09-09.md` | What did the 9 September source audit find, and what stayed unresolved? |
+| `shot-count-ablation.md` | What did the exploratory 0→10 shot-count side experiment measure? It is not part of the official experiment. |
 
 ## Component contracts
 

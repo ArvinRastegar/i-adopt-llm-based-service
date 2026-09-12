@@ -15,7 +15,7 @@ This is the layout as built. It is flatter than the tree originally planned here
 ```text
 iadopt-lab/
 ├── README.md                            # status, workflow, commands
-├── DECISIONS.md                         # D-001 … D-043
+├── DECISIONS.md                         # D-001 … D-050
 ├── TECHNICAL_SPECIFICATION.md
 ├── THIRD_PARTY_NOTICES.md
 ├── parameters.yml                       # the only human-edited configuration
@@ -52,11 +52,14 @@ iadopt-lab/
 │   │   ├── validation/lexical.py        # schema, semantics, canonicalization, readable view
 │   │   └── persistence/repository.py    # transactions, evidence, leases, migrations
 │   └── iadopt_eval/                     # core.py (pure scorer), embeddings.py
-└── tests/
-    ├── unit/                            # 11 modules
-    ├── scorer_regression/               # January parity
-    ├── integration/                     # PostgreSQL; skipped without a test DSN
-    └── recovery/                        # lease and resume; skipped without a test DSN
+├── tests/
+│   ├── unit/                            # 11 modules
+│   ├── scorer_regression/               # January parity
+│   ├── integration/                     # PostgreSQL; skipped without a test DSN
+│   └── recovery/                        # lease and resume; skipped without a test DSN
+├── reference/january/                   # retained hash-verified January scorer copy
+├── ops/                                 # unattended supervision; outside every hashed artifact path
+└── experiments/                         # exploratory side analyses and their own output/
 ```
 
 ### 2.0 Modules added after the first live runs

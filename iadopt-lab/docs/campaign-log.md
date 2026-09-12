@@ -92,6 +92,75 @@ would have discarded all 10,332 successful results.
 
 Against PSNC on the same grid: best PSNC 0.391 versus OpenRouter 0.371, and PSNC ran free.
 
+### `79b5ec5f` — OpenRouter continuation grid (reasoning dimension)
+
+The final official campaign. Five OpenRouter models x 3 prompts x 4 shot counts x 3
+temperatures = 180 configurations x 97 variables. Ran 8h40m and finished
+`tasks_terminal`: every task reached a terminal state, 130 of them a failure.
+
+| | |
+|---|---|
+| Models | `z-ai/glm-5.2`, `qwen/qwen3-32b`, `qwen/qwen3-8b`, `meta-llama/llama-3.1-8b-instruct`, `mistralai/ministral-8b-2512` |
+| Scope | 180 configurations x 97 variables = **17,460 tasks** |
+| Outcome | 17,330 complete, 130 lost, **115/180 rankable** |
+| Cost | **$19.73** against a $40 cap |
+| Export | `ranking_id c5e9333e`; plan `d16bee78` |
+
+**Best configuration overall, across the whole experiment:**
+`z-ai/glm-5.2`, matrix-decomposition, **5 shots, T=0.5, reasoning enabled — Close F1 0.4206**.
+That beats the best PSNC result (0.391, `5cdc9417`) and the earlier OpenRouter grid
+(0.371, `844df00e`). `glm-5.2` takes the top eight places outright.
+
+| Model | Rankable | Mean Close F1 | Best |
+|---|---|---|---|
+| `z-ai/glm-5.2` | 18/36 | 0.349 | **0.4206** |
+| `qwen/qwen3-32b` | 22/36 | 0.280 | 0.3618 |
+| `mistralai/ministral-8b-2512` | 34/36 | 0.267 | 0.3615 |
+| `qwen/qwen3-8b` | 8/36 | 0.282 | 0.3093 |
+| `meta-llama/llama-3.1-8b-instruct` | 33/36 | 0.120 | 0.2226 |
+
+Mean columns are over different numbers of configurations and are not comparable
+across rows; see D-048.
+
+**Shot count remains the strongest controlled factor**, and still has not plateaued at 5:
+
+| Shots | 0 | 1 | 3 | 5 |
+|---|---|---|---|---|
+| Mean Close F1 | 0.200 | 0.195 | 0.265 | 0.295 |
+
+That matches the shot-count ablation, which found `Qwen3.8-27B` still climbing at 10.
+
+Prompt variant is a weak effect: matrix-decomposition 0.253, constraint-decomposition
+0.237, strict-minimal 0.233.
+
+**The reasoning contrast in this campaign is NOT a controlled comparison.** Reasoning is
+`enabled` for exactly the three models that support it (`glm-5.2`, `qwen3-32b`,
+`qwen3-8b`) and `not_applicable` for the two that do not (`llama-3.1-8b`,
+`ministral-8b`). The 0.307 vs 0.194 gap between those groups therefore confounds
+reasoning with model identity and must not be read as an effect of reasoning. The only
+controlled reasoning evidence in this experiment is PSNC campaign `5cdc9417`, where the
+same model ran both ways.
+
+**Losses** (130, 0.74%) were concentrated and are explained:
+
+| Model | Lost | Cause |
+|---|---:|---|
+| `qwen/qwen3-8b` | 59 | upstream HTTP 429 exhausting three attempts (D-048) |
+| `z-ai/glm-5.2` | 50 | answers exceeding the 8,000-token output ceiling with reasoning on |
+| `qwen/qwen3-32b` | 16 | mixed, including 6 ambiguous deliveries |
+| others | 5 | the 403 outage below |
+
+`glm-5.2`'s truncations are a distinct cause from `qwen3-8b`'s throttling and cost it
+half its configurations: the model that produced the best result is also the one whose
+coverage suffered most from the ceiling. Worth revisiting if the grid is ever re-run.
+
+**One outage.** At 37.5% the OpenRouter key hit its configured monthly spend limit and
+returned HTTP 403 to all five models. A 403 is non-retryable, so each one failed its task
+outright; the supervisor's retry loop destroyed ~8 tasks per cycle until it was stopped.
+17 tasks were lost this way. The owner raised the key limit and the campaign resumed from
+37.5% with no completed work re-run. The health checks detected it within one 10-minute
+interval and named the provider as the cause.
+
 ## Planned continuation campaign
 
 All remaining work is **one OpenRouter campaign**. Everything left shares a provider,

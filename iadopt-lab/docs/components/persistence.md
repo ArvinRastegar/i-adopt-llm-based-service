@@ -35,7 +35,7 @@ Persistence does not implement scoring formulas, provider protocols, prompt text
 - Every mutable state transition uses transaction and row-version checks.
 - All dispatches retain cost/reservation records; atomic ceiling checks apply only to non-null provider/global caps. Null means uncapped, explicit zero means a zero ceiling. Explicit owner-reported no-charge zero cost retains its billing basis; unavailable usage or price is not replaced by zero.
 - The frozen plan's versioned pre-run estimate, disclosure evidence, and subsequent separate explicit live authorization remain immutable and linked; actual cost never overwrites the estimate. An estimate is not a cap.
-- Provider-specific pauses preserve eligible work for healthy providers. An optional non-null global monetary cap's exhaustion blocks positive-cost dispatch while explicitly no-charge work can continue; shared database/integrity failures or explicit stop block all new dispatch. Campaign completion checks all selected provider tasks and required final reports.
+- Provider-specific pauses preserve eligible work for healthy providers. An optional non-null global monetary cap's exhaustion blocks positive-cost dispatch while explicitly no-charge work can continue; shared database/integrity failures or explicit stop block all new dispatch. Campaign completion checks all selected provider tasks and required final reports. A task counts as settled when it is terminal, which under D-042 includes `operational_failed` and `ambiguous_delivery` as well as `complete`; a configuration missing any population member is then ranked nowhere with an explicit not-rankable reason rather than holding back the whole campaign.
 - Every attempt, prediction, item/component score, repetition aggregate, lower-ranked result, tie, and unranked reason remains queryable.
 
 ## Configuration keys consumed
@@ -46,6 +46,10 @@ Persistence does not implement scoring formulas, provider protocols, prompt text
 - Resolved identities derived from `dataset`, `demonstrations`, `evaluation_population`, `ranking`, `providers`, `parameter_grid`, `generation`, and `evaluation`
 
 ## Planned repository operations
+
+These planning signatures describe the decomposed responsibilities and the names
+used while the component was designed. *Initial implementation mapping* below records the implemented
+interface, including every name and signature that differs.
 
 ### `register_campaign(configuration) -> CampaignRecord`
 
@@ -141,6 +145,11 @@ Persistence does not implement scoring formulas, provider protocols, prompt text
 
 ## Initial implementation mapping
 
+Two planned names are not defined: `store_prediction_and_complete` is
+`Repository.select_prediction` and `store_configuration_ranking` is
+`Repository.save_ranking`. Every operation is a method on `Repository` taking plain
+mappings and returning plain dictionaries, not the named record types above.
+
 The implementation exposes a synchronous `Repository` backed by `psycopg_pool`.
 The asynchronous runner invokes its short operations through `asyncio.to_thread`;
 no connection or transaction is retained while a provider or embedding model runs.
@@ -181,6 +190,11 @@ receipts; it moves only to `prediction_ready`. `store_evaluation` retains the fu
 exact-rational evaluator receipt and normalized per-mode/component metrics before
 marking a task complete. `release`, `heartbeat`, `set_provider_state`, and
 `reconcile` implement operational coordination; they never reset attempts.
+`reconcile` additionally releases every paused provider for the campaign, writing a
+`released_by_reconcile` provider event and returning the names in
+`released_providers`. It is the only operation that clears a pause, and
+`claim_tasks` will not hand out a queued task whose provider is neither ready nor
+past its cooldown, so without this a paused campaign could never be resumed.
 `save_ranking`, `save_report`, and `complete_campaign` preserve all configurations
 and require complete coverage before recording final completion. Read operations
 `get_campaign`, `get_task`, `list_tasks`, and `list_attempts` verify stored content

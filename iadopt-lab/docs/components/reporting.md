@@ -56,7 +56,23 @@ That reuse applies only to observations actually collected. D-029's one-repetiti
 
 ## Planned public functions
 
+These planning signatures describe the decomposed responsibilities and the names
+used while the component was designed. *First implementation interfaces and evidence
+shape* below records the implemented interface, including every name and signature
+that differs.
+
 ### First implementation interfaces and evidence shape
+
+Reporting reads no database. Every function takes *observations* — the rows
+`workflow.build_observations(tasks)` projects from durable task evidence — so the
+planned query-object inputs (`query`, `runs`, `evaluation_ids`, `evaluation_id`) do not
+exist; the caller reads the evidence and passes the rows in. `build_run_summary` and
+`build_repetition_summary` are not implemented as named functions: per-attempt and
+per-scope summarization are the private helpers `_attempt_summary` and `_scope_summary`,
+and repetition means are calculated inside the ranking pass below. The full implemented
+signatures are `build_configuration_ranking(plan, observations, *,
+scorer_identity=None, population_categories=None)` and
+`build_category_summary(observations, population_categories=None)`.
 
 `build_configuration_ranking(plan, observations)` is pure. `plan` is the frozen
 `experiment-plan-v1` mapping from the planner, including its population,

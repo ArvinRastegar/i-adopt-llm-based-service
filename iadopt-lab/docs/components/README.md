@@ -31,8 +31,10 @@ Every implemented public or private function must then receive a truthful typed 
 | `providers.md` | `iadopt_lab.providers` |
 | `generation-and-validation.md` | `iadopt_lab.generation`, `iadopt_lab.validation` |
 | `persistence.md` | `iadopt_lab.persistence`, migrations |
-| `workflow.md` | `iadopt_lab.workflow` |
+| `workflow.md` | `iadopt_lab.workflow`, `iadopt_lab.planning`, `iadopt_lab.costing` |
 | `evaluation.md` | standalone `iadopt_eval` package |
 | `reporting.md` | `iadopt_lab.reporting` |
 
-Function names are provisional until implementation review. Their inputs, outputs, invariants, and side-effect boundaries are normative.
+Function names are provisional until implementation review. Their inputs, outputs, invariants, and side-effect boundaries are normative. Each contract's *Implementation interface* section records the names and signatures that were actually built, so a planning signature above that no longer resolves in `src/` is reconciled there rather than rewritten in place.
+
+Four modules in `src/iadopt_lab/` have no contract in this directory: `artifacts.py`, `probing.py`, `evidence.py`, and `local_database.py`. `docs/architecture.md` section 2.0 explains why `probing.py` and `evidence.py` were added after the first live runs, and `docs/local-database.md` covers local PostgreSQL preparation, but none of the four has the input/output/failure/determinism contract this directory requires.

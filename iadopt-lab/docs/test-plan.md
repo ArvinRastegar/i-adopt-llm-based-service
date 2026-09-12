@@ -225,7 +225,7 @@ Transition-model tests generate valid and invalid event sequences and prove that
 
 ## 12. January scorer regression tests
 
-The fixture bundle must be hand-calculated and, where unaffected, executed against `benchmarking_example/randomShotsPhaseOne.py` at its recorded hash.
+The fixture bundle must be hand-calculated and, where unaffected, executed against the retained copy at `reference/january/randomShotsPhaseOne.py.txt`, whose bytes match the recorded SHA-256 of `benchmarking_example/randomShotsPhaseOne.py` at tag `V1.1-Experiment`. Only isolated function definitions are compiled from it; the historical module is never imported.
 
 Cover:
 

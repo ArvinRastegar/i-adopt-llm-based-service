@@ -68,23 +68,28 @@ Configuration validation is read-only until the user invokes a command that regi
 
 ## Failures
 
-Named failures include YAML syntax, duplicate key, schema violation, unknown/empty/duplicate provider selection, duplicate model ID within one provider, no enabled model for a selected provider in live mode, unsupported capability, invalid reasoning mapping, missing manifest, unresolved placeholder, absent credential, unsupported PostgreSQL version, and billing/budget gate failure.
+Named failures include YAML syntax, duplicate key, YAML alias, a parameter file over the 2 MB limit, schema violation, non-finite or otherwise uncanonicalizable value, unknown/empty/duplicate provider selection, duplicate model ID within one provider, no enabled model for a selected provider in live mode, unsupported capability, invalid reasoning mapping, missing manifest, unresolved placeholder, absent credential, unsupported PostgreSQL version, and billing/budget gate failure.
 
 ## Planned public functions
+
+These planning signatures describe the decomposed responsibilities and the names
+used while the component was designed. The implemented public interface, including
+every name and signature that differs, is recorded under *Implementation interface
+(version 1)* at the end of this document.
 
 ### `load_configuration(path) -> RawConfiguration`
 
 - **Input:** One explicit filesystem path to a YAML file; the caller is responsible for selecting the path, while this function owns reading its exact bytes.
-- **Action:** Read the file once, decode it as UTF-8, reject duplicate keys and unsafe/custom YAML tags, parse supported YAML values, and calculate the source-byte SHA-256.
-- **Output:** An immutable record containing the resolved source path, exact bytes, parsed values, byte length, and source hash. No environment values are resolved here.
-- **Raises:** Typed unreadable-file, non-UTF-8, YAML-syntax, duplicate-key, unsafe-tag, unsupported-value, or hashing errors.
+- **Action:** Read the file once, reject a file over 2 MB, decode it as UTF-8, reject duplicate keys, aliases and unsafe/custom YAML tags, parse supported YAML values, validate the complete parameter schema, and calculate the canonical and source bytes. Under D-049 the schema gate lives here rather than in resolution, so a structurally invalid file cannot reach any later stage.
+- **Output:** An immutable record containing the exact original bytes, the canonical bytes and the source hash. No environment values are resolved here.
+- **Raises:** Typed unreadable-file, oversize-file, non-UTF-8, YAML-syntax, duplicate-key, alias, unsafe-tag, schema-violation, unsupported-value, or hashing errors.
 - **Side effects:** Filesystem read only; no database, environment mutation, provider request, or output write.
 - **Determinism:** Identical file bytes produce identical parsed content and hash independent of current directory.
 
 ### `resolve_configuration(raw, environment_capabilities) -> ResolvedConfiguration`
 
 - **Input:** One `RawConfiguration` plus typed, non-secret runtime/capability facts such as supported PostgreSQL major version and provider/model feature declarations.
-- **Action:** Validate the complete parameter schema, resolve the unique non-empty selected provider set and each provider's enabled owned models, expand applicable reasoning profiles and repetition rules, validate billing modes, mandatory estimate policy and optional caps, normalize artifact paths relative to the project root, validate the 97-member population and ranking contract, and canonicalize the selected scientific configuration. Expansion is the union of each provider's model grid, never a cross-product between every provider and every model.
+- **Action:** Take the already schema-valid snapshot and resolve the unique non-empty selected provider set and each provider's enabled owned models, expand applicable reasoning profiles and repetition rules, validate billing modes, mandatory estimate policy and optional caps, normalize artifact paths relative to the project root, validate the 97-member population and ranking contract, and canonicalize the selected scientific configuration. Expansion is the union of each provider's model grid, never a cross-product between every provider and every model.
 - **Output:** An immutable campaign configuration containing the selected provider set, fully resolved provider-owned models/profiles/grid values, provider billing and execution limits, normalized artifact identities, original-YAML hash, canonical selected-configuration bytes/hash, and a list of non-secret environment-variable names required later.
 - **Raises:** Typed schema, unknown-field, provider/model ownership, duplicate-ID, capability, reasoning-profile, manifest, path, placeholder, scientific-combination, or canonicalization error.
 - **Side effects:** None. It does not read credential values, write PostgreSQL, or contact a provider.
@@ -138,3 +143,27 @@ Named failures include YAML syntax, duplicate key, schema violation, unknown/emp
 - Secret values absent from resolved snapshot
 - Equivalent YAML produces the documented canonical fingerprint
 - Unknown keys and unsupported capability combinations fail
+
+## Implementation interface (version 1)
+
+`load_parameters(path, schema_path=None)` is the implemented reader; the contract above
+calls it `load_configuration`. It returns a `Configuration`, the single byte-backed
+snapshot type that also stands in for the planned `RawConfiguration` and
+`ResolvedConfiguration`: it exposes `canonical_bytes`, `original_bytes`, `issues`, a
+`data` property returning an independent parsed copy, and a `sha256` property.
+
+`resolve_configuration(raw, environment_capabilities=None)` returns another
+`Configuration` whose `issues` carry the plan-readiness paths rather than raising for
+them. It does not re-validate the parameter schema: under D-049 that gate runs once, inside
+`load_parameters`, so the same input is rejected one call earlier than the planning
+signatures described. `resolve_configuration` still raises for ownership, duplicate,
+model and mode inconsistencies it alone can see. `validate_live_readiness(resolved, facts=None)` returns a plain dictionary with
+`ready`, `issues`, `configuration_sha256` and `live_calls_enabled` in place of the
+planned `PreflightReport` type; injected `facts` supply the artifact, database,
+credential, estimate and authorization evidence. `main(argv=None)` is the entry point
+the contract calls `main(arguments=None)`; `load_runtime_secrets(env_file,
+required_names, process_environment)` is unchanged.
+
+Per-model capability checking has no adapter-side function. Declared capabilities are
+checked against the grid inside `resolve_configuration`, and `probing.py` establishes
+those declarations from live observation before a plan is frozen.

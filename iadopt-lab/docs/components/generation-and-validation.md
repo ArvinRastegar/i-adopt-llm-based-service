@@ -56,6 +56,10 @@ The candidate must pass JSON parse, strict lexical schema, and semantic cross-fi
 
 Semantic validation here means objective representation invariants such as a complete exclusive system shape and resolvable Constraint target. It is not expert grading or semantic-quality filtering.
 
+The gate must reject exactly what the evaluator rejects. A prediction this component accepts is selected, stored and handed to `iadopt_eval`; if the evaluator then refuses it, the two disagree about durable content, and before D-047 that ended a campaign and deadlocked every resume, because the stored response was replayed into the same exception. The one rule the two did not share was whitespace: the JSON schema accepts any string, while the evaluator refuses a string that is non-empty but all whitespace. All five string-valued fields — `hasStatisticalModifier`, `hasProperty`, and the three entity fields — now fail semantic validation with code `whitespace_only_text`, so such an answer is ordinary invalid content: retried, and scored as an empty prediction if it never improves.
+
+Any future disagreement is still contained. Under D-047 a data-shaped failure raised by the evaluator is recorded as `scorer_rejected_validated_prediction` against that task alone and the campaign continues; only an infrastructure exception stops the run.
+
 ## Configuration keys consumed
 
 - `generation.output_schema`
@@ -73,6 +77,10 @@ The first valid attempt is selected and later attempts do not exist. When three 
 A task/provider-local pause reports its affected scope and next eligible time when known so that the workflow can continue healthy selected providers. Stored responses still proceed through local processing while new calls for their provider are paused. A blocked task remains part of campaign completeness; completing the other provider never hides or substitutes it.
 
 ## Planned public functions
+
+These planning signatures describe the decomposed responsibilities and the names
+used while the component was designed. *Boundary implementation interfaces (version 1)* below records the implemented
+interface, including every name and signature that differs.
 
 ### `extract_json(raw_text) -> ExtractionResult`
 
@@ -122,6 +130,15 @@ A task/provider-local pause reports its affected scope and next eligible time wh
 ## Acceptance tests
 
 ## Boundary implementation interfaces (version 1)
+
+`execute_attempt` and `advance_task` are not defined in this component. Only the
+workflow layer may schedule another numbered attempt, so both were implemented
+there: `workflow.run_task(lease, services)` performs one attempt against a fenced
+lease, and the private `workflow._advance_task(lease, services)` applies the state
+table. There is no `AttemptOutcome` or `TaskDecision` type, and no pure decision
+core separable from the repository — `_advance_task` decides and persists in the
+same async function. `docs/architecture.md` section 2.1 records the folding of the
+planned `generation/attempts.py` into `workflow.py`.
 
 `extract_json(raw_text)` returns `ExtractionResult` with `success`, `candidate`,
 `errors`, strategy, candidate evidence, and `to_dict()`. Limits are 1 MiB UTF-8,

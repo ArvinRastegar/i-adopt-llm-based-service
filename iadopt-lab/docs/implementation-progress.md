@@ -34,7 +34,7 @@ Implementation is complete for the scoped campaigns described below, and live ru
 
 `src/iadopt_lab/cli.py` and the root `main.py` now exist, so the declared `iadopt-lab` console script works. The CLI parses arguments and delegates; it contains no loop, provider call, retry decision, SQL, scoring, or worker management, per `docs/architecture.md` section 4. Commands: `preflight`, `ingest`, `verify`, `plan`, `estimate`, `report`, `database`.
 
-The v2.0.1 migration is complete and verified; `docs/migration-v2.0.1.md` records the executed steps, four unanticipated findings, and the acceptance results. `variable_id` remains commit-derived by explicit owner confirmation, recorded in D-030. The suite is 274 passed / 14 skipped, and the corpus verifies with 204 derived files byte-identical to their canonical parents.
+The v2.0.1 migration is complete and verified; `docs/migration-v2.0.1.md` records the executed steps, four unanticipated findings, and the acceptance results. `variable_id` remains commit-derived by explicit owner confirmation, recorded in D-030. At that acceptance the suite was 274 passed / 14 skipped; `docs/unattended-execution.md` carries the current counts and the command that runs the database-gated tests, so the live number is recorded in one place rather than repeated here. The corpus verifies with 204 derived files byte-identical to their canonical parents.
 
 Two gaps remain open:
 
@@ -42,6 +42,72 @@ Two gaps remain open:
 2. **The PostgreSQL suite passes** when `IADOPT_LAB_TEST_DATABASE_URL` and `IADOPT_LAB_TEST_APP_DATABASE_URL` are set.
 
 The D-032 OpenRouter selection (`qwen/qwen3-8b`, `qwen/qwen3-32b`, `openai/gpt-4o-mini`) is applied in `parameters.yml` and validates. The PSNC selection is unchanged.
+
+### Documentation reconciliation
+
+**Docs last reconciled:** 2026-09-12 at commit `2a0ab53`, with the D-046/D-047/D-048
+working-tree changes present.
+
+Corrected in that pass: the `docs/README.md` index, which listed twelve documents and
+omitted seven; the `docs/architecture.md` tree, which said `D-001 … D-043` and showed
+neither `ops/`, `experiments/` nor `reference/`; `docs/test-plan.md`, which pointed the
+January regression fixtures at a working-tree path instead of the retained hash-verified
+copy at `reference/january/randomShotsPhaseOne.py.txt`; and the component registry in
+`docs/components/README.md`, which named one owner module for `workflow.md` and did not
+say that four modules have no contract at all.
+
+Each component contract's planning signatures are kept as written — `docs/components/README.md`
+states that function names are provisional and only the boundaries are normative — and
+every contract now carries a pointer from its planning section to the *Implementation
+interface* section recording what was built. Sixteen planned names do not resolve in
+`src/` and are reconciled there: `load_configuration`, `build_openrouter_request`,
+`build_psnc_request`, `ProviderAdapter.invoke`, `ProviderAdapter.validate_model_profile`,
+`build_corpus_manifest`, `execute_attempt`, `advance_task`, `store_prediction_and_complete`,
+`store_configuration_ranking`, `build_run_summary`, `build_repetition_summary`,
+`resume_campaign`, and the five evaluation planning signatures.
+
+#### Contract/code contradictions resolved on 2026-09-12
+
+Six behavioural contradictions were found in the 2026-09-11 pass. The owner decided that
+the code is authoritative in all six, and the documents were updated to match it. None of
+them changed code.
+
+1. **Provider pause scope.** `docs/retry-and-resume.md` said a rate failure pauses its
+   provider. Corrected to D-046's positive rule: only the five deployment outcomes
+   (`provider_error`, `html_response`, `provider_error_envelope`, `unparsable_envelope`,
+   `invalid_envelope`) pause a provider; a transient failure sets a cooldown and an
+   attempt-exhausted or truncated task fails alone.
+2. **What counts as a finished campaign.** `docs/retry-and-resume.md`,
+   `docs/components/workflow.md` and `docs/components/persistence.md` all required every
+   task to reach `complete`. Corrected to D-042: terminal means `complete`,
+   `operational_failed` or `ambiguous_delivery`, a wholly terminal population stops with
+   `tasks_terminal` and exits zero, and an incomplete configuration is ranked nowhere with
+   an explicit reason. The stop reasons are now listed in the `run_campaign` contract.
+3. **Scorer rejection as a task outcome.** Added `scorer_rejected_validated_prediction` and
+   `attempt_budget_exhausted_with_operational_error` to the typed-outcome list, and recorded
+   D-047's rule in `docs/components/generation-and-validation.md`: the gate must reject
+   exactly what the evaluator rejects, `whitespace_only_text` is the rule that closed the
+   known gap, and a data-shaped scoring failure costs one task rather than the campaign.
+4. **`reconcile` releases a paused provider.** Recorded in the resume sections of
+   `docs/retry-and-resume.md` and `docs/components/workflow.md` and in the persistence
+   implementation mapping, including the `released_by_reconcile` event, the
+   `released_providers` result and the `providers_paused` stop reason.
+5. **Where the parameter schema is validated.** The contract had resolution validate the
+   schema; the code validates in `load_parameters` and does not re-validate afterwards. The
+   two planning signatures and the Failures list were corrected, and the Failures list now
+   also names the 2 MB parameter-file limit and YAML-alias rejection. Recorded as **D-049**.
+6. **The adapter capability gate.** `ProviderAdapter.validate_model_profile` is marked
+   retired rather than pending. Its original specification is retained beneath the marker as
+   the record of what was intended; capability checking is `resolve_configuration` against
+   declared capabilities and `probing.py` against live observation. Recorded as **D-050**.
+
+Items 5 and 6 had no entry in `DECISIONS.md` and now do. Checking the history to write them
+corrected the finding itself: neither boundary ever moved. `load_parameters` validated the
+schema in the first commit that contained code (`cf5ec8a`), and `validate_model_profile`
+has never appeared in `src/` or `tests/` at all. Both are as-built divergences from the
+plan that stood unrecorded for the life of the project, not later changes. D-049 and D-050
+say so on their face, and say that they were reconstructed and ratified on 2026-09-12
+rather than decided when the code was written.
 
 ### Concrete configuration/provider boundary
 

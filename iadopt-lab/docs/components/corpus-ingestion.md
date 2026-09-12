@@ -57,6 +57,10 @@ Dataset identity includes tag, commit, tree, file-manifest hash, importer hash, 
 
 ## Planned public functions
 
+These planning signatures describe the decomposed responsibilities and the names
+used while the component was designed. *Implementation boundary (version 1)* below records the implemented
+interface, including every name and signature that differs.
+
 ### `enumerate_tag_files(source) -> tuple[SourceBlob, ...]`
 
 - **Input:** A frozen source descriptor containing repository URL, tag, commit, tree, allowed `.ttl` suffix, and expected file count.
@@ -114,6 +118,13 @@ Dataset identity includes tag, commit, tree, file-manifest hash, importer hash, 
 ## Acceptance tests
 
 ## Implementation boundary (version 1)
+
+`build_corpus_manifest` is not a separate function: the manifest is assembled and
+hashed inside `ingest_corpus`, which publishes it last as the activation boundary.
+`project_gold(parsed, schema_bytes=None)` takes exact schema bytes where the
+contract names a `policy` argument. `parse_variable`, `enumerate_tag_files` and
+`build_evaluation_population` keep their contract names; all of them return plain
+dictionaries rather than the named record types the contract uses.
 
 `ingest_corpus(project_root, source_repository=None, source_directory=None)` materializes and verifies a
 complete filesystem bundle and returns a dictionary with `manifest`, `records`,

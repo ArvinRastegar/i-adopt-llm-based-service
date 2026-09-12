@@ -70,11 +70,16 @@ Resume inspects durable evidence:
 - Prediction stored: continue scoring.
 - Score stored: mark/reconcile completion.
 
-Completed tasks are never repeated. Hash/config mismatch blocks continuation into a different campaign. A resume command reconciles all selected providers and then runs the same continuation loop. Provider/model list changes require a new frozen campaign. If only a provider subset is temporarily dispatched, all other planned tasks remain part of the completion requirement.
+Completed tasks are never repeated. Hash/config mismatch blocks continuation into a different campaign. A resume command reconciles all selected providers and then runs the same continuation loop. Reconciliation releases a paused provider as part of that repair, because nothing else clears a pause and an uncleared one makes every later resume claim nothing. Provider/model list changes require a new frozen campaign. If only a provider subset is temporarily dispatched, all other planned tasks remain part of the completion requirement.
 
 After all expected tasks are complete and scored, a deterministic reporting operation ranks every fully resolved configuration under accepted D-023 policy `mean-repetition-micro-close-f1-v1`: calculate micro Close F1 over the same 97 variables in each repetition, average the unrounded repetition values, rank descending, and assign exact ties a shared competition rank. All raw attempts, predictions, per-variable/component/repetition Exact/Close Precision, Recall, F1 and contributions, aggregates, and lower-ranked configurations remain queryable. Additional descriptive statistics and confidence intervals are deferred analyses and do not block workflow completion.
 
 ## Planned public functions
+
+These planning signatures describe the decomposed responsibilities and the names
+used while the component was designed. The implemented interface, including every
+name and signature that differs, is recorded under *Implementation interface
+(version 1)* at the end of this document.
 
 ### `expand_campaign(configuration, targets) -> ExperimentPlan`
 
@@ -98,7 +103,7 @@ After all expected tasks are complete and scored, a deterministic reporting oper
 
 - **Input:** Explicit planned campaign ID plus operational-only worker/concurrency/rate/batch/stop options that may narrow execution order but cannot alter scientific configuration or population.
 - **Action:** Verify the frozen selection, billing evidence, disclosed estimate, separate live authorization and any optional caps; start registered workers, fairly claim eligible tasks across selected providers, dispatch `run_task` within independent provider limits, heartbeat leases, reconcile outcomes/cost, and automatically revisit safe cooldowns. Continue unaffected providers when a local scope pauses; only an explicitly configured monetary cap blocks further positive-cost reservations, while evidenced non-billed work stays eligible. Stop all dispatch on user interrupt or fatal shared integrity/database failure. Once every planned task is scored, run ranking and final reporting idempotently.
-- **Output:** Execution summary containing per-provider and total counts by durable state, actual calls/usage/cost and billing basis, stop reason, outstanding/ambiguous work, cooldowns, lease health, final ranking/report identities when complete, and next safe command otherwise. A complete outcome requires all selected work and final artifacts, including every planned model.
+- **Output:** Execution summary containing per-provider and total counts by durable state, actual calls/usage/cost and billing basis, stop reason, outstanding/ambiguous work, cooldowns, lease health, final ranking/report identities when complete, and next safe command otherwise. A complete outcome requires every planned task to be terminal — `complete`, `operational_failed` or `ambiguous_delivery` under D-042 — and every final artifact to be produced, across every planned model. The named stop reasons are `tasks_complete`, `tasks_terminal`, `already_complete`, `providers_paused`, `no_claimable_work`, `requested_offline_checkpoint` and `blocked`; the first three are successful exits. `docs/unattended-execution.md` tabulates what each means for an operator. A campaign that stopped with terminal failures is finished rather than paused, because pausing it would invite a resume that can never make progress.
 - **Raises:** Unknown/unplanned campaign, absent or mismatched estimate disclosure/live authorization, incompatible execution option, shared database/integrity failure, or unrecoverable worker-manager error; provider-local and task outcomes remain recorded in their affected scope rather than aborting healthy providers.
 - **Side effects:** PostgreSQL workflow/evidence writes and authorized provider calls through task services only. It never changes scientific parameters or ranks partial results.
 - **Resume behavior:** A rerun delegates to durable state and does not recreate completed work.
@@ -154,3 +159,29 @@ After all expected tasks are complete and scored, a deterministic reporting oper
 - Full crash matrix at every durable checkpoint
 - No duplicate request after stored response
 - Repeated resume is idempotent
+
+## Implementation interface (version 1)
+
+`expand_campaign(configuration, targets, ...)` lives in `planning.py` and
+`estimate_campaign_cost(plan, prompt_artifacts, billing_evidence, assumptions)` in
+`costing.py`; both are pure. The rest of this contract is `workflow.py`, whose functions
+are `async` and take an injected `Services` record rather than loose option arguments:
+`run_campaign(campaign_id, services, *, stop_after=None)` and `run_task(lease,
+services)`. `finalize_campaign(campaign_id, services)` is the separate idempotent step
+that ranks, exports and marks the campaign complete once every task is terminal;
+finishing the tasks is not finishing the campaign. `build_observations(tasks)` projects
+stored task evidence into the rows `reporting.py` consumes.
+
+`resume_campaign(campaign_id)` does not exist as one function, and there is no
+`ReconciliationReport` type. Its responsibilities are split three ways:
+`Repository.reconcile(campaign_id)` performs the database-side reconciliation and
+returns `campaign_id`, `repaired_tasks`, `ambiguous_tasks`, `released_providers` and the
+campaign record; `cli.cmd_resume` re-prepares the frozen campaign and verifies that the
+checkout's inputs still resolve to the same campaign ID; and continued execution is
+ordinary `run_campaign`. `docs/architecture.md` section 2.1 records the consolidation of
+the planned `workflow/{planner,runner,state,resume}.py` into `planning.py` plus
+`workflow.py`.
+
+`heartbeat(lease)` is `Repository.heartbeat(lease, lease_seconds=300)`, a persistence
+operation rather than a workflow function; `workflow._heartbeat` is the private renewal
+loop that calls it while a task is in flight.

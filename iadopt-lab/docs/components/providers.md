@@ -65,6 +65,11 @@ Each result identifies its provider and model and retains a sanitized `Retry-Aft
 
 ## Planned public interface
 
+These planning signatures describe the decomposed responsibilities and the names
+used while the component was designed. The implemented interface, including every
+name and signature that differs, is recorded under *Implementation interface
+(version 1)* at the end of this document.
+
 ### `ProviderAdapter.invoke(request) -> ProviderResult`
 
 - **Input:** One validated provider-neutral attempt request containing exact messages, provider/model/revision, sampling/output values, native reasoning mapping, timeout, idempotency key when supported, and a credential reference resolved only at call time.
@@ -75,6 +80,17 @@ Each result identifies its provider and model and retains a sanitized `Retry-Aft
 - **Security:** Credentials/authorization never enter returned records, exception text, hashes, fixtures, or logs.
 
 ### `ProviderAdapter.validate_model_profile(profile) -> CapabilityReport`
+
+**Retired under D-050, not pending.** No adapter operation implements this and no
+`CapabilityReport` type exists. The responsibility moved rather than being dropped:
+declared capabilities are checked against the configured grid in
+`configuration.resolve_configuration`, which
+reports each unsupported combination as a plan-readiness issue path, and `probing.py`
+establishes those declarations from live observation before a plan is frozen, so the
+fields carry a measurement rather than an assumption. Checking a profile at the adapter
+boundary would re-derive what resolution already proved and could not run before
+planning, which is where the gate has to hold. The original specification is kept below
+as the record of what was intended.
 
 - **Input:** One selected provider/model profile, including exact ID/revision policy, declared capabilities, reasoning profiles/native fields, supported sampling/output controls, and provider adapter version.
 - **Action:** Check ownership, unique normalized reasoning modes, required enabled/disabled pair or sole `not_applicable`, prohibited fields, placeholders, and compatibility of every grid value with the declared model interface.
@@ -118,3 +134,39 @@ Each result identifies its provider and model and retains a sanitized `Retry-Aft
 - Non-billed PSNC usage preserved alongside an explicit billing basis
 - Provider-specific cooldown hints retained without adapter sleep or retry
 - All error classifications and ambiguous delivery
+
+## Implementation interface (version 1)
+
+There is no `ProviderAdapter` class. `providers/base.py` defines one
+`OpenAICompatibleAdapter(provider, base_url, api_key, timeout, *, transport=None)`
+shared by both providers, and `providers/openrouter.py` and `providers/psnc.py` each
+expose only `create_adapter(profile, api_key, *, base_url_override=None, **options)`,
+which selects that provider's endpoint and timeout from its frozen profile. The
+adapter rejects a non-HTTPS or credential-bearing base URL, disables both SDK and
+transport retries, and sets `trust_env=False`.
+
+`OpenAICompatibleAdapter.send_once(body)` is the method the contract calls
+`ProviderAdapter.invoke`. It performs at most one HTTP exchange and returns a
+`ProviderResult` carrying the sanitized request, the raw body as both text and base64,
+status, headers limited to `SAFE_HEADERS`, parsed envelope, usage, finish reason,
+requested and returned model, request ID, reasoning text and a parsed `Retry-After`.
+`close()` releases the client. An HTTP 200 that is not a well-formed completion —
+a gateway HTML page, an unparsable body, an error envelope, a missing completion
+structure, or a `finish_reason` of `length` — is classified as an operational failure
+with delivery `rejected`, so it never reaches content validation and never consumes a
+task's three attempts as model error.
+
+`build_request(run, messages)` replaces the two planned per-provider builders
+`build_openrouter_request` and `build_psnc_request`. One provider-neutral function maps
+the resolved run and the single user message to a non-streaming Chat Completions body;
+provider-specific native reasoning arrives as the run's `reasoning_fields` and is
+rejected unless every key is in `NATIVE_FIELDS`. It returns the sanitized body only —
+not a URL/method/header specification, mapping identity or hash. The URL and headers
+belong to the adapter's SDK client, and the request hash is taken from the stored
+attempt evidence. `send_once` sends the standard fields as named arguments and the
+native fields through `extra_body`.
+
+No adapter operation corresponds to `ProviderAdapter.validate_model_profile`, and no
+`CapabilityReport` type exists; D-050 retires that clause. Declared capabilities are
+checked against the grid in `configuration.resolve_configuration`, and `probing.py`
+establishes those declarations from live observation before a plan is frozen.
