@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Optional reboot-survival layer for the unattended campaign.
+
+  Install:  cp ops/com.iadopt.campaign.plist ~/Library/LaunchAgents/
+            launchctl load  ~/Library/LaunchAgents/com.iadopt.campaign.plist
+  Remove:   launchctl unload ~/Library/LaunchAgents/com.iadopt.campaign.plist
+            rm ~/Library/LaunchAgents/com.iadopt.campaign.plist
+
+  KeepAlive/SuccessfulExit=false restarts the supervisor only when it exits non-zero.
+  The supervisor exits 0 once the campaign is finished, and a later run finds it
+  already complete and exits 0 again, so this stops itself when the work is done.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>                 <string>com.iadopt.campaign</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/iadopt-lab/ops/run-campaign.sh</string>
+  </array>
+  <key>WorkingDirectory</key>      <string>/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/iadopt-lab</string>
+  <key>RunAtLoad</key>             <true/>
+  <key>KeepAlive</key>
+  <dict><key>SuccessfulExit</key>  <false/></dict>
+  <key>ThrottleInterval</key>      <integer>120</integer>
+  <!-- launchd stops a job with SIGTERM, which the supervisor traps and forwards so the
+       campaign can commit answers it already holds. Without a generous ExitTimeOut
+       launchd would SIGKILL mid-drain, which is exactly the loss this avoids. -->
+  <key>ExitTimeOut</key>           <integer>200</integer>
+  <key>ProcessType</key>           <string>Interactive</string>
+  <key>LowPriorityIO</key>         <false/>
+  <key>StandardOutPath</key>       <string>/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/iadopt-lab/.runtime/campaign/launchd.out.log</string>
+  <key>StandardErrorPath</key>     <string>/Users/rastegar-a/Documents/GitHub/i-adopt-llm-based-service/iadopt-lab/.runtime/campaign/launchd.err.log</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>                <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>IADOPT_ACTOR</key>        <string>Arvin</string>
+  </dict>
+</dict>
+</plist>
