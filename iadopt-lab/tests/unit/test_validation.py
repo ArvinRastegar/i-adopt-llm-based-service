@@ -181,3 +181,36 @@ def test_readable_prediction_attaches_corpus_values_without_touching_the_score()
         evaluate_item(prediction, readable, similarity=lambda left, right: 0.0)
     with pytest.raises(ValueError):
         readable_prediction(readable, label="x", definition="y")
+
+
+@pytest.mark.parametrize("blank", [" ", "\t", "\n", "  \t\n "])
+@pytest.mark.parametrize(
+    "field",
+    ["hasStatisticalModifier", "hasProperty", "hasObjectOfInterest", "hasMatrix",
+     "hasContextObject"],
+)
+def test_the_gate_rejects_everything_the_scorer_rejects(field, blank):
+    """Whatever `validate_prediction` accepts, `evaluate_item` must be able to score.
+
+    The two disagreed about whitespace-only text: the JSON schema takes any string, the
+    evaluator raises. A prediction that passes the gate is selected and stored, so the
+    exception arrived during scoring and aborted a live campaign after 995 tasks - and
+    because the response was already durable, every resume replayed it into the same
+    exception. Agreement here is what keeps a bad answer an ordinary invalid answer.
+    """
+    from iadopt_eval.core import _validate_decomposition
+    from iadopt_lab.validation import validate_prediction
+
+    candidate = {"hasProperty": "x", "hasObjectOfInterest": "y", "hasMatrix": "",
+                 "hasContextObject": "", "hasStatisticalModifier": "", "hasConstraint": []}
+    candidate[field] = blank
+
+    accepted_by_gate = validate_prediction(candidate).valid
+    try:
+        _validate_decomposition(candidate, "prediction")
+        accepted_by_scorer = True
+    except ValueError:
+        accepted_by_scorer = False
+
+    assert not accepted_by_gate, f"{field}={blank!r} must not pass validation"
+    assert accepted_by_gate == accepted_by_scorer

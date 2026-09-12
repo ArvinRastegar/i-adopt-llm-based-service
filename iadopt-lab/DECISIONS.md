@@ -656,6 +656,215 @@ the reasoning-disabled arm used PSNC `GLM-5.2`. These are the same model family 
 different deployments, so the two arms are NOT a controlled comparison of reasoning alone.
 Any reading of that pair has to treat deployment as a confound.
 
+### D-046 — Only a deployment failure pauses a provider; reconciliation releases the pause
+
+The first attempt at the official OpenRouter campaign stopped after 1,291 of 17,460
+tasks and could not be resumed. Two independent defects produced that, both found in
+the stored evidence of campaign `c4c118d7`.
+
+**One truncated answer paused the whole provider.** `provider_event` records
+`openrouter -> paused, reason {"code": "output_truncated", "http_status": 200}`. A
+single `z-ai/glm-5.2` response reached the 8,000-token ceiling — 1 of 1,717 stored
+responses, HTTP 200, the deployment answering perfectly — and stopped every one of the
+16,167 tasks still queued. The pause decision was written as a list of exceptions
+(everything except a transient error and an ambiguous delivery pauses), so every
+outcome nobody thought to exclude was silently sorted into "the deployment is broken".
+The rule is now stated positively as `_DEPLOYMENT_FAILURES`: pausing requires an
+outcome that says the deployment cannot serve requests at all. A truncation is a
+property of one prompt and model, and fails only its own task.
+
+**Nothing ever cleared a pause.** `claim_tasks` hands out a queued task only when its
+provider is `ready` or past a cooldown, and `reconcile` reset the campaign state but
+not the provider. Every `resume` therefore claimed nothing, reported
+`no_claimable_work` after six idle polls, and exited — permanently, on every future
+attempt. `reconcile` now releases a paused provider and records a `released_by_reconcile`
+provider event, because resuming *is* the act of retrying; if the cause persists it
+will simply pause again. A run that finds every provider paused now stops with the
+named reason `providers_paused` instead of the opaque `no_claimable_work`.
+
+The same signature explains the two earlier abandoned campaigns, `843165da` (10,348
+queued) and `90ed32f9` (9,931 queued).
+
+Fixing this changes `src/`, so the implementation hash moved and the plan hash with it:
+`274c17ff…` becomes `1b8dfef1…`. Campaign `c4c118d7` cannot be resumed under the
+corrected code and is abandoned at a cost of $1.22 and roughly one hour. Forcing a
+resume was rejected: the stored implementation identity would no longer describe the
+code that produced the results, which is the one guarantee the freeze exists to make.
+
+Both defects carry regression tests that fail against the previous code:
+`test_only_a_deployment_failure_pauses_the_provider` and
+`test_reconcile_releases_a_paused_provider`.
+
+### D-047 — The validator must reject whatever the scorer rejects, and scoring must not abort a run
+
+Campaign `fb58adbb` stopped after 995 of 17,460 tasks and every one of ten resumes died
+in ~16 seconds with:
+
+```
+error: ValueError: prediction/hasContextObject: whitespace-only entity is invalid
+```
+
+A model returned a whitespace-only string. `validate_prediction` accepted it — the JSON
+schema takes any string — so it was canonicalized, selected and stored as a valid
+prediction. `iadopt_eval` then refused to score it. The exception propagated out of
+`run_task`, through `reap()`, and ended the campaign. Because the offending response was
+already durable, reconciliation replayed it into the same exception on every resume: a
+deterministic deadlock that no retry could clear.
+
+A differential check found the disagreement is exactly one rule, on all five
+string-valued fields: non-empty but all whitespace. Every other malformed shape
+(single-part symmetric systems, duplicate parts, mixed asymmetric roles, blank
+constraint fields) was already rejected by both. The gate now applies the same rule, so
+such an answer is ordinary invalid content — retried, and scored as an empty prediction
+if it never improves, which is the correct treatment of a model producing malformed
+output.
+
+**The structural fix matters more than the specific rule.** Scoring is a pure
+computation over one gold and one prediction, so a data-shaped failure there
+(`ValueError`, `TypeError`, `KeyError`, `ArithmeticError`) is now recorded as
+`scorer_rejected_validated_prediction` on that task and the campaign continues.
+Infrastructure exceptions still propagate and stop the run, which is what they should
+do. Any future disagreement between the two validators therefore costs one task instead
+of a campaign — this is the third defect in a row (see D-046) where a per-task problem
+was allowed to become a campaign-level failure.
+
+Two operational defects surfaced with it:
+
+- `--stop` could take up to 30 minutes. Bash defers a trap until the running foreground
+  command returns, and the supervisor was inside `sleep 1800`. The backoff is now
+  backgrounded and awaited with `wait`, the one builtin a trapped signal interrupts.
+- The watcher reported liveness, not progress. It confirmed the supervisor process
+  existed and stayed silent for two hours while that process failed ten times. It now
+  alerts on a stalled settled-count, on the supervisor's own consecutive-failure streak,
+  and on any rise in permanently lost tasks.
+
+The hash moves again, `1b8dfef1…` to `d16bee78…`; campaign `fb58adbb` is abandoned at
+$0.81. Regression tests: `test_the_gate_rejects_everything_the_scorer_rejects` (25
+combinations) and `test_a_scorer_rejection_fails_the_task_not_the_campaign`.
+
+### D-048 — qwen3-8b's thin rankability is accepted, not engineered around
+
+Upstream throttling on `qwen/qwen3-8b` (HTTP 429 from Alibaba, the same behaviour seen
+in `844df00e`) exhausts a task's three attempts and fails it permanently. Because
+`ranking.require_complete_population` needs all 97 variables, one lost task makes a
+configuration unrankable. Measured at 41.7% through campaign `79b5ec5f`:
+
+| Model | Loss rate | Configurations already carrying a lost task |
+|---|---:|---:|
+| `qwen/qwen3-8b` | 1.61% | 20 of 36 |
+| `z-ai/glm-5.2` | 0.91% | 11 of 36 |
+| `qwen/qwen3-32b` | 0.51% | 6 of 36 |
+| `meta-llama/llama-3.1-8b-instruct` | 0.22% | 3 of 36 |
+| `mistralai/ministral-8b-2512` | 0.14% | 2 of 36 |
+
+Three options were weighed: accept it, lower this model's concurrency mid-campaign, or
+re-run the model separately afterwards. **Accepted as-is**, by the owner.
+
+Lowering concurrency mid-flight would buy rankability at the price of a campaign whose
+first half and second half ran under different execution conditions - a confound
+introduced into the very comparison the campaign exists to make, and harder to defend
+than thin coverage with a documented cause. The loss is an upstream rate limit, not a
+defect here: the runner already handles it correctly by spending three attempts and
+then failing that task alone, without touching the provider or the other models.
+
+Consequently `qwen/qwen3-8b` is expected to report substantially fewer than 36 rankable
+configurations, and its aggregate figures are **not comparable** with the other four
+models' - exactly the caveat `844df00e` carries, where the same cause left 3 of 36
+rankable. Any table including it must say so beside the number.
+
+This is distinct from `meta-llama/llama-3.1-8b-instruct`'s low valid-response rate
+(~21%), which is a model result the experiment exists to measure and needs no caveat
+beyond reporting it.
+
+### D-049 — The parameter schema is validated once, in the reader
+
+`docs/components/cli-and-configuration.md` divided the work so that the reader parsed
+YAML and resolution validated the schema: `load_configuration` was specified to "read the
+file once, decode it as UTF-8, reject duplicate keys and unsafe/custom YAML tags, parse
+supported YAML values, and calculate the source-byte SHA-256", raising nothing about
+structure, while `resolve_configuration` was to "validate the complete parameter schema".
+
+The code has never worked that way. The first implementation, in `cf5ec8a`, already
+validated the full Draft 2020-12 schema inside `load_parameters` and raised
+`ConfigurationError` on any violation, and `resolve_configuration` has never re-validated.
+This is not a boundary that moved and was left undocumented; it is an as-built divergence
+from the plan that nobody recorded, and it stood for the life of the project.
+
+**The code is ratified.** One gate, as early as possible: a structurally invalid parameter
+file cannot reach resolution, planning, costing or dispatch, and there is exactly one
+answer to what "schema-valid" means. Two validators that are each supposed to enforce the
+same rule are precisely the arrangement that produced D-047, where the prediction gate and
+the scorer disagreed about one whitespace rule and a live campaign died of it. Splitting
+schema validation across a reader and a resolver would invite the same class of defect for
+no benefit, since nothing legitimately consumes an unvalidated parameter snapshot.
+
+Two guards in the same function are ratified with it, neither previously documented:
+
+- A 2 MB ceiling on the parameter file, checked before parsing.
+- Rejection of YAML aliases. An alias lets a small file expand to an arbitrarily large
+  structure, and it makes the canonical snapshot's shape depend on expansion rather than on
+  the bytes. Refusing them keeps the hashed configuration identity a straightforward
+  function of what the owner actually wrote.
+
+`resolve_configuration` still raises for the ownership, duplicate-ID, model and mode
+inconsistencies that only it can see, and still reports plan-readiness gaps as issue paths
+rather than exceptions. That division is unchanged.
+
+Consequence: both planning signatures and the component's Failures list were corrected on
+2026-09-12, and the two guards are now named failures. No code changed, so no artifact,
+plan or campaign hash moves.
+
+This entry was reconstructed from the source and Git history on 2026-09-12 and ratified
+then. It records a decision that was implemented from the beginning but never written
+down; it is not evidence that anyone weighed these alternatives at the time.
+
+### D-050 — The adapter capability gate is retired; capability evidence belongs to resolution and probing
+
+`docs/components/providers.md` specified `ProviderAdapter.validate_model_profile(profile)
+-> CapabilityReport`, returning a "complete pass/fail capability report with stable gate
+IDs, normalized native request fragments, unsupported combinations, and evidence
+provenance".
+
+It was never built. `git log -S "validate_model_profile" -- src/ tests/` returns nothing:
+the name has only ever existed in the contract, added alongside the working adapters in
+`cf5ec8a`. There is also no `ProviderAdapter` class to own it — both providers share one
+`OpenAICompatibleAdapter`, and each provider module contributes only a `create_adapter`
+factory selecting its endpoint and timeout.
+
+**The code is ratified and the clause is retired.** The responsibility was not dropped; it
+sits in two places that can actually discharge it:
+
+- `configuration.resolve_configuration` checks every declared capability against the
+  configured grid and reports each unsupported combination as a plan-readiness issue path,
+  raising when reasoning profiles disagree with declared capabilities outright.
+- `probing.py`, added in `52197a5` on 2026-09-10, establishes those declarations from live
+  observation and writes them back to `parameters.yml`, so the capability fields the gate
+  reads carry a measurement rather than a hand-typed assumption. `docs/architecture.md`
+  section 2.0 records why it exists.
+
+The decisive argument is timing. The gate has to hold before a plan is frozen, because the
+failure it prevents is planning a grid the deployment cannot serve. An adapter exists only
+once a campaign is already dispatching, so an adapter-side check would re-derive what
+resolution proved, too late to prevent the thing worth preventing.
+
+What the adapter does retain is the last-line refusal: `build_request` rejects any native
+reasoning key outside `NATIVE_FIELDS`, so an unsupported field is a hard error rather than
+a silent omission, exactly as this contract's Common behavior requires.
+
+What is **not** ratified is the report shape. Nothing produces stable gate IDs or a
+structured per-gate capability report; `validate_live_readiness` returns a flat issue list.
+If a gate-ID-addressable report is wanted later - for a preflight UI, or to assert
+individual gates in tests - that is a new decision and a new interface, not a revival of
+this one.
+
+Consequence: the clause is marked retired in `docs/components/providers.md` on 2026-09-12,
+with its original specification retained beneath the marker as the record of what was
+intended. No code changed.
+
+This entry was reconstructed from the source and Git history on 2026-09-12 and ratified
+then. It records a gate that was specified and never implemented; it is not evidence that
+anyone decided to drop it at the time.
+
 ## Still to freeze
 
 These operational or campaign-specific values must still be frozen for a live campaign:

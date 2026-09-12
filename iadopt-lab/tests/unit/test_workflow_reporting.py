@@ -626,3 +626,116 @@ def test_an_empty_poll_does_not_abandon_queued_work(monkeypatch):
     assert result["stop_reason"] == "no_claimable_work"
     assert polls["claims"] >= _IDLE_POLLS_BEFORE_STOP, (
         f"gave up after {polls['claims']} polls; must retry at least {_IDLE_POLLS_BEFORE_STOP}")
+
+
+@pytest.mark.parametrize(
+    ("outcome", "status", "should_pause"),
+    [
+        ("output_truncated", 200, False),
+        ("classified_transient_provider_error", 429, False),
+        ("provider_error", 401, True),
+        ("html_response", 200, True),
+    ],
+)
+def test_only_a_deployment_failure_pauses_the_provider(outcome, status, should_pause):
+    """Pausing must follow the deployment's health, not one task's content.
+
+    `output_truncated` is an HTTP 200 whose only fault is that this prompt and model
+    reached the configured output ceiling: the deployment answered perfectly. Pausing
+    over it stopped a live campaign after 1,291 of 17,460 tasks and stranded the other
+    16,167, because nothing but this decision distinguishes the two cases.
+    """
+    from iadopt_lab.workflow import _advance_task
+
+    calls = []
+
+    class Repo:
+        def get_task(self, task_id):
+            return {"id": task_id, "state": "request_persisted", "prediction": None,
+                    "attempt_count": 3, "provider": "openrouter", "model_id": "M",
+                    "campaign_id": "c1",
+                    "attempts": [{"id": "a3", "attempt_number": 3, "validation": None,
+                                  "response": None, "request_body": {"model": "M"},
+                                  "delivery": "not_dispatched"}],
+                    "variable": {"variable_id": "v1", "definition": "d", "category": "C",
+                                 "subcategory": "S", "category_path": "C/S"},
+                    "run": {"model_id": "M", "prompt_variant": "strict-minimal", "shot_count": 0,
+                            "temperature": 0.5, "top_p": 1.0, "max_output_tokens": 16,
+                            "reasoning_fields": {}, "configuration": {"model_id": "M"}}}
+
+        def mark_dispatched(self, attempt, lease=None):
+            return {"dispatch_allowed": True}
+
+        def store_response(self, attempt, payload):
+            return {"id": "r1"}
+
+        def set_provider_state(self, *args, **kwargs):
+            calls.append(("set_provider_state", args[2]))
+            return {}
+
+        def release(self, lease, state=None, detail=None):
+            calls.append(("release", state))
+            return {"state": state}
+
+    class Adapter:
+        async def send_once(self, body):
+            from iadopt_lab.providers.base import ProviderResult
+            return ProviderResult(
+                provider="openrouter", requested_model="M", request=body, raw_response="x",
+                raw_response_base64="", assistant_text=None, status_code=status,
+                outcome=outcome, delivery="rejected",
+                started_at="", finished_at="", latency_seconds=0.0)
+
+    services = _services(Repo())
+    services.bundle = {"demonstrations": (), "plan": {"mode": "live", "population": ["v1"]}}
+    services.adapters = {"openrouter": Adapter()}
+    asyncio.run(_advance_task({"id": "t1", "provider": "openrouter", "campaign_id": "c1"}, services))
+
+    paused = ("set_provider_state", "paused") in calls
+    assert paused is should_pause, (
+        f"{outcome} {'must' if should_pause else 'must not'} pause the provider")
+    assert ("release", "operational_failed") in calls, "the task itself always fails"
+
+
+@pytest.mark.parametrize("error_type", [ValueError, TypeError, KeyError, ZeroDivisionError])
+def test_a_scorer_rejection_fails_the_task_not_the_campaign(error_type):
+    """A prediction the scorer refuses must not be able to abort the run.
+
+    The validator is meant to reject anything unscorable, so reaching the scorer with a
+    bad prediction is a defect - but it is still one task's. Letting the exception
+    propagate ended a live campaign at 995 of 17,460 tasks, and since the offending
+    response was already durable every resume replayed it and died at the same point.
+    """
+    from iadopt_lab.workflow import _score
+
+    calls = []
+
+    class Repo:
+        def store_evaluation(self, lease, result):
+            calls.append("store_evaluation")
+            return {}
+
+        def release(self, lease, state=None, detail=None):
+            calls.append(("release", state, (detail or {}).get("code")))
+            return {"state": state}
+
+    def explode(*args, **kwargs):
+        raise error_type("prediction/hasContextObject: whitespace-only entity is invalid")
+
+    services = _services(Repo())
+    services.bundle = {"plan": {"mode": "live"}, "similarity_identity": {}}
+    task = {"evaluation": None, "gold": {}, "prediction": {"canonical": {}},
+            "variable": {"variable_id": "v1", "category": "C", "subcategory": "S"},
+            "run": {"id": "r1"}}
+
+    import iadopt_lab.workflow as workflow
+
+    original = workflow.evaluate_item
+    workflow.evaluate_item = explode
+    try:
+        asyncio.run(_score(task, {"id": "t1"}, services))
+    finally:
+        workflow.evaluate_item = original
+
+    assert ("release", "operational_failed", "scorer_rejected_validated_prediction") in calls
+    assert "store_evaluation" not in calls, "a rejected prediction must not be scored"

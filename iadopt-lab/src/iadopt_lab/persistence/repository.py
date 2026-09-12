@@ -2137,7 +2137,7 @@ class Repository:
         resumes local work; dispatch without a response becomes ambiguous, never a
         fresh call. Completed evidence is retained. Hash conflicts roll back repairs.
         """
-        repaired, ambiguous = [], []
+        repaired, ambiguous, released = [], [], []
         with self.pool.connection() as conn:
             campaign = self._campaign(conn, campaign_id, lock=True)
             if not conn.execute(
@@ -2202,10 +2202,35 @@ class Repository:
                     "UPDATE campaign SET state='planned',updated_at=clock_timestamp() WHERE id=%s",
                     (campaign_id,),
                 )
+            # A paused provider has to be released here too. `claim_tasks` requires a
+            # provider that is ready (or past its cooldown) before it will hand out a
+            # queued task, and nothing else ever clears a pause, so resuming a campaign
+            # whose provider paused claimed nothing, reported `no_claimable_work`, and
+            # did so again on every later attempt: the pause was permanent and silently
+            # stranded the whole remaining population. Reconciliation is the explicit
+            # act of retrying, so it clears the pause and lets the cause reassert itself
+            # if it is still present, rather than deciding in advance that it will be.
+            for provider in conn.execute(
+                "SELECT provider FROM campaign_provider WHERE campaign_id=%s AND state='paused' FOR UPDATE",
+                (campaign_id,),
+            ).fetchall():
+                name = provider["provider"]
+                conn.execute(
+                    "UPDATE campaign_provider SET state='ready',reason=%s,cooldown_until=NULL "
+                    "WHERE campaign_id=%s AND provider=%s",
+                    (Jsonb({"code": "released_by_reconcile"}), campaign_id, name),
+                )
+                conn.execute(
+                    "INSERT INTO provider_event(id,campaign_id,provider,state,evidence) VALUES(%s,%s,%s,%s,%s)",
+                    (str(uuid.uuid4()), campaign_id, name, "ready",
+                     Jsonb({"reason": {"code": "released_by_reconcile"}, "cooldown_until": None})),
+                )
+                released.append(name)
         return {
             "campaign_id": campaign_id,
             "repaired_tasks": repaired,
             "ambiguous_tasks": ambiguous,
+            "released_providers": released,
             "campaign": self.get_campaign(campaign_id),
         }
 

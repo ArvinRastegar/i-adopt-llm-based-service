@@ -153,3 +153,22 @@ def test_before_dispatch_checkpoint_preserves_same_attempt(repo):
     assert newer["attempts"][0]["id"] == request["id"]
     assert repo.mark_dispatched(request, lease=newer)["dispatch_allowed"]
     assert len(repo.list_attempts(lease["id"])) == 1
+
+
+def test_reconcile_releases_a_paused_provider(repo):
+    """A paused provider must not outlive the resume that is meant to recover from it.
+
+    `claim_tasks` only hands out a queued task when its provider is ready or past a
+    cooldown, and nothing else clears a pause. Without this, one paused provider made
+    every later resume claim nothing, report `no_claimable_work`, and strand the entire
+    remaining population permanently - which is what happened to 16,167 queued tasks.
+    """
+    campaign, lease = prepare(repo)
+    repo.release(lease, "queued")
+    repo.set_provider_state(campaign, "psnc", "paused", {"code": "output_truncated"})
+    assert repo.claim_tasks(campaign, "blocked") == [], "a paused provider should block"
+
+    result = repo.reconcile(campaign)
+
+    assert result["released_providers"] == ["psnc"]
+    assert repo.claim_tasks(campaign, "recovered"), "resume must be able to claim again"

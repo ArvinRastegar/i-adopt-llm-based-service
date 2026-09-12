@@ -223,6 +223,19 @@ def validate_prediction(candidate: Any, schema_bytes: bytes | None = None) -> Va
     if errors:
         errors.sort(key=lambda item: (item["pointer"], item["code"], item["message"]))
         return ValidationResult(False, tuple(errors), None, candidate_hash, schema_hash)
+    # The evaluator refuses any of the five string-valued fields that is non-empty but
+    # all whitespace, while the JSON schema accepts any string. That disagreement is not
+    # cosmetic: a prediction the gate calls valid is selected and then handed to a scorer
+    # that raises on it, which killed a live campaign after 995 tasks and deadlocked every
+    # resume, because the stored response was replayed into the same exception. The gate
+    # must reject exactly what the evaluator rejects, so such an answer becomes ordinary
+    # invalid content - retried, and scored empty if it never improves - not a crash.
+    for field in ("hasStatisticalModifier", "hasProperty", *ENTITY_FIELDS):
+        value = candidate[field]
+        if isinstance(value, str) and value and not value.strip():
+            errors.append({"stage": "semantic", "code": "whitespace_only_text",
+                           "pointer": "/" + field,
+                           "message": "A value must be empty or contain non-whitespace."})
     for field in ENTITY_FIELDS:
         value = candidate[field]
         if isinstance(value, dict) and "hasPart" in value:

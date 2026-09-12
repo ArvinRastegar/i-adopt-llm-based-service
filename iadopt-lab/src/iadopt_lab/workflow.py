@@ -185,6 +185,19 @@ def _base_prompt(task: dict, services: Services) -> Any:
 # resent. Both are terminal outcomes to be reported, not scored.
 _TERMINAL_TASK_STATES = ("complete", "operational_failed", "ambiguous_delivery")
 _IDLE_POLLS_BEFORE_STOP = 6
+# Outcomes that say the DEPLOYMENT cannot serve requests, and so justify pausing every
+# task queued against that provider. Everything absent from this set is a property of
+# one task and must fail only that task. The distinction has to be stated positively:
+# as a list of exceptions it silently mis-sorted every outcome nobody thought to add,
+# and `output_truncated` - an HTTP 200 whose only fault is that this prompt and model
+# reached the configured ceiling - paused a provider and stranded 16,167 queued tasks.
+_DEPLOYMENT_FAILURES = frozenset({
+    "provider_error",            # non-transient HTTP status: credentials, model, route
+    "html_response",             # a gateway error page instead of a completion envelope
+    "provider_error_envelope",   # HTTP 200 carrying an error object and no answer
+    "unparsable_envelope",       # body is not the provider's JSON envelope
+    "invalid_envelope",          # envelope present but the completion structure is missing
+})
 
 _COMMIT_BACKOFF_SECONDS = (0.0, 0.5, 2.0, 5.0, 10.0, 20.0, 40.0, 45.0)
 
@@ -400,12 +413,11 @@ async def _advance_task(lease: dict, services: Services) -> dict:
                   {"code": response.outcome}, datetime.now(UTC) + timedelta(seconds=seconds))
         return await _db(services, "release", lease, "retry_pending", {"code": response.outcome})
     # Pausing the provider stops the whole campaign, so it is reserved for failures that
-    # say something is wrong with the deployment. A classified transient error does not:
-    # it is the recoverable case by definition. Reaching here with one means a single task
-    # ran out of its three attempts, which is that task's failure, not the provider's - and
-    # pausing over it blocked 10,348 queued tasks because one hit a 429.
+    # say something is wrong with the deployment - see `_DEPLOYMENT_FAILURES`. A task that
+    # merely exhausted its own attempts, or whose answer overran the output ceiling, is
+    # that task's failure and must not hold back the rest of the population.
     if (response.delivery != "ambiguous_delivery"
-            and response.outcome != "classified_transient_provider_error"):
+            and response.outcome in _DEPLOYMENT_FAILURES):
         await _db(services, "set_provider_state", task["campaign_id"], task["provider"], "paused",
                   {"code": response.outcome, "http_status": response.status_code})
     return await _db(services, "release", lease,
@@ -453,15 +465,30 @@ async def _score(task: dict, lease: dict, services: Services) -> dict:
 
     Args: task: Prediction-ready task; lease: current token/fence; services: identified similarity/store.
     Returns: Complete released task; existing score is reused unchanged.
-    Raises: Scorer or integrity errors, never triggering regeneration.
+    Raises: Integrity errors only; a scorer rejection fails this task alone.
     Side Effects: One immutable evaluation and normalized metric set; no provider calls.
     """
     if not task["evaluation"]:
-        result = await asyncio.to_thread(evaluate_item, task["gold"], task["prediction"]["canonical"],
-            services.similarity, metadata={"variable_id": task["variable"]["variable_id"],
-                "run_id": task["run"]["id"], "mode": services.bundle["plan"]["mode"],
-                "category": task["variable"]["category"], "subcategory": task["variable"]["subcategory"]},
-            similarity_identity=services.bundle["similarity_identity"])
+        try:
+            result = await asyncio.to_thread(evaluate_item, task["gold"], task["prediction"]["canonical"],
+                services.similarity, metadata={"variable_id": task["variable"]["variable_id"],
+                    "run_id": task["run"]["id"], "mode": services.bundle["plan"]["mode"],
+                    "category": task["variable"]["category"], "subcategory": task["variable"]["subcategory"]},
+                similarity_identity=services.bundle["similarity_identity"])
+        except (ValueError, TypeError, KeyError, ArithmeticError) as error:
+            # Data-shaped failures only. Scoring is a pure computation over one gold and
+            # one prediction, so these say something about that pair; an infrastructure
+            # fault still propagates and stops the campaign, which is what it should do.
+            # The validator is supposed to reject anything the scorer will not accept, so
+            # reaching here means the two disagree about this prediction. That is a defect
+            # worth fixing, but it is still one task's prediction: letting it propagate
+            # aborted a live campaign after 995 tasks, and because the offending response
+            # was already durable, every resume replayed it into the same exception and
+            # the run could never advance again. Fail the task, keep the campaign, and
+            # record the disagreement so it can be found and fixed.
+            return await _db(services, "release", lease, "operational_failed",
+                             {"code": "scorer_rejected_validated_prediction",
+                              "detail": str(error)[:500]})
         await _db(services, "store_evaluation", lease, result)
         _checkpoint(services, "scored", task)
     return await _db(services, "release", lease, "complete")
@@ -713,6 +740,14 @@ async def run_campaign(campaign_id: str, services: Services, *, stop_after: int 
             # recorded failures, not a stalled one.
             if sum(states.get(name, 0) for name in _TERMINAL_TASK_STATES) == total:
                 stop_reason = "tasks_terminal"
+                break
+            # A paused provider hands out no queued task and contributes no due time, so
+            # it produced neither work nor a delay and the loop fell through to six idle
+            # polls and the opaque `no_claimable_work`. When nothing is left that could
+            # serve a request, say so: the reason names the condition, and reconciliation
+            # on the next resume clears the pause, so a supervisor recovers by itself.
+            if all(profile["state"] in {"paused", "failed"} for profile in campaign["providers"]):
+                stop_reason = "providers_paused"
                 break
             delays = [gate.next_ready - time.monotonic() for gate in services.gates.values() if gate.next_ready > time.monotonic()]
             for profile in campaign["providers"]:
