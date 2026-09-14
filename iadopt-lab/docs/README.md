@@ -31,7 +31,6 @@ These describe work that was actually carried out. They are written in the past 
 | `campaign-log.md` | Which campaigns actually executed, why each exists, and what did it produce? |
 | `migration-v2.0.1.md` | What did the Corpus v2.0.1 re-import change, and what did executing it reveal? |
 | `read-only-review-2026-09-09.md` | What did the 9 September source audit find, and what stayed unresolved? |
-| `shot-count-ablation.md` | What did the exploratory 0→10 shot-count side experiment measure? It is not part of the official experiment. |
 
 ## Component contracts
 

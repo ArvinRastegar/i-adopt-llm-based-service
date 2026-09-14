@@ -21,9 +21,9 @@ experiment reads.
 
 Isolation
 ---------
-* Lives in `experiments/`, which no artifact collector walks.
+* Lives in `few-shot-selection/`, which no artifact collector walks.
 * Reads `parameters.yml` for nothing; the configuration is fixed in this file.
-* Writes only `experiments/output/`. It never touches the campaign database, `outputs/`,
+* Writes only `few-shot-selection/output/`. It never touches the campaign database, `outputs/`,
   or any manifest.
 * Results carry no campaign, run or task identity, so they cannot enter official rankings.
 
@@ -66,7 +66,7 @@ from iadopt_lab.prompting.renderer import load_prompt_version  # noqa: E402
 from iadopt_lab.validation import load_schema_bytes, validate_prediction  # noqa: E402
 
 EXPERIMENT = "shot-count-ablation-v1"
-OUT_DIR = ROOT / "experiments" / "output"
+OUT_DIR = ROOT / "few-shot-selection" / "output"
 RESULTS = OUT_DIR / "shot-count-ablation-results.jsonl"
 SHOT_LEVELS = (0, 1, 3, 5, 7, 10)
 POOL_SIZE = 10

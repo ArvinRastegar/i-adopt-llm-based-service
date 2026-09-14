@@ -128,8 +128,6 @@ across rows; see D-048.
 |---|---|---|---|---|
 | Mean Close F1 | 0.200 | 0.195 | 0.265 | 0.295 |
 
-That matches the shot-count ablation, which found `Qwen3.8-27B` still climbing at 10.
-
 Prompt variant is a weak effect: matrix-decomposition 0.253, constraint-decomposition
 0.237, strict-minimal 0.233.
 

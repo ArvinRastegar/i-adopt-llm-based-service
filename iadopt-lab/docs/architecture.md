@@ -58,8 +58,7 @@ iadopt-lab/
 │   ├── integration/                     # PostgreSQL; skipped without a test DSN
 │   └── recovery/                        # lease and resume; skipped without a test DSN
 ├── reference/january/                   # retained hash-verified January scorer copy
-├── ops/                                 # unattended supervision; outside every hashed artifact path
-└── experiments/                         # exploratory side analyses and their own output/
+└── ops/                                 # unattended supervision; outside every hashed artifact path
 ```
 
 ### 2.0 Modules added after the first live runs

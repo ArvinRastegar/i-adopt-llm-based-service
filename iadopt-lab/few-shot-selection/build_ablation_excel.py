@@ -2,7 +2,7 @@
 """Render the shot-count ablation JSONL into its own Excel workbook.
 
 Kept separate from the official reporting path on purpose: this reads only the ablation's
-own results file and writes only into `experiments/output/`, so nothing it produces can be
+own results file and writes only into `few-shot-selection/output/`, so nothing it produces can be
 mistaken for, or merged into, an official ranking.
 
 Aggregation matches the official experiment — micro metrics via `aggregate_items`, summing
@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-sys.path.insert(0, str(ROOT / "experiments"))
+sys.path.insert(0, str(ROOT / "few-shot-selection"))
 
 from openpyxl import Workbook  # noqa: E402
 from openpyxl.styles import Alignment, Font, PatternFill  # noqa: E402

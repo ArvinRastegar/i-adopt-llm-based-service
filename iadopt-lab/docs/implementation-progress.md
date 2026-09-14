@@ -50,7 +50,7 @@ working-tree changes present.
 
 Corrected in that pass: the `docs/README.md` index, which listed twelve documents and
 omitted seven; the `docs/architecture.md` tree, which said `D-001 … D-043` and showed
-neither `ops/`, `experiments/` nor `reference/`; `docs/test-plan.md`, which pointed the
+neither `ops/` nor `reference/`; `docs/test-plan.md`, which pointed the
 January regression fixtures at a working-tree path instead of the retained hash-verified
 copy at `reference/january/randomShotsPhaseOne.py.txt`; and the component registry in
 `docs/components/README.md`, which named one owner module for `workflow.md` and did not

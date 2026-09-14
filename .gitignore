@@ -189,10 +189,14 @@ data/embeddings/
 iadopt-lab/.runtime/
 iadopt-lab/outputs/*
 !iadopt-lab/outputs/README.md
-# Shot-count ablation results: a 15 MB raw JSONL and its Excel workbook. Ignored for
-# the same reason official rankings are - they are large, regenerated evidence that
-# lives on disk, not in Git. The runner and its documentation ARE tracked.
-iadopt-lab/experiments/output/
+# Side-experiment raw results: a 15 MB JSONL and its Excel workbook for the shot-count
+# ablation, and a 378 MB call cache plus its observation log for the example-selection
+# search. Ignored for the same reason official rankings are - they are large, regenerated
+# evidence that lives on disk, not in Git. The runners and the written records of what
+# they found ARE tracked.
+iadopt-lab/few-shot-selection/output/
+iadopt-lab/few-shot-selection/example_selection/output/*
+!iadopt-lab/few-shot-selection/example_selection/output/example-selection-report.md
 iadopt-lab/data/embeddings/
 
 # Python build and tool caches, repo-wide

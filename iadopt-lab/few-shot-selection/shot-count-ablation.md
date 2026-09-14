@@ -4,7 +4,7 @@
 own runner, its own output directory and its own Excel workbook. Its results do not appear
 in any official ranking, campaign, or results table, and it changed nothing about the
 official grid, campaigns, task counts or conclusions. If you are reading this to understand
-the official experiment, you are in the wrong document — see [campaign log](campaign-log.md).
+the official experiment, you are in the wrong document — see [campaign log](../docs/campaign-log.md).
 
 ## Scientific question
 
@@ -94,11 +94,11 @@ runner was the smaller and safer choice.
 
 | Concern | How it is isolated |
 |---|---|
-| Implementation hash | Runner lives in `experiments/`, which no artifact collector walks. Verified: the official hash was `ecfe44cb…` before and after. |
+| Implementation hash | Runner lives in `few-shot-selection/`, which no artifact collector walks. Verified: the official hash was `ecfe44cb…` before and after. |
 | Configuration | Reads nothing from `parameters.yml`; its configuration is fixed in the runner. Never writes it. |
 | Database | Writes no campaign, run, task or evaluation row. Results go to a JSONL file. |
 | Rankings | Results carry no campaign/run/task identity, so they cannot enter an official ranking even accidentally. |
-| Outputs | Writes only `experiments/output/`, never `outputs/`. |
+| Outputs | Writes only `few-shot-selection/output/`, never `outputs/`. |
 | Dependencies | `openpyxl` installed into the venv only; `uv.lock` and `pyproject.toml` unchanged, which matters because both feed the official hash. |
 | Provider | PSNC, while the main remaining campaign is entirely OpenRouter. |
 
@@ -106,14 +106,14 @@ runner was the smaller and safer choice.
 
 ```bash
 cd iadopt-lab
-.venv/bin/python experiments/shot_count_ablation.py --plan-only   # counts only, no calls
-.venv/bin/python experiments/shot_count_ablation.py               # run or resume
-.venv/bin/python experiments/shot_count_ablation.py --limit 2     # small smoke test
-.venv/bin/python experiments/build_ablation_excel.py              # rebuild the workbook
+.venv/bin/python few-shot-selection/shot_count_ablation.py --plan-only   # counts only, no calls
+.venv/bin/python few-shot-selection/shot_count_ablation.py               # run or resume
+.venv/bin/python few-shot-selection/shot_count_ablation.py --limit 2     # small smoke test
+.venv/bin/python few-shot-selection/build_ablation_excel.py              # rebuild the workbook
 ```
 
 Resumability is by construction: every scored evaluation is appended to
-`experiments/output/shot-count-ablation-results.jsonl` as it completes, and a re-run skips
+`few-shot-selection/output/shot-count-ablation-results.jsonl` as it completes, and a re-run skips
 any `(model, shot count, variable)` triple already present. An interruption costs nothing
 and no provider call is repeated. Re-running after completion does nothing and prints
 `already complete`.
@@ -157,12 +157,12 @@ large enough to be interesting but has not been repeated.
 
 ## Output
 
-- **Excel:** `iadopt-lab/experiments/output/shot-count-ablation-results.xlsx`
+- **Excel:** `iadopt-lab/few-shot-selection/output/shot-count-ablation-results.xlsx`
   - *Summary* — one row per model × shot count, with Close/Exact precision, recall and F1,
     valid rate, failed calls, latency and token usage
   - *Per-variable* — all 1,104 evaluations, so you can see where extra shots helped or hurt
   - *Shot pool* — the ten reserved variables, their order and which levels use them
   - *Configuration* — the fixed configuration per model and the official result it came from
-- **Raw:** `iadopt-lab/experiments/output/shot-count-ablation-results.jsonl` (~15 MB)
+- **Raw:** `iadopt-lab/few-shot-selection/output/shot-count-ablation-results.jsonl` (~15 MB)
 
-Both are under `experiments/output/`, which is not the official `outputs/` directory.
+Both are under `few-shot-selection/output/`, which is not the official `outputs/` directory.
