@@ -1,0 +1,1754 @@
+{
+  "model_id": "z-ai/glm-5.2",
+  "temperature": 0.5,
+  "shot_count": 5,
+  "campaign_prefix": "79b5ec5f",
+  "prompt_variants": [
+    "strict-minimal",
+    "matrix-decomposition",
+    "constraint-decomposition"
+  ],
+  "row_count": 290,
+  "rows": [
+    {
+      "variable": "Aircraft Angle of Attack.",
+      "prompt_version": "strict-minimal",
+      "task_id": "b8fba70e-8236-5c18-8eaf-30a3a95675e9",
+      "prediction_id": "aa6511e4-ad15-532d-8072-d6c7abdf5fd2"
+    },
+    {
+      "variable": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
+      "prompt_version": "strict-minimal",
+      "task_id": "c73f87b8-3199-5668-8c1c-75659c8aa140",
+      "prediction_id": "c64da7c9-ef69-5751-afa9-5e5b2d8f9f36"
+    },
+    {
+      "variable": "Atmospheric boundary layer height defined by temperature inversion",
+      "prompt_version": "strict-minimal",
+      "task_id": "6f28948c-3c7a-5011-8da4-309796ea11b1",
+      "prediction_id": "4b2ae3e8-9f8f-543a-9d8a-6f8698901b62"
+    },
+    {
+      "variable": "Average number of persons without high school diploma during the last three years within a statistical unit",
+      "prompt_version": "strict-minimal",
+      "task_id": "3223dfe2-132d-50fa-85d7-1e4e79116b5f",
+      "prediction_id": "a1f6266e-18ff-585a-9942-273ecf9f3e30"
+    },
+    {
+      "variable": "Biological sex",
+      "prompt_version": "strict-minimal",
+      "task_id": "e29486fb-9ee0-53f8-883c-59a062a34361",
+      "prediction_id": "e31e4480-1f92-59f3-bbfe-c6f226a946d0"
+    },
+    {
+      "variable": "Body Mass Index",
+      "prompt_version": "strict-minimal",
+      "task_id": "7a9da757-3a8f-58ca-895c-c1e86d95585a",
+      "prediction_id": "4bd2e0fb-7c17-5990-a7ed-07d1ef4b4991"
+    },
+    {
+      "variable": "boiling point of benzene",
+      "prompt_version": "strict-minimal",
+      "task_id": "8e2958bd-32e8-5d19-8911-eda15fd2b848",
+      "prediction_id": "94c44b83-6e95-562e-8d28-cce9b6c0382d"
+    },
+    {
+      "variable": "BPM Mean heart rate",
+      "prompt_version": "strict-minimal",
+      "task_id": "0d3a3d51-f9bc-5575-9a67-8d05c853e2b7",
+      "prediction_id": "406c58eb-a61a-54d2-bb15-57e066ac6039"
+    },
+    {
+      "variable": "Cellular dose in vitro of nanomaterials (mass / cell)",
+      "prompt_version": "strict-minimal",
+      "task_id": "ad961b31-f0e6-53c6-b699-9e8d38e2430b",
+      "prediction_id": "b77a4268-c25b-52c1-8bc9-578716b09719"
+    },
+    {
+      "variable": "Cellular dose in vitro of nanomaterials (particle / cell)",
+      "prompt_version": "strict-minimal",
+      "task_id": "67a72b62-9984-5459-9dd2-84f4f97287bd",
+      "prediction_id": "5b33478c-7ebe-516b-898d-d058cefb6194"
+    },
+    {
+      "variable": "Chronic pain grade scale",
+      "prompt_version": "strict-minimal",
+      "task_id": "1694c857-fe9a-5b58-9378-712b91fb431b",
+      "prediction_id": "65ac71b6-41e9-5a82-b293-c3c0f58205c3"
+    },
+    {
+      "variable": "Cloud cover",
+      "prompt_version": "strict-minimal",
+      "task_id": "fbcf377b-81cc-5015-baee-27bdcd3bfd86",
+      "prediction_id": "de2f6ec4-d8eb-5ad2-ab4a-0b7da5e21ba0"
+    },
+    {
+      "variable": "Coarse woody debris abundance",
+      "prompt_version": "strict-minimal",
+      "task_id": "2e2ca0f6-6de5-549c-99d6-9ae9634fe778",
+      "prediction_id": "c5b5e820-b79f-53ec-9563-7413219a503a"
+    },
+    {
+      "variable": "Concentration of Al cations in water",
+      "prompt_version": "strict-minimal",
+      "task_id": "e3457478-4c51-576a-9344-3664710fc9e2",
+      "prediction_id": "a1d01a3e-77a9-5b01-9ca8-1718f0a7f4c4"
+    },
+    {
+      "variable": "Concentration of DDT impacted by industry",
+      "prompt_version": "strict-minimal",
+      "task_id": "1f73d9f4-9a92-53da-81c9-cc1d7eec86f0",
+      "prediction_id": "0bb35dee-db60-520b-b358-f054e66d9d3d"
+    },
+    {
+      "variable": "Concentration of dissolved organic carbon in water",
+      "prompt_version": "strict-minimal",
+      "task_id": "7ed2c60c-8dee-51e7-a6e2-c867f3b6d357",
+      "prediction_id": "f0af208e-b24a-5e03-8014-a17ef504e03c"
+    },
+    {
+      "variable": "concentration of endosulfane sulfate in wet flesh of ostrea edulis",
+      "prompt_version": "strict-minimal",
+      "task_id": "b037936b-11a2-55e4-ac4f-b2a66f23220e",
+      "prediction_id": "083a0147-32bc-5490-be29-0c7f12413161"
+    },
+    {
+      "variable": "Count of tropic nights",
+      "prompt_version": "strict-minimal",
+      "task_id": "6e4d252c-d929-5828-ac77-3050850e4aa9",
+      "prediction_id": "4eb9ca91-e958-5f10-96bc-1342ff5fd2f8"
+    },
+    {
+      "variable": "Country of birth of mother",
+      "prompt_version": "strict-minimal",
+      "task_id": "fdb855b3-70d3-5402-9590-6d54379bcf98",
+      "prediction_id": "640de064-14d6-53cb-9b9b-dab91ac88c05"
+    },
+    {
+      "variable": "Current smoking status",
+      "prompt_version": "strict-minimal",
+      "task_id": "11a095d7-5c7d-5ad0-808f-50bc796903f5",
+      "prediction_id": "d3624956-8f55-597e-9c4d-693a5af69d6c"
+    },
+    {
+      "variable": "Daily maximum hourly precipitation rate",
+      "prompt_version": "strict-minimal",
+      "task_id": "b304f055-5d51-5904-a8e4-31c6714a19c4",
+      "prediction_id": "e87815d5-6a6d-5f2d-9d2e-ec3b27365666"
+    },
+    {
+      "variable": "Daily Maximum Near-Surface Wind Speed of Gust",
+      "prompt_version": "strict-minimal",
+      "task_id": "46e7bc42-5c59-59c0-a125-38538f866ef4",
+      "prediction_id": "757a80fd-88b8-5fc5-a57e-dfe1034bd325"
+    },
+    {
+      "variable": "Date of birth of mother",
+      "prompt_version": "strict-minimal",
+      "task_id": "110205eb-e622-5ce7-a1e0-806bac2503a4",
+      "prediction_id": "6e2e60d0-bba0-5679-9d60-dc99b09e0e86"
+    },
+    {
+      "variable": "Date of last PCR-test by certified laboratory",
+      "prompt_version": "strict-minimal",
+      "task_id": "f89bc92c-ea49-599e-98f9-796d33d44e2d",
+      "prediction_id": "fca3b058-833b-5857-80f3-ed4371b7fa1c"
+    },
+    {
+      "variable": "density of benzene",
+      "prompt_version": "strict-minimal",
+      "task_id": "34c04291-d0b7-5be3-a5ed-8b6581261fb3",
+      "prediction_id": "b68ecdc0-60d7-5642-8926-8fe6a81fc632"
+    },
+    {
+      "variable": "Determination of iron concentration in a soil sample",
+      "prompt_version": "strict-minimal",
+      "task_id": "4e118658-9512-5f34-a828-7cf621283ffd",
+      "prediction_id": "d1258a3e-aaca-545c-97c0-5d127cec6b4b"
+    },
+    {
+      "variable": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
+      "prompt_version": "strict-minimal",
+      "task_id": "271a56ef-a3de-5053-b12c-7418df96a51f",
+      "prediction_id": "67991d8e-1b45-512a-867d-f962f28884cd"
+    },
+    {
+      "variable": "DRVA Direction of radial velocity of water current relative to instrument and to True North by high frequency radar",
+      "prompt_version": "strict-minimal",
+      "task_id": "572183c6-5c3d-5c11-8961-89fefa31740a",
+      "prediction_id": "28bf7a4b-6525-5cb9-912f-34fe05f4d4a4"
+    },
+    {
+      "variable": "Dynamic shear viscosity of polystyrene PS042",
+      "prompt_version": "strict-minimal",
+      "task_id": "5ebbade0-1f75-5f4e-9a68-6938d82bd557",
+      "prediction_id": "4cedb875-3d90-503c-b699-ce9fd23d069e"
+    },
+    {
+      "variable": "Electron density in the solar wind",
+      "prompt_version": "strict-minimal",
+      "task_id": "31f52471-2160-5979-b303-82a204e359ff",
+      "prediction_id": "deff2079-c54b-5d66-850d-0d890c7716a4"
+    },
+    {
+      "variable": "estimation of the energy of reaction upon combustion of hexanol",
+      "prompt_version": "strict-minimal",
+      "task_id": "43193786-36c0-5f91-ba58-b54b7026c48b",
+      "prediction_id": "888b9763-64fc-553f-b537-e3e07d8cd253"
+    },
+    {
+      "variable": "EWCT Eastward velocity of water current in the water body by high frequency radar",
+      "prompt_version": "strict-minimal",
+      "task_id": "f12cedee-71f6-5673-be1c-2c0028176095",
+      "prediction_id": "8357790a-1945-5e7f-beca-5c41b6e14ad6"
+    },
+    {
+      "variable": "Feral-free enclosure area",
+      "prompt_version": "strict-minimal",
+      "task_id": "429ebeb2-ba96-507b-8431-2ee5f5f7fdd8",
+      "prediction_id": "2f8462be-73f0-5883-a957-1f6b8790709a"
+    },
+    {
+      "variable": "Fire risk per district",
+      "prompt_version": "strict-minimal",
+      "task_id": "9026c91c-1f69-541e-b348-9dd47b2a3826",
+      "prediction_id": "5706f3dc-9444-52cf-bf17-04a15a502046"
+    },
+    {
+      "variable": "Flood risk index related to mobility and accessibility of an urban area",
+      "prompt_version": "strict-minimal",
+      "task_id": "ec6b5960-de4c-5965-8ef3-da28eda0424b",
+      "prediction_id": "3c488c9f-05a6-5a1b-89b2-6eee7ee09721"
+    },
+    {
+      "variable": "Foliage projective cover in the lower canopy strata",
+      "prompt_version": "strict-minimal",
+      "task_id": "0f74ddcb-86b0-5f95-84e0-6ff6cbacc55f",
+      "prediction_id": "7a5e1d64-0137-57b1-a7d8-7613f37c15af"
+    },
+    {
+      "variable": "Foraminifera, planktic, size",
+      "prompt_version": "strict-minimal",
+      "task_id": "d175ed2e-b5d1-5057-9f00-b2d73d2eb1ce",
+      "prediction_id": "2fb3d2b0-fea4-5b65-958b-910959aae086"
+    },
+    {
+      "variable": "Fraction of flooded area around building",
+      "prompt_version": "strict-minimal",
+      "task_id": "ffb92d15-b422-5d40-bd6a-f3be2319d71f",
+      "prediction_id": "58eef029-5143-52c2-bd09-25cd7a607f4c"
+    },
+    {
+      "variable": "Geometric dilution of precision (GDOP) threshold quality flag ",
+      "prompt_version": "strict-minimal",
+      "task_id": "6bf302e7-9b5c-5a4b-bbc1-138a2bc96671",
+      "prediction_id": "cef0a63e-aa56-5e39-b080-8aed0a0f2e25"
+    },
+    {
+      "variable": "Global fallout of U‑236 (U236GF)",
+      "prompt_version": "strict-minimal",
+      "task_id": "07412a56-bfab-5abf-90a7-49dcd176b688",
+      "prediction_id": "520a7ebe-b333-57c2-bbee-b16de43e552e"
+    },
+    {
+      "variable": "HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+      "prompt_version": "strict-minimal",
+      "task_id": "2a93c4e4-ca03-5583-a1c9-ae519681e69a",
+      "prediction_id": "1bb36b86-2a70-540f-834e-fcf9dad10e8c"
+    },
+    {
+      "variable": "HRV Heart rate variabilty",
+      "prompt_version": "strict-minimal",
+      "task_id": "5a563743-ee3c-5089-bcec-e67cbe2980a6",
+      "prediction_id": "b2ce21cc-b914-594c-830b-b6a1e1290c3f"
+    },
+    {
+      "variable": "I129 deposition from Ringhals of Sweden",
+      "prompt_version": "strict-minimal",
+      "task_id": "46407a7f-d221-505f-b76c-1d1d7cd5d319",
+      "prediction_id": "40a7bea5-37f5-57d6-ae30-705cfb43e873"
+    },
+    {
+      "variable": "Ice water content in atmosphere",
+      "prompt_version": "strict-minimal",
+      "task_id": "e1018c64-8840-5d36-a78a-6508c1d9449a",
+      "prediction_id": "bb2a2da6-7003-576d-a50d-9109e436bf56"
+    },
+    {
+      "variable": "Labile detrital nitrogen concentration in the seabed",
+      "prompt_version": "strict-minimal",
+      "task_id": "c4e406c8-b56e-5faa-a6c0-a9306f997c86",
+      "prediction_id": "59c20014-ee3e-52fc-9d9b-87c8f8540b2f"
+    },
+    {
+      "variable": "Level of highest education",
+      "prompt_version": "strict-minimal",
+      "task_id": "295324bc-f0c1-5b10-9034-4f51ee379c40",
+      "prediction_id": "1258424b-fc6e-5343-bd09-920ae02483bc"
+    },
+    {
+      "variable": "Mass concentration of isobutylene in chloroform",
+      "prompt_version": "strict-minimal",
+      "task_id": "3a9a35a0-e098-5269-866f-8a6f29d204e9",
+      "prediction_id": "d55cb987-218a-5617-82d0-2c7040043bc0"
+    },
+    {
+      "variable": "Mass concentration of tbph in breast milk",
+      "prompt_version": "strict-minimal",
+      "task_id": "6e5b8519-034b-55d3-9526-e744e5cb0176",
+      "prediction_id": "dc59b95d-4dc7-5b67-afef-7b00d251ceb1"
+    },
+    {
+      "variable": "Mass flux of carbon into soil from vegetation due to senescence",
+      "prompt_version": "strict-minimal",
+      "task_id": "faa8607c-4268-5656-a91a-da028eca5bf6",
+      "prediction_id": "10d51a51-b86e-5b6d-8fa2-bcb23add775a"
+    },
+    {
+      "variable": "Mass ratio of dehp in nail",
+      "prompt_version": "strict-minimal",
+      "task_id": "4f9e573f-c627-5f0a-83cb-f2f0136b43b8",
+      "prediction_id": "e21d0e85-c1e7-5305-9ef3-80b8ded892be"
+    },
+    {
+      "variable": "Maximum trunk char height",
+      "prompt_version": "strict-minimal",
+      "task_id": "562543b2-d115-5ada-b59c-7b5f08c9afa1",
+      "prediction_id": "97b5f9cc-408b-5a7a-a09d-a15b8208bf8d"
+    },
+    {
+      "variable": "Mean sea level pressure",
+      "prompt_version": "strict-minimal",
+      "task_id": "004ae5ea-d2be-5cc2-b84b-6df4d889558e",
+      "prediction_id": "85ece3f9-6295-50ea-8f60-6d9337b42243"
+    },
+    {
+      "variable": "melting point of naphthalene under standard conditions",
+      "prompt_version": "strict-minimal",
+      "task_id": "e6f2ba8b-adb1-5187-8787-d670e80c2f72",
+      "prediction_id": "53bc2bab-2658-5095-aaa3-7e9e4f6a4b39"
+    },
+    {
+      "variable": "Moisture in upper soil portion",
+      "prompt_version": "strict-minimal",
+      "task_id": "11373429-f1f0-5bd1-9198-c366669c6bf4",
+      "prediction_id": "fd441dba-46cf-5c09-bfb0-bf5283293102"
+    },
+    {
+      "variable": "Nervosity feelings",
+      "prompt_version": "strict-minimal",
+      "task_id": "56af5e3d-26d3-5106-b6db-3d95dadc0789",
+      "prediction_id": "806648fa-7bc0-5d1b-a4bf-d7e0d1426da7"
+    },
+    {
+      "variable": "Northward Near-Surface Wind",
+      "prompt_version": "strict-minimal",
+      "task_id": "fde6bcea-2e79-517e-b812-6f8a8bcec710",
+      "prediction_id": "33d08b91-4825-52e4-9b8b-781a02741184"
+    },
+    {
+      "variable": "Northward velocity uncertainty of water current in the water body by high frequency radar",
+      "prompt_version": "strict-minimal",
+      "task_id": "beed4404-5beb-53e7-a285-7f72be08de68",
+      "prediction_id": "0536cd8f-6ca8-55fa-a83c-6f243751eb50"
+    },
+    {
+      "variable": "Number of children under the age of 10 years in a statistical unit",
+      "prompt_version": "strict-minimal",
+      "task_id": "38d7f8ea-74d7-5b38-8463-a5a1c1e8f646",
+      "prediction_id": "2c2af606-8d65-5b7f-8c2f-7cb50e2e389f"
+    },
+    {
+      "variable": "Number of elderly people living alone in a statistical unit",
+      "prompt_version": "strict-minimal",
+      "task_id": "9c74fe2e-fe78-54ae-9f21-9a411f0b3b9d",
+      "prediction_id": "a9b4d191-26c5-567a-b187-8ed5baf9cde6"
+    },
+    {
+      "variable": "Number of floors above ground of building",
+      "prompt_version": "strict-minimal",
+      "task_id": "514ebcb9-8946-558d-a634-65efdfb31ad8",
+      "prediction_id": "904592f3-81f5-551c-a75e-7f09baa089c7"
+    },
+    {
+      "variable": "Number of Hours of family activity per week",
+      "prompt_version": "strict-minimal",
+      "task_id": "1deb3d75-1983-585f-8c25-909dcf32829d",
+      "prediction_id": "367db907-9dcc-5170-ace3-d2fe4fb87957"
+    },
+    {
+      "variable": "Number of Uranium-236 atoms in sea water",
+      "prompt_version": "strict-minimal",
+      "task_id": "40e5f8c6-f993-515a-be06-d8fb98897fe5",
+      "prediction_id": "6add3a40-794f-5fb8-96c6-43eb30a422c3"
+    },
+    {
+      "variable": "Observation of bloodtype in blood",
+      "prompt_version": "strict-minimal",
+      "task_id": "51e7d2bd-7df4-5348-9848-c3fa60b915e0",
+      "prediction_id": "6562610d-bd5d-56f2-b2c3-39e9ca062fa2"
+    },
+    {
+      "variable": "Observation of Rhesusform in blood",
+      "prompt_version": "strict-minimal",
+      "task_id": "813e504d-5721-5121-9c5c-c816ab0fe4b1",
+      "prediction_id": "82258af9-b646-50ed-bcf0-24e35ddf3b65"
+    },
+    {
+      "variable": "Overnight stays in 3-star hotel near the sea shore",
+      "prompt_version": "strict-minimal",
+      "task_id": "7d68db20-15d6-5cef-babd-67758d08c5d7",
+      "prediction_id": "528ed2db-e786-545c-91e2-2ac806a19726"
+    },
+    {
+      "variable": "Partial Solar Obscuration",
+      "prompt_version": "strict-minimal",
+      "task_id": "8b9d062a-ce35-5ec5-87bb-26f950e98950",
+      "prediction_id": "93592729-f356-503c-b768-dc3df6a86a94"
+    },
+    {
+      "variable": "Peak ground acceleration",
+      "prompt_version": "strict-minimal",
+      "task_id": "7ef4e9e4-a4cc-572e-a58f-4342fa3dbf8b",
+      "prediction_id": "a34e06e3-4938-5df8-8122-000871b205cc"
+    },
+    {
+      "variable": "Percentage Branched Perfluorooctane sulfonic acid (BPFOS)",
+      "prompt_version": "strict-minimal",
+      "task_id": "bbb30194-4364-5d33-84a4-7f1ee5ebfbaf",
+      "prediction_id": "0194db5d-eb63-5631-ba9d-7914626c47a1"
+    },
+    {
+      "variable": "Percentage of number of children",
+      "prompt_version": "strict-minimal",
+      "task_id": "d100f8f5-3383-5d8b-88fa-f832c2a17b58",
+      "prediction_id": "b64e1d7a-cd17-5a93-b818-55e48c62d9b6"
+    },
+    {
+      "variable": "pH measurement of a sample of apple juice",
+      "prompt_version": "strict-minimal",
+      "task_id": "72dbdbf1-94ab-5838-bd75-1a523d8d5ff7",
+      "prediction_id": "e076db34-2249-5a1b-b7e4-1de6a97f611b"
+    },
+    {
+      "variable": "Pluvial flood due to 100 year event",
+      "prompt_version": "strict-minimal",
+      "task_id": "c8507a0f-2d2d-559c-80f5-b08782dc8ccd",
+      "prediction_id": "1ae4aff8-4baf-59e1-a0fb-a8edc62c3d28"
+    },
+    {
+      "variable": "Potential evaporation",
+      "prompt_version": "strict-minimal",
+      "task_id": "477a7850-dbac-5ce1-8231-b0cbd175562e",
+      "prediction_id": "c5d0f731-af18-54e0-9ebe-78705c28a5e1"
+    },
+    {
+      "variable": "Primary function of building",
+      "prompt_version": "strict-minimal",
+      "task_id": "f3a52b53-8605-55c0-b101-a6c804c91d6b",
+      "prediction_id": "620a9c41-b6b0-5bbe-8369-4afa6a76a2e0"
+    },
+    {
+      "variable": "Probablity of occurence of habitat",
+      "prompt_version": "strict-minimal",
+      "task_id": "301c658c-ca8d-5111-90a7-d2d8c533b391",
+      "prediction_id": "4bf7a3bf-4773-5f1b-90f2-290514841649"
+    },
+    {
+      "variable": "Radial velocity (away from) standard deviation over the coverage period of water current relative to instrument in the water body by high frequency radar",
+      "prompt_version": "strict-minimal",
+      "task_id": "83d3c87d-969b-50db-b2b3-9f1dfec1ffb2",
+      "prediction_id": "2e1686da-755d-5259-a2f7-a12671d3d8ec"
+    },
+    {
+      "variable": "Radioactivity_content_of_TC99SF",
+      "prompt_version": "strict-minimal",
+      "task_id": "d03f1d52-f192-5799-b59a-9df693370e5e",
+      "prediction_id": "ee24ef0e-b50d-57a2-bbf8-bf5e7a4c7deb"
+    },
+    {
+      "variable": "RDVA Radial velocity (away from) of water current relative to instrument in the water body by High Frequency Radar",
+      "prompt_version": "strict-minimal",
+      "task_id": "7a3bfe8a-6e4f-5085-84d0-b4327c038999",
+      "prediction_id": "e6bb73d4-ca1c-57f3-b120-2248e30a870e"
+    },
+    {
+      "variable": "Resting systolic blood pressure",
+      "prompt_version": "strict-minimal",
+      "task_id": "fb08ea7b-55fb-50e8-885a-2a4b71046ca1",
+      "prediction_id": "c0a9b955-b380-5a97-ac6b-ffb0212eb1bc"
+    },
+    {
+      "variable": "Sheet resistance of layer of gold",
+      "prompt_version": "strict-minimal",
+      "task_id": "16a4c8ed-551e-5d21-a26e-8f8b7228e0e0",
+      "prediction_id": "e7a4ad92-01e1-56dd-8cf8-8f00b65edad1"
+    },
+    {
+      "variable": "Snow water equivalent",
+      "prompt_version": "strict-minimal",
+      "task_id": "7e6d194f-89be-5865-a8b4-412425659442",
+      "prediction_id": "d76ac8df-e846-58f7-8a0f-432fd2ad17b4"
+    },
+    {
+      "variable": "Social Vulnerability to pluvial floods of the residents",
+      "prompt_version": "strict-minimal",
+      "task_id": "b2a30dad-ca20-5724-af05-8a4472e7b5c4",
+      "prediction_id": "8bcb626f-8a8c-5538-97e5-829663dd8f0d"
+    },
+    {
+      "variable": "Solar energy production of building per month",
+      "prompt_version": "strict-minimal",
+      "task_id": "a40a316c-f8a0-50b1-acf4-13b14d908638",
+      "prediction_id": "56318a77-ce7a-53dd-94c8-24addb746f92"
+    },
+    {
+      "variable": "solubility of benzene in water",
+      "prompt_version": "strict-minimal",
+      "task_id": "39c4a53a-aeb1-5227-8b36-ccd46431220d",
+      "prediction_id": "adfd8202-c658-575f-8c71-b41c82afbcad"
+    },
+    {
+      "variable": "solubility of molecular oxygen from air in water",
+      "prompt_version": "strict-minimal",
+      "task_id": "3d162bc2-79ba-53d1-a152-fa3d3d893943",
+      "prediction_id": "af5081a9-1238-55bb-b387-118d377aa297"
+    },
+    {
+      "variable": "solubility of naphthalene in water at room temperature",
+      "prompt_version": "strict-minimal",
+      "task_id": "0fda7e95-6305-52f4-8eb1-d719112246ae",
+      "prediction_id": "7c252fee-4fb7-5f37-bc8c-27f1608d3958"
+    },
+    {
+      "variable": "Spectral upwelling actinic flux",
+      "prompt_version": "strict-minimal",
+      "task_id": "d2e00fe3-de47-522f-9c10-3b0150358bf6",
+      "prediction_id": "dd01a383-58fc-5651-99b0-95f545755a07"
+    },
+    {
+      "variable": "Standard metabolic rate in mg of Oxygen per hour",
+      "prompt_version": "strict-minimal",
+      "task_id": "3bdd0a6f-9d90-5728-a153-d0fbd93533c8",
+      "prediction_id": "d56cdd10-c3fc-5fbd-bf79-a1dec23cdb83"
+    },
+    {
+      "variable": "State of connection pipe",
+      "prompt_version": "strict-minimal",
+      "task_id": "afd04f58-2a46-5a24-8fd5-79647bf380dd",
+      "prediction_id": "cf24ded9-4a2a-50af-a652-1d567db016ab"
+    },
+    {
+      "variable": "Strike of bedding",
+      "prompt_version": "strict-minimal",
+      "task_id": "d2e6c6c5-1b17-5f66-8e38-2885b34ddb86",
+      "prediction_id": "ed3cba26-7b79-587d-a69d-6fc9e1ea1059"
+    },
+    {
+      "variable": "Sulfate organic nitrate in aerosol particles",
+      "prompt_version": "strict-minimal",
+      "task_id": "e6920e22-f255-5c93-89aa-84a8ca3897ab",
+      "prediction_id": "f187e9dd-f879-550b-8bfd-e6b09445880c"
+    },
+    {
+      "variable": "Surface long-wave (thermal) radiation downwards",
+      "prompt_version": "strict-minimal",
+      "task_id": "6c21cef2-19fd-5b1d-8b28-0ad54d69b605",
+      "prediction_id": "c2f41b7b-2123-5b22-ae84-2ec63e16e35a"
+    },
+    {
+      "variable": "Surface runoff",
+      "prompt_version": "strict-minimal",
+      "task_id": "650c50f7-d83c-5188-8bc9-a52cd6f8a146",
+      "prediction_id": "e5406daf-515e-5c5f-97fb-29262e0ff555"
+    },
+    {
+      "variable": "Total Number of people living in a statistical unit",
+      "prompt_version": "strict-minimal",
+      "task_id": "a7c83c8b-fbf1-599a-bc4e-034a2bee6164",
+      "prediction_id": "a3f0df50-b94a-5f65-b8e2-ee61fea6fb36"
+    },
+    {
+      "variable": "Water sampling depth ",
+      "prompt_version": "strict-minimal",
+      "task_id": "3f45f5cd-5839-5de6-9097-d66809087ca2",
+      "prediction_id": "e2b1ab2c-8a36-52fd-97e1-cd80ac6e058c"
+    },
+    {
+      "variable": "Water turbidity of stagnant surface water ",
+      "prompt_version": "strict-minimal",
+      "task_id": "39299e35-d4ef-5d06-ba84-b84b5af9783c",
+      "prediction_id": "8b9217f4-59c1-5cc2-85e4-2b545985c1da"
+    },
+    {
+      "variable": "Weight specific-ingestion Carbon rate at 15 °C",
+      "prompt_version": "strict-minimal",
+      "task_id": "c61b10f8-5bd8-5a41-99c5-86a306191915",
+      "prediction_id": "774122e4-c79d-5cc1-8e42-41f7b4f97f5b"
+    },
+    {
+      "variable": "Weight without clothes",
+      "prompt_version": "strict-minimal",
+      "task_id": "717658ff-931c-5fca-b858-1d39153b720c",
+      "prediction_id": "315401f2-0599-5977-9e72-0786564e87d7"
+    },
+    {
+      "variable": "Aircraft Angle of Attack.",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "18e631d9-a019-59d7-a09a-e8f91cac7f5d",
+      "prediction_id": "a26123a9-ccc2-5580-a467-469307eea1da"
+    },
+    {
+      "variable": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "2e5e76de-b67d-5282-a848-706cc0a9064d",
+      "prediction_id": "670717d0-0b2b-5580-a051-fa4393ca287f"
+    },
+    {
+      "variable": "Atmospheric boundary layer height defined by temperature inversion",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "c80c7ae4-ba86-59d5-ab73-ad4b5e46aec2",
+      "prediction_id": "1a629836-4db8-55ae-9021-ab69a115f72d"
+    },
+    {
+      "variable": "Average number of persons without high school diploma during the last three years within a statistical unit",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "02366043-7865-59fc-9baf-d72785d35908",
+      "prediction_id": "34215e19-c5cf-55f6-959e-42e8a46de420"
+    },
+    {
+      "variable": "Biological sex",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "3593b9f6-bfea-5169-8658-130db1904913",
+      "prediction_id": "9748c70f-d013-5ade-af09-ea565816c210"
+    },
+    {
+      "variable": "Body Mass Index",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "acc967ec-892d-55b6-92be-f9fb4f2ee1e9",
+      "prediction_id": "a96abdf5-4b38-5a93-bdc0-c1f8ad177400"
+    },
+    {
+      "variable": "boiling point of benzene",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "f46a21b7-25fc-5fc9-8e95-8bb5a52754de",
+      "prediction_id": "70600f29-1c3b-5a48-8693-5deb1f3f15fd"
+    },
+    {
+      "variable": "BPM Mean heart rate",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "ab8a1391-fbd1-5ba0-bcb4-8fb133da42c9",
+      "prediction_id": "5a2dc91c-7ef9-58cb-900c-0e89d4511668"
+    },
+    {
+      "variable": "Cellular dose in vitro of nanomaterials (mass / cell)",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "187d0ad7-69ae-552f-a226-a81bdad6b17e",
+      "prediction_id": "1f6189f3-ed3e-56fa-92a5-2ac101436336"
+    },
+    {
+      "variable": "Cellular dose in vitro of nanomaterials (particle / cell)",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "8fc52c21-7175-5133-8eeb-850e3ce16d15",
+      "prediction_id": "bc46b267-c91f-5364-8298-1389b78b83c8"
+    },
+    {
+      "variable": "Chronic pain grade scale",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "0fc3f495-7f4b-5f69-8427-ed89af4b3d05",
+      "prediction_id": "f603d873-b948-5f53-ba63-67c8db0978c1"
+    },
+    {
+      "variable": "Cloud cover",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "2bb207a3-8790-5ea1-88bb-1bd8773aba8b",
+      "prediction_id": "5d98ac7c-35a1-59e7-8461-8af6044d6a1d"
+    },
+    {
+      "variable": "Coarse woody debris abundance",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "975a6d95-ce00-5f84-819f-1ae626b9bbac",
+      "prediction_id": "869c850e-ee19-5e9b-a5ec-75f170a3b712"
+    },
+    {
+      "variable": "Concentration of Al cations in water",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "b33d0c55-d7b6-509d-b645-0481e0f64c6a",
+      "prediction_id": "bcfd4b09-f6c2-5de1-a64b-451c1e863939"
+    },
+    {
+      "variable": "Concentration of DDT impacted by industry",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "d541d37f-4223-5050-bf6a-54a8f9bfcfb0",
+      "prediction_id": "7d0b7ce8-7ab0-5810-a762-f552c9cb339d"
+    },
+    {
+      "variable": "Concentration of dissolved organic carbon in water",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "8ee5169f-ca63-5d2f-8d6a-def0ee907ad0",
+      "prediction_id": "fdf34055-1e57-56f6-a8f7-cf038983011d"
+    },
+    {
+      "variable": "concentration of endosulfane sulfate in wet flesh of ostrea edulis",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "8ba55ac1-3294-5fdb-b164-0d5ed26e3a10",
+      "prediction_id": "59c9f392-f462-531c-ae89-37f6c9b9f256"
+    },
+    {
+      "variable": "Count of tropic nights",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "ece74f25-36c5-58b2-9b9f-3d5228cbf763",
+      "prediction_id": "a31a0165-4c38-5bfb-9e2b-d2b7c571f443"
+    },
+    {
+      "variable": "Country of birth of mother",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "bc24a244-05c8-5383-8380-a147d5c285a4",
+      "prediction_id": "d9cfd874-e857-5308-b327-0539e83f6a87"
+    },
+    {
+      "variable": "Current smoking status",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "6bd8bf6e-7347-5c17-bd00-122cf96a5429",
+      "prediction_id": "66333292-7013-50d9-9cb9-db0e70e5ca01"
+    },
+    {
+      "variable": "Daily maximum hourly precipitation rate",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "05cdae95-13ce-59ed-9d47-c0df405e4e22",
+      "prediction_id": "ff0eddfb-e711-53e2-937b-76bd604e5dcd"
+    },
+    {
+      "variable": "Daily Maximum Near-Surface Wind Speed of Gust",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "65734689-6cc4-52a5-a349-c2c40143b141",
+      "prediction_id": "3dd5b3dc-e9c7-575c-a58f-5ade15f077cd"
+    },
+    {
+      "variable": "Date of birth of mother",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "1c999f37-ce8e-53f6-aeed-65d0e52dc689",
+      "prediction_id": "6981eeb2-33e5-5db0-b357-25c2d7f77c8f"
+    },
+    {
+      "variable": "Date of last PCR-test by certified laboratory",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "cc746944-e76f-5936-b64e-4ad99a066b61",
+      "prediction_id": "b64ab0c1-a7a9-5574-8596-e6d4a4f9383c"
+    },
+    {
+      "variable": "density of benzene",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "af1ad03a-f191-51b5-9246-80cfc5d4fa3e",
+      "prediction_id": "59125cba-8b34-5ba3-84f7-6af6b3b3fb38"
+    },
+    {
+      "variable": "Determination of iron concentration in a soil sample",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "f8febdd6-0c95-574b-9732-80070dcd1a91",
+      "prediction_id": "b777a6fb-e273-515d-9017-6f7c448b2978"
+    },
+    {
+      "variable": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "83f387b1-2348-5a50-826f-0d58bd0ab773",
+      "prediction_id": "eb8b190c-7f36-523b-9b45-2285c51e8cdc"
+    },
+    {
+      "variable": "DRVA Direction of radial velocity of water current relative to instrument and to True North by high frequency radar",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "6c5c9172-4962-5153-bfa9-19fe41b7dc78",
+      "prediction_id": "0755fbdc-4752-5f3a-9269-f8eca33afcf0"
+    },
+    {
+      "variable": "Dynamic shear viscosity of polystyrene PS042",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "b63c7993-a9f7-57ed-a2b2-9b2c03c79bca",
+      "prediction_id": "42783ff4-fc30-57b7-912c-b1bf6b2f869f"
+    },
+    {
+      "variable": "Electron density in the solar wind",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "c6094f16-121c-523c-888f-f97140f4a000",
+      "prediction_id": "5f52118f-66dd-534b-9e3a-35bddc7436b4"
+    },
+    {
+      "variable": "estimation of the energy of reaction upon combustion of hexanol",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "3176e9e7-18ee-59a4-9f0f-0ee7084cb381",
+      "prediction_id": "e55a5baf-9f63-55e1-9664-35e15a6f4c0f"
+    },
+    {
+      "variable": "EWCT Eastward velocity of water current in the water body by high frequency radar",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "9f60070c-806a-5266-a6b5-bc1081a5cf6f",
+      "prediction_id": "cdaa02b5-67be-532e-ad8a-fa9bf60c98ea"
+    },
+    {
+      "variable": "Feral-free enclosure area",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "32ed9917-f61f-51e3-aecf-3247fbbdf04e",
+      "prediction_id": "d36117ec-ddc1-5a91-8cc3-08e97804701f"
+    },
+    {
+      "variable": "Fire risk per district",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "43caef27-773b-586b-9e06-037e39cb1f27",
+      "prediction_id": "64ac33b7-c328-59ab-8d69-8d4de6b02746"
+    },
+    {
+      "variable": "Flood risk index related to mobility and accessibility of an urban area",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "6d71cc2d-6648-5a49-b5df-7220f6523811",
+      "prediction_id": "201737ae-b0f3-543e-bf83-1e9bba16c384"
+    },
+    {
+      "variable": "Foliage projective cover in the lower canopy strata",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "1a9cd1bc-fa4a-53d2-9f31-a82104cb505b",
+      "prediction_id": "eebd2503-4e5e-5a1c-84dc-1231c2dea46b"
+    },
+    {
+      "variable": "Foraminifera, planktic, size",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "c27156e4-e60c-56c4-9f54-6e89a056cb82",
+      "prediction_id": "7cd3fb94-7e09-53b4-b3ec-bc8e0aa048d1"
+    },
+    {
+      "variable": "Fraction of flooded area around building",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "4e9f5596-9921-5cdd-961f-0eeb68ac01b9",
+      "prediction_id": "12d60746-cc7e-5525-b381-fef307a898ff"
+    },
+    {
+      "variable": "Geometric dilution of precision (GDOP) threshold quality flag ",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "c25beea9-cd70-5d64-af5b-bcbe45765a2e",
+      "prediction_id": "8bd29d50-78f6-5721-baab-034275c8745e"
+    },
+    {
+      "variable": "Global fallout of U‑236 (U236GF)",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "cc650f23-c007-5e19-9013-1149fa043dc4",
+      "prediction_id": "d3611235-0828-513d-8481-968ccce25c4f"
+    },
+    {
+      "variable": "HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "884d75c3-06b0-56f9-9291-b68af140f416",
+      "prediction_id": "fe79ae0e-90e1-5c99-b390-f4e3865a3ae6"
+    },
+    {
+      "variable": "HRV Heart rate variabilty",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "74eaa12a-a776-543f-a856-e47db987f0d1",
+      "prediction_id": "f0194928-f77e-5a76-8af3-9f6b00b303f4"
+    },
+    {
+      "variable": "I129 deposition from Ringhals of Sweden",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "4bff5c0a-e8fb-55a9-b554-9b0be2e220b9",
+      "prediction_id": "3211805d-da8d-5cda-b15d-a9d596a69303"
+    },
+    {
+      "variable": "Ice water content in atmosphere",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "ae30fa28-c452-5041-ab58-50136b3bdf36",
+      "prediction_id": "1e2b6666-2007-5e37-9d5a-2227d0d95af2"
+    },
+    {
+      "variable": "Labile detrital nitrogen concentration in the seabed",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "e8937c12-acb2-5dfd-87ec-bd01e9317b06",
+      "prediction_id": "4cc99a6b-b10a-5705-8c01-e3e1373f44e5"
+    },
+    {
+      "variable": "Level of highest education",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "3271943f-9991-52be-bd5f-4f0e1085bea8",
+      "prediction_id": "dae4d615-5700-5fbb-845c-26370781f20e"
+    },
+    {
+      "variable": "Mass concentration of isobutylene in chloroform",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "8e7397d5-72e3-57c5-bd96-c7636af79370",
+      "prediction_id": "332b7d94-8c56-5e0a-95ee-fbdb6f70065e"
+    },
+    {
+      "variable": "Mass concentration of tbph in breast milk",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "401c1957-ee29-573c-93f9-a531ec5f63cd",
+      "prediction_id": "dd19b52a-991b-51a9-bda7-68928626f21f"
+    },
+    {
+      "variable": "Mass flux of carbon into soil from vegetation due to senescence",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "37cff7df-d68b-50cf-b048-fcdc97548e70",
+      "prediction_id": "3115c196-2b0d-56a2-86ce-2232db7f18dc"
+    },
+    {
+      "variable": "Mass ratio of dehp in nail",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "ca35469f-6fed-5a85-be52-326ae00b9e2b",
+      "prediction_id": "3f6ab435-36ed-5e46-a78d-a9257fbc12f5"
+    },
+    {
+      "variable": "Maximum trunk char height",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "ba0beb2b-4c3c-5a7d-9cf7-7d14e4e56f54",
+      "prediction_id": "799c1b1a-057d-50db-82a7-e58a3bb8a4d0"
+    },
+    {
+      "variable": "Mean sea level pressure",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "e78c41f8-88e1-5159-a6a8-170abc4f7def",
+      "prediction_id": "d3de125a-4b15-5c2c-803d-2b1d6e8a0223"
+    },
+    {
+      "variable": "melting point of naphthalene under standard conditions",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "7125d31e-7441-5358-90bb-b443f83de0a7",
+      "prediction_id": "1d89082e-f236-528e-bdc0-0d3468a2c45e"
+    },
+    {
+      "variable": "Moisture in upper soil portion",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "56e63ff5-9456-5057-b747-422b8d7f7430",
+      "prediction_id": "e8b4bfe9-ac29-5732-b79b-893f36058ab5"
+    },
+    {
+      "variable": "Nervosity feelings",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "2169e881-e19d-5a13-8e42-80f4a02e5d9a",
+      "prediction_id": "38971f87-b527-571c-8ce6-29ee6a880a82"
+    },
+    {
+      "variable": "Northward Near-Surface Wind",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "66c2180b-3dc1-5333-900e-3f54cda98c29",
+      "prediction_id": "36214c10-9ab8-5700-aacf-7f76dfa42728"
+    },
+    {
+      "variable": "Northward velocity uncertainty of water current in the water body by high frequency radar",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "5bddb74b-bbcf-5388-98f9-a5da72bb7c42",
+      "prediction_id": "ab1f470e-27c7-5c04-b315-b20bc6b52e27"
+    },
+    {
+      "variable": "Number of children under the age of 10 years in a statistical unit",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "e93ebcf8-5e80-5cb2-a4ce-4a25b8faa2b7",
+      "prediction_id": "fb5ec63a-9e6b-5955-bcca-73fbc8285829"
+    },
+    {
+      "variable": "Number of elderly people living alone in a statistical unit",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "03c6b410-02c4-5e8c-9da1-57929f989411",
+      "prediction_id": "362a57ba-131b-5171-8eb8-fccb3b3a0939"
+    },
+    {
+      "variable": "Number of floors above ground of building",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "0424de86-bce9-5415-8fc0-c09908faf707",
+      "prediction_id": "d6ab723f-9757-5593-a0d0-60e52734f1fa"
+    },
+    {
+      "variable": "Number of Hours of family activity per week",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "76c582b0-2dc0-5f44-8649-f9350899d959",
+      "prediction_id": "179f49d8-99f5-59d2-b119-d5077d54daad"
+    },
+    {
+      "variable": "Number of Uranium-236 atoms in sea water",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "9f249b25-b415-59a7-b6c7-8afadd7f6541",
+      "prediction_id": "314a52bc-d8af-5e9d-aef4-61da96aa7a21"
+    },
+    {
+      "variable": "Observation of bloodtype in blood",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "92f6f046-d000-58a8-8ccb-4451ee6ae657",
+      "prediction_id": "6937e25a-0dc4-5bf7-9dd2-1b1fb0cce6cf"
+    },
+    {
+      "variable": "Observation of Rhesusform in blood",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "aa85854d-98cd-551e-ae63-4c2b911df1fe",
+      "prediction_id": "8bb21a8c-4bf7-58c2-aceb-2504c63832ab"
+    },
+    {
+      "variable": "Overnight stays in 3-star hotel near the sea shore",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "364050b4-e192-5b81-b70b-cdcb101a022e",
+      "prediction_id": "cb933de6-8edf-5b0b-b540-42947bfd36eb"
+    },
+    {
+      "variable": "Partial Solar Obscuration",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "dc7fe7fe-5650-51f2-a5ee-84233e3b1a4f",
+      "prediction_id": "b07afa52-be12-59e4-9200-e680ff8f346e"
+    },
+    {
+      "variable": "Peak ground acceleration",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "cbabc211-6437-59c7-82e2-acaf02c9a0a2",
+      "prediction_id": "90f4efbd-ce1b-564a-979e-2cd21a92f983"
+    },
+    {
+      "variable": "Percentage Branched Perfluorooctane sulfonic acid (BPFOS)",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "5118ad94-23dd-56dd-99fc-465ab19261b1",
+      "prediction_id": "b0705aaa-4384-52b7-b123-2f9ca590110f"
+    },
+    {
+      "variable": "Percentage of number of children",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "8cc2a76f-7216-58bd-9b6a-ae0493fed752",
+      "prediction_id": "69d07366-5d6a-5d50-aef0-65de8080e3a5"
+    },
+    {
+      "variable": "pH measurement of a sample of apple juice",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "1984df69-3e2f-5d8f-b2eb-a04f65dc5730",
+      "prediction_id": "f80996fd-b740-5ce0-9dc9-38fc76818a4e"
+    },
+    {
+      "variable": "Pluvial flood due to 100 year event",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "42ae10fb-42e1-5b73-a054-306ccd52786d",
+      "prediction_id": "cf015767-c7c7-5746-9904-073a410930b0"
+    },
+    {
+      "variable": "Potential evaporation",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "ebb11c2e-8f71-5ac1-954a-4fb990868d05",
+      "prediction_id": "aa3d87fd-d04f-5519-be18-25096dbe9caa"
+    },
+    {
+      "variable": "Primary function of building",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "c72af9ca-ad5b-5650-a157-dda2a90e213b",
+      "prediction_id": "fc810095-55c7-57c8-ad57-46f2d064abc4"
+    },
+    {
+      "variable": "Probablity of occurence of habitat",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "f31f298c-6360-5e41-a807-6fe26c04767b",
+      "prediction_id": "db6b0602-6961-5dbc-a02d-b21518cd0fea"
+    },
+    {
+      "variable": "Radial velocity (away from) standard deviation over the coverage period of water current relative to instrument in the water body by high frequency radar",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "2f221e39-f020-5526-b2a6-b6a667dd97c1",
+      "prediction_id": "1ff912eb-fe23-5b22-a96e-a5121ee1d062"
+    },
+    {
+      "variable": "Radioactivity_content_of_TC99SF",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "e6806471-3e5f-5cae-b6b6-285f3a42d4dd",
+      "prediction_id": "a2e75704-7978-57ec-bb62-a4d79216837c"
+    },
+    {
+      "variable": "RDVA Radial velocity (away from) of water current relative to instrument in the water body by High Frequency Radar",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "8ee8cf72-4b21-5dc2-80aa-12bbcf9ce931",
+      "prediction_id": "2b6dc542-887d-5106-8446-9a36b0569c6d"
+    },
+    {
+      "variable": "Resting systolic blood pressure",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "df795b7c-25e5-58dd-99f9-f774d177c85d",
+      "prediction_id": "952bd069-08d6-5e15-8733-bed084321aee"
+    },
+    {
+      "variable": "Sheet resistance of layer of gold",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "9b6e3bde-ab76-5143-81e4-c2f860f9afb9",
+      "prediction_id": "a9e756b0-6600-5595-858d-bd68087e8c2e"
+    },
+    {
+      "variable": "Snow water equivalent",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "4f3ac833-7ccf-5b6a-b1f9-face73f84b64",
+      "prediction_id": "62285a7b-9581-506d-8648-1936eea76285"
+    },
+    {
+      "variable": "Social Vulnerability to pluvial floods of the residents",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "75514356-ac9b-594f-b663-520d90739b64",
+      "prediction_id": "a388c721-b8c6-5c26-92d0-23576f08c06e"
+    },
+    {
+      "variable": "Solar energy production of building per month",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "11efc641-d89a-5644-a00d-c9943f0f9497",
+      "prediction_id": "9d63d212-afad-573d-b3c1-d25c0dd48d9c"
+    },
+    {
+      "variable": "solubility of benzene in water",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "e362d5af-1fbb-5f6f-a97d-7d20d34d0a36",
+      "prediction_id": "827c7a67-de96-5898-b08b-1388f01e3994"
+    },
+    {
+      "variable": "solubility of molecular oxygen from air in water",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "0f827a8b-b4e2-5fa3-a42a-7745c748c8cf",
+      "prediction_id": "0a41d5bb-ef00-5119-9ec8-f04ae090fdbd"
+    },
+    {
+      "variable": "solubility of naphthalene in water at room temperature",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "7bbb8652-d136-5d91-8c24-13d32134c6a7",
+      "prediction_id": "826e5ee4-f53e-54b2-a910-cc2aa50a402d"
+    },
+    {
+      "variable": "Spectral upwelling actinic flux",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "86550a11-df17-5218-9aed-6039a1d90b9c",
+      "prediction_id": "8489ecb1-ce5d-598a-a629-eb6e78da181e"
+    },
+    {
+      "variable": "Standard metabolic rate in mg of Oxygen per hour",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "09eb41ec-8d25-5e1f-8eae-ce2330cc0002",
+      "prediction_id": "a3d5a6a2-31b9-52c7-92a9-9eb4a0ec0e6e"
+    },
+    {
+      "variable": "State of connection pipe",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "7460358a-138a-5cd1-bbd8-f32fd53c18d8",
+      "prediction_id": "76043109-06ab-551d-845a-2d67fe1c876e"
+    },
+    {
+      "variable": "Strike of bedding",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "e1eba7c3-e0ea-5df2-a4fd-2a69d49469d8",
+      "prediction_id": "cb14e68a-f4dd-59fe-b2e8-4d9aae092455"
+    },
+    {
+      "variable": "Sulfate organic nitrate in aerosol particles",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "7253b748-60a7-5c24-bcdf-a6753a7a35af",
+      "prediction_id": "a15b194e-3aa4-5185-b27c-4d2a98056780"
+    },
+    {
+      "variable": "Surface long-wave (thermal) radiation downwards",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "6f6ebdd4-9c08-5a02-b1bb-beaed4abb23a",
+      "prediction_id": "658a980e-f106-5c10-9289-86c237662e15"
+    },
+    {
+      "variable": "Surface runoff",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "c579a087-777a-5c79-b2d6-7c66fcccab05",
+      "prediction_id": "d46a99c2-fb10-5c4e-baa9-863514a1b107"
+    },
+    {
+      "variable": "Total Number of people living in a statistical unit",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "6e5687ba-1b7c-5d10-9a4c-3c7ccbc99dc1",
+      "prediction_id": "29f8cee5-ca8a-5c7f-ac61-470217d01d8f"
+    },
+    {
+      "variable": "Water sampling depth ",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "3c9e00dd-662a-5b81-b753-ccfeca60e612",
+      "prediction_id": "c4472f38-1099-5955-8dee-7c3c1b6125c8"
+    },
+    {
+      "variable": "Water turbidity of stagnant surface water ",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "58258d6c-3c17-5260-84ea-ad1e1a1a80fc",
+      "prediction_id": "4a61a14a-f76c-531f-826b-765723e1bc58"
+    },
+    {
+      "variable": "Weight specific-ingestion Carbon rate at 15 °C",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "e16b6ada-a45c-5cb1-a68a-d6f9c764c826",
+      "prediction_id": "bc79733d-58dc-5ec5-b6e2-b91ef5c8e615"
+    },
+    {
+      "variable": "Weight without clothes",
+      "prompt_version": "matrix-decomposition",
+      "task_id": "25d9c666-f9a5-523a-ad3b-c66130c9d19b",
+      "prediction_id": "25985c8e-59a0-53c0-b142-1e4c5af46b2a"
+    },
+    {
+      "variable": "Aircraft Angle of Attack.",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "5ea4cac4-94d4-517b-a27e-5113cf52ed16",
+      "prediction_id": "260eb931-d3d2-54d0-8f3b-9e8f6bc9148c"
+    },
+    {
+      "variable": "Atmosphere optical thickness of particulate organic matter ambient aerosol",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "c6afd424-3567-58f3-9293-f67f14c3888c",
+      "prediction_id": "e75e8c15-3f81-5b40-b2db-3ea2b0f4d065"
+    },
+    {
+      "variable": "Atmospheric boundary layer height defined by temperature inversion",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "00fbaca2-445a-5330-abb5-21f38b1fd8a5",
+      "prediction_id": "ddcafc3e-fd19-5d20-8e95-84aea1435b7d"
+    },
+    {
+      "variable": "Average number of persons without high school diploma during the last three years within a statistical unit",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "404ec328-cf61-5a6d-a48c-26ec8652186d",
+      "prediction_id": "7579150e-9bc5-5524-ac48-e618ef240ecb"
+    },
+    {
+      "variable": "Biological sex",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "593bb228-58b3-598b-ae75-a48d17fc1e6f",
+      "prediction_id": "b7c60550-3cd7-5cd2-904d-98f22545048c"
+    },
+    {
+      "variable": "Body Mass Index",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "950bdc35-a9f4-5060-8463-166f4e0ca8d0",
+      "prediction_id": "61b7f2b3-9aa1-5319-84a5-29c924b4dfd0"
+    },
+    {
+      "variable": "boiling point of benzene",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "b5fcf770-a659-5a0b-a4c0-7ef7de554b3c",
+      "prediction_id": "f9070233-36c3-5996-8243-adb7bf6cc0e1"
+    },
+    {
+      "variable": "BPM Mean heart rate",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "ccae31ec-afeb-58b9-b4a0-7e2b93a4f70f",
+      "prediction_id": "ea972423-73f0-5068-95fe-76533f3874e0"
+    },
+    {
+      "variable": "Cellular dose in vitro of nanomaterials (mass / cell)",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "20a61e9b-1b6b-54b0-8d8a-9ec1c2817c9c",
+      "prediction_id": "4ba025a8-3e4c-5001-9799-a29f251ca3f7"
+    },
+    {
+      "variable": "Cellular dose in vitro of nanomaterials (particle / cell)",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "0f234449-7519-5f72-b21d-a32ab3e3d83f",
+      "prediction_id": "7b38b93b-09e2-52b4-bdcb-43f9669d7a6b"
+    },
+    {
+      "variable": "Chronic pain grade scale",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "a9db7eba-b464-5b69-aba8-b6e775be8f5d",
+      "prediction_id": "6b71f586-98f7-5499-9e7c-ab322224beb0"
+    },
+    {
+      "variable": "Cloud cover",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "662fbb23-4db5-5bf9-bee1-833bfe66f57c",
+      "prediction_id": "3b472307-dd16-52c0-a129-5030c802dbd6"
+    },
+    {
+      "variable": "Coarse woody debris abundance",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "00f5c71f-2175-5e1c-9a59-128940c4da1b",
+      "prediction_id": "06640a00-ede6-541b-a388-487b8e1e9069"
+    },
+    {
+      "variable": "Concentration of Al cations in water",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "51da25ab-ca5f-5aa3-9bf9-57436c88291a",
+      "prediction_id": "0d888bed-c9e0-58a7-b4aa-a2828ab5dbee"
+    },
+    {
+      "variable": "Concentration of DDT impacted by industry",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "d0cc9c8d-cdd0-5316-a0e5-43f61a85baef",
+      "prediction_id": "2dc38147-d47b-56b6-b3eb-6e7bdbf484c4"
+    },
+    {
+      "variable": "Concentration of dissolved organic carbon in water",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "9e520eca-fe74-5c64-a9df-6a497911e25a",
+      "prediction_id": "f8c011fe-c574-587e-998a-3164528b1198"
+    },
+    {
+      "variable": "concentration of endosulfane sulfate in wet flesh of ostrea edulis",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "9bed8a29-b422-5255-9913-f85063a686e4",
+      "prediction_id": "7e0e069e-a7ca-5214-adac-448711fe694c"
+    },
+    {
+      "variable": "Count of tropic nights",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "fa054069-d813-5061-802f-648aa01f9b5d",
+      "prediction_id": "2bfd1fdb-5e54-595c-9513-62ff91198f9c"
+    },
+    {
+      "variable": "Country of birth of mother",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "d0d1d5f6-4c13-5f4f-92bf-69ff7b8caca8",
+      "prediction_id": "ad61cb57-3234-519f-a6fa-dd74fa6710fd"
+    },
+    {
+      "variable": "Current smoking status",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "bdbe8fa3-8b76-5c8e-a5a0-4fdc909cf91b",
+      "prediction_id": "a6a34505-9bb8-566f-8506-f3fa98c818a2"
+    },
+    {
+      "variable": "Daily maximum hourly precipitation rate",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "eee3b53d-deeb-5716-98b4-97923b8a8a72",
+      "prediction_id": "57c26ff0-cd10-535c-9025-d5370a3ef1fb"
+    },
+    {
+      "variable": "Daily Maximum Near-Surface Wind Speed of Gust",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "1566bbe8-7fc0-5588-b043-946c14f029e1",
+      "prediction_id": "a1debdd9-785a-5cf5-94b1-c6ea2776115c"
+    },
+    {
+      "variable": "Date of birth of mother",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "0c12fb8b-128d-53a0-8bfa-fa6acb5b566f",
+      "prediction_id": "df29b0e8-64f8-54e8-8c84-f008049aa912"
+    },
+    {
+      "variable": "Date of last PCR-test by certified laboratory",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "5f7187ca-f223-5ac3-8a1a-57cf8429920a",
+      "prediction_id": "dc76f2f9-04fa-515f-a85a-2b8c8b5d6494"
+    },
+    {
+      "variable": "density of benzene",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "510a99a4-f34a-5ea3-9f38-f658b59fd4e2",
+      "prediction_id": "97dfbd45-4ab1-5844-b743-1279993cc5d7"
+    },
+    {
+      "variable": "Determination of iron concentration in a soil sample",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "fe2e28eb-2c65-5af9-8d73-dfdf86f5de89",
+      "prediction_id": "13d29d87-cf99-53ac-986d-c50f5cfc74e3"
+    },
+    {
+      "variable": "Docosahexaenoic acid content per dry weight (DHA content/ C22:6 n-3 content)",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "eead0fcb-f6c9-5fc2-a2af-4f18ed253c77",
+      "prediction_id": "44792110-78a3-5a57-8e8e-b7dfe10a9483"
+    },
+    {
+      "variable": "DRVA Direction of radial velocity of water current relative to instrument and to True North by high frequency radar",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "ba17c8ac-1788-58c1-b65a-cffa96fced70",
+      "prediction_id": "2a8ea9cd-f1be-59b6-807d-10303d70b59b"
+    },
+    {
+      "variable": "Dynamic shear viscosity of polystyrene PS042",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "c033427d-8083-580e-a88b-60184402e5bb",
+      "prediction_id": "1fdcf396-5038-5013-8a79-00f35aa32728"
+    },
+    {
+      "variable": "Electron density in the solar wind",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "0dcc55c6-46ee-5557-ba07-e756a479d774",
+      "prediction_id": "dbbf6e4f-6336-5bc9-8b9b-1a7f27c5f335"
+    },
+    {
+      "variable": "estimation of the energy of reaction upon combustion of hexanol",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "0c169dac-81f4-5e2c-a74a-dcadd0b6efe4",
+      "prediction_id": "f054519e-40d5-5aef-bd99-235b7ac6a2dd"
+    },
+    {
+      "variable": "EWCT Eastward velocity of water current in the water body by high frequency radar",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "f98c4715-13d1-560f-8152-83164b5134d5",
+      "prediction_id": "203de7d4-0b9d-5362-968e-0d0864b320fc"
+    },
+    {
+      "variable": "Feral-free enclosure area",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "aee89f34-45ef-5735-954e-4456322e1cc2",
+      "prediction_id": "6f49e3f5-9d34-59ae-867b-588c845bcc44"
+    },
+    {
+      "variable": "Fire risk per district",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "54c79637-b6fa-50a6-aa62-01fb2102b9d0",
+      "prediction_id": "e8200eac-357e-55ec-b59d-cf207b3ab9f9"
+    },
+    {
+      "variable": "Flood risk index related to mobility and accessibility of an urban area",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "d38bc0b3-36e7-5b89-a9b8-c73ed96d7622",
+      "prediction_id": "99a51b34-0434-54da-aed4-3ce06c2c503b"
+    },
+    {
+      "variable": "Foliage projective cover in the lower canopy strata",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "b7dd8455-de59-5551-97ba-72401cd6ac12",
+      "prediction_id": "82558ca7-2640-5102-b924-18f458d8f108"
+    },
+    {
+      "variable": "Foraminifera, planktic, size",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "4dadcf93-f551-55e6-8248-7eb5bb9ae11e",
+      "prediction_id": "01c1f509-8919-50bd-afb9-5eb9a5783569"
+    },
+    {
+      "variable": "Fraction of flooded area around building",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "b3dbc50d-3a07-58e5-b8b1-69df7761ced5",
+      "prediction_id": "3d40f4be-7046-563d-b40f-48d23112eff0"
+    },
+    {
+      "variable": "Geometric dilution of precision (GDOP) threshold quality flag ",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "2effa66b-f38b-563c-97f8-969a75086822",
+      "prediction_id": "d12b7316-0d4e-566f-bd49-5c00fa60db8f"
+    },
+    {
+      "variable": "Global fallout of U‑236 (U236GF)",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "6e171e3d-6583-5195-8598-d7cccf713eb2",
+      "prediction_id": "7b8551b9-1adf-5d1f-8b45-8b45c554e02e"
+    },
+    {
+      "variable": "HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "a1869c68-3a81-5a52-9470-cf4d635d6b5b",
+      "prediction_id": "abbf21dd-5d41-53a2-b49b-9a25311332f4"
+    },
+    {
+      "variable": "HRV Heart rate variabilty",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "febafa98-536e-5204-a742-391cd66b6d75",
+      "prediction_id": "0ffdf6e6-a761-5d6b-a996-805ccfc15b4b"
+    },
+    {
+      "variable": "I129 deposition from Ringhals of Sweden",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "74f291ec-0a4c-5ab2-b03b-372fa8dbbf09",
+      "prediction_id": "29ef047f-8bc9-5d12-815f-5d87ec96627b"
+    },
+    {
+      "variable": "Ice water content in atmosphere",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "d5eca793-873f-5ea8-b068-7dc3f9b6d9ff",
+      "prediction_id": "12d51c3f-3b67-569f-9303-8fb380747bac"
+    },
+    {
+      "variable": "Labile detrital nitrogen concentration in the seabed",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "1b0fc7f7-f6f6-542f-8d12-9f24cab3c360",
+      "prediction_id": "03a46be8-de11-50fe-8016-0adc9ff53cfc"
+    },
+    {
+      "variable": "Level of highest education",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "de7551eb-ff0b-571a-9ec2-a6d1e82b64d9",
+      "prediction_id": "d51534e8-0d42-572e-bf64-b8252e0b1209"
+    },
+    {
+      "variable": "Mass concentration of isobutylene in chloroform",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "040eb1b8-5772-5771-9a23-0a729e4311ae",
+      "prediction_id": "3e8e38a4-29c1-5eb6-9de2-c9636d76737f"
+    },
+    {
+      "variable": "Mass concentration of tbph in breast milk",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "39c416a3-7daf-5964-909f-5c7b7a6c11ae",
+      "prediction_id": "1b0ccdd3-bac8-53bb-a0df-d3037eb3e57a"
+    },
+    {
+      "variable": "Mass flux of carbon into soil from vegetation due to senescence",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "bf6cf3ca-44d3-5391-9f16-45ef94c48dc1",
+      "prediction_id": "74940df3-9165-5e45-baf1-5d987c3657bf"
+    },
+    {
+      "variable": "Mass ratio of dehp in nail",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "669ef281-a82c-5036-829b-060b6527d6b6",
+      "prediction_id": "bafc50f0-320e-541e-b23f-554142aadea0"
+    },
+    {
+      "variable": "Maximum trunk char height",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "3492461c-b8b0-5a32-a378-eef9dbb7adf9",
+      "prediction_id": "e2730208-4b66-5938-9df9-fcc0a4a96ced"
+    },
+    {
+      "variable": "Mean sea level pressure",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "d04aac01-c8d2-5a01-b14f-c90aaf6f365e",
+      "prediction_id": "bee98efb-c48d-5314-9a1c-02180a849526"
+    },
+    {
+      "variable": "melting point of naphthalene under standard conditions",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "2e739f5f-37c6-5a24-98a4-8d28e60f00a5",
+      "prediction_id": "60c34cef-a000-500f-9cde-54c691ce86f3"
+    },
+    {
+      "variable": "Moisture in upper soil portion",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "c572b8f5-dc21-533b-b295-6a80fc9ad73d",
+      "prediction_id": "eed63291-4b88-5f10-8b10-b2520cd4a1d9"
+    },
+    {
+      "variable": "Nervosity feelings",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "21de8b0d-c228-553e-802d-4909344dd6bf",
+      "prediction_id": "c7785f2e-82b8-5b0a-b756-c36cd5481890"
+    },
+    {
+      "variable": "Northward Near-Surface Wind",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "216d2424-29b6-51bd-8c64-43ce8e2da7d2",
+      "prediction_id": "985ca4f3-03a5-53a8-bfe4-c0e6d4e149db"
+    },
+    {
+      "variable": "Northward velocity uncertainty of water current in the water body by high frequency radar",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "e37992c0-6123-5dbd-9ea9-ef447ed119b5",
+      "prediction_id": "564c8f23-a70c-5c6c-9c8b-44e22f84415a"
+    },
+    {
+      "variable": "Number of children under the age of 10 years in a statistical unit",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "313e013d-4d03-5125-a851-f2e8e3366e2f",
+      "prediction_id": "fd36d116-64ad-5a75-9993-7bc363602d6b"
+    },
+    {
+      "variable": "Number of elderly people living alone in a statistical unit",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "75a888e0-1f2c-56e8-bc99-26b73306f8ac",
+      "prediction_id": "668e643a-37a5-5a8f-9322-771a9d1ed7cf"
+    },
+    {
+      "variable": "Number of floors above ground of building",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "594ebbea-4560-5520-9f10-e35a1068a068",
+      "prediction_id": "6f5ab3eb-c54f-5363-a5ac-de07d5551db1"
+    },
+    {
+      "variable": "Number of Hours of family activity per week",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "e69250ef-300a-5c83-9b27-096fac924048",
+      "prediction_id": "59372fe7-7c36-5d8c-ba97-452034a30566"
+    },
+    {
+      "variable": "Number of Uranium-236 atoms in sea water",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "8a011809-810b-5b6f-9b5e-bbd1882fb24f",
+      "prediction_id": "884c9336-13a4-5b07-9fd6-4787eb1d45c4"
+    },
+    {
+      "variable": "Observation of bloodtype in blood",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "865b6499-5689-54c1-a950-aaa43e4bcb14",
+      "prediction_id": "509a82ab-d3f8-5a76-83c2-d8eece1774db"
+    },
+    {
+      "variable": "Observation of Rhesusform in blood",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "84ecbfce-7b56-53e4-9dab-8f5acd60b3b8",
+      "prediction_id": "020018da-1faa-5f4b-8149-8c273f783bf4"
+    },
+    {
+      "variable": "Overnight stays in 3-star hotel near the sea shore",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "abd45a2c-1cfd-5384-9a75-62915828bdf5",
+      "prediction_id": "ff6b70eb-1d29-551c-bc6e-b0016c0d1aa6"
+    },
+    {
+      "variable": "Partial Solar Obscuration",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "8fb26094-b4ca-5d20-95cd-7354f60e9726",
+      "prediction_id": "d8572647-a72e-5efd-8079-db8cdd30f1e2"
+    },
+    {
+      "variable": "Peak ground acceleration",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "2fb29cf4-7ec0-51be-b227-51d424c0f02b",
+      "prediction_id": "bf649e0b-4b4b-5413-8906-7cc2bec2003b"
+    },
+    {
+      "variable": "Percentage Branched Perfluorooctane sulfonic acid (BPFOS)",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "fe0d7608-8b79-51fa-a7df-80e3b9d6118e",
+      "prediction_id": "fb853fe4-7f8b-5287-a2ea-196042b5333b"
+    },
+    {
+      "variable": "Percentage of number of children",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "9fd0799b-f39b-5efa-8d12-7f000c92a567",
+      "prediction_id": "a64f486e-7f19-52c2-b344-4754a1d9ee08"
+    },
+    {
+      "variable": "pH measurement of a sample of apple juice",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "4e82961e-bb0b-5e99-b69b-d2f22ce524f0",
+      "prediction_id": "147b74eb-3a34-5035-8936-f06853e45466"
+    },
+    {
+      "variable": "Pluvial flood due to 100 year event",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "bd6631cb-9046-5c81-8d82-5a9bf8fe24f9",
+      "prediction_id": "15af3f11-f991-5e68-a751-68a83fa57ec1"
+    },
+    {
+      "variable": "Potential evaporation",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "614642e5-58fe-58a6-b287-aac330864022",
+      "prediction_id": "b710a66a-e725-56c5-865d-87980da0f3f3"
+    },
+    {
+      "variable": "Primary function of building",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "4bda5857-99fb-5015-8f29-db0b20d2a0a2",
+      "prediction_id": "c70f6708-f5f2-584d-8f7b-57fb99b9e69c"
+    },
+    {
+      "variable": "Probablity of occurence of habitat",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "221d2d7a-c843-532b-8b61-b0af678001af",
+      "prediction_id": "0bdd05b2-c016-59da-8d81-4232410a7187"
+    },
+    {
+      "variable": "Radial velocity (away from) standard deviation over the coverage period of water current relative to instrument in the water body by high frequency radar",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "6995a70f-08a4-5b5d-ac81-3042ba833f60",
+      "prediction_id": "4c835f38-3bd3-527f-8c7f-0c2d2dd39052"
+    },
+    {
+      "variable": "Radioactivity_content_of_TC99SF",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "2fda8ddc-750b-5335-a0b9-7026a32fa332",
+      "prediction_id": "f8679872-d454-5eca-a55d-04ccc8b5b68e"
+    },
+    {
+      "variable": "RDVA Radial velocity (away from) of water current relative to instrument in the water body by High Frequency Radar",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "2a7d5368-68be-5348-a1d6-9bc01b242c27",
+      "prediction_id": "81664d6d-5410-5581-9fef-5a0b6ccb4d4a"
+    },
+    {
+      "variable": "Resting systolic blood pressure",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "e26a6bcd-e738-56a9-b9f5-14558c6a417c",
+      "prediction_id": "219819db-dd0f-57a4-9b63-1f06e55b5662"
+    },
+    {
+      "variable": "Sheet resistance of layer of gold",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "3cbe92cb-13c4-5aaf-acc5-b6322f54e772",
+      "prediction_id": "7272a891-6130-58f4-ac6b-d51aefd7ae6b"
+    },
+    {
+      "variable": "Snow water equivalent",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "06392fa3-fef1-5ff9-8605-57518f1a97ef",
+      "prediction_id": "42e3557a-81b4-5a9e-a41e-0609108bc74e"
+    },
+    {
+      "variable": "Social Vulnerability to pluvial floods of the residents",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "cb367ce0-d7b6-5e94-9c7f-99e3b029c1b9",
+      "prediction_id": "bc78356d-3bcd-5943-846a-18aa27a491fb"
+    },
+    {
+      "variable": "Solar energy production of building per month",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "b9b76e3d-9103-50a4-8174-19660b20d555",
+      "prediction_id": "8020b55d-400b-5b1a-bd9c-06457199ea20"
+    },
+    {
+      "variable": "solubility of benzene in water",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "5ed5ee6d-a05d-51f2-9570-339306be46de",
+      "prediction_id": "cbb9695a-6253-52f4-9141-b51420533695"
+    },
+    {
+      "variable": "solubility of molecular oxygen from air in water",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "1bcf664f-33c5-592a-9fc1-88a96890e749",
+      "prediction_id": "0c1933e9-0590-59d0-9a78-47584c42e33f"
+    },
+    {
+      "variable": "solubility of naphthalene in water at room temperature",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "1b6aa916-e242-5eee-925b-bdac48d352a5",
+      "prediction_id": "9ad58887-cd9a-5915-8bf5-f84766b1aea5"
+    },
+    {
+      "variable": "Spectral upwelling actinic flux",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "be46a1ed-f123-57b1-a818-a642dc9f8dc8",
+      "prediction_id": "a336c5ce-fe4c-50e0-98b0-3a0e5fc94979"
+    },
+    {
+      "variable": "Standard metabolic rate in mg of Oxygen per hour",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "b376651d-d2dc-5e03-92d9-deb2d5fb062f",
+      "prediction_id": "18a7ffc6-b9f5-5d35-ae39-ea31ac476833"
+    },
+    {
+      "variable": "State of connection pipe",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "6915799c-0eaf-544d-84ee-5784ee8cedda",
+      "prediction_id": "124213f9-1a74-54e3-ac84-f2f403d90ad9"
+    },
+    {
+      "variable": "Strike of bedding",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "f6c7bb1c-8aa2-5ca2-b461-9fe368c09691",
+      "prediction_id": "348bf961-c421-5df3-8747-6b67d7f48491"
+    },
+    {
+      "variable": "Sulfate organic nitrate in aerosol particles",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "f761ef23-a44b-5408-b771-c5123e736782",
+      "prediction_id": "faec6535-209a-5f27-95b9-f6d7faeeb023"
+    },
+    {
+      "variable": "Surface long-wave (thermal) radiation downwards",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "cf410fa6-d55f-59bb-aea9-e89f59c612c4",
+      "prediction_id": "f45986d4-c557-5f83-8e5c-3a7da10f6454"
+    },
+    {
+      "variable": "Surface runoff",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "b1bdc74d-b47c-5375-9960-ba8e146e974e",
+      "prediction_id": "2dbc5636-8da7-5370-bc06-83dce88cf994"
+    },
+    {
+      "variable": "Total Number of people living in a statistical unit",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "bae9480a-1148-5a59-8583-da8421cef26b",
+      "prediction_id": "abdf9ee0-cca8-535d-b9dc-7b02e673a8a7"
+    },
+    {
+      "variable": "Water sampling depth ",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "03631dc9-c4b5-5ffa-81e3-a046ab4fb5cd",
+      "prediction_id": "bebea1bd-3ea8-54b8-8f82-a42f4c878240"
+    },
+    {
+      "variable": "Water turbidity of stagnant surface water ",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "fccd65b3-95b1-57b5-8b57-ac271d7b974e",
+      "prediction_id": "01364305-5d5f-512a-8efe-8f0d0af450ac"
+    },
+    {
+      "variable": "Weight without clothes",
+      "prompt_version": "constraint-decomposition",
+      "task_id": "6dad72ec-a638-5e54-ad47-3dd06edf2432",
+      "prediction_id": "197b7481-37e8-5791-8908-8b588fadcaea"
+    }
+  ]
+}

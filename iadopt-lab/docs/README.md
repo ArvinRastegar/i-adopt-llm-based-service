@@ -31,6 +31,10 @@ These describe work that was actually carried out. They are written in the past 
 | `campaign-log.md` | Which campaigns actually executed, why each exists, and what did it produce? |
 | `migration-v2.0.1.md` | What did the Corpus v2.0.1 re-import change, and what did executing it reveal? |
 | `read-only-review-2026-09-09.md` | What did the 9 September source audit find, and what stayed unresolved? |
+| `results-top-configurations.md` | Which configurations scored best in campaign `79b5ec5f`, and how is each figure derived? |
+| `results-model-comparison.md` | How does every model compare at its own best configuration across the three pooled grids? |
+
+The two `results-*.md` documents are generated, not hand-written: `ops/report-top-configurations.py` and `ops/report-model-comparison.py` recompute every figure from the stored per-variable receipts and refuse to write a file whose recomputed score disagrees with the ranking the campaign stored. They are reproduced by re-running the generator rather than edited.
 
 ## Component contracts
 
