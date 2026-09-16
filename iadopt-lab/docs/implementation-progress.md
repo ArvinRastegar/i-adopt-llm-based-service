@@ -45,11 +45,12 @@ The D-032 OpenRouter selection (`qwen/qwen3-8b`, `qwen/qwen3-32b`, `openai/gpt-4
 
 ### Documentation reconciliation
 
-**Docs last reconciled:** 2026-09-12 at commit `2a0ab53`, with the D-046/D-047/D-048
-working-tree changes present.
+**Docs last reconciled:** 2026-09-16 at commit `7405fb0`, with the results-document and
+report-generator working-tree additions present. The previous pass was 2026-09-12 at
+commit `2a0ab53`, with the D-046/D-047/D-048 working-tree changes present.
 
-Corrected in that pass: the `docs/README.md` index, which listed twelve documents and
-omitted seven; the `docs/architecture.md` tree, which said `D-001 … D-043` and showed
+Corrected in the 2026-09-12 pass: the `docs/README.md` index, which listed twelve documents
+and omitted seven; the `docs/architecture.md` tree, which said `D-001 … D-043` and showed
 neither `ops/` nor `reference/`; `docs/test-plan.md`, which pointed the
 January regression fixtures at a working-tree path instead of the retained hash-verified
 copy at `reference/january/randomShotsPhaseOne.py.txt`; and the component registry in
@@ -108,6 +109,58 @@ has never appeared in `src/` or `tests/` at all. Both are as-built divergences f
 plan that stood unrecorded for the life of the project, not later changes. D-049 and D-050
 say so on their face, and say that they were reconstructed and ratified on 2026-09-12
 rather than decided when the code was written.
+
+#### Reconciliation pass of 2026-09-16
+
+`src/`, `parameters.yml` and `schemas/` are byte-identical to the 2026-09-12 pass, so no new
+behavioural drift was introduced between them. The two findings below are misses from that
+pass, not regressions since it.
+
+Checked: every document under `docs/` including `components/`, plus the root `README.md`,
+`TECHNICAL_SPECIFICATION.md`, `DECISIONS.md` and `CLAUDE.md`. Excluded as dated archival
+records under the CLAUDE.md rule: `read-only-review-2026-09-09.md`, `migration-v2.0.1.md`,
+`repository-audit.md`, `documentation-audit.md`, `campaign-log.md` and the dated entries of
+this file. The symbol pass reports no unresolved name and no missing path. It lists
+seventeen absent entries, all already accounted for: the sixteen planning names of the
+2026-09-12 pass, reconciled in the contracts' *Implementation interface* sections, and
+one path, `generation/attempts.py`, which `docs/architecture.md` section 2.1 records as
+folded into `workflow.py`.
+
+Corrected in this pass: the `docs/README.md` index, which did not list
+`results-top-configurations.md` or `results-model-comparison.md`.
+
+`few-shot-selection/` is deliberately absent from the `docs/architecture.md` tree and from
+the index. Commit `7405fb0` removed both entries so the side experiment leaves no trace
+outside its own directory. That is not drift and must not be "corrected".
+
+#### Open contradictions
+
+1. **`ranking.require_complete_population` and `ranking.retain_every_result` are read by no
+   code.** Both are required properties of `schemas/parameters.schema.json` and are set in
+   `parameters.yml`, but no module reads the `ranking` block. Rankability is hardcoded in
+   `reporting.build_configuration_ranking` as `all(row["complete"] ...)`. The behaviour the
+   documents describe is the behaviour the code has, so nothing is currently mis-stated
+   about outcomes; what is wrong is the attributed mechanism. Setting either key to `false`
+   would change nothing, silently. Named as the governing gate in
+   `docs/retry-and-resume.md`, `docs/unattended-execution.md`, `docs/campaign-log.md` and
+   D-048. No test refers to either key. The newest generator,
+   `ops/report-model-comparison.py`, states the rule without naming the flag, which is the
+   accurate framing. Unresolved: whether the flags should be honoured or retired.
+
+2. **A campaign with terminal failures never reaches a finished state.**
+   `docs/components/workflow.md` says `finalize_campaign` "marks the campaign complete once
+   every task is terminal" and that "a campaign that stopped with terminal failures is
+   finished rather than paused". `run_campaign` implements that — it skips the `paused`
+   write on a `tasks_terminal` stop. `finalize_campaign` does not: it calls
+   `complete_campaign` only when every configuration is rankable, and
+   `Repository._verify_complete` in turn requires every task in state `complete`, which is
+   the pre-D-042 condition D-042 was recorded to abolish. A campaign holding one
+   `operational_failed` task therefore stays `running` in the database for good.
+   `finalize_campaign` also returns `state: "paused"` on that path without writing it, so
+   the returned state does not match the stored row. The unit test for D-042 stops at the
+   incompleteness gate and asserts nothing about campaign state. Under D-048 this is the
+   expected case, not a rare one. Unresolved: the contract records the intent, so the code
+   is the more likely side to be wrong.
 
 ### Concrete configuration/provider boundary
 
