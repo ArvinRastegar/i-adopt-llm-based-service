@@ -212,3 +212,7 @@ benchmarking_example/data/Json_schema.json
 benchmarking_example/iadopt_benchmark_presentation_v2.ipynb
 external/I-ADOPT-patterns-playground
 /external
+
+# Paper revision workspace: separate PRIVATE repository (i-adopt-llm-based-service-paper).
+# Contains confidential peer-review material; never add it to this public repository.
+/paper/
