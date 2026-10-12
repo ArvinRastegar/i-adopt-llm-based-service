@@ -1,6 +1,6 @@
 Data used in Manuscript ID: #4005-5219 in the Semantic Web Journal
-Title: From Scientific Variables to Knowledge Graphs: The I-ADOPT Benchmark
-Authors: Barbara Magagna, Arvin Rastegar, Esteban González Guardia, Cristian Berrio, Stuart Chalk, José Manuel Gómez-Pérez, Christof Lorenz, Saurav Kumar, Daniel Garijo
+Title: **From Scientific Variables to Knowledge Graphs: The I-ADOPT Benchmark**
+Authors: *Barbara Magagna, Arvin Rastegar, Esteban González Guardia, Cristian Berrio, Stuart Chalk, José Manuel Gómez-Pérez, Christof Lorenz, Saurav Kumar, Daniel Garijo*
 
 | Key / Term | Description |
 | --- | --- |
