@@ -1,8 +1,8 @@
-Data used in Manuscript ID: #4005-5219 in the Semantic Web Journal
+Data in the excel file used in Manuscript ID: #4005-5219 in the Semantic Web Journal
 Title: **From Scientific Variables to Knowledge Graphs: The I-ADOPT Benchmark**
 Authors: *Barbara Magagna, Arvin Rastegar, Esteban González Guardia, Cristian Berrio, Stuart Chalk, José Manuel Gómez-Pérez, Christof Lorenz, Saurav Kumar, Daniel Garijo*
 
-| Key / Term | Description |
+| Tab label| Description |
 | --- | --- |
 | **Domain distribution** | All variables, including the specific domains to which they belong |
 | **Domain expert evaluation results** | Results of the evaluation of the modeled variables in the I-ADOPT Corpus conducted by domain experts |
