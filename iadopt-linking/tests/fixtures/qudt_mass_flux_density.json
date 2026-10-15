@@ -1,0 +1,41 @@
+{
+ "head": {
+  "vars": [
+   "qk",
+   "len",
+   "label",
+   "description",
+   "wikidata",
+   "definedBy"
+  ]
+ },
+ "results": {
+  "bindings": [
+   {
+    "qk": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind/MassFluxDensity"
+    },
+    "len": {
+     "type": "literal",
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "value": "17"
+    },
+    "label": {
+     "type": "literal",
+     "xml:lang": "en-US",
+     "value": "Mass Flux Density"
+    },
+    "description": {
+     "type": "literal",
+     "xml:lang": "en",
+     "value": "product of flow velocity and density"
+    },
+    "definedBy": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind"
+    }
+   }
+  ]
+ }
+}

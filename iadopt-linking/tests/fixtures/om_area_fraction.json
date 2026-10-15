@@ -1,0 +1,33 @@
+{
+ "response": {
+  "docs": [
+   {
+    "iri": "http://www.ontology-of-units-of-measure.org/resource/om-2/AreaFraction",
+    "ontology_name": "om",
+    "description": [],
+    "label": "area fraction",
+    "type": "class"
+   },
+   {
+    "iri": "http://www.ontology-of-units-of-measure.org/resource/om-2/ColorAreaFraction",
+    "ontology_name": "om",
+    "description": [],
+    "label": "color area fraction",
+    "type": "class"
+   },
+   {
+    "iri": "http://www.ontology-of-units-of-measure.org/resource/om-2/StemEndRotAreaFraction",
+    "ontology_name": "om",
+    "description": [],
+    "label": "stem end rot area fraction",
+    "type": "class"
+   }
+  ],
+  "numFound": 3,
+  "start": 0
+ },
+ "responseHeader": {
+  "QTime": 0,
+  "status": 0
+ }
+}

@@ -1,0 +1,89 @@
+{
+  "device_check": {
+    "correct_on_primary": 34,
+    "correct_on_reference": 34,
+    "max_abs_difference": 1.5854835510253906e-05,
+    "max_reproducibility_difference": 0.0,
+    "near_tie_margin": 0.001,
+    "near_ties": 53,
+    "passed": true,
+    "primary_device": "mps",
+    "reference_device": "cpu",
+    "reproducibility_tolerance": 1e-06,
+    "scores_sha256": "ced7309048720cca3b227af06bc825c1a6330dc96cb5c4e25e1c7ea0166e1074",
+    "selection_changes": [],
+    "slots_checked": 63,
+    "spread": 10,
+    "tolerance": 0.0001
+  },
+  "invocations": [
+    {
+      "code": {
+        "files": 22,
+        "git_base_commit": "0c47be18da79f97aa0f9ce05587df853fb3c616c",
+        "git_dirty": true,
+        "source_sha256": "8a8ccc3bb83d3e1ab4d9ffd44457a34e5c97bcfb756549ca96b075affb870037"
+      },
+      "evidence_code_sha256": "c88a30e9c0748db51eed01f8937d6ab9e8d03e1941b507320385419468b0c0a7",
+      "finished_at": "2026-10-14T14:09:11+00:00",
+      "http": {
+        "backoff_s": [
+          2.0,
+          5.0
+        ],
+        "max_attempts": 3,
+        "max_retry_after_s": 120.0,
+        "min_interval_s": 1.0,
+        "timeout_s": 30.0,
+        "user_agent": "iadopt-linking/0.1 (I-ADOPT corpus entity-linking benchmark; research use)"
+      },
+      "model": {
+        "batch_size": 16,
+        "device": "mps",
+        "model": "tomaarsen/Qwen3-Reranker-0.6B-seq-cls",
+        "revision": "6a5829f5079c66e78d911e06fe21931cc00232f7",
+        "sentence_transformers": "5.7.0",
+        "torch": "2.14.0",
+        "transformers": "5.16.1"
+      },
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "retrieval": {
+        "empty:om": 117,
+        "empty:qudt": 97,
+        "empty:wikidata": 11,
+        "ok:om": 153,
+        "ok:qudt": 153,
+        "ok:wikidata": 153,
+        "requested": 459,
+        "skipped": 0
+      },
+      "scoring": {
+        "empty_pool": 8,
+        "scored": 294
+      },
+      "seconds": {
+        "device_check": 520.840468874987,
+        "retrieval": 898.316440458002,
+        "scoring": 203.01569883400225
+      },
+      "source_releases": {
+        "om": {
+          "fileHash": null,
+          "loaded": "2026-10-09T10:53:12.508719762",
+          "numberOfTerms": 2307,
+          "probed_at": "2026-10-14T13:57:05+00:00",
+          "status": "LOADED",
+          "version": "2.0.59"
+        },
+        "qudt": {
+          "graph_modified": "2026-09-22T13:10:01Z",
+          "probed_at": "2026-10-14T13:57:06+00:00"
+        }
+      },
+      "started_at": "2026-10-14T13:42:08+00:00"
+    }
+  ],
+  "schema": 1
+}

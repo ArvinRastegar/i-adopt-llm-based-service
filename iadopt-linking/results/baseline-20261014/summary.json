@@ -1,0 +1,1756 @@
+{
+  "margins": {
+    "below_1e-2": {
+      "denominator": 281,
+      "numerator": 114
+    },
+    "below_1e-3": {
+      "denominator": 281,
+      "numerator": 53
+    },
+    "below_1e-4": {
+      "denominator": 281,
+      "numerator": 11
+    }
+  },
+  "most_repeated_terms": [
+    {
+      "slots": 26,
+      "term": "person",
+      "wrong": 14
+    },
+    {
+      "slots": 12,
+      "term": "water",
+      "wrong": 12
+    },
+    {
+      "slots": 11,
+      "term": "count",
+      "wrong": 0
+    },
+    {
+      "slots": 11,
+      "term": "urban area",
+      "wrong": 10
+    },
+    {
+      "slots": 9,
+      "term": "atmosphere",
+      "wrong": 1
+    }
+  ],
+  "populations": {
+    "all": {
+      "categories": {
+        "correct": 194,
+        "gold_not_retrieved": 3,
+        "no_candidates": 6,
+        "unreachable_vocabulary": 10,
+        "wrong_source": 26,
+        "wrong_within_source": 55
+      },
+      "consistency_ceiling": {
+        "denominator": 294,
+        "numerator": 278
+      },
+      "distinct_term_gold_pairs": 158,
+      "distinct_terms": 153,
+      "gold_in_pool": {
+        "denominator": 284,
+        "numerator": 275
+      },
+      "n": 294,
+      "native_first_hit_top1": {
+        "denominator": 284,
+        "numerator": 204
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 340,
+        "numerator": 241
+      },
+      "oracle_routed_top1": {
+        "denominator": 284,
+        "numerator": 216
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 3060,
+        "numerator": 2279
+      },
+      "reachable_slots": {
+        "denominator": 294,
+        "numerator": 284
+      },
+      "routed_to_gold_source": {
+        "denominator": 278,
+        "numerator": 252
+      },
+      "top1": {
+        "denominator": 294,
+        "numerator": 194
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 275,
+        "numerator": 194
+      },
+      "top1_macro_by_variable": {
+        "denominator": 2040,
+        "numerator": 1307
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 294,
+        "numerator": 202
+      },
+      "wikidata_only_top1": {
+        "denominator": 218,
+        "numerator": 153
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 400,
+        "numerator": 271
+      }
+    },
+    "gold:bioportal": {
+      "categories": {
+        "correct": 0,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 1,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "distinct_term_gold_pairs": 1,
+      "distinct_terms": 1,
+      "gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "n": 1,
+      "native_first_hit_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "oracle_routed_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "reachable_slots": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "routed_to_gold_source": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:envthes": {
+      "categories": {
+        "correct": 0,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 1,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "distinct_term_gold_pairs": 1,
+      "distinct_terms": 1,
+      "gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "n": 1,
+      "native_first_hit_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "oracle_routed_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "reachable_slots": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "routed_to_gold_source": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:iobc": {
+      "categories": {
+        "correct": 0,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 4,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 4,
+        "numerator": 4
+      },
+      "distinct_term_gold_pairs": 2,
+      "distinct_terms": 2,
+      "gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "n": 4,
+      "native_first_hit_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "oracle_routed_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "reachable_slots": {
+        "denominator": 4,
+        "numerator": 0
+      },
+      "routed_to_gold_source": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1": {
+        "denominator": 4,
+        "numerator": 0
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 4,
+        "numerator": 0
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:iupac-goldbook": {
+      "categories": {
+        "correct": 0,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 1,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "distinct_term_gold_pairs": 1,
+      "distinct_terms": 1,
+      "gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "n": 1,
+      "native_first_hit_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "oracle_routed_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "reachable_slots": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "routed_to_gold_source": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:nalt": {
+      "categories": {
+        "correct": 0,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 1,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "distinct_term_gold_pairs": 1,
+      "distinct_terms": 1,
+      "gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "n": 1,
+      "native_first_hit_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "oracle_routed_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "reachable_slots": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "routed_to_gold_source": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:nerc": {
+      "categories": {
+        "correct": 0,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 2,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 2,
+        "numerator": 2
+      },
+      "distinct_term_gold_pairs": 2,
+      "distinct_terms": 2,
+      "gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "n": 2,
+      "native_first_hit_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "oracle_routed_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "reachable_slots": {
+        "denominator": 2,
+        "numerator": 0
+      },
+      "routed_to_gold_source": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1": {
+        "denominator": 2,
+        "numerator": 0
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 2,
+        "numerator": 0
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:om": {
+      "categories": {
+        "correct": 5,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "distinct_term_gold_pairs": 1,
+      "distinct_terms": 1,
+      "gold_in_pool": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "n": 5,
+      "native_first_hit_top1": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "oracle_routed_top1": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "reachable_slots": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "routed_to_gold_source": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "top1": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 5,
+        "numerator": 5
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:qudt": {
+      "categories": {
+        "correct": 51,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 7,
+        "wrong_within_source": 3
+      },
+      "consistency_ceiling": {
+        "denominator": 61,
+        "numerator": 61
+      },
+      "distinct_term_gold_pairs": 31,
+      "distinct_terms": 31,
+      "gold_in_pool": {
+        "denominator": 61,
+        "numerator": 61
+      },
+      "n": 61,
+      "native_first_hit_top1": {
+        "denominator": 61,
+        "numerator": 61
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "oracle_routed_top1": {
+        "denominator": 61,
+        "numerator": 58
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 61,
+        "numerator": 58
+      },
+      "reachable_slots": {
+        "denominator": 61,
+        "numerator": 61
+      },
+      "routed_to_gold_source": {
+        "denominator": 61,
+        "numerator": 54
+      },
+      "top1": {
+        "denominator": 61,
+        "numerator": 51
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 61,
+        "numerator": 51
+      },
+      "top1_macro_by_variable": {
+        "denominator": 61,
+        "numerator": 51
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 61,
+        "numerator": 55
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "gold:wikidata": {
+      "categories": {
+        "correct": 138,
+        "gold_not_retrieved": 3,
+        "no_candidates": 6,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 19,
+        "wrong_within_source": 52
+      },
+      "consistency_ceiling": {
+        "denominator": 218,
+        "numerator": 205
+      },
+      "distinct_term_gold_pairs": 118,
+      "distinct_terms": 116,
+      "gold_in_pool": {
+        "denominator": 218,
+        "numerator": 209
+      },
+      "n": 218,
+      "native_first_hit_top1": {
+        "denominator": 218,
+        "numerator": 138
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 75,
+        "numerator": 47
+      },
+      "oracle_routed_top1": {
+        "denominator": 218,
+        "numerator": 153
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 400,
+        "numerator": 271
+      },
+      "reachable_slots": {
+        "denominator": 218,
+        "numerator": 218
+      },
+      "routed_to_gold_source": {
+        "denominator": 212,
+        "numerator": 193
+      },
+      "top1": {
+        "denominator": 218,
+        "numerator": 138
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 209,
+        "numerator": 138
+      },
+      "top1_macro_by_variable": {
+        "denominator": 300,
+        "numerator": 181
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 218,
+        "numerator": 142
+      },
+      "wikidata_only_top1": {
+        "denominator": 218,
+        "numerator": 153
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 400,
+        "numerator": 271
+      }
+    },
+    "reachable": {
+      "categories": {
+        "correct": 194,
+        "gold_not_retrieved": 3,
+        "no_candidates": 6,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 26,
+        "wrong_within_source": 55
+      },
+      "consistency_ceiling": {
+        "denominator": 284,
+        "numerator": 268
+      },
+      "distinct_term_gold_pairs": 150,
+      "distinct_terms": 145,
+      "gold_in_pool": {
+        "denominator": 284,
+        "numerator": 275
+      },
+      "n": 284,
+      "native_first_hit_top1": {
+        "denominator": 284,
+        "numerator": 204
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 340,
+        "numerator": 241
+      },
+      "oracle_routed_top1": {
+        "denominator": 284,
+        "numerator": 216
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 3060,
+        "numerator": 2279
+      },
+      "reachable_slots": {
+        "denominator": 284,
+        "numerator": 284
+      },
+      "routed_to_gold_source": {
+        "denominator": 278,
+        "numerator": 252
+      },
+      "top1": {
+        "denominator": 284,
+        "numerator": 194
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 275,
+        "numerator": 194
+      },
+      "top1_macro_by_variable": {
+        "denominator": 180,
+        "numerator": 119
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 284,
+        "numerator": 202
+      },
+      "wikidata_only_top1": {
+        "denominator": 218,
+        "numerator": 153
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 400,
+        "numerator": 271
+      }
+    },
+    "role:member": {
+      "categories": {
+        "correct": 46,
+        "gold_not_retrieved": 0,
+        "no_candidates": 1,
+        "unreachable_vocabulary": 3,
+        "wrong_source": 11,
+        "wrong_within_source": 7
+      },
+      "consistency_ceiling": {
+        "denominator": 68,
+        "numerator": 68
+      },
+      "distinct_term_gold_pairs": 46,
+      "distinct_terms": 46,
+      "gold_in_pool": {
+        "denominator": 65,
+        "numerator": 64
+      },
+      "n": 68,
+      "native_first_hit_top1": {
+        "denominator": 65,
+        "numerator": 50
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 4,
+        "numerator": 3
+      },
+      "oracle_routed_top1": {
+        "denominator": 65,
+        "numerator": 55
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 33,
+        "numerator": 28
+      },
+      "reachable_slots": {
+        "denominator": 68,
+        "numerator": 65
+      },
+      "routed_to_gold_source": {
+        "denominator": 64,
+        "numerator": 53
+      },
+      "top1": {
+        "denominator": 68,
+        "numerator": 46
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 64,
+        "numerator": 46
+      },
+      "top1_macro_by_variable": {
+        "denominator": 68,
+        "numerator": 45
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 68,
+        "numerator": 47
+      },
+      "wikidata_only_top1": {
+        "denominator": 65,
+        "numerator": 55
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 33,
+        "numerator": 28
+      }
+    },
+    "role:top-level": {
+      "categories": {
+        "correct": 148,
+        "gold_not_retrieved": 3,
+        "no_candidates": 5,
+        "unreachable_vocabulary": 7,
+        "wrong_source": 15,
+        "wrong_within_source": 48
+      },
+      "consistency_ceiling": {
+        "denominator": 226,
+        "numerator": 212
+      },
+      "distinct_term_gold_pairs": 123,
+      "distinct_terms": 119,
+      "gold_in_pool": {
+        "denominator": 219,
+        "numerator": 211
+      },
+      "n": 226,
+      "native_first_hit_top1": {
+        "denominator": 219,
+        "numerator": 154
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 606,
+        "numerator": 451
+      },
+      "oracle_routed_top1": {
+        "denominator": 219,
+        "numerator": 161
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1212,
+        "numerator": 901
+      },
+      "reachable_slots": {
+        "denominator": 226,
+        "numerator": 219
+      },
+      "routed_to_gold_source": {
+        "denominator": 214,
+        "numerator": 199
+      },
+      "top1": {
+        "denominator": 226,
+        "numerator": 148
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 211,
+        "numerator": 148
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1212,
+        "numerator": 809
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 226,
+        "numerator": 155
+      },
+      "wikidata_only_top1": {
+        "denominator": 153,
+        "numerator": 98
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 81,
+        "numerator": 50
+      }
+    },
+    "slot:hasContextObject": {
+      "categories": {
+        "correct": 5,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 0,
+        "wrong_within_source": 6
+      },
+      "consistency_ceiling": {
+        "denominator": 11,
+        "numerator": 11
+      },
+      "distinct_term_gold_pairs": 5,
+      "distinct_terms": 5,
+      "gold_in_pool": {
+        "denominator": 11,
+        "numerator": 11
+      },
+      "n": 11,
+      "native_first_hit_top1": {
+        "denominator": 11,
+        "numerator": 7
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 11,
+        "numerator": 7
+      },
+      "oracle_routed_top1": {
+        "denominator": 11,
+        "numerator": 5
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 11,
+        "numerator": 5
+      },
+      "reachable_slots": {
+        "denominator": 11,
+        "numerator": 11
+      },
+      "routed_to_gold_source": {
+        "denominator": 11,
+        "numerator": 11
+      },
+      "top1": {
+        "denominator": 11,
+        "numerator": 5
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 11,
+        "numerator": 5
+      },
+      "top1_macro_by_variable": {
+        "denominator": 11,
+        "numerator": 5
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 11,
+        "numerator": 5
+      },
+      "wikidata_only_top1": {
+        "denominator": 11,
+        "numerator": 5
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 11,
+        "numerator": 5
+      }
+    },
+    "slot:hasMatrix": {
+      "categories": {
+        "correct": 32,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 0,
+        "wrong_within_source": 23
+      },
+      "consistency_ceiling": {
+        "denominator": 55,
+        "numerator": 50
+      },
+      "distinct_term_gold_pairs": 26,
+      "distinct_terms": 25,
+      "gold_in_pool": {
+        "denominator": 55,
+        "numerator": 55
+      },
+      "n": 55,
+      "native_first_hit_top1": {
+        "denominator": 55,
+        "numerator": 42
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 25,
+        "numerator": 19
+      },
+      "oracle_routed_top1": {
+        "denominator": 55,
+        "numerator": 32
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 25,
+        "numerator": 14
+      },
+      "reachable_slots": {
+        "denominator": 55,
+        "numerator": 55
+      },
+      "routed_to_gold_source": {
+        "denominator": 55,
+        "numerator": 55
+      },
+      "top1": {
+        "denominator": 55,
+        "numerator": 32
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 55,
+        "numerator": 32
+      },
+      "top1_macro_by_variable": {
+        "denominator": 25,
+        "numerator": 14
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 55,
+        "numerator": 32
+      },
+      "wikidata_only_top1": {
+        "denominator": 55,
+        "numerator": 32
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 25,
+        "numerator": 14
+      }
+    },
+    "slot:hasObjectOfInterest": {
+      "categories": {
+        "correct": 79,
+        "gold_not_retrieved": 1,
+        "no_candidates": 5,
+        "unreachable_vocabulary": 5,
+        "wrong_source": 16,
+        "wrong_within_source": 12
+      },
+      "consistency_ceiling": {
+        "denominator": 118,
+        "numerator": 118
+      },
+      "distinct_term_gold_pairs": 79,
+      "distinct_terms": 79,
+      "gold_in_pool": {
+        "denominator": 113,
+        "numerator": 107
+      },
+      "n": 118,
+      "native_first_hit_top1": {
+        "denominator": 113,
+        "numerator": 72
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 174,
+        "numerator": 103
+      },
+      "oracle_routed_top1": {
+        "denominator": 113,
+        "numerator": 92
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 87,
+        "numerator": 70
+      },
+      "reachable_slots": {
+        "denominator": 118,
+        "numerator": 113
+      },
+      "routed_to_gold_source": {
+        "denominator": 108,
+        "numerator": 92
+      },
+      "top1": {
+        "denominator": 118,
+        "numerator": 79
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 107,
+        "numerator": 79
+      },
+      "top1_macro_by_variable": {
+        "denominator": 180,
+        "numerator": 121
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 118,
+        "numerator": 81
+      },
+      "wikidata_only_top1": {
+        "denominator": 113,
+        "numerator": 92
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 87,
+        "numerator": 70
+      }
+    },
+    "slot:hasProperty": {
+      "categories": {
+        "correct": 70,
+        "gold_not_retrieved": 1,
+        "no_candidates": 1,
+        "unreachable_vocabulary": 5,
+        "wrong_source": 10,
+        "wrong_within_source": 14
+      },
+      "consistency_ceiling": {
+        "denominator": 101,
+        "numerator": 99
+      },
+      "distinct_term_gold_pairs": 55,
+      "distinct_terms": 53,
+      "gold_in_pool": {
+        "denominator": 96,
+        "numerator": 94
+      },
+      "n": 101,
+      "native_first_hit_top1": {
+        "denominator": 96,
+        "numerator": 76
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 24,
+        "numerator": 19
+      },
+      "oracle_routed_top1": {
+        "denominator": 96,
+        "numerator": 79
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 96,
+        "numerator": 79
+      },
+      "reachable_slots": {
+        "denominator": 101,
+        "numerator": 96
+      },
+      "routed_to_gold_source": {
+        "denominator": 95,
+        "numerator": 85
+      },
+      "top1": {
+        "denominator": 101,
+        "numerator": 70
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 94,
+        "numerator": 70
+      },
+      "top1_macro_by_variable": {
+        "denominator": 101,
+        "numerator": 70
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 101,
+        "numerator": 76
+      },
+      "wikidata_only_top1": {
+        "denominator": 30,
+        "numerator": 16
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 15,
+        "numerator": 8
+      }
+    },
+    "slot:hasStatisticalModifier": {
+      "categories": {
+        "correct": 8,
+        "gold_not_retrieved": 1,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "distinct_term_gold_pairs": 5,
+      "distinct_terms": 4,
+      "gold_in_pool": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "n": 9,
+      "native_first_hit_top1": {
+        "denominator": 9,
+        "numerator": 7
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 9,
+        "numerator": 7
+      },
+      "oracle_routed_top1": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "reachable_slots": {
+        "denominator": 9,
+        "numerator": 9
+      },
+      "routed_to_gold_source": {
+        "denominator": 9,
+        "numerator": 9
+      },
+      "top1": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 8,
+        "numerator": 8
+      },
+      "top1_macro_by_variable": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "wikidata_only_top1": {
+        "denominator": 9,
+        "numerator": 8
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 9,
+        "numerator": 8
+      }
+    },
+    "unreachable": {
+      "categories": {
+        "correct": 0,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 10,
+        "wrong_source": 0,
+        "wrong_within_source": 0
+      },
+      "consistency_ceiling": {
+        "denominator": 10,
+        "numerator": 10
+      },
+      "distinct_term_gold_pairs": 8,
+      "distinct_terms": 8,
+      "gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "n": 10,
+      "native_first_hit_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "oracle_routed_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "reachable_slots": {
+        "denominator": 10,
+        "numerator": 0
+      },
+      "routed_to_gold_source": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1": {
+        "denominator": 10,
+        "numerator": 0
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 10,
+        "numerator": 0
+      },
+      "wikidata_only_top1": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    "words:1": {
+      "categories": {
+        "correct": 117,
+        "gold_not_retrieved": 2,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 4,
+        "wrong_source": 22,
+        "wrong_within_source": 37
+      },
+      "consistency_ceiling": {
+        "denominator": 182,
+        "numerator": 167
+      },
+      "distinct_term_gold_pairs": 88,
+      "distinct_terms": 84,
+      "gold_in_pool": {
+        "denominator": 178,
+        "numerator": 176
+      },
+      "n": 182,
+      "native_first_hit_top1": {
+        "denominator": 178,
+        "numerator": 111
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 273,
+        "numerator": 172
+      },
+      "oracle_routed_top1": {
+        "denominator": 178,
+        "numerator": 135
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 364,
+        "numerator": 275
+      },
+      "reachable_slots": {
+        "denominator": 182,
+        "numerator": 178
+      },
+      "routed_to_gold_source": {
+        "denominator": 178,
+        "numerator": 156
+      },
+      "top1": {
+        "denominator": 182,
+        "numerator": 117
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 176,
+        "numerator": 117
+      },
+      "top1_macro_by_variable": {
+        "denominator": 364,
+        "numerator": 229
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 182,
+        "numerator": 122
+      },
+      "wikidata_only_top1": {
+        "denominator": 152,
+        "numerator": 109
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 1056,
+        "numerator": 745
+      }
+    },
+    "words:2": {
+      "categories": {
+        "correct": 62,
+        "gold_not_retrieved": 1,
+        "no_candidates": 6,
+        "unreachable_vocabulary": 6,
+        "wrong_source": 4,
+        "wrong_within_source": 15
+      },
+      "consistency_ceiling": {
+        "denominator": 94,
+        "numerator": 93
+      },
+      "distinct_term_gold_pairs": 59,
+      "distinct_terms": 58,
+      "gold_in_pool": {
+        "denominator": 88,
+        "numerator": 81
+      },
+      "n": 94,
+      "native_first_hit_top1": {
+        "denominator": 88,
+        "numerator": 76
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 201,
+        "numerator": 175
+      },
+      "oracle_routed_top1": {
+        "denominator": 88,
+        "numerator": 66
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 201,
+        "numerator": 146
+      },
+      "reachable_slots": {
+        "denominator": 94,
+        "numerator": 88
+      },
+      "routed_to_gold_source": {
+        "denominator": 82,
+        "numerator": 78
+      },
+      "top1": {
+        "denominator": 94,
+        "numerator": 62
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 81,
+        "numerator": 62
+      },
+      "top1_macro_by_variable": {
+        "denominator": 420,
+        "numerator": 269
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 94,
+        "numerator": 65
+      },
+      "wikidata_only_top1": {
+        "denominator": 57,
+        "numerator": 37
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 49,
+        "numerator": 30
+      }
+    },
+    "words:3+": {
+      "categories": {
+        "correct": 15,
+        "gold_not_retrieved": 0,
+        "no_candidates": 0,
+        "unreachable_vocabulary": 0,
+        "wrong_source": 0,
+        "wrong_within_source": 3
+      },
+      "consistency_ceiling": {
+        "denominator": 18,
+        "numerator": 18
+      },
+      "distinct_term_gold_pairs": 11,
+      "distinct_terms": 11,
+      "gold_in_pool": {
+        "denominator": 18,
+        "numerator": 18
+      },
+      "n": 18,
+      "native_first_hit_top1": {
+        "denominator": 18,
+        "numerator": 17
+      },
+      "native_first_hit_top1_macro_by_variable": {
+        "denominator": 18,
+        "numerator": 17
+      },
+      "oracle_routed_top1": {
+        "denominator": 18,
+        "numerator": 15
+      },
+      "oracle_routed_top1_macro_by_variable": {
+        "denominator": 6,
+        "numerator": 5
+      },
+      "reachable_slots": {
+        "denominator": 18,
+        "numerator": 18
+      },
+      "routed_to_gold_source": {
+        "denominator": 18,
+        "numerator": 18
+      },
+      "top1": {
+        "denominator": 18,
+        "numerator": 15
+      },
+      "top1_given_gold_in_pool": {
+        "denominator": 18,
+        "numerator": 15
+      },
+      "top1_macro_by_variable": {
+        "denominator": 6,
+        "numerator": 5
+      },
+      "top1_with_qudt_equivalence": {
+        "denominator": 18,
+        "numerator": 15
+      },
+      "wikidata_only_top1": {
+        "denominator": 9,
+        "numerator": 7
+      },
+      "wikidata_only_top1_macro_by_variable": {
+        "denominator": 9,
+        "numerator": 7
+      }
+    }
+  },
+  "routing_confusion": {
+    "om>om": 5,
+    "qudt>om": 1,
+    "qudt>qudt": 54,
+    "qudt>wikidata": 6,
+    "wikidata>qudt": 19,
+    "wikidata>wikidata": 193
+  },
+  "scorer_version": "exact-identity-pooled-top1-v3",
+  "thresholds_all": [
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 286
+      },
+      "precision": {
+        "denominator": 286,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 1,
+        "numerator": 0
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 286
+      },
+      "precision": {
+        "denominator": 286,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 10,
+        "numerator": 1
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 285
+      },
+      "precision": {
+        "denominator": 285,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 5,
+        "numerator": 1
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 284
+      },
+      "precision": {
+        "denominator": 284,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 10,
+        "numerator": 3
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 282
+      },
+      "precision": {
+        "denominator": 282,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 5,
+        "numerator": 2
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 281
+      },
+      "precision": {
+        "denominator": 281,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 2,
+        "numerator": 1
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 281
+      },
+      "precision": {
+        "denominator": 281,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 5,
+        "numerator": 3
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 280
+      },
+      "precision": {
+        "denominator": 280,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 10,
+        "numerator": 7
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 277
+      },
+      "precision": {
+        "denominator": 277,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 5,
+        "numerator": 4
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 276
+      },
+      "precision": {
+        "denominator": 276,
+        "numerator": 194
+      },
+      "threshold": {
+        "denominator": 10,
+        "numerator": 9
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 268
+      },
+      "precision": {
+        "denominator": 268,
+        "numerator": 192
+      },
+      "threshold": {
+        "denominator": 20,
+        "numerator": 19
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 230
+      },
+      "precision": {
+        "denominator": 230,
+        "numerator": 167
+      },
+      "threshold": {
+        "denominator": 100,
+        "numerator": 99
+      }
+    },
+    {
+      "coverage": {
+        "denominator": 294,
+        "numerator": 93
+      },
+      "precision": {
+        "denominator": 93,
+        "numerator": 67
+      },
+      "threshold": {
+        "denominator": 1000,
+        "numerator": 999
+      }
+    }
+  ]
+}

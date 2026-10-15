@@ -1,0 +1,98 @@
+{
+ "head": {
+  "vars": [
+   "qk",
+   "len",
+   "label",
+   "description",
+   "wikidata",
+   "definedBy"
+  ]
+ },
+ "results": {
+  "bindings": [
+   {
+    "qk": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind/MassConcentration"
+    },
+    "len": {
+     "type": "literal",
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "value": "18"
+    },
+    "label": {
+     "type": "literal",
+     "xml:lang": "en",
+     "value": "Mass Concentration"
+    },
+    "description": {
+     "type": "literal",
+     "datatype": "http://qudt.org/schema/qudt/LatexString",
+     "value": "The \"Mass Concentration\" of substance B  is defined as the mass of a constituent  divided by the volume\n    of the mixture .\n  "
+    },
+    "wikidata": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q589446"
+    },
+    "definedBy": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind"
+    }
+   },
+   {
+    "qk": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind/MassConcentrationOfWater"
+    },
+    "len": {
+     "type": "literal",
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "value": "27"
+    },
+    "label": {
+     "type": "literal",
+     "xml:lang": "en",
+     "value": "Mass Concentration of Water"
+    },
+    "description": {
+     "type": "literal",
+     "datatype": "http://qudt.org/schema/qudt/LatexString",
+     "value": "\"Mass Concentration of Water\" is one of a number of $\\textit{Concentration}$ quantities defined by ISO\n    80000.\n  "
+    },
+    "wikidata": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q76378758"
+    },
+    "definedBy": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind"
+    }
+   },
+   {
+    "qk": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind/MassConcentrationRateOfChange"
+    },
+    "len": {
+     "type": "literal",
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "value": "33"
+    },
+    "label": {
+     "type": "literal",
+     "xml:lang": "en",
+     "value": "Mass Concentration Rate of Change"
+    },
+    "description": {
+     "type": "literal",
+     "value": "the rate at which a specific chemical element or compound changes concentration over time, where with\n    concentration expressed as mass per volume. SI unit is"
+    },
+    "definedBy": {
+     "type": "uri",
+     "value": "http://qudt.org/vocab/quantitykind"
+    }
+   }
+  ]
+ }
+}

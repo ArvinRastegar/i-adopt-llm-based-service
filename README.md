@@ -27,6 +27,12 @@ The experiment that produced these numbers lives in [`iadopt-lab/`](iadopt-lab/)
 commentary is in [`iadopt-lab/docs/results-top-configurations.md`](iadopt-lab/docs/results-top-configurations.md)
 and [`results-model-comparison.md`](iadopt-lab/docs/results-model-comparison.md).
 
+## Entity linking
+
+Linking slot values to controlled vocabularies (Wikidata, QUDT, OM) is a separate experiment in
+[`iadopt-linking/`](iadopt-linking/). Its baseline with the Qwen3 reranker, 194 of 294 slots
+correct, is reported in [`iadopt-linking/results/baseline-20261014/report.md`](iadopt-linking/results/baseline-20261014/report.md).
+
 ## Getting started
 
 1. Install Dependencies
