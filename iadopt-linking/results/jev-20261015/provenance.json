@@ -1,0 +1,178 @@
+{
+  "invocations": [
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "client": {
+        "backoff_s": [
+          2.0,
+          6.0,
+          20.0
+        ],
+        "max_attempts": 4,
+        "max_retry_after_s": 120.0,
+        "timeout_s": 90.0,
+        "url": "https://openrouter.ai/api/alpha/decisions",
+        "user_agent": "iadopt-linking/0.1 (I-ADOPT corpus entity-linking benchmark; research use)"
+      },
+      "code": {
+        "files": 31,
+        "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+        "git_dirty": true,
+        "source_sha256": "126bbad5939c115632004222ef0dfc190790f7c6888eac1db10581b9c4716082"
+      },
+      "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+      "finished_at": "2026-10-15T10:35:10+00:00",
+      "outcome": "stopped: RunError: 1 of 1430 requests have no usable answer; rerun the same command to retry only those",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 108.71173629202531
+      },
+      "started_at": "2026-10-15T10:33:21+00:00",
+      "workers": 4
+    },
+    {
+      "asking": {
+        "answered": 1,
+        "requested": 1,
+        "retried": 0
+      },
+      "cap_usd": "2",
+      "client": {
+        "backoff_s": [
+          2.0,
+          6.0,
+          20.0
+        ],
+        "max_attempts": 4,
+        "max_retry_after_s": 120.0,
+        "timeout_s": 90.0,
+        "url": "https://openrouter.ai/api/alpha/decisions",
+        "user_agent": "iadopt-linking/0.1 (I-ADOPT corpus entity-linking benchmark; research use)"
+      },
+      "code": {
+        "files": 31,
+        "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+        "git_dirty": true,
+        "source_sha256": "126bbad5939c115632004222ef0dfc190790f7c6888eac1db10581b9c4716082"
+      },
+      "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+      "finished_at": "2026-10-15T10:35:21+00:00",
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.3246159999980591
+      },
+      "started_at": "2026-10-15T10:35:21+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "client": {},
+      "code": {
+        "files": 31,
+        "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+        "git_dirty": true,
+        "source_sha256": "52f47377ba9df55abefdb4a2d04268a3621071c26e658ecd3d35bd7a64ee0877"
+      },
+      "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+      "finished_at": "2026-10-15T10:38:42+00:00",
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 2.374988980591297e-06
+      },
+      "started_at": "2026-10-15T10:38:42+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "client": {},
+      "code": {
+        "files": 31,
+        "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+        "git_dirty": true,
+        "source_sha256": "e7cae28812f49f0b140a0ad503c8830426b907daef26bae182ff4c4d44ba5f7e"
+      },
+      "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+      "finished_at": "2026-10-15T10:41:10+00:00",
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 2.1250161807984114e-06
+      },
+      "started_at": "2026-10-15T10:41:10+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "client": {},
+      "code": {
+        "files": 31,
+        "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+        "git_dirty": true,
+        "source_sha256": "a97d295cf031d2759e2c83d07558bd011b0b854a42dfac063242f690ebceb269"
+      },
+      "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+      "finished_at": "2026-10-15T11:31:29+00:00",
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 2.1669839043170214e-06
+      },
+      "started_at": "2026-10-15T11:31:29+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "client": {},
+      "code": {
+        "files": 31,
+        "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+        "git_dirty": true,
+        "source_sha256": "508348e8438c96b0032a68ef62c4429070ad7c092a202b1ba5f56572591625a7"
+      },
+      "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+      "finished_at": "2026-10-15T12:03:33+00:00",
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 2.582994056865573e-06
+      },
+      "started_at": "2026-10-15T12:03:33+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "client": {},
+      "code": {
+        "files": 31,
+        "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+        "git_dirty": true,
+        "source_sha256": "1bf445186a53a2515d84cde79d8a4d68c6c940699feba7b94d82ab05f4eca2cb"
+      },
+      "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+      "finished_at": "2026-10-15T12:19:18+00:00",
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 3.1660019885748625e-06
+      },
+      "started_at": "2026-10-15T12:19:18+00:00",
+      "workers": 4
+    }
+  ],
+  "schema": 1
+}

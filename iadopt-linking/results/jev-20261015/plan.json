@@ -1,0 +1,122 @@
+{
+  "analysis": {
+    "bootstrap": {
+      "level": "0.95",
+      "resamples": 10000,
+      "seed": 20261015
+    },
+    "confidence_signals": [
+      "jev_selected_probability",
+      "jev_confidence",
+      "jev_margin",
+      "jev_candidate_mass",
+      "jev_pass_agreement"
+    ],
+    "exploratory": [
+      "every pass other than the primary",
+      "the pointwise arm",
+      "consensus of the Choice passes",
+      "abstention",
+      "position bias",
+      "confidence thresholds and escalation",
+      "QUDT/Wikidata equivalence",
+      "subpopulations by gold vocabulary"
+    ],
+    "pass_or_fail_criterion": null,
+    "primary": {
+      "decision": "forced choice: the candidate with the highest probability, none_of_these ignored, ties by source order then rank (iadopt_linking_eval.choose)",
+      "estimand": "top-1 accuracy of Jev minus the Qwen3 baseline, same slots and candidates",
+      "interval": "percentile bootstrap over terms",
+      "pass": "choice-a1",
+      "population": "reachable: gold in Wikidata, QUDT or OM",
+      "test": "exact McNemar on slots, descriptive because slots cluster by term"
+    },
+    "prompt_changes_after_first_corpus_request": "none",
+    "strict_identity_is_the_headline": true
+  },
+  "asked": {
+    "empty_pools": 8,
+    "slots": 294
+  },
+  "baseline": {
+    "candidates_sha256": "7b2eb3b7da6cb2321dacb1f0718e474b12d8a0a3306e43a04d8f32069ce0a9f2",
+    "evidence_code_sha256": "c88a30e9c0748db51eed01f8937d6ab9e8d03e1941b507320385419468b0c0a7",
+    "folder": "baseline-20261014",
+    "max_description_chars": 300,
+    "plan_sha256": "feed87620bfb0786b54d52528942fd946599ac0f6a3e2e588360882a452ac121",
+    "run_id": "baseline-20261014",
+    "scores_sha256": "ced7309048720cca3b227af06bc825c1a6330dc96cb5c4e25e1c7ea0166e1074"
+  },
+  "corpus": {
+    "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+    "corpus_manifest_sha256": "507a2f5690d2b904da877d3fe6a0fcb5264725e7b442f4fe0927a198af5ee1e2",
+    "repository": "https://github.com/i-adopt/Corpus",
+    "source_lock_sha256": "f3d162c655a9c09672a80593f7fc2aee6d403e7559ebd3768d9e3c9a87906583",
+    "tag": "v2.0.1"
+  },
+  "estimate": {
+    "assumed_chars_per_token": 1.5,
+    "estimated_cost_usd": "0.132047286",
+    "input_tokens_upper_estimate": 3143983,
+    "price_per_input_token_usd": "0.000000042",
+    "request_chars": 4715974,
+    "requests": 1430,
+    "requests_by_pass": {
+      "choice-a1": 286,
+      "choice-a1-repeat": 286,
+      "choice-a2-reversed": 286,
+      "choice-a3": 286,
+      "noul-n1": 286
+    }
+  },
+  "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+  "experiment": "jev-entity-linking-v1",
+  "model": {
+    "price_per_input_token_usd": "0.000000042",
+    "price_source": "https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints (2026-10-15)",
+    "requested": "typesafe/jev-1.13"
+  },
+  "only": null,
+  "passes": [
+    [
+      "choice-a1",
+      "choice",
+      "shuffle-a"
+    ],
+    [
+      "choice-a1-repeat",
+      "choice",
+      "shuffle-a"
+    ],
+    [
+      "choice-a2-reversed",
+      "choice",
+      "reverse-a"
+    ],
+    [
+      "choice-a3",
+      "choice",
+      "shuffle-b"
+    ],
+    [
+      "noul-n1",
+      "noul",
+      "shuffle-a"
+    ]
+  ],
+  "prompt": {
+    "choice_instructions": "`term` is one component of the variable that `variable_definition` describes. Which candidate is the entry for the concept that `term` names? Use `variable_definition` only to tell which meaning of `term` is intended. A candidate matches only if it is the same concept as `term`: a broader, narrower or merely related concept does not match, and neither does a concept for the whole variable. Differences in capitalization, plural form or word order do not matter. Choose `none_of_these` if no candidate is the same concept.",
+    "fingerprint": "a6042e8c2d203a7716bf5241008d4efa5ac33b44c28309fbcb3dca461ec565c5",
+    "max_description_chars": 300,
+    "none_description": "No candidate is the same concept as `term`.",
+    "noul_instructions": "`term` is one component of the variable that `variable_definition` describes. Is `candidate` the same concept as the one that `term` names? Use `variable_definition` only to tell which meaning of `term` is intended. A broader, narrower or merely related concept is not the same concept, and neither is a concept for the whole variable. Differences in capitalization, plural form or word order do not matter.",
+    "order_seed": "iadopt-linking/jev-entity-link-v1/orders",
+    "shown_per_candidate": [
+      "label",
+      "description"
+    ],
+    "version": "jev-entity-link-v1"
+  },
+  "run_id": "jev-20261015",
+  "tasks": 1430
+}

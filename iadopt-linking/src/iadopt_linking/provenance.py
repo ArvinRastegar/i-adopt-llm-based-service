@@ -44,16 +44,18 @@ def now_utc() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
-def evidence_code_identity(project_root: Path = PROJECT_ROOT) -> str:
+def evidence_code_identity(project_root: Path = PROJECT_ROOT,
+                           files: Sequence[str] = EVIDENCE_FILES) -> str:
     """Hash the modules that produce a run's evidence.
 
-    Args: project_root: the iadopt-linking folder.
-    Returns: a hexadecimal SHA-256 over EVIDENCE_FILES, names and bytes.
+    Args: project_root: the iadopt-linking folder; files: module paths under ``src``, which
+    default to the baseline's EVIDENCE_FILES (the Jev experiment passes its own list).
+    Returns: a hexadecimal SHA-256 over those files, names and bytes.
     Raises: OSError if a listed module is missing.
     Side effects: filesystem reads.
     """
     digest = hashlib.sha256()
-    for name in EVIDENCE_FILES:
+    for name in files:
         digest.update(name.encode() + b"\0" + (project_root / "src" / name).read_bytes())
     return digest.hexdigest()
 

@@ -1,0 +1,291 @@
+{
+  "baseline": {
+    "candidates_sha256": "7b2eb3b7da6cb2321dacb1f0718e474b12d8a0a3306e43a04d8f32069ce0a9f2",
+    "evidence_code_sha256": "c88a30e9c0748db51eed01f8937d6ab9e8d03e1941b507320385419468b0c0a7",
+    "folder": "baseline-20261014",
+    "max_description_chars": 300,
+    "plan_sha256": "feed87620bfb0786b54d52528942fd946599ac0f6a3e2e588360882a452ac121",
+    "run_id": "baseline-20261014",
+    "scores_sha256": "ced7309048720cca3b227af06bc825c1a6330dc96cb5c4e25e1c7ea0166e1074"
+  },
+  "checks": [
+    {
+      "detail": "294 slots and 3473 candidate documents rebuilt and equal to the baseline's; 7 baseline files re-hashed; the baseline scored 294 slots in 294 records",
+      "name": "inputs identical to the baseline",
+      "passed": true
+    },
+    {
+      "detail": "1430/1430 requests answered (0 needed an HTTP retry; 1 stored responses were rejected as invalid answers and asked again)",
+      "name": "every request answered",
+      "passed": true
+    },
+    {
+      "detail": "1430/1430 stored requests equal the ones this tree builds",
+      "name": "stored requests regenerate from the plan",
+      "passed": true
+    },
+    {
+      "detail": "1431 stored responses re-hashed",
+      "name": "stored response hashes verify",
+      "passed": true
+    },
+    {
+      "detail": "1430 responses read strictly; probabilities sum to 1 within 0.010 at worst",
+      "name": "every response is a valid answer",
+      "passed": true
+    },
+    {
+      "detail": "served by TypeSafe as typesafe/jev-1.13-20260917 (requested typesafe/jev-1.13)",
+      "name": "one model snapshot served",
+      "passed": true
+    },
+    {
+      "detail": "$0.070812294 spent over 1430 answers and 1 rejected responses, every stored response included; cap $2",
+      "name": "spend fully accounted and within the cap",
+      "passed": true
+    },
+    {
+      "detail": "286/286 requests of choice-a1 answered",
+      "name": "primary pass complete",
+      "passed": true
+    }
+  ],
+  "code": {
+    "files": 31,
+    "git_base_commit": "4af382e2128c0559cc5497bcc8a2d660bb0ab483",
+    "git_dirty": true,
+    "source_sha256": "1bf445186a53a2515d84cde79d8a4d68c6c940699feba7b94d82ab05f4eca2cb"
+  },
+  "corpus": {
+    "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+    "corpus_manifest_sha256": "507a2f5690d2b904da877d3fe6a0fcb5264725e7b442f4fe0927a198af5ee1e2",
+    "repository": "https://github.com/i-adopt/Corpus",
+    "source_lock_sha256": "f3d162c655a9c09672a80593f7fc2aee6d403e7559ebd3768d9e3c9a87906583",
+    "tag": "v2.0.1"
+  },
+  "created_at": "2026-10-15T12:19:18+00:00",
+  "evidence_code_sha256": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+  "evidence_period": {
+    "first_request": "2026-10-15T10:33:21+00:00",
+    "last_request": "2026-10-15T10:35:21+00:00"
+  },
+  "experiment": "jev-entity-linking-v1",
+  "files": {
+    "comparison.md": "cefb3b77b63410760b4711c8dbc0b259171a040a1d391442d0ef2739e0357984",
+    "confidence.csv": "eeccc1ca5966587a03c54a89d2124d74e21369e9b6c9fc3c478cd2a2cbc6dd54",
+    "outcomes.csv": "865f5ebe543952fd5d74813f231427fa33bb9ff1fb7ef9849c0b7162d91bf2f5",
+    "plan.json": "282a1bbb56954b0c67e0c64ed8000abb4a6ab5175927f26712a329ada8dd8c0e",
+    "probabilities.csv": "2a8c36b5b5b536268ac4f4e72085aa10a1d1b0abdee2c281344ef8fee861fdca",
+    "provenance.json": "60c64a281faacfed6754332e2a1461ec48647e2de1d6820b81ac9c4cefb6584b",
+    "report.md": "426a3283aa1c07e82152eebc5c3b876504c5ed3a711a3fe324ad7dedbf4ebf2d",
+    "responses.jsonl": "9158353bf4f627f94436d68c10519f56aeb0f0073bd491892708b208349bdc3b",
+    "summary.json": "3ce48e9622829e775c8aa500989eddace2087404f19bdd985670e52733315f43"
+  },
+  "invocations": [
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "finished_at": "2026-10-15T10:35:10+00:00",
+      "git_dirty": true,
+      "outcome": "stopped: RunError: 1 of 1430 requests have no usable answer; rerun the same command to retry only those",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 108.7
+      },
+      "source_sha256": "126bbad5939c115632004222ef0dfc190790f7c6888eac1db10581b9c4716082",
+      "started_at": "2026-10-15T10:33:21+00:00",
+      "workers": 4
+    },
+    {
+      "asking": {
+        "answered": 1,
+        "requested": 1,
+        "retried": 0
+      },
+      "cap_usd": "2",
+      "finished_at": "2026-10-15T10:35:21+00:00",
+      "git_dirty": true,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.3
+      },
+      "source_sha256": "126bbad5939c115632004222ef0dfc190790f7c6888eac1db10581b9c4716082",
+      "started_at": "2026-10-15T10:35:21+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "finished_at": "2026-10-15T10:38:42+00:00",
+      "git_dirty": true,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "52f47377ba9df55abefdb4a2d04268a3621071c26e658ecd3d35bd7a64ee0877",
+      "started_at": "2026-10-15T10:38:42+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "finished_at": "2026-10-15T10:41:10+00:00",
+      "git_dirty": true,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "e7cae28812f49f0b140a0ad503c8830426b907daef26bae182ff4c4d44ba5f7e",
+      "started_at": "2026-10-15T10:41:10+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "finished_at": "2026-10-15T11:31:29+00:00",
+      "git_dirty": true,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "a97d295cf031d2759e2c83d07558bd011b0b854a42dfac063242f690ebceb269",
+      "started_at": "2026-10-15T11:31:29+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "finished_at": "2026-10-15T12:03:33+00:00",
+      "git_dirty": true,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "508348e8438c96b0032a68ef62c4429070ad7c092a202b1ba5f56572591625a7",
+      "started_at": "2026-10-15T12:03:33+00:00",
+      "workers": 4
+    },
+    {
+      "asking": null,
+      "cap_usd": "2",
+      "finished_at": "2026-10-15T12:19:18+00:00",
+      "git_dirty": true,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "1bf445186a53a2515d84cde79d8a4d68c6c940699feba7b94d82ab05f4eca2cb",
+      "started_at": "2026-10-15T12:19:18+00:00",
+      "workers": 4
+    }
+  ],
+  "model": {
+    "price_per_input_token_usd": "0.000000042",
+    "price_source": "https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints (2026-10-15)",
+    "providers": [
+      "TypeSafe"
+    ],
+    "requested": "typesafe/jev-1.13",
+    "served": [
+      "typesafe/jev-1.13-20260917"
+    ]
+  },
+  "notes": [
+    "Jev saw, for every candidate, the label and the description (capped at 300 characters): the information the Qwen3 reranker saw, with no vocabulary, identifier, rank or score. The term and the variable's definition are the baseline's.",
+    "8 slots have no candidate; they were not asked and count as misses, as in the baseline.",
+    "17 label-only nodes and 2 non-vocabulary IRIs are outside the population, as in the baseline.",
+    "10 slots have their gold in a vocabulary these sources cannot reach; they count as misses in the \"All controlled-vocabulary slots\" row and are left out of the primary population (the reachable slots).",
+    "Jev reports probabilities rounded to two decimals: 1 of 281 primary selections that have a runner-up tie with it and were decided by the baseline's rule (source order, then rank).",
+    "Gold terms are the corpus labels of the gold nodes; for QUDT slots they are often QUDT's own labels, so QUDT accuracy on these terms may overstate accuracy on LLM-predicted wording.",
+    "The service answers live: another run would not give identical probabilities (see the repeated pass), and a later release of the model is a different model.",
+    "1 stored response(s) were rejected by the validity rule and the request was asked again, as the protocol says (1 x the choice is not the option with the highest probability); rejected responses stay in responses.jsonl."
+  ],
+  "passes": [
+    [
+      "choice-a1",
+      "choice",
+      "shuffle-a"
+    ],
+    [
+      "choice-a1-repeat",
+      "choice",
+      "shuffle-a"
+    ],
+    [
+      "choice-a2-reversed",
+      "choice",
+      "reverse-a"
+    ],
+    [
+      "choice-a3",
+      "choice",
+      "shuffle-b"
+    ],
+    [
+      "noul-n1",
+      "noul",
+      "shuffle-a"
+    ]
+  ],
+  "pilot_variables": null,
+  "platform": "macOS-26.7.1-arm64-arm-64bit",
+  "population": {
+    "counts": {
+      "excluded_label_only": 17,
+      "excluded_non_vocabulary": 2,
+      "gold_form_canonical": 12,
+      "gold_form_opaque": 10,
+      "gold_form_repaired": 2,
+      "gold_form_scheme": 269,
+      "gold_form_variant": 1,
+      "gold_links": 313,
+      "links": 313,
+      "slots": 294
+    },
+    "slots": 294
+  },
+  "prompt": {
+    "choice_instructions": "`term` is one component of the variable that `variable_definition` describes. Which candidate is the entry for the concept that `term` names? Use `variable_definition` only to tell which meaning of `term` is intended. A candidate matches only if it is the same concept as `term`: a broader, narrower or merely related concept does not match, and neither does a concept for the whole variable. Differences in capitalization, plural form or word order do not matter. Choose `none_of_these` if no candidate is the same concept.",
+    "fingerprint": "a6042e8c2d203a7716bf5241008d4efa5ac33b44c28309fbcb3dca461ec565c5",
+    "max_description_chars": 300,
+    "none_description": "No candidate is the same concept as `term`.",
+    "noul_instructions": "`term` is one component of the variable that `variable_definition` describes. Is `candidate` the same concept as the one that `term` names? Use `variable_definition` only to tell which meaning of `term` is intended. A broader, narrower or merely related concept is not the same concept, and neither is a concept for the whole variable. Differences in capitalization, plural form or word order do not matter.",
+    "order_seed": "iadopt-linking/jev-entity-link-v1/orders",
+    "shown_per_candidate": [
+      "label",
+      "description"
+    ],
+    "version": "jev-entity-link-v1"
+  },
+  "python": "3.12.1",
+  "run_id": "jev-20261015",
+  "spend": {
+    "answered_after_retry": 0,
+    "cap_usd": "2",
+    "cost_usd": "0.070812294",
+    "estimate_usd": "0.132047286",
+    "failed_attempts_repeated": 0,
+    "input_tokens": 1685133,
+    "output_tokens": 221949,
+    "rejected_responses": 1,
+    "requests": 1430,
+    "responses_stored": 1431
+  },
+  "timings_s": {
+    "asking": 109.0
+  },
+  "title": "Jev (typesafe/jev-1.13) over the baseline's pooled Wikidata, QUDT and OM candidates"
+}

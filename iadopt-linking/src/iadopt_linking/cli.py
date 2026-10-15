@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import math
 import sys
 from collections.abc import Callable, Sequence
@@ -12,6 +13,9 @@ from typing import Any
 from .compare import compare_runs, render_comparison
 from .errors import RunError, UsageError
 from .experiment import load_population, log, query_keys, run
+from .jev import ARM_CHOICE, ARM_NOUL, PASSES, PassSpec, pass_spec
+from .jev_experiment import PRICE_PER_INPUT_TOKEN_USD, run_jev
+from .jev_inputs import build_tasks, estimate, load_baseline
 from .recorder import StoreError
 from .rerank import DEFAULT_MAX_DESCRIPTION_CHARS, ScoreError
 from .retrieve import RetrievalTimeout
@@ -70,6 +74,24 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("--first", required=True, help="first results folder")
     compare.add_argument("--second", required=True, help="second results folder")
     compare.add_argument("--out", help="write the Markdown here instead of printing it")
+    jev_plan = commands.add_parser(
+        "jev-plan", help="build every Jev request offline, show one of each kind and the cost "
+                         "estimate, call nothing")
+    jev_full = commands.add_parser(
+        "jev-run", help="ask Jev about the baseline's candidates, check, compare with the "
+                        "baseline and report; resumes where a previous run stopped")
+    for command in (jev_plan, jev_full):
+        command.add_argument("--baseline", required=True, help="finished baseline results folder")
+        command.add_argument("--only", help="comma-separated variable file stems (a pilot)")
+        command.add_argument("--lab-root", help="iadopt-lab root (default: sibling folder)")
+        command.add_argument("--passes", help="comma-separated pass names (default: all)")
+    jev_full.add_argument("--out", required=True, help="Jev results folder")
+    jev_full.add_argument("--max-cost-usd", required=True, help="hard spending cap in USD")
+    jev_full.add_argument("--env-file", help="credential file defining OPENROUTER_API_KEY "
+                                             "(default: .env at the repository root)")
+    jev_full.add_argument("--workers", type=_positive(int), default=4,
+                          help="parallel requests (default 4)")
+    jev_full.add_argument("--run-id", help="run name (default: the folder name)")
     full.add_argument("--out", required=True, help="results folder")
     full.add_argument("--max-retrieval-minutes", type=_positive(float), default=30.0)
     full.add_argument("--max-description-chars", type=_positive(int),
@@ -81,6 +103,42 @@ def build_parser() -> argparse.ArgumentParser:
     devices.add_argument("--recheck-devices", action="store_true",
                          help="repeat the cross-device check even if one passed for these scores")
     return parser
+
+
+def _specs(names: str | None) -> list[PassSpec]:
+    """Read the pass names of a command line.
+
+    Args: names: comma-separated pass names, or None for all.
+    Returns: the passes in the order given (or PASSES).
+    Raises: UsageError for an unknown name.
+    Side effects: none.
+    """
+    if not names:
+        return list(PASSES)
+    try:
+        return [pass_spec(name.strip()) for name in names.split(",") if name.strip()]
+    except KeyError as exc:
+        raise UsageError(f"{exc.args[0]}; passes are {[p.name for p in PASSES]}") from None
+
+
+def _jev_plan(args: argparse.Namespace, only: list[str] | None) -> None:
+    """Show what a Jev run would send and cost, without calling anything.
+
+    Args: args: parsed arguments; only: variable stems or None.
+    Returns: None.
+    Raises: RunError if the baseline is not usable.
+    Side effects: prints; reads the baseline and the corpus.
+    """
+    baseline = load_baseline(args.baseline, lab_root=args.lab_root, only=only)
+    tasks, asked = build_tasks(baseline, _specs(args.passes), session_id="iadopt-linking/plan")
+    summary = estimate(tasks, PRICE_PER_INPUT_TOKEN_USD)
+    log(f"{asked['slots']} slots, {asked['empty_pools']} without candidates (not asked)")
+    log(f"estimate: {json.dumps(summary, sort_keys=True)}")
+    for arm in (ARM_CHOICE, ARM_NOUL):
+        first = next((t for t in tasks if t.spec.arm == arm), None)
+        if first is not None:
+            log(f"first {arm} request ({first.spec.name}, {first.slot.slot_id}, sha256 "
+                f"{first.sha256[:12]}):\n{json.dumps(first.body, indent=2, ensure_ascii=False)}")
 
 
 def _dispatch(args: argparse.Namespace) -> int:
@@ -100,6 +158,15 @@ def _dispatch(args: argparse.Namespace) -> int:
             print(text, end="")
         return 0
     only = [s.strip() for s in args.only.split(",") if s.strip()] if args.only else None
+    if args.command == "jev-plan":
+        _jev_plan(args, only)
+        return 0
+    if args.command == "jev-run":
+        run_jev(args.out, baseline_dir=args.baseline, max_cost_usd=args.max_cost_usd,
+                env_file=args.env_file, lab_root=args.lab_root, only=only,
+                passes=[s.name for s in _specs(args.passes)] if args.passes else None,
+                workers=args.workers, run_id=args.run_id)
+        return 0
     if args.command == "plan":
         _, slots, counts = load_population(args.lab_root, only)
         log(f"population counts: {counts}")

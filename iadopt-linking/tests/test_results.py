@@ -19,7 +19,14 @@ from iadopt_linking.retrieve import response_hash_matches
 from iadopt_linking_eval import evaluate_slot, summarise
 
 RESULTS = Path(__file__).resolve().parents[1] / "results"
-MANIFESTS = sorted(RESULTS.glob("*/manifest.json"))
+
+
+def is_baseline(manifest_path: Path) -> bool:
+    """Baseline manifests carry no ``experiment`` field; other experiments name themselves."""
+    return "experiment" not in json.loads(manifest_path.read_text(encoding="utf-8"))
+
+
+MANIFESTS = sorted(p for p in RESULTS.glob("*/manifest.json") if is_baseline(p))
 EACH = pytest.mark.parametrize("manifest_path", MANIFESTS, ids=lambda p: p.parent.name)
 
 

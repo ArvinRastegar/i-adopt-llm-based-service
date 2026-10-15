@@ -34,13 +34,52 @@ The headline does not depend on the device: 53 selections were decided by a top-
 first run six and a half hours earlier changed no selection
 ([`replication.md`](results/baseline-20261014/replication.md)).
 
+## Jev on the same candidates
+
+[`results/jev-20261015`](results/jev-20261015/report.md) asks TypeSafe's Jev (`typesafe/jev-1.13`
+through OpenRouter) to choose among exactly the candidates the baseline scored, so only the scorer
+differs (DECISIONS L-010 to L-015). Jev answers a typed question with a probability for each option.
+Each slot is one Choice question over its pooled candidates plus `none_of_these`, asked in four
+Choice passes (three distinct candidate orders; one pass repeats the primary request exactly) and
+once more as one yes/no question per candidate. The 1,430 requests (one of them asked a second time
+after a rejected answer, L-014) took two minutes and cost $0.07 as OpenRouter reports it. The prompt
+was written before any corpus slot was sent and developed on invented slots only (L-011); the primary
+analysis was written down before the first request (L-012), pre-specified rather than registered
+anywhere outside this repository.
+
+On the 284 reachable slots Jev's first Choice pass gets 213 right (0.750) against Qwen3's 194
+(0.683). That +0.067 cannot be told from zero once a term asked many times counts once: the interval
+that resamples terms is -0.040 to +0.182, and (post hoc, L-014) Jev does better on 17 of 145 terms,
+Qwen3 on 16. It is two opposite effects. Where the gold is in Wikidata, Jev gets 174/218 against
+138/218 (post hoc: better on 15 terms, worse on 1). Where it is in QUDT, 34/61 against 51/61 (better
+on 2, worse on 15), because Jev often picks the Wikidata item that QUDT lists as the twin of the same
+concept (post hoc: 16 of the 23 slots only Qwen3 got right are such twins). Counting a QUDT kind and its twin as
+one entity, an open decision, gives 237/284 = 0.835 against 202/284 = 0.711.
+
+The total hides how much individual slots move. The four Choice passes get 210 to 213 right, and an
+identical repeat selects the same candidate for 98% of slots (though only 27% of slots get identical
+probabilities). Another order changes the selection for 9 to 12% of slots and flips whether the answer
+is right for 23 to 31 of the 278 asked reachable slots, in both directions (post hoc); all four passes
+select the same candidate on 232 of them. No pass favours the first option shown. The pointwise arm
+is worse (177/284).
+
+Confidence is where Jev differs most. The probability of its selected candidate separates right from
+wrong (AUROC 0.81, calibration gap 0.045) where Qwen3's score hardly does (0.59, 0.28). Answering only
+at probability 0.8 or more covers 157 of 284 slots at 93% precision, and at 0.9 or more 116 slots at
+97%. Jev's own `confidence` matches (p_max - 1/n) / (1 - 1/n) in all 1,144 Choice responses, so it
+adds nothing to the probability and the option count. `outcomes.csv`, `confidence.csv` and
+`probabilities.csv` hold every figure per slot and candidate for choosing thresholds later, and the
+report's escalation table counts the errors a stronger model could and could not fix. A threshold
+read off these same data needs held-out terms before it is trusted.
+
 ## How the two projects share work
 
 | Shared thing | Owner | How this project uses it |
 |---|---|---|
 | Corpus Turtle (v2.0.1) and its frozen manifests | `iadopt-lab/data/` | read in place after the lab's own verification; never copied |
 | Corpus loading and hash checks | `iadopt_lab.corpus.ingestion.load_canonical_records` | imported |
-| Canonical JSON and SHA-256 identities | `iadopt_lab.canonical` | to be imported when a snapshot needs an identity |
+| Canonical JSON and SHA-256 identities | `iadopt_lab.canonical` | imported (`content_hash`, for the Jev prompt fingerprint) |
+| Credential loading | `iadopt_lab.configuration.load_runtime_secrets` | imported by `openrouter.api_key_from`; it keeps only the allowlisted `OPENROUTER_API_KEY` |
 | Lexical scorer | `iadopt_eval` | to be imported if end-to-end runs need it |
 | Link gold, including ratio and source/target members | `iadopt_linking.gold` | here, because the lab's parser keeps IRIs only for top-level slots |
 | Link evaluation | `iadopt_linking_eval` | here, standalone so the lab can import it later |
@@ -54,8 +93,10 @@ fails if their readings diverge.
 ```text
 src/iadopt_linking/        gold, population, sources, http, recorder, retrieve, rerank, score,
                            health, devices, provenance, artifacts, errors, experiment, report,
-                           compare, cli
-src/iadopt_linking_eval/   pure link scorer (standard library only): identity, metrics
+                           compare, cli; for Jev: jev, openrouter, jev_inputs, jev_health,
+                           jev_analysis, jev_report, jev_experiment
+src/iadopt_linking_eval/   pure link scorer (standard library only): identity, metrics, paired,
+                           confidence
 tests/                     offline tests, contract tests against iadopt-lab, result-integrity tests
 results/<run>/             committed evidence and report of a run
 outputs/                   gitignored scratch: logs, pilots, superseded runs
@@ -70,6 +111,17 @@ document, score and the model, revision, device and description cap that made it
 releases, health checks, the cross-device check and the hash of every file). Retrieval is live, so
 the stored candidates are the result; scoring and reporting repeat exactly from them.
 
+A Jev folder (`results/jev-<date>`) holds no new retrieval. It has `responses.jsonl` (every request,
+its response text and hash, the served model and the cost OpenRouter reported), `plan.json`,
+`provenance.json`, `summary.json`, `report.md`, `comparison.md` (paired counts, counts per term, how
+slots moved between outcome categories, and the slots only one of the two scorers got right), and
+three CSV files for later threshold analysis: `outcomes.csv` (one row per slot: the
+primary pass's selection, probability, margin and confidence beside the pointwise arm and Qwen3),
+`confidence.csv` (one row per slot and pass, with every confidence signal and the outcome) and
+`probabilities.csv` (one row per candidate and pass: Jev's probability, whether it is the gold and
+whether it was selected). Group the CSV rows by `query_key`, not by `term`, when splitting terms into
+folds: three terms differ only in case, spacing or hyphen form. `manifest.json` hashes all of it.
+
 ## Commands
 
 ```bash
@@ -79,7 +131,20 @@ uv run ruff check .
 uv run iadopt-linking plan
 uv run iadopt-linking run --out results/<name>
 uv run iadopt-linking compare --first results/a --second results/b
+uv run iadopt-linking jev-plan --baseline results/baseline-20261014
+uv run iadopt-linking jev-run --baseline results/baseline-20261014 --out results/jev-<date> \
+    --max-cost-usd 2
 ```
+
+`jev-plan` builds every Jev request offline, prints the cost estimate and one request of each kind,
+and calls nothing. `jev-run` is billed, so it refuses to start without a spending cap and without an
+estimate that fits under it. It reads `OPENROUTER_API_KEY` from `../.env` (or `--env-file`) only when
+requests are pending and never prints or stores it. It resumes, stops with a named reason on a
+refused credential, a passed cap or the first ten requests all failing, and rerunning it in a finished folder
+rebuilds the report without a service call. Both commands take `--passes` (a comma-separated subset of
+the five passes, which must include the primary `choice-a1`; a folder keeps the list it started with),
+`--only` (variable file stems, for a pilot on a few variables) and `--lab-root`; `jev-run` also takes
+`--workers` (parallel requests, default 4), `--run-id` and `--env-file`.
 
 `run` resumes where it stopped and stops with a named reason on any failed request, failed health
 check, missing or impossible score. A full run took 27 minutes: 15 for retrieval (Wikidata
@@ -94,10 +159,13 @@ from the repo root. The rules for working here are in [`AGENTS.md`](AGENTS.md).
 
 ## Status
 
-The baseline is done and its evidence is in `results/`. Not yet decided: the evaluation population
-for comparing the reranker with Jev (TypeSafe's constrained-output model, the candidate
-replacement), whether QUDT's `wikidataMatch` makes a QUDT kind and its Wikidata item equally
-correct (it would add 8 correct slots), whether the ten slots in other vocabularies should get a
-source, and how to read the gap to the manuscript's table. QUDT accuracy on gold terms is close to
-a label lookup (59 of 61 corpus terms are QUDT's own label), so it will not carry over to
-LLM-predicted wording.
+The baseline and the Jev run are done and their evidence is in `results/`. The Jev results decide
+nothing yet: no success criterion for replacing the reranker has been chosen. Not yet decided (see
+`DECISIONS.md`): that criterion; whether to repeat the Jev run with the client hardening listed in
+L-015; whether QUDT's `wikidataMatch` makes a QUDT kind and its Wikidata item equally correct
+(it moves Jev's result more than Qwen3's: +24 slots against +8), whether the ten slots in other
+vocabularies should get a source, how to read the gap to the manuscript's table, whether a response
+whose `choice` differs from its highest probability by a rounding step should be accepted, and which
+confidence threshold, if any, should send a slot to a larger model, a PSNC-hosted one being the stated
+candidate. QUDT accuracy on gold terms is close to a label lookup (59 of 61 corpus terms are QUDT's own
+label), so it will not carry over to LLM-predicted wording.
