@@ -1,0 +1,89 @@
+{
+  "invocations": [
+    {
+      "asking": {
+        "answered": 1144,
+        "requested": 1144,
+        "retried": 0
+      },
+      "cap_usd": null,
+      "client": {
+        "backoff_s": [
+          2.0,
+          6.0,
+          20.0
+        ],
+        "host": "llm.hpc.psnc.pl",
+        "max_attempts": 4,
+        "max_retry_after_s": 120.0,
+        "path": "/chat/completions",
+        "proxies": "ignored",
+        "redirects": "not followed",
+        "timeout_s": 120.0,
+        "user_agent": "iadopt-linking/0.1 (I-ADOPT corpus entity-linking benchmark; research use)"
+      },
+      "code": {
+        "files": 34,
+        "git_base_commit": "6c003700d2f403556b97cc302f2cc0dc32081f37",
+        "git_dirty": true,
+        "source_sha256": "5c9d63d1bb16ca7d068bee53ec030cd2550343d044c4e194b059deaafec1df6d"
+      },
+      "evidence_code_sha256": "a342a3b6435978a9af2376f7a490f808b895118d609cbb7f5ac19fd76e4492f1",
+      "finished_at": "2026-10-15T18:40:50+00:00",
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 343.48155979200965
+      },
+      "started_at": "2026-10-15T18:35:06+00:00",
+      "workers": 1
+    },
+    {
+      "asking": null,
+      "cap_usd": null,
+      "client": {},
+      "code": {
+        "files": 34,
+        "git_base_commit": "6c003700d2f403556b97cc302f2cc0dc32081f37",
+        "git_dirty": true,
+        "source_sha256": "841ff72e5447777cab25b3ddb27138506294e779cae50b1367ad9f947b38afa6"
+      },
+      "evidence_code_sha256": "a342a3b6435978a9af2376f7a490f808b895118d609cbb7f5ac19fd76e4492f1",
+      "finished_at": "2026-10-15T18:42:21+00:00",
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 1.667009200900793e-06
+      },
+      "started_at": "2026-10-15T18:42:21+00:00",
+      "workers": 1
+    },
+    {
+      "asking": null,
+      "cap_usd": null,
+      "client": {},
+      "code": {
+        "files": 35,
+        "git_base_commit": "6c003700d2f403556b97cc302f2cc0dc32081f37",
+        "git_dirty": true,
+        "source_sha256": "22b92f5cf68118333677191da009a1c1acb6545f87a8b76ed80fa80abca4d493"
+      },
+      "evidence_code_sha256": "a342a3b6435978a9af2376f7a490f808b895118d609cbb7f5ac19fd76e4492f1",
+      "finished_at": "2026-10-16T17:03:13+00:00",
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 2.00001522898674e-06
+      },
+      "started_at": "2026-10-16T17:03:13+00:00",
+      "workers": 1
+    }
+  ],
+  "schema": 1
+}

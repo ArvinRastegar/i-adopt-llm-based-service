@@ -72,6 +72,36 @@ adds nothing to the probability and the option count. `outcomes.csv`, `confidenc
 report's escalation table counts the errors a stronger model could and could not fix. A threshold
 read off these same data needs held-out terms before it is trusted.
 
+## A PSNC chat model on the same candidates
+
+[`results/psnc-qwen3.8-27b-20261015`](results/psnc-qwen3.8-27b-20261015/report.md) asks
+`Qwen3.8-27B`, a chat model on PSNC's gateway with reasoning switched off, the question Jev was asked
+about exactly the same candidates, in the same four candidate orders (DECISIONS L-016 to L-018). A
+chat model answers in text, so the options are named by one-token labels, the model replies with one
+label, and the probability of each option is read from the log-probabilities of that token. The 1,144
+requests were sent one at a time, took under six minutes and are not billed to the owner.
+
+On the 284 reachable slots its first pass gets 206 right (0.725), against Qwen3-0.6B's 194 (0.683) and
+Jev's 213 (0.750). Neither difference can be told from zero: against the baseline +0.042 (term-resampled
+95% interval -0.073 to +0.172; better on 19 of 145 terms, worse on 16), against Jev -0.025 (-0.082 to
++0.034; better on 13 terms, worse on 12). The total hides the same two effects as in Jev's run. On
+Wikidata gold it gets 169/218 against 138/218 (better on 17 terms, worse on 2); on QUDT gold 32/61
+against 51/61 (better on 2, worse on 14), because it often picks the Wikidata (16 slots) or OM (13)
+item that duplicates a QUDT kind. It gets `water` and `urban area` right in every slot, where the
+baseline misses all 12 and 10 of 11, and `person` wrong in 20 of 26 (the baseline 14), where the gold
+itself names two different items.
+
+Its probabilities are informative. The probability of the selected candidate separates right from
+wrong answers (AUROC 0.86; Jev 0.81; the Qwen3 score 0.59), though it is somewhat over-confident
+(calibration gap 0.080). Answering only at 0.9 or more covers 135 of 284 slots at 97% precision. With
+one request at a time the answers were reproducible: the identical repeat selected the same candidate
+and gave identical probabilities for 286 of 286 slots, and a complete run made minutes before it (a
+shakedown, kept outside the repository in `outputs/`; DECISIONS L-017) gave the same top-20
+log-probabilities in 1,143 of 1,144 responses (largest difference in any token's probability 0.0011). The candidate order is not neutral: reversing it changes whether 40 of 278 slots
+are right (18 become right, 22 wrong). `report.md` also compares the two on every vocabulary and by
+term; `outcomes.csv`, `confidence.csv` and `probabilities.csv` have the same layout as Jev's, with
+`llm_` in place of `jev_`.
+
 ## How the two projects share work
 
 | Shared thing | Owner | How this project uses it |
@@ -94,7 +124,8 @@ fails if their readings diverge.
 src/iadopt_linking/        gold, population, sources, http, recorder, retrieve, rerank, score,
                            health, devices, provenance, artifacts, errors, experiment, report,
                            compare, cli; for Jev: jev, openrouter, jev_inputs, jev_health,
-                           jev_analysis, jev_report, jev_experiment
+                           jev_analysis, jev_report, jev_experiment (the engine both experiments
+                           run on); for a PSNC chat model: chat, chat_choice, chat_redact, chat_experiment
 src/iadopt_linking_eval/   pure link scorer (standard library only): identity, metrics, paired,
                            confidence
 tests/                     offline tests, contract tests against iadopt-lab, result-integrity tests
@@ -134,6 +165,9 @@ uv run iadopt-linking compare --first results/a --second results/b
 uv run iadopt-linking jev-plan --baseline results/baseline-20261014
 uv run iadopt-linking jev-run --baseline results/baseline-20261014 --out results/jev-<date> \
     --max-cost-usd 2
+uv run iadopt-linking psnc-plan --baseline results/baseline-20261014
+uv run iadopt-linking psnc-run --baseline results/baseline-20261014 \
+    --out results/psnc-qwen3.8-27b-<date> --max-requests 1500 --reference results/jev-20261015
 ```
 
 `jev-plan` builds every Jev request offline, prints the cost estimate and one request of each kind,
@@ -145,6 +179,17 @@ rebuilds the report without a service call. Both commands take `--passes` (a com
 the five passes, which must include the primary `choice-a1`; a folder keeps the list it started with),
 `--only` (variable file stems, for a pilot on a few variables) and `--lab-root`; `jev-run` also takes
 `--workers` (parallel requests, default 4), `--run-id` and `--env-file`.
+
+`psnc-plan` builds every PSNC request offline and prints the size of the run and one request.
+`psnc-run` asks a chat model on PSNC's gateway (`--model`, default `Qwen3.8-27B`, reasoning off) the
+same question as Jev about the same candidates. PSNC access is free to the owner, so the run is limited
+by a number of requests (`--max-requests`, required) and sends them one at a time by default
+(`--workers 1`): identical requests sent concurrently gave different probabilities. It reads
+`PSNC_API_KEY` (and optionally `PSNC_API_BASE_URL`, which must be PSNC's https host) from `../.env`
+or `--env-file`, only when requests are pending, and never prints or stores it. `--reference` names a
+finished Jev run on the same candidates, which the report then compares with; a rebuild needs the same
+`--reference`. It takes the same `--passes` (the four Choice passes, which must include `choice-a1`),
+`--only`, `--lab-root` and `--run-id` as `jev-run`.
 
 `run` resumes where it stopped and stops with a named reason on any failed request, failed health
 check, missing or impossible score. A full run took 27 minutes: 15 for retrieval (Wikidata
@@ -159,11 +204,14 @@ from the repo root. The rules for working here are in [`AGENTS.md`](AGENTS.md).
 
 ## Status
 
-The baseline and the Jev run are done and their evidence is in `results/`. The Jev results decide
-nothing yet: no success criterion for replacing the reranker has been chosen. Not yet decided (see
-`DECISIONS.md`): that criterion; whether to repeat the Jev run with the client hardening listed in
-L-015; whether QUDT's `wikidataMatch` makes a QUDT kind and its Wikidata item equally correct
-(it moves Jev's result more than Qwen3's: +24 slots against +8), whether the ten slots in other
+The baseline, the Jev run and the PSNC run are done and their evidence is in `results/`. The results
+decide nothing yet: no success criterion for replacing the reranker has been chosen. Not yet decided
+(see `DECISIONS.md`): that criterion; whether to repeat the Jev run with the client hardening listed in
+L-015; which other PSNC models to run (the gateway lists 23, among them `Qwen3.5-397B-A17B`) and
+whether to add the one-yes/no-per-candidate arm, which would compare model size with the 0.6B
+reranker like for like; whether QUDT's `wikidataMatch` makes a QUDT kind and its Wikidata item equally
+correct (it moves Jev's result more than Qwen3's: +24 slots against +8, and it does not cover the OM
+twins that the PSNC model often picks), whether the ten slots in other
 vocabularies should get a source, how to read the gap to the manuscript's table, whether a response
 whose `choice` differs from its highest probability by a rounding step should be accepted, and which
 confidence threshold, if any, should send a slot to a larger model, a PSNC-hosted one being the stated

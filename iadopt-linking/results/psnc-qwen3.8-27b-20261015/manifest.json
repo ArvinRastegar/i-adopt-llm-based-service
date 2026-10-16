@@ -1,0 +1,269 @@
+{
+  "baseline": {
+    "candidates_sha256": "7b2eb3b7da6cb2321dacb1f0718e474b12d8a0a3306e43a04d8f32069ce0a9f2",
+    "evidence_code_sha256": "c88a30e9c0748db51eed01f8937d6ab9e8d03e1941b507320385419468b0c0a7",
+    "folder": "baseline-20261014",
+    "max_description_chars": 300,
+    "plan_sha256": "feed87620bfb0786b54d52528942fd946599ac0f6a3e2e588360882a452ac121",
+    "run_id": "baseline-20261014",
+    "scores_sha256": "ced7309048720cca3b227af06bc825c1a6330dc96cb5c4e25e1c7ea0166e1074"
+  },
+  "checks": [
+    {
+      "detail": "294 slots and 3473 candidate documents rebuilt and equal to the baseline's; 7 baseline files re-hashed; the baseline scored 294 slots in 294 records",
+      "name": "inputs identical to the baseline",
+      "passed": true
+    },
+    {
+      "detail": "1144/1144 requests answered (0 needed an HTTP retry; 0 stored responses were rejected as invalid answers and asked again)",
+      "name": "every request answered",
+      "passed": true
+    },
+    {
+      "detail": "1144/1144 stored requests equal the ones this tree builds",
+      "name": "stored requests regenerate from the plan",
+      "passed": true
+    },
+    {
+      "detail": "1144 stored responses re-hashed",
+      "name": "stored response hashes verify",
+      "passed": true
+    },
+    {
+      "detail": "1144 responses read strictly; at least 0.9512 of every first token's probability sits on option labels (required: 0.5), no response held reasoning text",
+      "name": "every response is a valid answer",
+      "passed": true
+    },
+    {
+      "detail": "served as Qwen3.8-27B by build vllm-0.26.0-1c0daee9 (requested Qwen3.8-27B)",
+      "name": "one model snapshot served",
+      "passed": true
+    },
+    {
+      "detail": "566,320 tokens used over 1144 answers and 0 rejected responses, every stored response included; not billed to the owner",
+      "name": "token usage fully accounted",
+      "passed": true
+    },
+    {
+      "detail": "286/286 requests of choice-a1 answered",
+      "name": "primary pass complete",
+      "passed": true
+    }
+  ],
+  "code": {
+    "files": 35,
+    "git_base_commit": "6c003700d2f403556b97cc302f2cc0dc32081f37",
+    "git_dirty": true,
+    "source_sha256": "22b92f5cf68118333677191da009a1c1acb6545f87a8b76ed80fa80abca4d493"
+  },
+  "corpus": {
+    "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
+    "corpus_manifest_sha256": "507a2f5690d2b904da877d3fe6a0fcb5264725e7b442f4fe0927a198af5ee1e2",
+    "repository": "https://github.com/i-adopt/Corpus",
+    "source_lock_sha256": "f3d162c655a9c09672a80593f7fc2aee6d403e7559ebd3768d9e3c9a87906583",
+    "tag": "v2.0.1"
+  },
+  "created_at": "2026-10-16T17:03:13+00:00",
+  "evidence_code_sha256": "a342a3b6435978a9af2376f7a490f808b895118d609cbb7f5ac19fd76e4492f1",
+  "evidence_period": {
+    "first_request": "2026-10-15T18:35:06+00:00",
+    "last_request": "2026-10-15T18:40:50+00:00"
+  },
+  "experiment": "psnc-entity-linking-v1",
+  "files": {
+    "comparison.md": "4b7555e57d72ea0378f2edeed6767e4c8f030fa68e8c422fe48be736156d51ca",
+    "confidence.csv": "25f6e67df4801a02ccde3be495c06feb2c1537bc813d40534aec876be41f6eed",
+    "outcomes.csv": "27fa3b604fb187ad5bdb0e64bc164243926cd681fa68278ade2adc57f9535c64",
+    "plan.json": "c4e87c1e89a55ea143df9d7466137e334d7372ad9205e73f1e7338e1a77baad7",
+    "probabilities.csv": "42ef719944190f633b51b117a405e82a2ecb95e9464779bd13bc80ad986fbd9f",
+    "provenance.json": "c5e0a948534664d5934a0c5faa5b7380972bd111fe55707fe775f59d5d07a889",
+    "report.md": "633f695b94ae7029a78b003a47ead138e3c242eb7cdc3797b2bf2254d576faaf",
+    "responses.jsonl": "9be831035cc3fa99fa6285f6f0a233d57b0f8113e231c06d6b9801523adba047",
+    "summary.json": "59f2b4b6b676ef17cfde0e6f7fac36706744a184472b1fdd1cce8908f7d5e6c1"
+  },
+  "invocations": [
+    {
+      "asking": {
+        "answered": 1144,
+        "requested": 1144,
+        "retried": 0
+      },
+      "cap_usd": null,
+      "finished_at": "2026-10-15T18:40:50+00:00",
+      "git_dirty": true,
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 343.5
+      },
+      "source_sha256": "5c9d63d1bb16ca7d068bee53ec030cd2550343d044c4e194b059deaafec1df6d",
+      "started_at": "2026-10-15T18:35:06+00:00",
+      "workers": 1
+    },
+    {
+      "asking": null,
+      "cap_usd": null,
+      "finished_at": "2026-10-15T18:42:21+00:00",
+      "git_dirty": true,
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "841ff72e5447777cab25b3ddb27138506294e779cae50b1367ad9f947b38afa6",
+      "started_at": "2026-10-15T18:42:21+00:00",
+      "workers": 1
+    },
+    {
+      "asking": null,
+      "cap_usd": null,
+      "finished_at": "2026-10-16T17:03:13+00:00",
+      "git_dirty": true,
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-26.7.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "22b92f5cf68118333677191da009a1c1acb6545f87a8b76ed80fa80abca4d493",
+      "started_at": "2026-10-16T17:03:13+00:00",
+      "workers": 1
+    }
+  ],
+  "model": {
+    "billing": "not billed to the owner (owner-reported free access, recorded in the lab's parameters.yml); the run is limited by a number of requests",
+    "builds": [
+      "vllm-0.26.0-1c0daee9"
+    ],
+    "gateway": "llm.hpc.psnc.pl",
+    "providers": [
+      "psnc"
+    ],
+    "request_parameters": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "logprobs": true,
+      "max_tokens": 1,
+      "stream": false,
+      "temperature": 0,
+      "top_logprobs": 20
+    },
+    "requested": "Qwen3.8-27B",
+    "served": [
+      "Qwen3.8-27B"
+    ]
+  },
+  "notes": [
+    "The model saw, for every candidate, the label and the description (capped at 300 characters): the information the Qwen3 reranker saw, with no vocabulary, identifier, rank or score. The term and the variable's definition are the baseline's, and the candidates were shown in the same seeded orders the Jev run used.",
+    "8 slots have no candidate; they were not asked and count as misses, as in the baseline.",
+    "17 label-only nodes and 2 non-vocabulary IRIs are outside the population, as in the baseline.",
+    "10 slots have their gold in a vocabulary these sources cannot reach; they count as misses in the \"All controlled-vocabulary slots\" row and are left out of the primary population (the reachable slots).",
+    "Reasoning is switched off with `chat_template_kwargs.enable_thinking=false`, the control the lab measured for Qwen3.8-27B on this gateway; the parser refuses any response that carries reasoning text, and none did.",
+    "A probability is the model's probability of that label given that its first token is a label, estimated from the 20 most probable tokens the gateway reports: the tokens that spell a label are summed and divided by the total over the labels found, so the options sum to 1, and a label outside the reported tokens counts as 0. The share of the first token's probability on option labels was at least 0.9512 in every response (median 0.9995), the rest sitting on other tokens, which the division leaves out; between 2 and 20 labels were reported per response, and what lay outside the reported tokens bounds the error of any probability at 0.0019.",
+    "1 of 281 primary selections that have a runner-up tie with it and were decided by the baseline's rule (source order, then rank).",
+    "Gold terms are the corpus labels of the gold nodes; for QUDT slots they are often QUDT's own labels, so QUDT accuracy on these terms may overstate accuracy on LLM-predicted wording.",
+    "The service is shared and its answers can differ slightly with what else its server is processing: in development, identical requests sent concurrently gave different probabilities and identical requests sent one after another gave identical ones, so the experiment sends one request at a time unless told otherwise (the header says how this run was sent). The repeated pass (an identical request, sent later in the same run) selected the same candidate for 286/286 = 1.000 and gave identical probabilities for 286/286 = 1.000. A later run, or one made while the server is busier, may differ, and a later build of the model server is a different system."
+  ],
+  "passes": [
+    [
+      "choice-a1",
+      "choice",
+      "shuffle-a"
+    ],
+    [
+      "choice-a1-repeat",
+      "choice",
+      "shuffle-a"
+    ],
+    [
+      "choice-a2-reversed",
+      "choice",
+      "reverse-a"
+    ],
+    [
+      "choice-a3",
+      "choice",
+      "shuffle-b"
+    ]
+  ],
+  "pilot_variables": null,
+  "platform": "macOS-26.7.1-arm64-arm-64bit",
+  "population": {
+    "counts": {
+      "excluded_label_only": 17,
+      "excluded_non_vocabulary": 2,
+      "gold_form_canonical": 12,
+      "gold_form_opaque": 10,
+      "gold_form_repaired": 2,
+      "gold_form_scheme": 269,
+      "gold_form_variant": 1,
+      "gold_links": 313,
+      "links": 313,
+      "slots": 294
+    },
+    "slots": 294
+  },
+  "prompt": {
+    "answer_line": "Answer with one label.",
+    "fingerprint": "20d69e9a52e2dfe38c19250c0ce7fea2761b5352440b1b38bae4b63735ff6f24",
+    "labels": "123456789ABCDEFGHJKLMNPQRSTUVWXYZ",
+    "max_description_chars": 300,
+    "min_label_mass": 0.5,
+    "none_description": "no candidate is the same concept as the term",
+    "none_label": "0",
+    "order_seed": "iadopt-linking/jev-entity-link-v1/orders",
+    "request_parameters": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "logprobs": true,
+      "max_tokens": 1,
+      "stream": false,
+      "temperature": 0,
+      "top_logprobs": 20
+    },
+    "shown_per_candidate": [
+      "label",
+      "description"
+    ],
+    "system_prompt": "You link a term from a scientific variable name to the knowledge-base entry that names the same concept. You are given a `term`, the `variable_definition` of the variable the term is a component of, and a numbered list of candidate entries. Pick the candidate that is the entry for the concept that `term` names. Use `variable_definition` only to tell which meaning of `term` is intended. A candidate matches only if it is the same concept as `term`: a broader, narrower or merely related concept does not match, and neither does a concept for the whole variable. Differences in capitalization, plural form or word order do not matter. If no candidate is the same concept, pick option 0. Reply with the label of exactly one option (a digit or a capital letter) and nothing else.",
+    "version": "psnc-chat-entity-link-v1"
+  },
+  "python": "3.12.1",
+  "reference": {
+    "experiment": "jev-entity-linking-v1",
+    "folder": "jev-20261015",
+    "outcomes_sha256": "865f5ebe543952fd5d74813f231427fa33bb9ff1fb7ef9849c0b7162d91bf2f5",
+    "plan_sha256": "282a1bbb56954b0c67e0c64ed8000abb4a6ab5175927f26712a329ada8dd8c0e",
+    "responses_sha256": "9158353bf4f627f94436d68c10519f56aeb0f0073bd491892708b208349bdc3b"
+  },
+  "run_id": "psnc-qwen3.8-27b-20261015",
+  "spend": {
+    "answered_after_retry": 0,
+    "billing": "owner-reported free access; no price applies",
+    "cost_usd": "0",
+    "failed_attempts_repeated": 0,
+    "input_tokens": 565176,
+    "max_requests": 1500,
+    "output_tokens": 1144,
+    "rejected_responses": 0,
+    "request_seconds": {
+      "max": 1.467,
+      "mean": 0.298,
+      "total": 340.7
+    },
+    "requests": 1144,
+    "requests_sent": 1144,
+    "responses_stored": 1144
+  },
+  "timings_s": {
+    "asking": 343.5
+  },
+  "title": "Qwen3.8-27B (reasoning off, PSNC) over the baseline's pooled Wikidata, QUDT and OM candidates"
+}

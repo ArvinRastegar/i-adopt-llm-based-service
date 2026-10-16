@@ -1,4 +1,4 @@
-"""Run health for a Jev run: what must hold before its numbers are allowed to mean anything.
+"""Run health for a scorer's run: what must hold before its numbers are allowed to mean anything.
 
 Everything here is a function of stored evidence: nothing reads a file or calls a service. A check
 has the baseline's three states (passed, failed, not run) and the baseline's rule that a failed
@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import math
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from decimal import Decimal
 from typing import Any
 
@@ -68,17 +68,20 @@ def parse_answer(task: Task, text: str) -> dict[str, Any]:
     return parse_noul(text, task.offered)
 
 
-def read_answers(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mapping[str, Any]]
+def read_answers(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mapping[str, Any]],
+                 parse: Callable[[Task, str], dict[str, Any]] | None = None
                  ) -> tuple[dict[tuple[str, str], dict[str, Any]], dict[str, list[Any]]]:
     """Parse every stored answer and sort out the tasks that have none.
 
-    Args: tasks: the requests of the run; recorded: the latest stored exchange per task key.
+    Args: tasks: the requests of the run; recorded: the latest stored exchange per task key; parse:
+    the scorer's answer parser (Jev's by default).
     Returns: parsed answers by task key, and the problems: ``missing`` (never sent), ``failed``
     (sent, no usable response), ``bad_hash`` and ``unparseable`` (a response that is not a valid
     answer, with the reason).
     Raises: None; a parser bug (anything but JevError) propagates.
     Side effects: none.
     """
+    parse = parse or parse_answer
     parsed: dict[tuple[str, str], dict[str, Any]] = {}
     problems: dict[str, list[Any]] = {"missing": [], "failed": [], "bad_hash": [], "unparseable": []}
     for task in tasks:
@@ -91,7 +94,7 @@ def read_answers(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mappi
             problems["failed"].append(task.key)
         else:
             try:
-                parsed[task.key] = parse_answer(task, record["response_text"])
+                parsed[task.key] = parse(task, record["response_text"])
             except JevError as exc:
                 problems["unparseable"].append((task.key, str(exc)))
     return parsed, problems
@@ -124,18 +127,22 @@ def reported_cost(text: str | None) -> Decimal | None:
         return None
 
 
-def history_spend(history: Sequence[Mapping[str, Any]]) -> tuple[Decimal, int]:
+def history_spend(history: Sequence[Mapping[str, Any]],
+                  cost_of: Callable[[str | None], Decimal | None] | None = None
+                  ) -> tuple[Decimal, int]:
     """Add up what every stored response cost, valid or rejected.
 
-    Args: history: every stored exchange in file order.
+    Args: history: every stored exchange in file order; cost_of: reads the cost a response text
+    reports (Jev's ``usage.cost`` by default).
     Returns: the exact total in USD and how many stored 200 responses report no cost.
     Raises: None.
     Side effects: none.
     """
+    cost_of = cost_of or reported_cost
     total, unpriced = Decimal(0), 0
     for record in history:
         if record.get("status") == 200 and record.get("response_text") is not None:
-            cost = reported_cost(record["response_text"])
+            cost = cost_of(record["response_text"])
             if cost is None:
                 unpriced += 1
             else:

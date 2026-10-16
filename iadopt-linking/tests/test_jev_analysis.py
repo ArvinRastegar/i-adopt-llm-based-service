@@ -42,18 +42,18 @@ def base(slot_id: str, gold: tuple[str, str], ids: list[str], term: str = "t") -
 
 
 def result(record: dict[str, Any], scores: list[float], *, p_none: float | None = 0.0,
-           order: list[int] | None = None, jev_index: int | None = -1,
+           order: list[int] | None = None, own_index: int | None = -1,
            confidence: float = 0.5) -> dict[str, Any]:
     """Judge scores the way pass_results does, for a hand-built Choice result."""
     pool = [{**c, "score": s} for c, s in zip(record["pool"], scores, strict=True)]
     scored = {**record, "pool": pool}
     chosen = choose(pool)
-    own = chosen if jev_index == -1 else jev_index
+    own = chosen if own_index == -1 else own_index
     margin = exact_margin(scores)
     return {"slot_id": record["slot_id"], "asked": True, "scores": scores, "p_none": p_none,
             "margin": None if margin is None else float(margin),
-            "jev_index": own, "jev_chose_none": own is None, "jev_choice_key": None,
-            "jev_confidence": confidence, "order": order or list(range(len(scores))),
+            "own_index": own, "own_chose_none": own is None, "own_choice_key": None,
+            "own_confidence": confidence, "order": order or list(range(len(scores))),
             "selected_index": chosen, "outcome": evaluate_slot(scored)}
 
 
@@ -120,9 +120,9 @@ def test_consensus_averages_scores_before_selecting() -> None:
 
 
 def test_abstention_leaves_the_slots_outside_the_population_apart() -> None:
-    inside = result(A, [0.2, 0.1, 0.1], p_none=0.6, jev_index=None, confidence=0.95)
+    inside = result(A, [0.2, 0.1, 0.1], p_none=0.6, own_index=None, confidence=0.95)
     outside_record = base("o", ("nerc", "S27"), ["Q1"], term="omega")
-    outside = result(outside_record, [0.1], p_none=0.9, jev_index=None)
+    outside = result(outside_record, [0.1], p_none=0.9, own_index=None)
     a = abstention([inside, outside])
     assert a["asked"] == 1 and a["none_when_gold_in_pool"] == {"numerator": 1, "denominator": 1}
     assert a["none_when_gold_absent"] == {"numerator": 0, "denominator": 0}
@@ -131,9 +131,9 @@ def test_abstention_leaves_the_slots_outside_the_population_apart() -> None:
 
 
 def test_abstention_separates_wrong_and_right_refusals() -> None:
-    present = result(A, [0.2, 0.1, 0.1], p_none=0.6, jev_index=None)       # refused, gold present
-    absent = result(C, [0.1], p_none=0.9, jev_index=None)                  # refused, gold absent
-    answered = result(B, [0.1, 0.8], p_none=0.1, jev_index=1)              # answered correctly
+    present = result(A, [0.2, 0.1, 0.1], p_none=0.6, own_index=None)       # refused, gold present
+    absent = result(C, [0.1], p_none=0.9, own_index=None)                  # refused, gold absent
+    answered = result(B, [0.1, 0.8], p_none=0.1, own_index=1)              # answered correctly
     a = abstention([present, absent, answered])
     assert a["none_when_gold_in_pool"] == {"numerator": 1, "denominator": 2}
     assert a["none_when_gold_absent"] == {"numerator": 1, "denominator": 1}

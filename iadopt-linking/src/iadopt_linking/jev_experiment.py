@@ -1,4 +1,9 @@
-"""The Jev experiment: plan, ask, check, analyse and report, with a health gate before any result.
+"""The scorer experiments: plan, ask, check, analyse and report, with a health gate before any result.
+
+One engine runs every scorer that answers a Choice question with a probability for each option.
+An ``Experiment`` holds what differs between scorers (the requests, how an answer is read, what a
+request costs, how the run is checked and described); ``JEV`` is the Jev experiment, and a chat
+model's is in ``chat_experiment``. Everything below the dataclass is the engine.
 
 Phases append to one results folder, so a run can be interrupted and resumed and a finished folder
 can have its report rebuilt without a service call. ``plan.json`` binds the folder to the code,
@@ -62,6 +67,8 @@ from .jev_health import (
 )
 from .jev_inputs import Baseline, Task, build_tasks, estimate, load_baseline
 from .jev_report import (
+    JEV_VOICE,
+    Voice,
     confidence_csv,
     outcomes_csv,
     probabilities_csv,
@@ -100,6 +107,9 @@ PLAN_FIELDS = (
     ("passes", "different passes"), ("model", "a different model"),
     ("only", "a different set of variables"), ("analysis", "a different analysis plan"),
     ("corpus", "a different corpus release"), ("run_id", "a different run name"))
+# Plan entries a run may leave out (a run with no reference run has no "reference"); every other
+# entry of an experiment's plan_fields must be in the plan it builds.
+OPTIONAL_PLAN_FIELDS = ("reference",)
 # Written into plan.json before the first request, so the analysis cannot be chosen after the
 # data are seen. Everything not listed as primary is exploratory.
 ANALYSIS_PLAN = {
@@ -124,8 +134,49 @@ ANALYSIS_PLAN = {
 
 
 @dataclass(frozen=True)
+class Experiment:
+    """Everything that differs between one scorer's experiment and another's.
+
+    ``voice`` names the scorer in the published files. ``plan_fields`` are the plan entries a rerun
+    must repeat. ``billed`` says whether requests cost money (then a spending cap is required;
+    otherwise a request limit is). The callables are the scorer's: ``build_tasks`` and ``estimate``
+    make and size the requests; ``parse_answer`` reads a response strictly and ``cost_of`` prices
+    one; ``checks`` judges the stored evidence; ``manifest_model`` and ``spend`` describe the
+    service's side of the run and ``notes`` writes the report's notes; ``plan_extra`` adds entries
+    to the plan (a reference run, say) and ``extra_analysis`` adds to the analysis; ``make_client``
+    builds the client that sends requests.
+    """
+
+    voice: Voice
+    experiment_id: str
+    title: str
+    evidence_files: tuple[str, ...]
+    passes: tuple[PassSpec, ...]
+    analysis_plan: Mapping[str, Any]
+    plan_fields: tuple[tuple[str, str], ...]
+    billed: bool
+    formula_check: bool
+    fatal: frozenset[int]
+    prompt_plan: Callable[[int | None], dict[str, Any]]
+    model_plan: Callable[[], dict[str, Any]]
+    build_tasks: Callable[[Baseline, Sequence[PassSpec], str | None],
+                          tuple[list[Task], dict[str, int]]]
+    estimate: Callable[[Sequence[Task]], dict[str, Any]]
+    parse_answer: Callable[[Task, str], dict[str, Any]]
+    cost_of: Callable[[str | None], Decimal | None]
+    checks: Callable[..., list[dict[str, Any]]]
+    manifest_model: Callable[[Mapping[Any, Mapping[str, Any]], Mapping[str, Any]], dict[str, Any]]
+    spend: Callable[..., dict[str, Any]]
+    notes: Callable[..., list[str]]
+    make_client: Callable[[str | None, Path], Any]
+    plan_extra: Callable[[Path | str | None, Baseline], dict[str, Any]] = (
+        lambda reference, baseline: {})
+    extra_analysis: Callable[..., dict[str, Any]] = lambda plan, baseline, results, analysis: {}
+
+
+@dataclass(frozen=True)
 class JevPaths:
-    """The files of one Jev results folder."""
+    """The files of one results folder."""
 
     root: Path
 
@@ -188,13 +239,17 @@ def prompt_plan(max_description_chars: int | None) -> dict[str, Any]:
             "shown_per_candidate": ["label", "description"]}
 
 
-def bind_plan(paths: JevPaths, expected: Mapping[str, Any]) -> dict[str, Any]:
+def bind_plan(paths: JevPaths, expected: Mapping[str, Any],
+              fields: Sequence[tuple[str, str]] = PLAN_FIELDS) -> dict[str, Any]:
     """Tie a results folder to the run that starts it, or check that this run continues it.
 
-    Args: paths: results folder; expected: the plan this invocation would write.
+    Args: paths: results folder; expected: the plan this invocation would write; fields: the plan
+    entries a rerun must repeat, with the phrase that names a difference in each.
     Returns: the stored plan.
-    Raises: RunError when plan.json cannot be read or differs in any PLAN_FIELDS entry, or when
-    the folder holds evidence but no plan.
+    Raises: RunError when plan.json cannot be read or differs in any of the fields, or when the
+    folder holds evidence but no plan; KeyError when a field the plan must hold (anything not in
+    OPTIONAL_PLAN_FIELDS) is not in the plan this run builds, so a misspelled field cannot quietly
+    skip its check.
     Side effects: writes plan.json for a new folder.
     """
     path = paths.named("plan.json")
@@ -204,8 +259,9 @@ def bind_plan(paths: JevPaths, expected: Mapping[str, Any]) -> dict[str, Any]:
         except (OSError, json.JSONDecodeError) as exc:
             raise RunError(f"{path} cannot be read ({exc}); a results folder without its plan "
                            "cannot be continued. Use a new --out folder.") from exc
-        for field, phrase in PLAN_FIELDS:
-            if previous.get(field) != expected[field]:
+        for field, phrase in fields:
+            mine = expected.get(field) if field in OPTIONAL_PLAN_FIELDS else expected[field]
+            if previous.get(field) != mine:
                 raise RunError(f"{paths.root} was started with {phrase}; resuming would mix "
                                "evidence. Use a new --out folder.")
         return previous
@@ -241,12 +297,12 @@ def load_jev_journal(path: Path, *, evidence_exists: bool) -> dict[str, Any]:
 
 def begin_invocation(journal: dict[str, Any], *, evidence_sha256: str,
                      client_settings: Mapping[str, Any], cap_usd: Decimal | None,
-                     workers: int) -> dict[str, Any]:
+                     workers: int, max_requests: int | None = None) -> dict[str, Any]:
     """Open a journal entry for this invocation.
 
     Args: journal: the journal; evidence_sha256: hash of the evidence-producing code;
     client_settings: how the client behaves (never a credential); cap_usd: the spending cap;
-    workers: parallel requests.
+    workers: parallel requests; max_requests: the request limit of an unbilled run, or None.
     Returns: the new entry, already appended; its outcome is "running" until the invocation ends.
     Raises: None.
     Side effects: runs git read-only; hashes the source files.
@@ -257,6 +313,8 @@ def begin_invocation(journal: dict[str, Any], *, evidence_sha256: str,
         "python": sys.version.split()[0], "platform": platform.platform(),
         "client": dict(client_settings), "cap_usd": None if cap_usd is None else format(cap_usd, "f"),
         "workers": workers, "seconds": {}, "asking": None}
+    if max_requests is not None:
+        invocation["max_requests"] = max_requests
     journal["invocations"].append(invocation)
     return invocation
 
@@ -285,25 +343,30 @@ def exchange_record(task: Task, exchange: Exchange, parse_error: str | None) -> 
 
 def ask_phase(paths: JevPaths, tasks: Sequence[Task], client: Any, *, workers: int,
               cap_usd: Decimal | None, spent_before: Decimal,
-              counters: Counter[str] | None = None) -> Counter[str]:
+              counters: Counter[str] | None = None, exp: Experiment | None = None,
+              max_requests: int | None = None) -> Counter[str]:
     """Send every request that has no usable answer yet.
 
     Each worker stores the record of the response it received, under a lock, before anything that
     could fail: judging the response is wrapped, so even an unexpected error while reading it
     leaves the response on disk with that error as the reason. A worker is also the one that
-    applies the three stop rules, so none depends on timing: the service refusing the credential or
-    the account, total spend passing the cap (rejected responses included, they were paid for),
-    and the first BREAKER requests all failing. After a stop no worker sends another request.
+    applies the stop rules, so none depends on timing: the service refusing the credential or
+    the account, total spend passing the cap (rejected responses included, they were paid for), the
+    request limit being reached, and the first BREAKER requests all failing. After a stop no worker
+    sends another request.
 
     Args: paths: results folder; tasks: all requests of the run; client: anything with
     ``post(body) -> Exchange``; workers: parallel requests; cap_usd: stop when total spend passes
     it, or None; spent_before: what every stored response already cost; counters: filled in place
-    as the run goes, so a caller that sees this function raise still knows what it did.
+    as the run goes, so a caller that sees this function raise still knows what it did; exp: the
+    scorer's experiment (Jev's by default), which reads and prices responses; max_requests: stop
+    after sending this many requests in this invocation, or None.
     Returns: counters: requested, answered, failed, retried, not_sent.
     Raises: RunError for a stop rule, for stored responses that no longer match their hash (the
     folder was altered, so nothing is asked), or when requests remain without a usable answer.
     Side effects: network I/O; one appended, fsynced line per finished request.
     """
+    exp = exp or JEV
     store = JsonlStore(paths.responses)
     history = store.read()
     altered = unverified(history)
@@ -319,7 +382,8 @@ def ask_phase(paths: JevPaths, tasks: Sequence[Task], client: Any, *, workers: i
     started = time.monotonic()
     halt = threading.Event()
     lock = threading.Lock()
-    book: dict[str, Any] = {"spent": spent_before, "failed": 0, "answered": 0, "stop": None}
+    book: dict[str, Any] = {"spent": spent_before, "failed": 0, "answered": 0, "stop": None,
+                            "sent": 0}
 
     def send(task: Task) -> tuple[Exchange, str | None] | None:
         """Send one request unless the run has been halted, store the response, apply the rules.
@@ -332,6 +396,13 @@ def ask_phase(paths: JevPaths, tasks: Sequence[Task], client: Any, *, workers: i
         """
         if halt.is_set():
             return None
+        with lock:
+            if max_requests is not None and book["sent"] >= max_requests:
+                if book["stop"] is None:
+                    book["stop"] = f"the request limit of {max_requests} was reached"
+                    halt.set()
+                return None
+            book["sent"] += 1
         try:
             exchange = client.post(task.body)
         except Exception as exc:
@@ -342,9 +413,9 @@ def ask_phase(paths: JevPaths, tasks: Sequence[Task], client: Any, *, workers: i
                                 0.0, 0.0, now_utc())
         parse_error, cost = None, Decimal(0)
         if exchange.status == 200 and exchange.text is not None:
-            cost = reported_cost(exchange.text) or Decimal(0)
+            cost = exp.cost_of(exchange.text) or Decimal(0)
             try:
-                parse_answer(task, exchange.text)
+                exp.parse_answer(task, exchange.text)
             except JevError as exc:
                 parse_error = str(exc)
             except Exception as exc:
@@ -357,7 +428,7 @@ def ask_phase(paths: JevPaths, tasks: Sequence[Task], client: Any, *, workers: i
             stats["failed" if failed else "answered"] += 1
             stats["retried"] += exchange.attempts > 1
             if book["stop"] is None:
-                if exchange.status in FATAL:
+                if exchange.status in exp.fatal:
                     book["stop"] = (f"the service refused the credential or the account (HTTP "
                                     f"{exchange.status}); no further request can succeed")
                 elif cap_usd is not None and book["spent"] > cap_usd:
@@ -448,30 +519,32 @@ def notes_for(summary: Mapping[str, Any], counts: Mapping[str, int], asked: Mapp
     return notes
 
 
-def build_summary(baseline: Baseline, results: Mapping[str, Any], analysis: Mapping[str, Any]
-                  ) -> dict[str, Any]:
+def build_summary(baseline: Baseline, results: Mapping[str, Any], analysis: Mapping[str, Any],
+                  exp: Experiment | None = None) -> dict[str, Any]:
     """Assemble the run summary from the judged passes.
 
     Args: baseline: the verified baseline; results: pass_results by pass name; analysis: analyse
-    output.
+    output; exp: the scorer's experiment (Jev's by default).
     Returns: the summary: the primary pass and the baseline summarised by the same code, and the
     analysis.
     Raises: KeyError for a malformed result.
     Side effects: none.
     """
-    jev = [r["outcome"] for r in results[PRIMARY_PASS]]
+    exp = exp or JEV
+    own = [r["outcome"] for r in results[PRIMARY_PASS]]
     qwen = [evaluate_slot(baseline.records[slot.slot_id]) for slot in baseline.slots]
-    primary = summarise(jev)
-    # The evaluator subtracts floats; Jev's scores are decimals, so its margins are counted exactly.
+    primary = summarise(own)
+    # The evaluator subtracts floats; the scores are decimals, so margins are counted exactly.
     primary["margins"] = exact_margins(results[PRIMARY_PASS])
-    return {"scorer_version": primary["scorer_version"], "experiment": EXPERIMENT_ID,
+    return {"scorer_version": primary["scorer_version"], "experiment": exp.experiment_id,
             "primary_pass": PRIMARY_PASS, "primary": primary, "baseline": summarise(qwen),
             "analysis": dict(analysis)}
 
 
 def build_outputs(paths: JevPaths, baseline: Baseline, tasks: Sequence[Task],
                   plan: Mapping[str, Any], journal: Mapping[str, Any], specs: Sequence[PassSpec],
-                  cap_usd: Decimal | None, created_at: str
+                  cap_usd: Decimal | None, created_at: str, exp: Experiment | None = None,
+                  max_requests: int | None = None
                   ) -> tuple[dict[str, Any], dict[str, Any], dict[str, str]]:
     """Judge the stored responses and render everything that is published, writing nothing.
 
@@ -480,30 +553,34 @@ def build_outputs(paths: JevPaths, baseline: Baseline, tasks: Sequence[Task],
 
     Args: paths: results folder (only responses.jsonl is read); baseline: the verified baseline;
     tasks: all requests; plan: the stored plan; journal: the provenance journal; specs: the passes;
-    cap_usd: the spending cap; created_at: the manifest's timestamp, which the report prints.
+    cap_usd: the spending cap; created_at: the manifest's timestamp, which the report prints; exp:
+    the scorer's experiment (Jev's by default); max_requests: the request limit of an unbilled run.
     Returns: the manifest without its file hashes, the summary, and the text of outcomes.csv,
     confidence.csv, probabilities.csv, report.md and comparison.md.
     Raises: RunError if any check failed; KeyError for a malformed record.
     Side effects: filesystem read of responses.jsonl.
     """
+    exp = exp or JEV
     history = JsonlStore(paths.responses).read()
     recorded = dict(latest(history, lambda r: (r["slot_id"], r["pass"])))
-    parsed, problems = read_answers(tasks, recorded)
+    parsed, problems = read_answers(tasks, recorded, exp.parse_answer)
     inputs = {"slots": len(baseline.slots),
               "candidates": sum(len(baseline.records[s.slot_id]["pool"]) for s in baseline.slots),
               "baseline_files": len(baseline.manifest["files"]),
               "baseline_records": len(baseline.records),
               "baseline_slots": None if plan["only"] else baseline.manifest["population"]["slots"]}
-    checks = jev_checks(tasks, recorded, parsed, problems, history=history, inputs=inputs,
-                        cap_usd=cap_usd)
+    checks = exp.checks(tasks, recorded, parsed, problems, history=history, inputs=inputs,
+                        cap_usd=cap_usd, max_requests=max_requests)
     ensure_checks(checks, final=True)
     by_key = {task.key: task for task in tasks}
     results, analysis = analyse(baseline.slots, baseline.records, specs, by_key, parsed,
                                 resamples=plan["analysis"]["bootstrap"]["resamples"],
-                                seed=plan["analysis"]["bootstrap"]["seed"])
-    summary = build_summary(baseline, results, analysis)
+                                seed=plan["analysis"]["bootstrap"]["seed"], key=exp.voice.key,
+                                formula_check=exp.formula_check)
+    analysis = {**analysis, **exp.extra_analysis(plan, baseline, results, analysis)}
+    summary = build_summary(baseline, results, analysis, exp)
     primary = results[PRIMARY_PASS]
-    jev = [r["outcome"] for r in primary]
+    own = [r["outcome"] for r in primary]
     qwen = [evaluate_slot(baseline.records[s.slot_id]) for s in baseline.slots]
     choice = [results[s.name] for s in specs if s.arm == ARM_CHOICE and s.name != PRIMARY_PASS]
     agreement = agreement_with(primary, choice)
@@ -513,50 +590,52 @@ def build_outputs(paths: JevPaths, baseline: Baseline, tasks: Sequence[Task],
     last = journal["invocations"][-1]
     sent = sorted(r["sent_at"] for r in history)
     manifest: dict[str, Any] = {
-        "title": TITLE, "experiment": EXPERIMENT_ID, "run_id": plan["run_id"],
+        "title": exp.title, "experiment": exp.experiment_id, "run_id": plan["run_id"],
         "created_at": created_at, "pilot_variables": plan["only"], "code": last["code"],
         "evidence_code_sha256": plan["evidence_code_sha256"], "corpus": plan["corpus"],
         "baseline": plan["baseline"],
-        "model": {"requested": MODEL, "served": sorted({a["model"] for a in parsed.values()}),
-                  "providers": sorted({str(a["provider"]) for a in parsed.values()}),
-                  "price_per_input_token_usd": plan["model"]["price_per_input_token_usd"],
-                  "price_source": plan["model"]["price_source"]},
+        **({"reference": plan["reference"]} if "reference" in plan else {}),
+        "model": exp.manifest_model(parsed, plan),
         "prompt": plan["prompt"], "passes": plan["passes"], "python": last["python"],
         "platform": last["platform"], "invocations": _summaries(journal["invocations"]),
         "timings_s": summed_seconds(journal["invocations"]),
         "evidence_period": {"first_request": sent[0], "last_request": sent[-1]},
-        "spend": _spend(parsed, recorded, history, cap_usd, plan),
+        "spend": exp.spend(parsed, recorded, history, cap_usd, plan, max_requests),
         "population": {"counts": dict(baseline.counts), "slots": len(baseline.slots)},
         "checks": checks,
-        "notes": notes_for(summary, baseline.counts, plan["asked"],
+        "notes": exp.notes(summary, baseline.counts, plan["asked"],
                            (sum(m == 0 for m in margins), len(margins)),
                            Counter(r["parse_error"] for r in history if r.get("parse_error")),
                            baseline.max_description_chars,
                            any(r.arm == ARM_CHOICE and r.name != PRIMARY_PASS and r.order
-                               == pass_spec(PRIMARY_PASS).order for r in specs))}
+                               == pass_spec(PRIMARY_PASS).order for r in specs), parsed)}
     texts = {
-        "outcomes.csv": outcomes_csv(jev, qwen, results, agreement, paths_by_slot, spec_map),
-        "confidence.csv": confidence_csv(results, spec_map),
+        "outcomes.csv": outcomes_csv(own, qwen, results, agreement, paths_by_slot, spec_map,
+                                     exp.voice),
+        "confidence.csv": confidence_csv(results, spec_map, exp.voice),
         "probabilities.csv": probabilities_csv(results, spec_map, baseline.records),
-        "report.md": render_report(manifest, summary, jev, spec_map),
-        "comparison.md": render_comparison(manifest, summary)}
+        "report.md": render_report(manifest, summary, own, spec_map, exp.voice),
+        "comparison.md": render_comparison(manifest, summary, exp.voice)}
     return manifest, summary, texts
 
 
 def report_phase(paths: JevPaths, baseline: Baseline, tasks: Sequence[Task],
                  plan: Mapping[str, Any], journal: dict[str, Any], specs: Sequence[PassSpec],
-                 cap_usd: Decimal | None) -> dict[str, Any]:
+                 cap_usd: Decimal | None, exp: Experiment | None = None,
+                 max_requests: int | None = None) -> dict[str, Any]:
     """Judge the stored responses and write summary, tables, reports and, last, the manifest.
 
     Args: paths: results folder; baseline: the verified baseline; tasks: all requests; plan: the
-    stored plan; journal: the provenance journal; specs: the passes; cap_usd: the spending cap.
+    stored plan; journal: the provenance journal; specs: the passes; cap_usd: the spending cap;
+    exp: the scorer's experiment (Jev's by default); max_requests: the request limit of an
+    unbilled run.
     Returns: the manifest.
     Raises: RunError if any check failed; KeyError for a malformed record.
     Side effects: writes provenance.json, summary.json, outcomes.csv, confidence.csv,
     probabilities.csv, report.md, comparison.md and manifest.json.
     """
     manifest, summary, texts = build_outputs(paths, baseline, tasks, plan, journal, specs, cap_usd,
-                                             now_utc())
+                                             now_utc(), exp, max_requests)
     save_journal(paths, journal)
     write_json(paths.named("summary.json"), summary)
     for name, text in texts.items():
@@ -567,12 +646,13 @@ def report_phase(paths: JevPaths, baseline: Baseline, tasks: Sequence[Task],
 
 
 def _spend(parsed: Mapping[Any, Mapping[str, Any]], recorded: Mapping[Any, Mapping[str, Any]],
-           history: Sequence[Mapping[str, Any]], cap_usd: Decimal | None, plan: Mapping[str, Any]
-           ) -> dict[str, Any]:
+           history: Sequence[Mapping[str, Any]], cap_usd: Decimal | None, plan: Mapping[str, Any],
+           max_requests: int | None = None) -> dict[str, Any]:
     """Account for what the run cost.
 
     Args: parsed: parsed answers; recorded: the latest stored exchange per task; history: every
-    stored exchange, rejected ones included; cap_usd: the spending cap; plan: the stored plan.
+    stored exchange, rejected ones included; cap_usd: the spending cap; plan: the stored plan;
+    max_requests: the request limit (unused: Jev's run is limited by money).
     Returns: answered requests with their tokens, the exact cost reported by the service over every
     stored response (a rejected response was paid for too), the cap, the pre-run estimate, and how
     many answers needed an HTTP retry.
@@ -603,6 +683,7 @@ def _summaries(invocations: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]
     return [{"started_at": i["started_at"], "finished_at": i["finished_at"],
              "outcome": i["outcome"], "seconds": {k: round(v, 1) for k, v in i["seconds"].items()},
              "asking": i["asking"], "workers": i["workers"], "cap_usd": i["cap_usd"],
+             **({"max_requests": i["max_requests"]} if "max_requests" in i else {}),
              "python": i["python"], "platform": i["platform"],
              "source_sha256": i["code"]["source_sha256"], "git_dirty": i["code"]["git_dirty"]}
             for i in invocations]
@@ -627,6 +708,119 @@ def _parse_cap(max_cost_usd: str | Decimal | None) -> Decimal | None:
     return cap
 
 
+def run_experiment(exp: Experiment, out_dir: Path | str, *, baseline_dir: Path | str,
+                   max_cost_usd: str | Decimal | None = None, max_requests: int | None = None,
+                   env_file: str | None = None, lab_root: Path | str | None = None,
+                   only: Sequence[str] | None = None, passes: Sequence[str] | None = None,
+                   workers: int = 4, run_id: str | None = None,
+                   resamples: int = DEFAULT_RESAMPLES,
+                   client_factory: Callable[[], Any] | None = None,
+                   reference: Path | str | None = None) -> dict[str, Any]:
+    """Run a whole experiment: verify, plan, ask, check, analyse, report.
+
+    Args: exp: the scorer's experiment; out_dir: results folder; baseline_dir: the finished
+    baseline to compare against and take candidates from; max_cost_usd: spending cap in USD,
+    required for a billed experiment (a billed call needs an explicit limit); max_requests: the
+    request limit, required for an unbilled one; env_file: credential file, used only when
+    requests are pending; lab_root: iadopt-lab root; only: variable stems for a pilot; passes:
+    pass names (default all of the experiment's); workers: parallel requests; run_id: name
+    recorded in the manifest and sent as the session label; resamples: bootstrap replicates;
+    client_factory: injectable for tests; reference: a finished run to compare with, for an
+    experiment that takes one.
+    Returns: the manifest.
+    Raises: RunError when the baseline is not usable, the plan differs, the estimate exceeds the
+    limit, a request cannot be answered or a check fails; UsageError for an unknown variable or
+    pass, a duplicated pass or a missing primary pass.
+    Side effects: network I/O, files in out_dir; removes an earlier manifest.json at once, so an
+    invocation that stops leaves no manifest behind.
+    """
+    paths = JevPaths(Path(out_dir))
+    paths.root.mkdir(parents=True, exist_ok=True)
+    root = resolve_lab_root(lab_root)
+    baseline = load_baseline(baseline_dir, lab_root=root, only=only)
+    by_name = {spec.name: spec for spec in exp.passes}
+    try:
+        specs = [by_name[name] for name in passes] if passes else list(exp.passes)
+    except KeyError as missing:
+        raise UsageError(f"No such pass: {missing.args[0]!r}; passes are {list(by_name)}") from None
+    names = [spec.name for spec in specs]
+    if len(set(names)) != len(names):
+        raise UsageError(f"a pass can be run once; the list has duplicates: {names}")
+    if PRIMARY_PASS not in names:
+        raise UsageError(f"the primary pass {PRIMARY_PASS!r} must be among the passes")
+    name = run_id or paths.root.name
+    tasks, asked = exp.build_tasks(baseline, specs, f"iadopt-linking/{name}")
+    cap = _parse_cap(max_cost_usd)
+    evidence_sha256 = evidence_code_identity(files=exp.evidence_files)
+    plan = bind_plan(paths, {
+        "experiment": exp.experiment_id, "run_id": name, "evidence_code_sha256": evidence_sha256,
+        "baseline": baseline.identity, "corpus": corpus_identity(root),
+        "model": exp.model_plan(), "prompt": exp.prompt_plan(baseline.max_description_chars),
+        "passes": [[s.name, s.arm, s.order] for s in specs],
+        "only": sorted(only) if only else None,
+        "analysis": {**exp.analysis_plan, "bootstrap": {**exp.analysis_plan["bootstrap"],
+                                                         "resamples": resamples}},
+        "asked": asked, "tasks": len(tasks), "estimate": exp.estimate(tasks),
+        **exp.plan_extra(reference, baseline)}, exp.plan_fields)
+    journal = load_jev_journal(paths.named("provenance.json"), evidence_exists=paths.has_evidence())
+    paths.named("manifest.json").unlink(missing_ok=True)
+    stored = JsonlStore(paths.responses).read()
+    recorded = latest(stored, lambda r: (r["slot_id"], r["pass"]))
+    spent_before, _ = history_spend(stored, exp.cost_of)
+    waiting = [t for t in tasks if not answered_ok(recorded.get(t.key))]
+    pending = len(waiting)
+    cost_estimate = Decimal(exp.estimate(waiting)["estimated_cost_usd"])
+    log(f"population: {len(baseline.slots)} slots, {asked['empty_pools']} without candidates; "
+        f"{len(tasks)} requests in {len(specs)} passes, {pending} pending; "
+        + (f"estimate for those ${format(cost_estimate, 'f')} (upper bound), spent so far "
+           f"${format(spent_before, 'f')}, cap {'none' if cap is None else '$' + format(cap, 'f')}"
+           if exp.billed else
+           f"not billed to the owner, request limit "
+           f"{'none' if max_requests is None else max_requests}"))
+    if exp.billed:
+        if pending and cap is None:
+            raise RunError("a billed run needs an explicit spending cap (--max-cost-usd)")
+        if pending and cap is not None and spent_before + cost_estimate > cap:
+            raise RunError(f"the upper-bound estimate ${format(cost_estimate, 'f')} plus the "
+                           f"${format(spent_before, 'f')} already spent exceeds the cap "
+                           f"${format(cap, 'f')}; raise --max-cost-usd or ask for fewer passes")
+    else:
+        if pending and max_requests is None:
+            raise RunError("a run needs an explicit request limit (--max-requests)")
+        if max_requests is not None and pending > max_requests:
+            raise RunError(f"{pending} requests are pending but the request limit is "
+                           f"{max_requests}; raise --max-requests or ask for fewer passes")
+    client = None
+    if pending:
+        client = client_factory() if client_factory else exp.make_client(env_file, root)
+    invocation = begin_invocation(
+        journal, evidence_sha256=evidence_sha256, workers=workers, cap_usd=cap,
+        client_settings=client.settings() if client is not None and hasattr(client, "settings")
+        else {}, max_requests=max_requests)
+    save_journal(paths, journal)
+    counters: Counter[str] = Counter()
+    try:
+        try:
+            with timed(invocation["seconds"], "asking"):
+                if client is not None:
+                    ask_phase(paths, tasks, client, workers=workers, cap_usd=cap,
+                              spent_before=spent_before, counters=counters, exp=exp,
+                              max_requests=max_requests)
+        finally:
+            invocation["asking"] = dict(sorted(counters.items())) or None
+        save_journal(paths, journal)
+        invocation["outcome"], invocation["finished_at"] = "completed", now_utc()
+        manifest = report_phase(paths, baseline, tasks, plan, journal, specs, cap, exp,
+                                max_requests)
+        log(f"report written to {paths.named('report.md')}")
+        return manifest
+    except BaseException as exc:
+        invocation["outcome"] = f"stopped: {type(exc).__name__}: {exc}"[:300]
+        invocation["finished_at"] = now_utc()
+        save_journal(paths, journal)
+        raise
+
+
 def run_jev(out_dir: Path | str, *, baseline_dir: Path | str, max_cost_usd: str | Decimal | None,
             env_file: str | None = None, lab_root: Path | str | None = None,
             only: Sequence[str] | None = None, passes: Sequence[str] | None = None,
@@ -643,83 +837,15 @@ def run_jev(out_dir: Path | str, *, baseline_dir: Path | str, max_cost_usd: str 
     injectable for tests.
     Returns: the manifest.
     Raises: RunError when the baseline is not usable, the plan differs, the estimate exceeds the
-    cap, a request cannot be answered or a check fails; UsageError for an unknown variable;
-    KeyError for an unknown pass name.
+    cap, a request cannot be answered or a check fails; UsageError for an unknown variable or
+    pass, a duplicated pass or a missing primary pass.
     Side effects: network I/O, files in out_dir; removes an earlier manifest.json at once, so an
     invocation that stops leaves no manifest behind.
     """
-    paths = JevPaths(Path(out_dir))
-    paths.root.mkdir(parents=True, exist_ok=True)
-    root = resolve_lab_root(lab_root)
-    baseline = load_baseline(baseline_dir, lab_root=root, only=only)
-    specs = [pass_spec(name) for name in passes] if passes else list(PASSES)
-    names = [spec.name for spec in specs]
-    if len(set(names)) != len(names):
-        raise UsageError(f"a pass can be run once; the list has duplicates: {names}")
-    if PRIMARY_PASS not in names:
-        raise UsageError(f"the primary pass {PRIMARY_PASS!r} must be among the passes")
-    name = run_id or paths.root.name
-    tasks, asked = build_tasks(baseline, specs, session_id=f"iadopt-linking/{name}")
-    cap = _parse_cap(max_cost_usd)
-    evidence_sha256 = jev_evidence_identity()
-    plan = bind_plan(paths, {
-        "experiment": EXPERIMENT_ID, "run_id": name, "evidence_code_sha256": evidence_sha256,
-        "baseline": baseline.identity, "corpus": corpus_identity(root),
-        "model": {"requested": MODEL, "price_per_input_token_usd": PRICE_PER_INPUT_TOKEN_USD,
-                  "price_source": PRICE_SOURCE},
-        "prompt": prompt_plan(baseline.max_description_chars),
-        "passes": [[s.name, s.arm, s.order] for s in specs],
-        "only": sorted(only) if only else None,
-        "analysis": {**ANALYSIS_PLAN, "bootstrap": {**ANALYSIS_PLAN["bootstrap"],
-                                                    "resamples": resamples}},
-        "asked": asked, "tasks": len(tasks),
-        "estimate": estimate(tasks, PRICE_PER_INPUT_TOKEN_USD)})
-    journal = load_jev_journal(paths.named("provenance.json"), evidence_exists=paths.has_evidence())
-    paths.named("manifest.json").unlink(missing_ok=True)
-    stored = JsonlStore(paths.responses).read()
-    recorded = latest(stored, lambda r: (r["slot_id"], r["pass"]))
-    spent_before, _ = history_spend(stored)
-    waiting = [t for t in tasks if not answered_ok(recorded.get(t.key))]
-    pending = len(waiting)
-    cost_estimate = Decimal(estimate(waiting, PRICE_PER_INPUT_TOKEN_USD)["estimated_cost_usd"])
-    log(f"population: {len(baseline.slots)} slots, {asked['empty_pools']} without candidates; "
-        f"{len(tasks)} requests in {len(specs)} passes, {pending} pending; estimate for those "
-        f"${format(cost_estimate, 'f')} (upper bound), spent so far ${format(spent_before, 'f')}, "
-        f"cap {'none' if cap is None else '$' + format(cap, 'f')}")
-    if pending and cap is None:
-        raise RunError("a billed run needs an explicit spending cap (--max-cost-usd)")
-    if pending and cap is not None and spent_before + cost_estimate > cap:
-        raise RunError(f"the upper-bound estimate ${format(cost_estimate, 'f')} plus the "
-                       f"${format(spent_before, 'f')} already spent exceeds the cap "
-                       f"${format(cap, 'f')}; raise --max-cost-usd or ask for fewer passes")
-    client = None
-    if pending:
-        client = client_factory() if client_factory else DecisionsClient(
-            api_key_from(env_file or _default_env(root), os.environ))
-    invocation = begin_invocation(
-        journal, evidence_sha256=evidence_sha256, workers=workers, cap_usd=cap,
-        client_settings=client.settings() if client is not None and hasattr(client, "settings")
-        else {})
-    save_journal(paths, journal)
-    counters: Counter[str] = Counter()
-    try:
-        try:
-            with timed(invocation["seconds"], "asking"):
-                if client is not None:
-                    ask_phase(paths, tasks, client, workers=workers, cap_usd=cap,
-                              spent_before=spent_before, counters=counters)
-        finally:
-            invocation["asking"] = dict(sorted(counters.items())) or None
-        save_journal(paths, journal)
-        invocation["outcome"], invocation["finished_at"] = "completed", now_utc()
-        manifest = report_phase(paths, baseline, tasks, plan, journal, specs, cap)
-        log(f"report written to {paths.named('report.md')}")
-        return manifest
-    except BaseException as exc:
-        invocation["outcome"] = f"stopped: {type(exc).__name__}: {exc}"[:300]
-        invocation["finished_at"] = now_utc()
-        save_journal(paths, journal)
-        raise
+    return run_experiment(JEV, out_dir, baseline_dir=baseline_dir, max_cost_usd=max_cost_usd,
+                          env_file=env_file, lab_root=lab_root, only=only, passes=passes,
+                          workers=workers, run_id=run_id, resamples=resamples,
+                          client_factory=client_factory)
 
 
 def _default_env(lab_root: Path) -> str | None:
@@ -732,3 +858,81 @@ def _default_env(lab_root: Path) -> str | None:
     """
     candidate = lab_root.parent / ".env"
     return str(candidate) if candidate.is_file() else None
+
+
+def _jev_model_plan() -> dict[str, Any]:
+    """Describe the model and its price for the plan.
+
+    Args: none.
+    Returns: the model requested, its price per input token and where that price was read.
+    Raises: None.
+    Side effects: none.
+    """
+    return {"requested": MODEL, "price_per_input_token_usd": PRICE_PER_INPUT_TOKEN_USD,
+            "price_source": PRICE_SOURCE}
+
+
+def _jev_manifest_model(parsed: Mapping[Any, Mapping[str, Any]], plan: Mapping[str, Any]
+                        ) -> dict[str, Any]:
+    """Describe the model the run asked and the snapshot that answered.
+
+    Args: parsed: parsed answers; plan: the stored plan.
+    Returns: requested, served and provider names, price and where it came from.
+    Raises: KeyError for a malformed answer or plan.
+    Side effects: none.
+    """
+    return {"requested": MODEL, "served": sorted({a["model"] for a in parsed.values()}),
+            "providers": sorted({str(a["provider"]) for a in parsed.values()}),
+            "price_per_input_token_usd": plan["model"]["price_per_input_token_usd"],
+            "price_source": plan["model"]["price_source"]}
+
+
+def _jev_checks(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mapping[str, Any]],
+                parsed: Mapping[tuple[str, str], Mapping[str, Any]],
+                problems: Mapping[str, Sequence[Any]], *, history: Sequence[Mapping[str, Any]],
+                inputs: Mapping[str, int], cap_usd: Decimal | None,
+                max_requests: int | None) -> list[dict[str, Any]]:
+    """Run Jev's checks (its run is limited by money, so the request limit is ignored).
+
+    Args: as jev_checks, plus max_requests.
+    Returns: the checks.
+    Raises: None.
+    Side effects: none.
+    """
+    return jev_checks(tasks, recorded, parsed, problems, history=history, inputs=inputs,
+                      cap_usd=cap_usd)
+
+
+def _jev_notes(summary: Mapping[str, Any], counts: Mapping[str, int], asked: Mapping[str, int],
+               margin_ties: tuple[int, int], rejected: Mapping[str, int], cap: int | None,
+               has_repeat: bool, parsed: Mapping[Any, Mapping[str, Any]]) -> list[str]:
+    """Write Jev's report notes (the parsed answers are not needed).
+
+    Args: as notes_for, plus parsed.
+    Returns: the notes.
+    Raises: KeyError for a malformed summary.
+    Side effects: none.
+    """
+    return notes_for(summary, counts, asked, margin_ties, rejected, cap, has_repeat)
+
+
+def _jev_client(env_file: str | None, root: Path) -> DecisionsClient:
+    """Build the client for a real Jev run.
+
+    Args: env_file: credential file or None; root: iadopt-lab root, whose parent holds ``.env``.
+    Returns: a Decisions client that holds the key privately.
+    Raises: RunError when no key can be read.
+    Side effects: reads the credential file.
+    """
+    return DecisionsClient(api_key_from(env_file or _default_env(root), os.environ))
+
+
+JEV = Experiment(
+    voice=JEV_VOICE, experiment_id=EXPERIMENT_ID, title=TITLE,
+    evidence_files=JEV_EVIDENCE_FILES, passes=PASSES, analysis_plan=ANALYSIS_PLAN,
+    plan_fields=PLAN_FIELDS, billed=True, formula_check=True, fatal=FATAL,
+    prompt_plan=prompt_plan, model_plan=_jev_model_plan,
+    build_tasks=lambda baseline, specs, session: build_tasks(baseline, specs, session_id=session),
+    estimate=lambda tasks: estimate(tasks, PRICE_PER_INPUT_TOKEN_USD),
+    parse_answer=parse_answer, cost_of=reported_cost, checks=_jev_checks,
+    manifest_model=_jev_manifest_model, spend=_spend, notes=_jev_notes, make_client=_jev_client)

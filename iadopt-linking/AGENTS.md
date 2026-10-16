@@ -16,6 +16,9 @@ uv run iadopt-linking run --out results/<name>           # retrieve, score, chec
 uv run iadopt-linking compare --first results/a --second results/b
 uv run iadopt-linking jev-plan --baseline results/baseline-20261014                  # offline, shows requests and cost
 uv run iadopt-linking jev-run --baseline results/baseline-20261014 --out results/jev-<date> --max-cost-usd 2
+uv run iadopt-linking psnc-plan --baseline results/baseline-20261014                 # offline, shows one request and the size
+uv run iadopt-linking psnc-run --baseline results/baseline-20261014 --out results/psnc-<model>-<date> \
+    --max-requests 1500 --reference results/jev-20261015
 ```
 
 Python 3.12 only, `uv` for everything. Never `pip install` into this project. Until `uv sync` has
@@ -112,6 +115,48 @@ evidence:
 - **Leave the baseline alone.** Jev reads `results/baseline-20261014` after re-verifying its hashes,
   evidence code, queries and documents, and never writes to it.
 
+## The PSNC chat-model experiment
+
+`psnc-run` asks a chat model served by PSNC (`Qwen3.8-27B`, reasoning off) the same question about the
+same frozen candidates in Jev's four candidate orders, and compares it with the baseline and with the
+Jev run (DECISIONS L-016, L-017). It runs on the same engine as Jev's: `jev_experiment.Experiment`
+describes what differs (requests, how an answer is read, checks, notes, voice), `run_experiment` does
+the rest. The rules:
+
+- **Nobody reads the credential.** `PSNC_API_KEY` (and optionally `PSNC_API_BASE_URL`) are read from the
+  repository's `.env` by the lab's allowlisted loader in `chat.credentials_from`; the process
+  environment wins. `RedactingChatClient` (a `ChatClient` that also redacts what it keeps of a failure,
+  `chat_redact.py`) holds the key privately, follows no redirect, ignores proxies, sends it only to an
+  https host in `chat.ALLOWED_HOSTS`, and stores no response header (the gateway's carry a backend
+  address and the key's running spend). Same rules as Jev for `.env`: never open, grep or print it;
+  check connectivity with code that prints a whitelist of fields.
+- **Not billed, but limited.** PSNC access is the owner's free access, so `psnc-run` refuses without
+  `--max-requests` and without that many requests being enough for what is pending. The limit is per
+  invocation and counts requests, not attempts: the client retries a transient failure up to three
+  more times, so a failing gateway can see up to four times as many calls.
+- **One request at a time.** Identical requests sent concurrently gave different probabilities, ones
+  sent one after another did not (L-016), so the default is `--workers 1`; do not raise it for a run
+  that is meant to be compared.
+- **The prompt is frozen.** `chat_choice.SYSTEM_PROMPT`, `ANSWER_LINE`, the labels, the request
+  parameters, `REASONING_OFF` and the thresholds are pinned by a fingerprint test and by a golden
+  request hash. A model joins `REASONING_OFF` only after its way of turning reasoning off has been
+  measured (the lab's `probe-models`), and a test compares the entry with the lab's `parameters.yml`.
+- **Evidence and report-side modules.** A PSNC folder is bound to `PSNC_EVIDENCE_FILES` (Jev's nine
+  files and `chat.py`, `chat_choice.py`). Changing any of Jev's nine files therefore also invalidates
+  PSNC folders, on purpose: `jev.py` and `jev_inputs.py` decide the slots, candidates and orders both
+  experiments share, and `openrouter.py` supplies the request record and status sets the chat client
+  uses. `chat_experiment`, `chat_redact`, `jev_health`, `jev_analysis`, `jev_report`,
+  `jev_experiment`, `paired` and `confidence` are report-side. `tests/test_chat_results.py` re-derives the committed folder.
+- **Probabilities are estimates from 20 tokens.** They come from the first token's top 20
+  log-probabilities, summed over a label's spellings and divided by the total over the option labels
+  found, so they sum to 1; a label outside the 20 counts as 0. `label_mass` and `top_mass` are not
+  stored: recompute them from a response's `response_text` with `chat_choice.parse_chat_choice` (the
+  report gives their extremes and the resulting bound on any probability, 0.0019 in the committed run).
+- **The reference run is read, not rerun.** `--reference results/jev-<date>` is verified by its
+  manifest hashes and baseline identity, must cover exactly the same slots and must sit in the same
+  folder as the baseline (the plan names it by folder name and the report phase looks it up there); a
+  rebuild needs the same `--reference`. A run without one says so in its report.
+
 ## Traps
 
 **The lab's readable view is not the full link gold.** `*.readable.json` and
@@ -138,6 +183,25 @@ probability and the option count, so analyse the probabilities.
 
 **Slots are not independent.** 153 terms ask 294 slots; `water` alone is 12 slots. A slot-level p-value
 or interval is optimistic, and the headline of `jev-20261015` changes when each term counts once.
+
+**A shared inference server answers slightly differently under load.** Identical PSNC requests sent
+8 at a time gave four different probability vectors (the probability of `none_of_these` ranged from
+0.22 to 0.39 for one near-tied slot); sent one after another they gave one. Prefix caching was not the
+cause (`cached_tokens` was always 0). Compare runs through their repeated pass, not by expecting equal
+numbers, and never raise `--workers` for a run meant for comparison.
+
+**The PSNC gateway leaks its backend in headers and error texts.** Responses carry `x-litellm-*`
+headers (a private backend address, the key's running spend) and failures can name that address;
+`RedactingChatClient` stores no header and redacts private and cluster-internal addresses, and
+`test_chat_results.py` checks that nothing of the sort reached a committed file. A new client must do
+the same. A failing LiteLLM gateway also echoes a masked copy of a rejected key (`sk-...90zz`) and its
+hash, `User=` and `Spend=`: `chat.scrub` misses those, `chat_redact` does not.
+
+**A chat model's probabilities come from 20 tokens.** The gateway returns at most 20 log-probabilities
+per token, so a pool of 30 options shows 17 to 20 labels; the rest count as 0. What the 20 leave out
+(1 - `top_mass`) bounds the error of every probability: at most 0.0019 over the 1,144 responses of the
+committed run. They are not lower bounds: they are divided by `label_mass`, so a reported value is up
+to 1/`label_mass` (1.05) times its token's own probability.
 
 **The workflow retrieves; it does not download.** Candidates come from each source's query
 service at run time, never from a local copy of a vocabulary dump. Every response is recorded
@@ -166,7 +230,8 @@ only the routing share is conditional on a selection and says so.
   owner's explicit authorization. Pin `typesafe/jev-1.13` (OpenRouter's slug; TypeSafe's own API
   calls it `jev-1.13.0`), never a `latest` alias, and store the `model` field the API returns with
   every response. Free public services are called at most one request at a time per host, at least a
-  second apart.
+  second apart. The PSNC gateway is not one of them: it is the owner's authenticated access, limited by
+  `--max-requests` and used one request at a time.
 - **Raw responses are stored before interpretation,** and a failure is stored as a failure, never
   turned into an empty result. A parser refuses a response that contradicts itself (OM `numFound`
   or status, Wikidata `success`, a QUDT row of the wrong shape); a bug in a parser is not recorded

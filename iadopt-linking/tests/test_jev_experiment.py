@@ -20,6 +20,7 @@ from iadopt_linking.jev import MODEL, NONE_KEY, PASSES, PRIMARY_PASS, encode
 from iadopt_linking.jev_experiment import (
     PUBLISHED_JEV,
     JevPaths,
+    bind_plan,
     jev_evidence_identity,
     run_jev,
 )
@@ -295,6 +296,9 @@ def test_spend_above_the_cap_stops_the_run_and_stores_the_answers_already_paid_f
     ("only", ["EWCT"]),
     ("evidence_code_sha256", "0" * 64),
     ("analysis", {}),
+    ("model", {"requested": "another-model"}),
+    ("corpus", {"release": "another corpus release"}),
+    ("run_id", "another run name"),
 ])
 def test_a_folder_that_does_not_match_this_run_is_not_resumed(
         tmp_path: Path, field: str, value: Any) -> None:
@@ -560,3 +564,15 @@ def test_a_cost_the_arithmetic_cannot_hold_does_not_lose_the_other_answers(tmp_p
     flagged = [r for r in records if r["parse_error"]]
     assert len(flagged) == 1 and flagged[0]["response_text"] is not None
     assert "unexpected InvalidOperation while reading the response" in flagged[0]["parse_error"]
+
+
+def test_a_plan_field_the_run_does_not_build_is_an_error_not_a_check_that_quietly_passes(
+        tmp_path: Path) -> None:
+    (tmp_path / "plan.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(KeyError, match="misspelled"):
+        bind_plan(JevPaths(tmp_path), {"model": 1}, (("misspelled", "a different thing"),))
+    # A reference run is the one entry a run may leave out, in the plan and in what it builds.
+    assert bind_plan(JevPaths(tmp_path), {}, (("reference", "a different reference run"),)) == {}
+    with pytest.raises(RunError, match="a different reference run"):
+        bind_plan(JevPaths(tmp_path), {"reference": {"folder": "x"}},
+                  (("reference", "a different reference run"),))

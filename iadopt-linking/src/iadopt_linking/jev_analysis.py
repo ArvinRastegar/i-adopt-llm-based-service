@@ -119,8 +119,8 @@ def pass_results(spec: PassSpec, slots: Sequence[Slot], records: Mapping[str, Ma
     key, for every slot that was asked.
     Returns: one result per slot: slot id, whether it was asked, the score of each pool
     candidate, the exact gap between the two highest scores (``margin``, a float of an exact
-    value), the probability of "none" and Jev's own choice (Choice only), Jev's confidence, the
-    presentation order, the pool index selected, and the evaluate_slot outcome. A slot with no
+    value), the probability of "none" and the scorer's own choice (Choice only), its own
+    confidence, the presentation order, the pool index selected, and the evaluate_slot outcome. A slot with no
     candidate was not asked and has no scores.
     Raises: KeyError if an asked slot has no parsed answer; ValueError if a slot has candidates
     but no request, which would otherwise score as a row of ties.
@@ -134,18 +134,18 @@ def pass_results(spec: PassSpec, slots: Sequence[Slot], records: Mapping[str, Ma
             raise ValueError(f"{slot.slot_id} has candidates but pass {spec.name} sent no request")
         result: dict[str, Any] = {
             "slot_id": slot.slot_id, "asked": key in tasks, "scores": [], "margin": None,
-            "p_none": None, "jev_index": None, "jev_chose_none": None, "jev_choice_key": None,
-            "jev_confidence": None, "order": [], "selected_index": None}
+            "p_none": None, "own_index": None, "own_chose_none": None, "own_choice_key": None,
+            "own_confidence": None, "order": [], "selected_index": None}
         if key in tasks:
             order, answer = list(tasks[key].order), parsed[key]
             result["order"] = order
             if spec.arm == ARM_CHOICE:
-                scores, p_none, jev_index = choice_scores(answer, order, len(base["pool"]))
-                result.update(scores=scores, p_none=p_none, jev_index=jev_index,
-                              jev_chose_none=jev_index is None,
-                              jev_choice_key=(NONE_KEY if jev_index is None
-                                              else candidate_key(base["pool"][jev_index])),
-                              jev_confidence=answer["confidence"])
+                scores, p_none, own_index = choice_scores(answer, order, len(base["pool"]))
+                result.update(scores=scores, p_none=p_none, own_index=own_index,
+                              own_chose_none=own_index is None,
+                              own_choice_key=(NONE_KEY if own_index is None
+                                              else candidate_key(base["pool"][own_index])),
+                              own_confidence=answer["confidence"])
             else:
                 result["scores"] = noul_scores(answer, order, len(base["pool"]))
             margin = exact_margin(result["scores"])
@@ -300,10 +300,10 @@ def confidence_formula(answers: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
 
 
 def abstention(primary: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    """Describe how Jev used its own "none of these" option.
+    """Describe how the scorer used its own "none of these" option.
 
     Args: primary: the primary Choice pass's results.
-    Returns: over the asked slots of the primary (reachable) population: how often Jev chose
+    Returns: over the asked slots of the primary (reachable) population: how often it chose
     "none" where the gold was among the candidates (a wrong abstention) and where it was not
     (a right one), how many refusals were made at a confidence of 0.9 or more, and what accuracy
     would be if refusals were left unanswered: coverage and precision among answered slots. The
@@ -316,29 +316,30 @@ def abstention(primary: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     asked = [r for r in primary if r["asked"] and r["outcome"]["reachable"]]
     present = [r for r in asked if r["outcome"]["gold_in_pool"]]
     absent = [r for r in asked if not r["outcome"]["gold_in_pool"]]
-    answered = [r for r in asked if not r["jev_chose_none"]]
-    refused = [r for r in asked if r["jev_chose_none"]]
+    answered = [r for r in asked if not r["own_chose_none"]]
+    refused = [r for r in asked if r["own_chose_none"]]
     outside = [r for r in primary if r["asked"] and not r["outcome"]["reachable"]]
     return {
         "asked": len(asked),
-        "none_when_gold_in_pool": _count(sum(r["jev_chose_none"] for r in present), len(present)),
-        "none_when_gold_absent": _count(sum(r["jev_chose_none"] for r in absent), len(absent)),
+        "none_when_gold_in_pool": _count(sum(r["own_chose_none"] for r in present), len(present)),
+        "none_when_gold_absent": _count(sum(r["own_chose_none"] for r in absent), len(absent)),
         "answered": _count(len(answered), len(asked)),
         "precision_when_answered": _count(sum(r["outcome"]["correct"] for r in answered),
                                           len(answered)),
         "forced_choice_correct_when_none_chosen": _count(
             sum(r["outcome"]["correct"] for r in refused), len(refused)),
-        "refusals_at_confidence_0.9": sum(r["jev_confidence"] >= 0.9 for r in refused),
+        "refusals_at_confidence_0.9": sum(r["own_confidence"] >= 0.9 for r in refused),
         "outside_population_asked": len(outside),
-        "outside_population_none": sum(bool(r["jev_chose_none"]) for r in outside)}
+        "outside_population_none": sum(bool(r["own_chose_none"]) for r in outside)}
 
 
-def positions(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def positions(results: Sequence[Mapping[str, Any]], key: str = "jev") -> dict[str, Any]:
     """Measure whether a pass favours the first option it is shown.
 
-    Args: results: pass_results of a Choice pass.
+    Args: results: pass_results of a Choice pass; key: the scorer's key, which prefixes the
+    published names of its own-choice counts.
     Returns: over the slots with at least two candidates: how many selections sit in the first
-    position, how many Jev choices (its own, "none" excluded) do, and how many each would
+    position, how many of the scorer's own choices ("none" excluded) do, and how many each would
     be if position played no part (the mean of 1/n), as exact fractions of the slot count.
     Raises: KeyError for a malformed result.
     Side effects: none.
@@ -346,12 +347,12 @@ def positions(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     several = [r for r in results if r["asked"] and len(r["scores"]) >= 2]
     expected = sum(Fraction(1, len(r["scores"])) for r in several)
     first = sum(r["order"].index(r["selected_index"]) == 0 for r in several)
-    own = [r for r in several if r["jev_index"] is not None]
-    own_first = sum(r["order"].index(r["jev_index"]) == 0 for r in own)
+    own = [r for r in several if r["own_index"] is not None]
+    own_first = sum(r["order"].index(r["own_index"]) == 0 for r in own)
     own_expected = sum(Fraction(1, len(r["scores"])) for r in own)
     return {"slots": len(several), "selected_first": first, "expected_if_no_bias": _exact(expected),
-            "jev_choice_slots": len(own), "jev_choice_first": own_first,
-            "jev_choice_expected_if_no_bias": _exact(own_expected)}
+            f"{key}_choice_slots": len(own), f"{key}_choice_first": own_first,
+            f"{key}_choice_expected_if_no_bias": _exact(own_expected)}
 
 
 def correctness_changes(primary: Sequence[Mapping[str, Any]],
@@ -458,13 +459,15 @@ def disagreements(first: Sequence[Mapping[str, Any]], second: Sequence[Mapping[s
 
 def confidence_signals(primary: Sequence[Mapping[str, Any]],
                        choice_passes: Sequence[Sequence[Mapping[str, Any]]],
-                       qwen: Sequence[Mapping[str, Any]]) -> dict[str, list[float | None]]:
+                       qwen: Sequence[Mapping[str, Any]], key: str = "jev"
+                       ) -> dict[str, list[float | None]]:
     """Collect the numbers that say how much to trust a selection, per slot.
 
     Args: primary: the primary Choice pass's results; choice_passes: the other Choice passes'
-    results; qwen: the baseline's evaluate_slot outcomes.
+    results; qwen: the baseline's evaluate_slot outcomes; key: the scorer's key, which prefixes the
+    names of its signals.
     Returns: signal name -> one value or None per slot. Signals: the probability of the selected
-    candidate, Jev's own confidence, the top-two margin and the probability mass on real
+    candidate, the scorer's own confidence, the top-two margin and the probability mass on real
     candidates (1 minus "none"), both computed exactly from the decimals the service wrote, the
     share of the Choice passes that agree with the primary selection (an identical repeat counts
     as a pass), and the Qwen3 score and margin for reference.
@@ -482,24 +485,26 @@ def confidence_signals(primary: Sequence[Mapping[str, Any]],
         return None if outcome["selected"] is None else outcome["selected"]["score"]
 
     return {
-        "jev_selected_probability": [selected_score(r["outcome"]) for r in primary],
-        "jev_confidence": [r["jev_confidence"] if r["asked"] else None for r in primary],
-        "jev_margin": [r["margin"] if r["asked"] else None for r in primary],
-        "jev_candidate_mass": [None if r["p_none"] is None else float(1 - _dec(r["p_none"]))
-                               for r in primary],
-        "jev_pass_agreement": [None if share is None else float(share)
-                               for share in agreement_with(primary, choice_passes)],
+        f"{key}_selected_probability": [selected_score(r["outcome"]) for r in primary],
+        f"{key}_confidence": [r["own_confidence"] if r["asked"] else None for r in primary],
+        f"{key}_margin": [r["margin"] if r["asked"] else None for r in primary],
+        f"{key}_candidate_mass": [None if r["p_none"] is None else float(1 - _dec(r["p_none"]))
+                                  for r in primary],
+        f"{key}_pass_agreement": [None if share is None else float(share)
+                                  for share in agreement_with(primary, choice_passes)],
         "qwen3_score": [selected_score(o) for o in qwen],
         "qwen3_margin": [o["margin"] for o in qwen]}
 
 
 def confidence_block(signals: Mapping[str, Sequence[float | None]],
                      outcomes: Mapping[str, Sequence[Mapping[str, Any]]],
-                     population: Callable[[Mapping[str, Any]], bool]) -> dict[str, Any]:
+                     population: Callable[[Mapping[str, Any]], bool],
+                     key: str = "jev") -> dict[str, Any]:
     """Judge each confidence signal on one population.
 
     Args: signals: confidence_signals output; outcomes: name of the system that made each signal
-    ("jev" or "qwen3") -> its evaluate_slot outcomes; population: which slots to include.
+    (the scorer's key or "qwen3") -> its evaluate_slot outcomes; population: which slots to
+    include; key: the scorer's key.
     Returns: per signal the AUROC for telling right from wrong, coverage and precision at each
     threshold, the escalation table, and, for the probability-like signals, reliability bins,
     the calibration gap and the Brier score.
@@ -508,7 +513,7 @@ def confidence_block(signals: Mapping[str, Sequence[float | None]],
     """
     block: dict[str, Any] = {}
     for name, values in signals.items():
-        system = "qwen3" if name.startswith("qwen3") else "jev"
+        system = "qwen3" if name.startswith("qwen3") else key
         judged = outcomes[system]
         chosen = [i for i, o in enumerate(judged) if population(o)]
         confidence = [values[i] for i in chosen]
@@ -519,7 +524,7 @@ def confidence_block(signals: Mapping[str, Sequence[float | None]],
             "thresholds": coverage_precision(confidence, correct, THRESHOLDS),
             "escalation": escalation_table(confidence, correct, THRESHOLDS,
                                            [bool(judged[i]["gold_in_pool"]) for i in chosen])}
-        if name in ("jev_selected_probability", "jev_confidence", "qwen3_score"):
+        if name in (f"{key}_selected_probability", f"{key}_confidence", "qwen3_score"):
             bins = reliability_bins(confidence, correct)
             entry.update(reliability=bins, calibration_gap=calibration_gap(bins),
                          brier=brier_score(confidence, correct))
@@ -530,12 +535,15 @@ def confidence_block(signals: Mapping[str, Sequence[float | None]],
 def analyse(slots: Sequence[Slot], records: Mapping[str, Mapping[str, Any]],
             specs: Sequence[PassSpec], tasks: Mapping[tuple[str, str], Any],
             parsed: Mapping[tuple[str, str], Any], *, resamples: int = DEFAULT_RESAMPLES,
-            seed: int = BOOTSTRAP_SEED) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
+            seed: int = BOOTSTRAP_SEED, key: str = "jev", formula_check: bool = True
+            ) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
     """Judge every pass and compare the primary pass with the Qwen3 baseline.
 
     Args: slots, records: the population and the baseline's scores; specs: the passes run (the
     primary pass is required); tasks and parsed: requests and parsed answers by (slot id, pass);
-    resamples and seed: the bootstrap's.
+    resamples and seed: the bootstrap's; key: the scorer's key, which prefixes the names of its
+    signals and of the comparisons that name it; formula_check: whether to test the scorer's own
+    confidence against the formula its vendor documents (only a scorer with such a formula).
     Returns: results by pass name, and the analysis: per-pass headlines, the paired comparison with
     Qwen3 on each population, other passes against Qwen3, the pointwise arm against the primary,
     repeatability, agreement, consensus, abstention, position bias, category transitions,
@@ -549,33 +557,34 @@ def analyse(slots: Sequence[Slot], records: Mapping[str, Mapping[str, Any]],
     results = {spec.name: pass_results(spec, slots, records, tasks, parsed) for spec in specs}
     qwen = [evaluate_slot(records[slot.slot_id]) for slot in slots]
     primary = results[PRIMARY_PASS]
-    jev = [r["outcome"] for r in primary]
+    own = [r["outcome"] for r in primary]
     choice_names = [spec.name for spec in specs if spec.arm == ARM_CHOICE]
     others = [results[n] for n in choice_names if n != PRIMARY_PASS]
     analysis: dict[str, Any] = {
         "passes": {name: headline(rows) for name, rows in results.items()},
         "qwen3": headline([{"outcome": o} for o in qwen]),
         "primary_vs_qwen3": {
-            name: compare(jev, qwen, population, resamples=resamples, seed=seed)
+            name: compare(own, qwen, population, resamples=resamples, seed=seed)
             for name, population in POPULATIONS},
         "primary_vs_qwen3_equivalence": compare(
-            jev, qwen, POPULATIONS[0][1], "equivalent_correct", resamples=resamples, seed=seed),
+            own, qwen, POPULATIONS[0][1], "equivalent_correct", resamples=resamples, seed=seed),
         "passes_vs_qwen3": {
             name: compare([r["outcome"] for r in rows], qwen, POPULATIONS[0][1],
                           resamples=resamples, seed=seed)
             for name, rows in results.items() if name != PRIMARY_PASS},
-        "transitions_qwen3_to_jev": transitions(qwen, jev),
-        "disagreements_jev_vs_qwen3": disagreements(jev, qwen),
+        f"transitions_qwen3_to_{key}": transitions(qwen, own),
+        f"disagreements_{key}_vs_qwen3": disagreements(own, qwen),
         "abstention": abstention(primary),
-        "confidence_formula": confidence_formula([
-            parsed[key] for key, task in tasks.items() if task.spec.arm == ARM_CHOICE]),
-        "positions": {name: positions(results[name]) for name in choice_names},
+        "positions": {name: positions(results[name], key) for name in choice_names},
         "agreement_with_primary": {
             name: {"same_selection": _count(
                 sum(a["selected_index"] == b["selected_index"] for a, b in zip(
                     primary, results[name], strict=True) if a["asked"] and b["asked"]),
                 sum(a["asked"] and b["asked"] for a, b in zip(primary, results[name], strict=True)))}
             for name in results if name != PRIMARY_PASS}}
+    if formula_check:
+        analysis["confidence_formula"] = confidence_formula([
+            parsed[slot_pass] for slot_pass, task in tasks.items() if task.spec.arm == ARM_CHOICE])
     if "choice-a1-repeat" in results:
         analysis["repeatability"] = repeatability(primary, results["choice-a1-repeat"])
     if len(choice_names) > 1:
@@ -588,13 +597,14 @@ def analyse(slots: Sequence[Slot], records: Mapping[str, Mapping[str, Any]],
     if pointwise is not None:
         analysis["pointwise_vs_primary"] = {
             "pass": pointwise, "vs_primary": compare(
-                [r["outcome"] for r in results[pointwise]], jev, POPULATIONS[0][1],
+                [r["outcome"] for r in results[pointwise]], own, POPULATIONS[0][1],
                 resamples=resamples, seed=seed)}
     if others:
         analysis["order_and_chance"] = {
             "correctness_changes": correctness_changes(
                 primary, {n: results[n] for n in choice_names if n != PRIMARY_PASS}),
             "unanimity": unanimity([results[n] for n in choice_names])}
-    signals = confidence_signals(primary, others, qwen)
-    analysis["confidence"] = confidence_block(signals, {"jev": jev, "qwen3": qwen}, POPULATIONS[0][1])
+    signals = confidence_signals(primary, others, qwen, key)
+    analysis["confidence"] = confidence_block(signals, {key: own, "qwen3": qwen}, POPULATIONS[0][1],
+                                              key)
     return results, analysis

@@ -416,8 +416,268 @@ says so; exploratory). Six of the nine `JEV_EVIDENCE_FILES` repeat the baseline'
 nothing. The Jev folder, paths, plan-binding and journal helpers stay near-copies of the baseline's
 because merging them would change the baseline's report-side modules; only identical code was reused.
 
+## L-016 — A PSNC chat model on the same candidates: what it is asked and how it was developed
+
+**Status:** Accepted (Arvin, 2026-10-15). He asked to run the experiment against `Qwen3.8-27B` from
+PSNC with reasoning off, to see whether it performs better using only models available from PSNC, and
+wrote: "I think you can use the same workflow by just changing the calls to psnc provider with the new
+model". The design below is the assistant's reading of that; it was not put to him before the run
+(L-019 lists what he may want to change).
+
+*Scope.* One model, `Qwen3.8-27B` on PSNC's gateway (`https://llm.hpc.psnc.pl/v1`, LiteLLM in front of
+vLLM), asked about exactly the candidates the Qwen3-0.6B baseline scored, read from
+`results/baseline-20261014` after the same re-verification as in L-010, and compared with the
+baseline and with the finished Jev run. Other PSNC models (the gateway lists 23 on 2026-10-15,
+including `Qwen3.5-397B-A17B`, `GLM-5.2` and `DeepSeek-V4-Flash`) are not run. Reasoning is off:
+`chat_template_kwargs.enable_thinking=false`, the control the lab measured (`parameters.yml`); a test
+compares the request with the lab's file. Reasoning on was excluded by the lab (its D-044: it does not
+fit the 120 s timeout).
+
+*Why this is not only a change of calls.* Jev's API returns a probability for every option; a chat
+model returns text. So (1) the options are named by one-character labels (`1`-`9`, then the capital
+letters without `I` and `O`, 33 in all; a pool holds at most 30; `0` is "none of these"), so that
+each option is one token; (2) the model is asked to reply with the label alone, one token is
+generated at temperature 0; (3) the probability of each option is read from the log-probabilities of
+that first token (the gateway reports at most 20), summed over the label's spellings and normalised
+over the labels found, with 0 for a label not reported, so a probability is the model's probability
+of the label given that its first token is a label, estimated from the reported tokens (L-019 says how
+far it can be off); the share on labels (`label_mass`) and on all reported tokens (`top_mass`) are
+computed when a response is read, not stored per response (the report gives their extremes). No
+confidence is asked for in words. The question is Jev's (L-011), the candidates are shown as
+`"label": description` (description capped at 300 characters as for the baseline), and the candidate
+orders are Jev's (`jev.presentation_order` with Jev's seed; a test compares both builders slot by
+slot).
+
+*A response is refused* (stored as a failure and asked again on the next invocation) if it names no
+model, finished abnormally, carries reasoning text, has no log-probabilities for the first token,
+puts less than 0.5 of that token's probability on option labels, starts with something that is not a
+label, or whose own label is not the most probable of the labels found. Nothing is repaired. A
+response that fails again is not scored as a miss behind the owner's back: the run does not finish
+and the owner is told (the prompt is not changed).
+
+*Listwise only.* Jev's pointwise arm (one yes/no per candidate) would need one request per candidate
+here (3,473 for the 294 slots), not one per slot. It is left out; it is the like-for-like test of
+model size against the 0.6B reranker, which scores each candidate alone, and can be added.
+
+*The engine.* The Jev engine was generalised so that one run function serves both scorers:
+`jev_experiment.Experiment` describes what differs (the requests, how an answer is read, the checks and
+notes, the wording, whether a request costs money) and `run_experiment` does the rest; Jev is the `JEV`
+instance and `psnc-run` the `chat_experiment()` one. Jev's analysis and report modules gained a `key`
+and a `Voice` (internal names `jev_*` became `own_*`). Five source modules changed, none of them
+evidence code of Jev's folder, and that folder is unchanged: `git diff` of `results/jev-20261015` is
+empty and `tests/test_jev_results.py` re-derives it and reruns it in a copy, which reproduces every
+data file byte for byte. This was the assistant's way of honouring "the same workflow".
+
+*The client* (`chat.py`) closes the gaps listed for Jev's in L-015 for this endpoint: it follows no
+redirect and ignores proxies, sends the key only to an allowlisted https host, scrubs the key,
+bearer tokens, key-shaped strings, account ids in the JSON forms of an error body and private
+(RFC 1918) addresses, and stores no response header (the gateway's carry a backend address and the
+key's running spend); L-019 widens the redaction to the other forms a LiteLLM gateway uses. The key (`PSNC_API_KEY`, optionally `PSNC_API_BASE_URL`) is read only by the lab's allowlisted
+loader, as in L-010; the assistant never opened `.env`.
+
+*Spend.* PSNC access is the owner's free access (the lab records it as `non_billed`), so a run is
+limited by a number of requests, not by money: 1,144 are planned (4 passes of 286) and the limit is
+set when the run starts.
+
+*Development.* On invented slots only, with the right answers written down first and the acceptance
+criteria set before the first call: every response valid, the forced choice right on at least 90% of
+the answerable runs, at least 0.8 of the first token's probability on labels in every run. The 23
+slots are the five of L-011 (`bridge`, `cello`, `violin`, `length`, `croissant`) and `guitar`,
+`lighthouse`, `glacier`, `temperature`, `forest`, `Plants` (plural and capital), `wavelength`,
+`torque`, `serendipity coefficient` (right answer: none), `oak` with only a broader and a narrower
+entry (none), `oak` with the genus present, `bank` (river bank, among a financial bank and others),
+`car` (right: the entry named "automobile"), `age`, `DNA`, `pentane (C5H12)`, `sheep` (with a "Sheep
+Count" distractor) and `frequency` with a pool of 30 near-duplicates. None of the 23 terms is among
+the corpus's 153 query terms. Each was asked in the three orders (69 runs) with the first draft of
+the prompt: all 69 responses were valid; the forced choice was right on 60 of 60 answerable runs; the
+model's own choice was right on 67 of 69 (both misses a near-tie between the right candidate and
+`none_of_these`, 0.394 against 0.394 and 0.245 against 0.216); the share on labels was at least
+0.9976 (median 0.9996); with 30 candidates 17 or 18 labels were reported and at least 0.9991 of the
+probability was on labels. A second draft with three invented worked examples was written but not
+run, because the first met the criteria. The prompt is frozen (fingerprint `20d69e9a52e2`, pinned by a
+test). The slots were not written around a failure, so this says the prompt works, not how well it
+will do on the corpus.
+
+*What development showed about the service.* Identical requests sent one after another gave identical
+probabilities (30 in a row, three slots); 40 identical requests sent 8 at a time gave four different
+probability vectors (the probability of `none_of_these` ranged from 0.22 to 0.39 for one near-tied
+slot), all from one backend, with `cached_tokens` always 0. So the answer depends slightly on what
+else the server is processing, and the run sends one request at a time. Another run, or the same one
+with other traffic on the server, will not reproduce the probabilities exactly; the repeated pass
+measures it.
+
+*Sources.* The lab's `docs/model-catalog.md`, `docs/components/providers.md` and `parameters.yml`
+(PSNC base URL, the measured reasoning control, the free-access basis, concurrency and timeout), the
+gateway's own `/models` list and response bodies, 2026-10-15. Probing used invented text only.
+
+## L-017 — The PSNC run: pre-specified analysis and protocol
+
+**Status:** Accepted. Written on 2026-10-15 between 18:27 and 18:29 UTC (the times of the edits to
+this file), before the first request that names a corpus slot; the structured part is stored in
+`plan.json` when that request is sent. Pre-specified,
+not pre-registered: nothing was filed outside this repository and no commit predates the run (L-012
+explains the difference). A *term* is the slot's `query_key`, as in L-012.
+
+- **Primary result:** pass `choice-a1` (candidates in Jev's first seeded order), forced choice (the
+  candidate with the highest probability, `none_of_these` ignored, ties by the baseline's rule),
+  strict identity, on the 284 reachable slots. Estimand: top-1 accuracy of the model minus the
+  Qwen3-0.6B baseline's on the same slots and candidates; percentile bootstrap over terms (10,000
+  resamples, seed 20261015, 95%) and exact McNemar on slots as a descriptive test.
+- **Secondary result (pre-specified):** the same comparison against the primary pass of the finished
+  Jev run `jev-20261015`, from its published `outcomes.csv` after its manifest hashes and its baseline
+  identity have been verified, on every gold vocabulary, with the term-level comparison. The plan
+  stores that run's identity: the hashes of its responses, its plan and its per-slot outcomes (not of
+  its manifest, which a rebuilt report changes).
+- **Pass or fail:** no criterion (the assistant's default, as in L-010; what would count as
+  "performs better" or as a reason to adopt a scorer is still open).
+- **Everything else is exploratory:** the other passes, the consensus of the passes, the model's own
+  `none_of_these`, position bias, the confidence signals (the probability of the selected candidate,
+  of its own choice, the top-two margin, the probability not given to `none_of_these`, the share of
+  passes that agree), thresholds and escalation, the QUDT/Wikidata equivalence, subpopulations.
+  Thresholds are read off the data they describe and need held-out terms.
+- **Passes:** `choice-a1`, `choice-a1-repeat` (a byte-identical request), `choice-a2-reversed`,
+  `choice-a3`: Jev's four Choice passes.
+- **Protocol:** `psnc-run`, one request at a time, a request limit of 1,500 for the invocation (1,144
+  planned, the rest for asking failures again; a request counts once however often the client retries
+  it, which it does up to three more times after a transient failure), stop rules applied by the
+  workers (the service
+  refusing the credential, the limit, the first ten requests all failing), responses stored with their
+  SHA-256 before they are judged. The folder is bound by `plan.json` to the evidence code
+  (`PSNC_EVIDENCE_FILES`: Jev's nine files and the two chat modules), the baseline, the prompt, the
+  passes, the analysis plan and the reference run; report-side modules may change and the report be
+  rebuilt without a service call.
+- **A committed result passes every check:** inputs identical to the baseline, every request
+  answered, stored requests regenerate from the plan, stored response hashes verify, every response a
+  valid answer, one served model and one server build, token usage fully accounted, primary pass
+  complete.
+- **After the results:** whatever is added is labelled post hoc and listed in a later entry. A bug found
+  in an evidence module afterwards means a new folder; stored responses are never edited.
+- **Deviation (decided before the second run, which started at 18:35 UTC).** The run described above
+  was started at 18:28 UTC and finished cleanly (1,144 of 1,144 requests answered, exit code 0). Before
+  any accuracy figure of it was read (only validity, label mass and latency had been looked at), a
+  flaw in this harness was found: the plan pinned the reference run by the hash of its
+  `manifest.json`, which changes whenever that run's report is merely rebuilt, so a later rebuild of
+  either folder would have been refused. The pin was changed to the reference's evidence (responses,
+  plan, outcomes) and the run repeated in a fresh folder with the same prompt, the same evidence
+  code and the same plan otherwise. The first run's folder was moved to `outputs/` (gitignored) as
+  a shakedown and its report read afterwards, to check that the report renders on real data; its
+  headline is reported next to the second run's in the entry that holds the results, as a
+  replicate, not replaced by it. The decision to repeat did not depend on any accuracy figure.
+
+## L-018 — The PSNC run: what it shows and what it does not
+
+**Status:** Accepted (2026-10-15). Results: `results/psnc-qwen3.8-27b-20261015`, the second complete
+run of L-017's deviation note.
+
+*Runs.* Two complete runs of 1,144 requests each (4 passes of 286 slots), one request at a time, 18:28
+to 18:34 UTC (run 1, the shakedown, in `outputs/`, gitignored) and 18:35 to 18:41 UTC (run 2, the
+committed one). In each: no request failed, no response was refused, 342 and 341 s of request time (0.30 s
+on average; the slowest request took 0.95 s and 1.47 s; run 1 first in each pair), 565,176 input and 1,144 output tokens, served
+as `Qwen3.8-27B` by server build `vllm-0.26.0-1c0daee9`, not billed. Both runs give 206/284 on the primary pass and 206, 202 and 201
+on the other three; 1,143 of the 1,144 responses have identical top-20 log-probabilities in the two runs,
+the largest difference in any token's probability is 0.0011 and no selection changed. So the headline is
+that of both runs, and run 1 is a replicate, not a discarded run. The committed folder's report was
+rebuilt twice after run 2 (no service call) to correct wording. First: the analyses that Jev's report
+gained after its first results (L-014) are labelled "exploratory" here, not "post hoc", because this
+run's code had them from the start, and two notes say what the data show (whether reasoning text
+occurred, how the repeated pass compared). Second, after the review of L-019: which readings are
+exploratory, what a probability is, how the requests were sent. No number changed.
+
+*Pre-specified results.* Primary: the first pass gets 206 of the 284 reachable slots right (0.725),
+Qwen3-0.6B 194 (0.683): +0.042, term-resampled 95% interval -0.073 to +0.172, exact McNemar p 0.188
+(descriptive); counted once per term the model is better on 19 of 145 terms and worse on 16. Secondary:
+against Jev's 213 (0.750) it is -0.025 (-0.082 to +0.034; p 0.349), better on 13 terms and worse on 12;
+by gold vocabulary against Jev it is -0.023 on Wikidata and -0.033 on QUDT, neither distinguishable
+from zero. So the data do not show that this model performs better than the 0.6B reranker, nor worse
+than Jev.
+
+*Exploratory results (L-017 lists them).* Every interval of this run that excludes zero is exploratory.
+By gold vocabulary against the baseline, Wikidata 169/218 against 138/218 (+0.142, +0.008 to +0.300; 17
+terms better, 2 worse) and QUDT 32/61 against 51/61 (-0.311, -0.522 to -0.138; 2 better, 14 worse): the
+pattern Jev has. On QUDT gold the model picks the Wikidata item for 16 slots and the OM item for 13:
+QUDT's `wikidataMatch` equivalence covers 11 of the 16 and none of the 13, so counting twins as one
+entity gives the model 218/284 against Jev's 237/284 (-0.067, -0.127 to -0.007), a gap that comes from
+which twins the equivalence covers. It gets `water` (12 slots) and `urban area` (11) right in
+every slot, where the baseline gets none and one, and `person` wrong in 20 of 26 against the baseline's
+14, where the gold names two items (Q5 in 14 slots, Q215627 in 12). The probability of the selected
+candidate has AUROC 0.86 (Jev 0.81, Qwen3 score 0.59), calibration gap 0.080 (Jev 0.045) and Brier score
+0.136; answering only at 0.9 or more covers 135 slots at 131/135 = 97.0%, at 0.8 or more 157 at 96.2%.
+The model chose `none_of_these` for 17 reachable slots (5 at 0.9 or more), 15 of them with the gold
+among the candidates. The identical repeat selected the same candidate and gave identical probabilities
+for 286 of 286 slots; reversing the order changes whether 40 of 278 slots are right (18 become right, 22
+wrong), another shuffle 21 (8 and 13), and the four passes select the same candidate on 207 of 278.
+
+*Checks.* The run passed every health check; `tests/test_chat_results.py` re-derives the published
+files from the stored responses, reads the raw responses and the baseline's and Jev's per-slot outcomes
+with no project code (the probability and choice rules of L-016 and L-017) to the same pass totals and
+the same paired counts against the baseline and against Jev, and reruns the folder in a copy, as the
+documented rebuild does, to the same data files; nothing secret or internal was published (the stored
+text is a fixed point of the scrubber, no header or address).
+
+*What is not concluded.* Nothing about other PSNC models, about the one-yes/no-per-candidate
+formulation, or about an adoption rule (none was given). The prompt was developed on easy invented
+slots, a probability is estimated from at most 20 log-probabilities per token (L-019), the pool and gold are
+the baseline's, and the equivalence question decides who leads on QUDT slots.
+
+## L-019 — Review of the PSNC work: what was corrected and what stays
+
+**Status:** Accepted (2026-10-16). An independent read-only review of L-016 to L-018 (three reviewers:
+correctness, truth and secrecy, cleanup and tests; the first attempt stopped on a usage limit and was
+repeated) found no defect in a published number: about 230 quoted figures were recomputed with separate
+code and matched, Jev's folder reruns in a copy to the same data files, and no key, account id, header
+or spend figure is in any file. It found the following, corrected without a service call and without
+touching an evidence module (`PSNC_EVIDENCE_FILES`), so `results/psnc-qwen3.8-27b-20261015` is still
+bound to the code that made it. Its report was rebuilt (L-018).
+
+- *Statements that were false or loose.* A probability is not a lower bound: it is the token's
+  probability divided by `label_mass`, so a reported label's value is up to 1/`label_mass` times its
+  token probability (1.0513 at most in the run), and the exact label-conditional probability is within
+  0.0019 of it (what the 20 tokens leave out, over `label_mass`); a label outside the 20 counts as 0.
+  `label_mass` and `top_mass` are not stored per response; they are recomputed from `response_text`.
+  With 30 candidates the run reported 17 to 20 labels, not 17 or 18 (that was development). The
+  per-vocabulary rows against the baseline and the equivalence reading against Jev, the only intervals
+  that exclude zero, were exploratory but sat under "pre-specified"; the report and L-018 now say so.
+  Smaller: two request times transposed, 153 query terms (not 154), the owner's words altered inside
+  quotation marks, the replicate placed after the committed run (it ran first), the engine refactor
+  missing from this log, and `--max-requests` is a limit per invocation on requests, each retried up to
+  three more times. All nine Jev evidence files, `openrouter.py` among them, invalidate a PSNC folder
+  when changed, not only `jev.py` and `jev_inputs.py`.
+- *Behaviour.* A reference run outside the baseline's folder passed planning, cost every request, then
+  failed in the report phase; it is now refused at planning. The usage check's token total skipped
+  rejected responses (none occurred), the note on the service hard-coded how the run was sent, a repeat
+  difference under 0.005 printed as 0.00, and a misspelled plan field would have skipped its check.
+- *Redaction (a gap; nothing leaked).* `chat.scrub` did not cover a masked key (`sk-...90zz`), the hash
+  of a rejected key, `User=`, `Spend=`/`Budget=`, a Python-dict `'user_id'`, loopback, link-local and
+  carrier-grade addresses or cluster-internal names, all forms a LiteLLM gateway uses; the committed run
+  stored no error text. `chat_redact.RedactingChatClient`, which a real run now builds, redacts them
+  before an error is cut. A test had copied the backend address the gateway names in a response header;
+  an invented one replaces it.
+- *Tests.* Two that could not fail (scrubbing before the cut, proxies from the environment), one that
+  stopped on the circuit breaker and never reached the usage check, and tautologies were replaced; the
+  eight checks, the plan fields `corpus` and `run_id`, the forwarding of every `psnc-run` option, the
+  reference's location and identity, the notes and the documented rebuild of both committed folders
+  gained tests. The summary test compares floats to a relative 1e-9, because they derive from `exp()`
+  and another platform's C library may round it differently. 22 one-line mutations are each caught.
+- *Left in evidence modules (a fix means a new folder).* `chat_choice.py` still calls the probabilities
+  lower bounds in a docstring, and `chat.py` promises "account ids in any of the forms"; `estimate`,
+  `_require_permutation` and `ChatClient.post` copy their Jev counterparts; the validity rule compares
+  the sum over a label's spellings with the others', so a response whose own token loses to another
+  label's sum would be refused every time (none of 1,144 was; the run would stop loudly). In report-side
+  code, about fourteen defaults (`exp or JEV`, `key="jev"`, `voice=None`) make a forgotten argument fall
+  back to Jev's parser or names instead of failing; the PSNC tests would show it, a new scorer's might not.
+- *Process.* The design departed from "just changing the calls" (labels and log-probabilities, listwise
+  only, the engine refactor) and a second complete run of 1,144 requests was made as a shakedown;
+  neither was put to the owner first. The decisions below are his.
+
 ## Open
 
+- Which other PSNC models to run on the same candidates (the gateway lists 23 on 2026-10-15, among
+  them `Qwen3.5-397B-A17B`, `GLM-5.2` and `DeepSeek-V4-Flash`), each needing its reasoning control
+  measured first, and whether to add the one-yes/no-per-candidate arm (3,473 requests), which would
+  compare model size with the 0.6B reranker like for like.
+- Whether QUDT's OM twins (`Mass`, `Height`, `Time` exist in both vocabularies) should count as the same
+  entity as the QUDT kind, as `wikidataMatch` makes the Wikidata items count (the PSNC model picks them
+  for 13 QUDT-gold slots).
 - What counts as success for replacing the reranker with Jev (the first item of the earlier list,
   which Arvin's request only partly settled: it fixed the 284-slot population and the OpenRouter
   route, not a criterion). L-010 and L-012 record "no criterion" as the assistant's default, so the
@@ -438,7 +698,9 @@ because merging them would change the baseline's report-side modules; only ident
   wider scrubbing, a corrected sum message, one cost parser). It would be a replicate in a new folder
   (about $0.07 and two minutes) reported beside this one: Jev's probabilities vary from run to run,
   so its figures would differ slightly and neither run replaces the other. Until then the client
-  should not be reused for another service.
+  should not be reused for another service. Changing any of Jev's nine evidence files (`openrouter.py`
+  among them) also ends the binding of the PSNC folder, so that fix would mean running the PSNC
+  experiment again as well (free, about six minutes).
 - Which statistics must be exact receipts. AGENTS.md says metrics are numerator/denominator receipts,
   never a float, while the Brier score, the calibration gap, the mean confidence and the bootstrap
   bounds are floats (their docstrings say so). Either the rule names them as exceptions or the code

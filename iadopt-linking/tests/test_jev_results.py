@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import functools
 import json
+import re
+import shutil
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -11,6 +13,7 @@ from typing import Any
 import pytest
 
 from iadopt_linking.artifacts import file_sha256
+from iadopt_linking.chat_experiment import EXPERIMENT_ID as PSNC_EXPERIMENT_ID
 from iadopt_linking.jev import PASSES, candidate_key, pass_spec, prompt_fingerprint
 from iadopt_linking.jev_experiment import (
     EXPERIMENT_ID,
@@ -18,6 +21,7 @@ from iadopt_linking.jev_experiment import (
     JevPaths,
     build_outputs,
     jev_evidence_identity,
+    run_jev,
 )
 from iadopt_linking.jev_health import REQUIRED_JEV_CHECKS, hash_matches
 from iadopt_linking.jev_inputs import build_tasks, load_baseline
@@ -155,7 +159,7 @@ def test_there_is_at_least_one_committed_jev_result() -> None:
 def test_every_committed_result_belongs_to_a_suite_that_checks_it() -> None:
     for path in RESULTS.glob("*/manifest.json"):
         experiment = read(path).get("experiment")
-        assert experiment in (None, EXPERIMENT_ID), (
+        assert experiment in (None, EXPERIMENT_ID, PSNC_EXPERIMENT_ID), (
             f"{path.parent.name} names experiment {experiment!r}, which no integrity test covers: "
             "add its suite before committing it")
 
@@ -175,3 +179,41 @@ def test_no_committed_result_holds_a_key_or_an_account_id() -> None:
             text = path.read_text(encoding="utf-8")
             for pattern in patterns:
                 assert pattern not in text, f"{folder.name}/{path.name} contains {pattern!r}"
+
+
+class NoRequestsAllowed:
+    """A client factory for a rebuild, which must not ask for anything."""
+
+    def __call__(self) -> Any:
+        raise AssertionError("rebuilding a finished folder must not build a client")
+
+
+def at_no_time(text: str) -> str:
+    """Blank what a rebuild changes in a report's text: when it was built and by which code."""
+    text = re.sub(r"report built \d{4}-\d{2}-\d{2}T[\d:+\-]+", "report built <time>", text)
+    return re.sub(r"all code `[0-9a-f]+`", "all code `<hash>`", text)
+
+
+@EACH
+def test_the_documented_rebuild_binds_to_the_committed_plan_and_changes_none_of_its_data(
+        manifest_path: Path, tmp_path: Path) -> None:
+    """Rerunning jev-run in a copy is how report-side changes are published: it must not alter data.
+
+    The engine was generalised after these folders were committed; this is what shows that a Jev
+    folder still binds to the plan it holds and that every file but the report and the manifest
+    comes out byte for byte as committed.
+    """
+    committed = manifest_path.parent
+    copy = tmp_path / committed.name
+    shutil.copytree(committed, copy)
+    plan, manifest = read(committed / "plan.json"), read(manifest_path)
+    run_jev(copy, baseline_dir=RESULTS / plan["baseline"]["folder"],
+            max_cost_usd=manifest["spend"]["cap_usd"], only=plan["only"],
+            client_factory=NoRequestsAllowed())
+    files = manifest["files"]
+    for name in ("plan.json", "responses.jsonl", "summary.json", "outcomes.csv", "confidence.csv",
+                 "probabilities.csv", "comparison.md"):
+        assert file_sha256(copy / name) == files[name], f"{name} is not what the committed run holds"
+    assert at_no_time((copy / "report.md").read_text(encoding="utf-8")) == at_no_time(
+        (committed / "report.md").read_text(encoding="utf-8"))
+    assert read(copy / "manifest.json")["checks"] == manifest["checks"]
