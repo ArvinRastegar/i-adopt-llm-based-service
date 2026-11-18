@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accuracy, cost and latency of three linkers</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11, 11, 11, 0.10); --wash: rgba(11, 11, 11, 0.05);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
+    --wash: rgba(255, 255, 255, 0.06); --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
+  --wash: rgba(255, 255, 255, 0.06); --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1240px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 22px; line-height: 1.25; margin: 0 0 8px; font-weight: 650; }
+h2 { font-size: 16px; margin: 28px 0 6px; }
+.lede { color: var(--ink-2); max-width: 86ch; margin: 0 0 16px; font-size: 15px; }
+.lede strong { color: var(--ink); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px 10px; }
+.chart-wrap { position: relative; }
+.chart-scroll { overflow-x: auto; }
+svg { display: block; width: 100%; min-width: 880px; height: auto; }
+svg text { font-family: inherit; fill: var(--ink); }
+.title { font-size: 15px; font-weight: 650; }
+.hint, .desc, .rowsub, .valsub, .legend { font-size: 11.5px; }
+.hint, .rowsub, .legend, .tick, .absent { fill: var(--muted); }
+.desc, .valsub { fill: var(--ink-2); }
+.rowname { font-size: 14px; font-weight: 650; }
+.val { font-size: 15px; font-weight: 650; }
+.tick { font-size: 11px; font-variant-numeric: tabular-nums; }
+.absent { font-size: 12px; font-style: italic; }
+.grid { stroke: var(--grid); stroke-width: 1; }
+.axis { stroke: var(--axis); stroke-width: 1; }
+.hit { fill: transparent; }
+.cell { outline: none; }
+.cell:hover .hit, .cell:focus-visible .hit { fill: var(--wash); }
+.m0 .bar, .m0 .swatch { fill: var(--s1); }
+.m1 .bar, .m1 .swatch { fill: var(--s2); }
+.m2 .bar, .m2 .swatch { fill: var(--s3); }
+.halo { stroke: var(--surface); stroke-width: 4; fill: none; stroke-linecap: round; }
+.whisker { stroke: var(--ink-2); stroke-width: 1.5; fill: none; stroke-linecap: round; }
+#tip { position: absolute; z-index: 5; max-width: 360px; background: var(--ink);
+  color: var(--surface); padding: 8px 10px; border-radius: 8px; font-size: 12.5px;
+  line-height: 1.4; pointer-events: none; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18); }
+#tip[hidden] { display: none; }
+.notes { color: var(--ink-2); font-size: 13px; margin: 10px 4px 4px; padding-left: 18px;
+  max-width: 120ch; }
+.notes li { margin: 3px 0; }
+.notes strong { color: var(--ink); }
+.small { color: var(--ink-2); font-size: 13px; margin: 0 0 8px; }
+.table-scroll { overflow-x: auto; margin: 10px 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; }
+caption { text-align: left; font-weight: 650; padding: 6px 2px; color: var(--ink); }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grid);
+  vertical-align: top; }
+thead th { color: var(--ink-2); font-weight: 600; }
+tbody th { font-weight: 650; white-space: nowrap; }
+footer { margin-top: 22px; color: var(--muted); font-size: 12.5px; max-width: 110ch; }
+.png main { padding: 16px; }
+.png .tables, .png footer, .png #tip { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Accuracy, cost and latency of the three linkers</h1>
+  <p class="lede"><strong>Bottom line.</strong> Accuracy cannot be ranked: the margins of error overlap. Jev and Qwen3.8-27B are about equally fast. Cost depends on where Qwen3.8-27B is bought: at a typical OpenRouter provider it would cost about 2.5× what Jev costs, and across providers it ranges from 4× cheaper than Jev to 12× dearer. The reranker has no per-call price but was more than twice as slow, on the Mac.</p>
+  <div class="card">
+    <div class="chart-wrap"><div class="chart-scroll"><svg viewBox="0 0 1180 324" role="img" aria-label="Accuracy, cost and latency of the reranker, Qwen3.8-27B and Jev. The numbers are in the tables below."><g class="m0"><rect class="swatch" x="24" y="89" width="12" height="12" rx="3"/><text class="rowname" x="44" y="100">Reranker</text><text class="rowsub" x="44" y="117">0.6B model · Mac GPU</text></g><g class="m1"><rect class="swatch" x="24" y="149" width="12" height="12" rx="3"/><text class="rowname" x="44" y="160">Qwen3.8-27B</text><text class="rowsub" x="44" y="177">27B chat model · PSNC</text></g><g class="m2"><rect class="swatch" x="24" y="209" width="12" height="12" rx="3"/><text class="rowname" x="44" y="220">Jev</text><text class="rowsub" x="44" y="237">Jev 1.13 · OpenRouter</text></g><text class="title" x="222" y="22">Accuracy</text><text class="hint" x="518" y="22" text-anchor="end">higher is better</text><text class="desc" x="222" y="41">share of the 284 slots linked correctly</text><line class="grid" x1="222.0" y1="72" x2="222.0" y2="254"/><text class="tick" x="222.0" y="271" text-anchor="middle">0%</text><line class="grid" x1="272.0" y1="72" x2="272.0" y2="254"/><text class="tick" x="272.0" y="271" text-anchor="middle">25%</text><line class="grid" x1="322.0" y1="72" x2="322.0" y2="254"/><text class="tick" x="322.0" y="271" text-anchor="middle">50%</text><line class="grid" x1="372.0" y1="72" x2="372.0" y2="254"/><text class="tick" x="372.0" y="271" text-anchor="middle">75%</text><line class="grid" x1="422.0" y1="72" x2="422.0" y2="254"/><text class="tick" x="422.0" y="271" text-anchor="middle">100%</text><line class="axis" x1="222" y1="72" x2="222" y2="254"/><line class="axis" x1="222" y1="254" x2="422" y2="254"/><g class="cell m0" tabindex="0" role="group" aria-label="Reranker, accuracy: 68.3%" data-tip="Reranker: 194 of 284 slots linked correctly = 68.3%. 95% margin of error 57.6% to 78.9% (resampling the 145 terms, since slots of one term are not independent)."><rect class="hit" x="214" y="73" width="308" height="58" rx="8"/><path class="bar" d="M222.0,91.0h132.6a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-132.6z"/><path class="halo" d="M337.3,102.0H379.7M337.3,97.0V107.0M379.7,97.0V107.0"/><path class="whisker" d="M337.3,102.0H379.7M337.3,97.0V107.0M379.7,97.0V107.0"/><text class="val" x="436" y="101">68.3%</text><text class="valsub" x="436" y="117">194 of 284</text></g><g class="cell m1" tabindex="0" role="group" aria-label="Qwen3.8-27B, accuracy: 72.5%" data-tip="Qwen3.8-27B: 206 of 284 slots linked correctly = 72.5%. 95% margin of error 61.1% to 83.2% (resampling the 145 terms, since slots of one term are not independent). The same list in the other three candidate orders: 206, 202, 201 correct."><rect class="hit" x="214" y="133" width="308" height="58" rx="8"/><path class="bar" d="M222.0,151.0h141.1a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-141.1z"/><path class="halo" d="M344.1,162.0H388.4M344.1,157.0V167.0M388.4,157.0V167.0"/><path class="whisker" d="M344.1,162.0H388.4M344.1,157.0V167.0M388.4,157.0V167.0"/><text class="val" x="436" y="161">72.5%</text><text class="valsub" x="436" y="177">206 of 284</text></g><g class="cell m2" tabindex="0" role="group" aria-label="Jev, accuracy: 75.0%" data-tip="Jev: 213 of 284 slots linked correctly = 75.0%. 95% margin of error 66.8% to 82.9% (resampling the 145 terms, since slots of one term are not independent). The same list in the other three candidate orders: 212, 212, 210 correct."><rect class="hit" x="214" y="193" width="308" height="58" rx="8"/><path class="bar" d="M222.0,211.0h146.0a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-146.0z"/><path class="halo" d="M355.6,222.0H387.9M355.6,217.0V227.0M387.9,217.0V227.0"/><path class="whisker" d="M355.6,222.0H387.9M355.6,217.0V227.0M387.9,217.0V227.0"/><text class="val" x="436" y="221">75.0%</text><text class="valsub" x="436" y="237">213 of 284</text></g><text class="legend" x="222" y="294">bar: main run, same 284 slots</text><text class="legend" x="222" y="309">line: 95% margin of error</text><text class="title" x="542" y="22">Cost</text><text class="hint" x="838" y="22" text-anchor="end">lower is better</text><text class="desc" x="542" y="41">to link the whole list once</text><line class="grid" x1="542.0" y1="72" x2="542.0" y2="254"/><text class="tick" x="542.0" y="271" text-anchor="middle">$0</text><line class="grid" x1="608.7" y1="72" x2="608.7" y2="254"/><text class="tick" x="608.7" y="271" text-anchor="middle">$0.05</text><line class="grid" x1="675.3" y1="72" x2="675.3" y2="254"/><text class="tick" x="675.3" y="271" text-anchor="middle">$0.10</text><line class="grid" x1="742.0" y1="72" x2="742.0" y2="254"/><text class="tick" x="742.0" y="271" text-anchor="middle">$0.15</text><line class="axis" x1="542" y1="72" x2="542" y2="254"/><line class="axis" x1="542" y1="254" x2="742" y2="254"/><g class="cell m0" tabindex="0" role="group" aria-label="Reranker, cost: —" data-tip="Reranker: no per-call price. It runs on this Mac, so there is no bill (electricity and hardware are not counted)."><rect class="hit" x="534" y="73" width="308" height="58" rx="8"/><text class="absent" x="552" y="100">no per-call price:</text><text class="absent" x="552" y="116">runs on the Mac</text><text class="val" x="756" y="101">—</text><text class="valsub" x="756" y="117">not priced</text></g><g class="cell m1" tabindex="0" role="group" aria-label="Qwen3.8-27B, cost: $0.0290" data-tip="Qwen3.8-27B was free at PSNC. Priced as if bought on OpenRouter: 141,294 input and 286 output tokens per list. Median of the 15 providers that offer log-probabilities: $0.0290 (Mancer 2). Cheapest $0.0030 (Tenstorrent, fp4), priciest $0.1403 (Cerebras). Prices read 2026-10-19."><rect class="hit" x="534" y="133" width="308" height="58" rx="8"/><path class="bar" d="M542.0,151.0h34.6a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-34.6z"/><path class="halo" d="M546.0,162.0H729.1M546.0,157.0V167.0M729.1,157.0V167.0"/><path class="whisker" d="M546.0,162.0H729.1M546.0,157.0V167.0M729.1,157.0V167.0"/><text class="val" x="756" y="161">$0.0290</text><text class="valsub" x="756" y="177">median provider</text></g><g class="cell m2" tabindex="0" role="group" aria-label="Jev, cost: $0.0117" data-tip="Jev: $0.0117 per list = 279,211 input tokens at $0.042 per million (output is free). This is what OpenRouter billed for the first pass; the other orders cost the same."><rect class="hit" x="534" y="193" width="308" height="58" rx="8"/><path class="bar" d="M542.0,211.0h11.6a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-11.6z"/><text class="val" x="756" y="221">$0.0117</text><text class="valsub" x="756" y="237">billed</text></g><text class="legend" x="542" y="294">bar: median of the 15 OpenRouter providers</text><text class="legend" x="542" y="309">line: cheapest to priciest provider</text><text class="title" x="862" y="22">Latency</text><text class="hint" x="1158" y="22" text-anchor="end">lower is better</text><text class="desc" x="862" y="41">time to link the whole list once, in sequence</text><line class="grid" x1="862.0" y1="72" x2="862.0" y2="254"/><text class="tick" x="862.0" y="271" text-anchor="middle">0 s</text><line class="grid" x1="912.0" y1="72" x2="912.0" y2="254"/><text class="tick" x="912.0" y="271" text-anchor="middle">60</text><line class="grid" x1="962.0" y1="72" x2="962.0" y2="254"/><text class="tick" x="962.0" y="271" text-anchor="middle">120</text><line class="grid" x1="1012.0" y1="72" x2="1012.0" y2="254"/><text class="tick" x="1012.0" y="271" text-anchor="middle">180</text><line class="grid" x1="1062.0" y1="72" x2="1062.0" y2="254"/><text class="tick" x="1062.0" y="271" text-anchor="middle">240 s</text><line class="axis" x1="862" y1="72" x2="862" y2="254"/><line class="axis" x1="862" y1="254" x2="1062" y2="254"/><g class="cell m0" tabindex="0" role="group" aria-label="Reranker, latency: 203 s" data-tip="Reranker: 203 s to score the whole list (286 slots, 3,473 candidates, batches of 16) on this Mac&#x27;s GPU, including loading the model. Two earlier runs of the same job took 165 s and 202 s."><rect class="hit" x="854" y="73" width="308" height="58" rx="8"/><path class="bar" d="M862.0,91.0h165.2a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-165.2z"/><path class="halo" d="M999.5,102.0H1031.2M999.5,97.0V107.0M1031.2,97.0V107.0"/><path class="whisker" d="M999.5,102.0H1031.2M999.5,97.0V107.0M1031.2,97.0V107.0"/><text class="val" x="1076" y="101">203 s</text><text class="valsub" x="1076" y="117">0.71 s per slot</text></g><g class="cell m1" tabindex="0" role="group" aria-label="Qwen3.8-27B, latency: 84.7 s" data-tip="Qwen3.8-27B: 84.7 s = the time of 286 calls added up, sent one at a time (mean 0.296 s per call). The other three candidate orders: 84.6 to 86.5 s. Served by PSNC, not by OpenRouter."><rect class="hit" x="854" y="133" width="308" height="58" rx="8"/><path class="bar" d="M862.0,151.0h66.6a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-66.6z"/><path class="halo" d="M932.5,162.0H934.1M932.5,157.0V167.0M934.1,157.0V167.0"/><path class="whisker" d="M932.5,162.0H934.1M932.5,157.0V167.0M934.1,157.0V167.0"/><text class="val" x="1076" y="161">84.7 s</text><text class="valsub" x="1076" y="177">0.30 s per call</text></g><g class="cell m2" tabindex="0" role="group" aria-label="Jev, latency: 89.0 s" data-tip="Jev: 89.0 s = the time of 286 calls added up (mean 0.311 s per call). Range over the four candidate orders 84.0 to 89.0 s. The run sent 4 calls at a time, which took about 22 s of wall-clock time per list."><rect class="hit" x="854" y="193" width="308" height="58" rx="8"/><path class="bar" d="M862.0,211.0h70.2a4.0,4.0 0 0 1 4.0,4.0v14.0a4.0,4.0 0 0 1 -4.0,4.0h-70.2z"/><path class="halo" d="M932.0,222.0H936.2M932.0,217.0V227.0M936.2,217.0V227.0"/><path class="whisker" d="M932.0,222.0H936.2M932.0,217.0V227.0M936.2,217.0V227.0"/><text class="val" x="1076" y="221">89.0 s</text><text class="valsub" x="1076" y="237">0.31 s per call</text></g><text class="legend" x="862" y="294">bar: main run, calls added up</text><text class="legend" x="862" y="309">line: range over repeat runs</text></svg></div><div id="tip" role="tooltip" hidden></div></div>
+    <ul class="notes"><li><strong>Same test for all.</strong> The same 284 slots, the same candidates and the same strict scoring (a Wikidata twin of a QUDT kind counts as wrong). The three accuracy ranges overlap, so they cannot be ranked.</li><li><strong>One list</strong> is the 286 slots that have candidates, linked once. For Jev and Qwen3.8-27B the bar is the first candidate order (the pre-specified main run) and the line shows the other three orders; for the reranker it is one scoring run, with two earlier runs of the same job.</li><li><strong>Latency</strong> adds up the time of every call, one at a time. Where it ran matters: the reranker on this Mac's GPU (including loading the model), Qwen3.8-27B on PSNC's server, Jev through OpenRouter. The Jev run sent 4 calls at a time, about 22 s of wall-clock time per list.</li><li><strong>Cost.</strong> Jev is what OpenRouter billed. Qwen3.8-27B was free at PSNC, so it is priced as if bought on OpenRouter, from the 15 of 20 providers that offer log-probabilities (this method needs them). Prices were read on 2026-10-19 and they change. The reranker has no per-call price.</li><li><strong>Post hoc.</strong> Put together after the results were known; nothing was re-run. Jev's yes/no formulation is not shown (177 of 284 correct).</li></ul>
+  </div>
+  <section class="tables"><h2>The numbers behind the chart</h2><p class="small">One list = the 286 slots that have candidates, linked once. Accuracy counts the 284 slots whose vocabulary the sources reach; the margin of error resamples the 145 terms.</p><div class="table-scroll"><table><caption>For one list</caption><thead><tr><th></th><th>Correct of 284</th><th>95% margin of error</th><th>Cost per list</th><th>Cost range across providers</th><th>Latency per list</th><th>Per call</th></tr></thead><tbody><tr><th scope="row">Reranker</th><td>194 (68.3%)</td><td>57.6% to 78.9%</td><td>not priced</td><td>—</td><td>203 s (165 to 203 over 3 runs)</td><td>0.71 s per slot</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>206 (72.5%)</td><td>61.1% to 83.2%</td><td>$0.0290 (median)</td><td>$0.0030 to $0.1403</td><td>84.7 s (84.6 to 86.5 over 4 orders)</td><td>0.296 s per call</td></tr><tr><th scope="row">Jev</th><td>213 (75.0%)</td><td>66.8% to 82.9%</td><td>$0.0117 (billed)</td><td>one price</td><td>89.0 s (84.0 to 89.0 over 4 orders)</td><td>0.311 s per call</td></tr></tbody></table></div><div class="table-scroll"><table><caption>Cost per 1,000 slots (the same figures scaled)</caption><thead><tr><th></th><th>Cost</th><th>Range across providers</th></tr></thead><tbody><tr><th scope="row">Qwen3.8-27B (median, range)</th><td>$0.1013</td><td>$0.0104 to $0.4906</td></tr><tr><th scope="row">Jev (billed)</th><td>$0.0410</td><td>one price</td></tr></tbody></table></div><div class="table-scroll"><table><caption>Whole experiments as they were run (not like for like: Jev's includes a yes/no pass that Qwen3.8-27B did not run)</caption><thead><tr><th></th><th>Calls</th><th>Input tokens</th><th>Cost</th><th>Latency of all calls added up</th><th>Wall-clock as run</th></tr></thead><tbody><tr><th scope="row">Reranker</th><td>1 scoring run, 286 lists</td><td>—</td><td>not priced</td><td>203 s</td><td>203 s</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>1,144 (4 candidate orders)</td><td>565,176</td><td>free at PSNC; at OpenRouter $0.1159 (median), $0.0119 to $0.5612</td><td>340.7 s</td><td>343.5 s (1 call at a time)</td></tr><tr><th scope="row">Jev</th><td>1,431 (4 candidate orders + a yes/no pass; 1 answer asked again)</td><td>1,686,007</td><td>$0.0708 billed</td><td>433.8 s</td><td>109.0 s (4 calls at a time)</td></tr></tbody></table></div></section>
+  <footer>Made by compute_numbers.py and render_figure.py from the stored run files; numbers.json holds
+  every number. A post hoc side analysis: it was not pre-specified and re-runs nothing.</footer>
+</main>
+<script>
+(function () {
+  var theme = /[?&]theme=(light|dark)/.exec(location.search);
+  if (theme) { document.documentElement.setAttribute('data-theme', theme[1]); }
+  var wrap = document.querySelector('.chart-wrap');
+  var tip = document.getElementById('tip');
+  function show(cell, x, y) {
+    tip.textContent = cell.getAttribute('data-tip');
+    tip.hidden = false;
+    var box = wrap.getBoundingClientRect();
+    var left = Math.min(Math.max(x - box.left + 14, 8), box.width - tip.offsetWidth - 8);
+    var top = y - box.top + 18;
+    if (y + 18 + tip.offsetHeight > window.innerHeight - 8) { top = y - box.top - tip.offsetHeight - 12; }
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+  function hide() { tip.hidden = true; }
+  document.querySelectorAll('.cell').forEach(function (cell) {
+    cell.addEventListener('pointermove', function (e) { show(cell, e.clientX, e.clientY); });
+    cell.addEventListener('pointerleave', hide);
+    cell.addEventListener('focus', function () {
+      var b = cell.getBoundingClientRect();
+      show(cell, b.left + b.width / 2, b.top + b.height / 2);
+    });
+    cell.addEventListener('blur', hide);
+  });
+  if (location.search.indexOf('png') !== -1) { document.documentElement.classList.add('png'); }
+})();
+</script>
+</body>
+</html>

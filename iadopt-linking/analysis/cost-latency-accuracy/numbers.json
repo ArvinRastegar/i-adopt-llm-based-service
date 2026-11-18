@@ -1,0 +1,514 @@
+{
+  "meta": {
+    "kind": "post hoc side analysis; re-runs nothing, calls no service",
+    "list": "one list = the 286 slots that have candidates, asked once",
+    "primary_pass": "choice-a1",
+    "bootstrap": {
+      "draws": 10000,
+      "seed": 20261019,
+      "unit": "term (query_key)",
+      "terms": 145
+    },
+    "prices_read_on": "2026-10-19",
+    "prices_sources": [
+      "https://openrouter.ai/api/v1/models/qwen/qwen3.8-27b/endpoints",
+      "https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints"
+    ],
+    "reports_reproduced": [
+      "reachable slots",
+      "reranker correct",
+      "Qwen3.8-27B correct",
+      "Jev correct",
+      "Jev answered requests",
+      "Jev input tokens",
+      "Jev billed USD",
+      "Qwen3.8-27B requests",
+      "Qwen3.8-27B input tokens",
+      "Qwen3.8-27B output tokens",
+      "Qwen3.8-27B request seconds"
+    ]
+  },
+  "accuracy": {
+    "reachable_slots": 284,
+    "terms": 145,
+    "reranker": {
+      "receipt": {
+        "numerator": 194,
+        "denominator": 284
+      },
+      "share": 0.6831,
+      "ci95": [
+        0.5765,
+        0.7886
+      ]
+    },
+    "qwen38": {
+      "receipt": {
+        "numerator": 206,
+        "denominator": 284
+      },
+      "share": 0.7254,
+      "ci95": [
+        0.6106,
+        0.832
+      ],
+      "other_orders": {
+        "choice-a1": 206,
+        "choice-a1-repeat": 206,
+        "choice-a2-reversed": 202,
+        "choice-a3": 201
+      }
+    },
+    "jev": {
+      "receipt": {
+        "numerator": 213,
+        "denominator": 284
+      },
+      "share": 0.75,
+      "ci95": [
+        0.6678,
+        0.8294
+      ],
+      "other_orders": {
+        "choice-a1": 213,
+        "choice-a1-repeat": 212,
+        "choice-a2-reversed": 212,
+        "choice-a3": 210
+      },
+      "yes_no_pass": 177
+    },
+    "paired": {
+      "jev_minus_qwen38": {
+        "difference": 0.0246,
+        "ci95": [
+          -0.0332,
+          0.0825
+        ]
+      },
+      "jev_minus_reranker": {
+        "difference": 0.0669,
+        "ci95": [
+          -0.039,
+          0.1847
+        ]
+      },
+      "qwen38_minus_reranker": {
+        "difference": 0.0423,
+        "ci95": [
+          -0.0726,
+          0.1765
+        ]
+      }
+    }
+  },
+  "latency": {
+    "list_requests": 286,
+    "reranker": {
+      "seconds": 203.0,
+      "run_seconds": [
+        165.0,
+        202.0,
+        203.0
+      ],
+      "range": [
+        165.0,
+        203.0
+      ],
+      "lists_scored": 286,
+      "candidates_scored": 3473,
+      "seconds_per_slot": 0.71,
+      "device": "mps",
+      "batch_size": 16,
+      "includes_model_loading": true
+    },
+    "qwen38": {
+      "seconds": 84.736,
+      "range": [
+        84.617,
+        86.498
+      ],
+      "mean_call_seconds": 0.2963,
+      "wall_seconds_per_list_as_run": 85.9,
+      "workers": 1,
+      "passes": {
+        "choice-a1": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 84.736,
+          "call_seconds_mean": 0.2963,
+          "call_seconds_median": 0.2845,
+          "call_seconds_p95": 0.3962,
+          "call_seconds_max": 0.562,
+          "input_tokens": 141294,
+          "output_tokens": 286,
+          "billed_usd": 0.0
+        },
+        "choice-a1-repeat": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 84.617,
+          "call_seconds_mean": 0.2959,
+          "call_seconds_median": 0.275,
+          "call_seconds_p95": 0.4313,
+          "call_seconds_max": 0.768,
+          "input_tokens": 141294,
+          "output_tokens": 286,
+          "billed_usd": 0.0
+        },
+        "choice-a2-reversed": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 86.498,
+          "call_seconds_mean": 0.3024,
+          "call_seconds_median": 0.28,
+          "call_seconds_p95": 0.4233,
+          "call_seconds_max": 1.467,
+          "input_tokens": 141294,
+          "output_tokens": 286,
+          "billed_usd": 0.0
+        },
+        "choice-a3": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 84.875,
+          "call_seconds_mean": 0.2968,
+          "call_seconds_median": 0.278,
+          "call_seconds_p95": 0.4042,
+          "call_seconds_max": 1.004,
+          "input_tokens": 141294,
+          "output_tokens": 286,
+          "billed_usd": 0.0
+        }
+      }
+    },
+    "jev": {
+      "seconds": 88.992,
+      "range": [
+        84.03,
+        88.992
+      ],
+      "mean_call_seconds": 0.3112,
+      "wall_seconds_per_list_as_run": 21.8,
+      "workers": 4,
+      "passes": {
+        "choice-a1": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 88.992,
+          "call_seconds_mean": 0.3112,
+          "call_seconds_median": 0.286,
+          "call_seconds_p95": 0.415,
+          "call_seconds_max": 1.523,
+          "input_tokens": 279211,
+          "output_tokens": 39573,
+          "billed_usd": 0.011726862
+        },
+        "choice-a1-repeat": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 84.96,
+          "call_seconds_mean": 0.2971,
+          "call_seconds_median": 0.283,
+          "call_seconds_p95": 0.3918,
+          "call_seconds_max": 1.293,
+          "input_tokens": 279211,
+          "output_tokens": 39572,
+          "billed_usd": 0.011726862
+        },
+        "choice-a2-reversed": {
+          "stored_responses": 287,
+          "rejected_and_asked_again": 1,
+          "calls_retried": 0,
+          "call_seconds_total": 86.001,
+          "call_seconds_mean": 0.2997,
+          "call_seconds_median": 0.28,
+          "call_seconds_p95": 0.3787,
+          "call_seconds_max": 1.416,
+          "input_tokens": 280085,
+          "output_tokens": 39701,
+          "billed_usd": 0.01176357
+        },
+        "choice-a3": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 84.03,
+          "call_seconds_mean": 0.2938,
+          "call_seconds_median": 0.278,
+          "call_seconds_p95": 0.3878,
+          "call_seconds_max": 0.845,
+          "input_tokens": 279211,
+          "output_tokens": 39573,
+          "billed_usd": 0.011726862
+        },
+        "noul-n1": {
+          "stored_responses": 286,
+          "rejected_and_asked_again": 0,
+          "calls_retried": 0,
+          "call_seconds_total": 89.782,
+          "call_seconds_mean": 0.3139,
+          "call_seconds_median": 0.291,
+          "call_seconds_p95": 0.391,
+          "call_seconds_max": 1.317,
+          "input_tokens": 568289,
+          "output_tokens": 63658,
+          "billed_usd": 0.023868138
+        }
+      }
+    }
+  },
+  "cost": {
+    "reranker": {
+      "usd_per_list": null,
+      "note": "runs on the Mac: no per-call price (power and hardware not counted)"
+    },
+    "qwen38": {
+      "usd_per_list": 0.028974,
+      "input_tokens_per_list": 141294,
+      "output_tokens_per_list": 286,
+      "openrouter": {
+        "median_usd": 0.028974,
+        "median_provider": "Mancer 2",
+        "cheapest": {
+          "provider": "Tenstorrent",
+          "offers_logprobs": true,
+          "quantization": "fp4",
+          "usd_per_million_input": 0.02,
+          "usd_per_million_output": 0.5,
+          "usd": 0.002969
+        },
+        "priciest": {
+          "provider": "Cerebras",
+          "offers_logprobs": true,
+          "quantization": "fp16",
+          "usd_per_million_input": 0.99,
+          "usd_per_million_output": 1.49,
+          "usd": 0.140307
+        },
+        "all_endpoints_usd_range": [
+          0.002969,
+          0.140307
+        ],
+        "providers_offering_logprobs": 15,
+        "providers_listed": 20,
+        "providers": [
+          {
+            "provider": "Tenstorrent",
+            "offers_logprobs": true,
+            "quantization": "fp4",
+            "usd_per_million_input": 0.02,
+            "usd_per_million_output": 0.5,
+            "usd": 0.002969
+          },
+          {
+            "provider": "Darkbloom",
+            "offers_logprobs": true,
+            "quantization": "fp4",
+            "usd_per_million_input": 0.035,
+            "usd_per_million_output": 2.2,
+            "usd": 0.005574
+          },
+          {
+            "provider": "Chutes",
+            "offers_logprobs": false,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.039,
+            "usd_per_million_output": 1.25,
+            "usd": 0.005868
+          },
+          {
+            "provider": "Near AI",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.04,
+            "usd_per_million_output": 1.35,
+            "usd": 0.006038
+          },
+          {
+            "provider": "Reka",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.04,
+            "usd_per_million_output": 2.2,
+            "usd": 0.006281
+          },
+          {
+            "provider": "Wafer",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.04,
+            "usd_per_million_output": 2.3,
+            "usd": 0.00631
+          },
+          {
+            "provider": "DekaLLM",
+            "offers_logprobs": true,
+            "quantization": "unknown",
+            "usd_per_million_input": 0.04,
+            "usd_per_million_output": 2.5,
+            "usd": 0.006367
+          },
+          {
+            "provider": "Ionstream",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.0893,
+            "usd_per_million_output": 2.35,
+            "usd": 0.01329
+          },
+          {
+            "provider": "DeepInfra",
+            "offers_logprobs": false,
+            "quantization": "bf16",
+            "usd_per_million_input": 0.15,
+            "usd_per_million_output": 1.875,
+            "usd": 0.02173
+          },
+          {
+            "provider": "ModelRun",
+            "offers_logprobs": false,
+            "quantization": "fp4",
+            "usd_per_million_input": 0.2,
+            "usd_per_million_output": 2.5,
+            "usd": 0.028974
+          },
+          {
+            "provider": "Mancer 2",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.2,
+            "usd_per_million_output": 2.5,
+            "usd": 0.028974
+          },
+          {
+            "provider": "Phala",
+            "offers_logprobs": false,
+            "quantization": "unknown",
+            "usd_per_million_input": 0.2,
+            "usd_per_million_output": 2.5,
+            "usd": 0.028974
+          },
+          {
+            "provider": "AkashML",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.225,
+            "usd_per_million_output": 1.98,
+            "usd": 0.032357
+          },
+          {
+            "provider": "Parasail",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.24,
+            "usd_per_million_output": 2.2,
+            "usd": 0.03454
+          },
+          {
+            "provider": "CoreWeave",
+            "offers_logprobs": true,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.4,
+            "usd_per_million_output": 3.0,
+            "usd": 0.057376
+          },
+          {
+            "provider": "Novita",
+            "offers_logprobs": true,
+            "quantization": "unknown",
+            "usd_per_million_input": 0.42,
+            "usd_per_million_output": 3.0,
+            "usd": 0.060201
+          },
+          {
+            "provider": "Alibaba",
+            "offers_logprobs": true,
+            "quantization": "unknown",
+            "usd_per_million_input": 0.425,
+            "usd_per_million_output": 2.55,
+            "usd": 0.060779
+          },
+          {
+            "provider": "Cloudflare",
+            "offers_logprobs": true,
+            "quantization": "unknown",
+            "usd_per_million_input": 0.45,
+            "usd_per_million_output": 3.2,
+            "usd": 0.064497
+          },
+          {
+            "provider": "Venice",
+            "offers_logprobs": false,
+            "quantization": "fp8",
+            "usd_per_million_input": 0.45,
+            "usd_per_million_output": 3.2,
+            "usd": 0.064497
+          },
+          {
+            "provider": "Cerebras",
+            "offers_logprobs": true,
+            "quantization": "fp16",
+            "usd_per_million_input": 0.99,
+            "usd_per_million_output": 1.49,
+            "usd": 0.140307
+          }
+        ]
+      },
+      "free_at": "PSNC (the run was not billed)"
+    },
+    "jev": {
+      "usd_per_list": 0.011727,
+      "input_tokens_per_list": 279211,
+      "usd_per_million_input": 0.042,
+      "billed_equals_tokens_times_price": true,
+      "billed_per_choice_pass": [
+        0.011726862,
+        0.011726862,
+        0.01176357,
+        0.011726862
+      ]
+    },
+    "ratios": {
+      "qwen38_median_over_jev": 2.47,
+      "qwen38_cheapest_over_jev": 0.25,
+      "qwen38_priciest_over_jev": 11.96
+    }
+  },
+  "as_run": {
+    "reranker": {
+      "calls": "1 scoring run over 286 lists",
+      "seconds_summed": 203.0,
+      "wall_seconds": 203.0,
+      "usd": null
+    },
+    "qwen38": {
+      "calls": 1144,
+      "input_tokens": 565176,
+      "output_tokens": 1144,
+      "seconds_summed": 340.726,
+      "wall_seconds": 343.5,
+      "workers": 1,
+      "usd_psnc": 0.0,
+      "usd_openrouter_median": 0.115895,
+      "usd_openrouter_range": [
+        0.011876,
+        0.561229
+      ]
+    },
+    "jev": {
+      "calls": 1431,
+      "input_tokens": 1686007,
+      "output_tokens": 222077,
+      "seconds_summed": 433.765,
+      "wall_seconds": 109.0,
+      "workers": 4,
+      "usd_billed": 0.070812294
+    }
+  }
+}
