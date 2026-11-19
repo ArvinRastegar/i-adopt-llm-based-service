@@ -1,0 +1,2178 @@
+{
+ "date": "2026-11-19",
+ "issues": [
+  {
+   "corpus_path": "Technical Sciences/Material Science/StateOfPipeConnection.ttl",
+   "labels": [
+    "101 property: nominal",
+    "206 constraint: diameter",
+    "33 object of interest: single",
+    "64 constraint: material type",
+    "corpus"
+   ],
+   "number": 1,
+   "state": "open",
+   "title": "Technical Sciences - Material Science - Waste water: State of pipe",
+   "updated_at": "2026-08-16T10:26:06Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Material Science/CirculationMode-Water.ttl",
+   "labels": [
+    "101 property: nominal",
+    "32 object of interest: process",
+    "42 matrix: artificial container",
+    "corpus"
+   ],
+   "number": 2,
+   "state": "open",
+   "title": "Technical Sciences - Material Science - CirculationMode-Water",
+   "updated_at": "2026-08-16T07:16:05Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 3,
+   "state": "closed",
+   "title": "Direction of radial vector relative to instrument and True North",
+   "updated_at": "2025-11-18T18:26:42Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 4,
+   "state": "closed",
+   "title": "Radial velocity (away from) standard error of water current relative to instrument in the water body",
+   "updated_at": "2025-11-18T18:26:53Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 5,
+   "state": "closed",
+   "title": "Standard deviation of surface northward sea water velocity",
+   "updated_at": "2025-11-18T18:27:09Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 6,
+   "state": "closed",
+   "title": "Surface eastward sea water velocity",
+   "updated_at": "2025-11-18T18:27:16Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Space Physics/C1_ElectronDensity.ttl",
+   "labels": [
+    "125 property: volumic number density",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "number": 7,
+   "state": "open",
+   "title": "Natural Sciences - Space Physics - C1 Electron density in the solar wind",
+   "updated_at": "2026-08-17T12:43:10Z"
+  },
+  {
+   "corpus_path": "Natural Science/Atmospheric Science/C2_AirDailyMaximumTemperature.ttl",
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "83 constraint: reporting frequency",
+    "corpus"
+   ],
+   "number": 8,
+   "state": "open",
+   "title": "Natural Science - Atmospheric Science - C2 Air daily maximum temperature",
+   "updated_at": "2026-08-15T09:10:11Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/C3_CloudCover.ttl",
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "number": 9,
+   "state": "open",
+   "title": "Natural Sciences- Atmospheric Sciences - C3 Cloud cover",
+   "updated_at": "2026-08-16T13:13:39Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/C4_ABLHeight.ttl",
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 10,
+   "state": "open",
+   "title": "Natural Sciences - Atmosheric Science - C4 Atmospheric boundary layer height defined by temperature inversion",
+   "updated_at": "2026-08-15T12:03:32Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/C5_OpticalThickness.ttl",
+   "labels": [
+    "113 property: dimensionless physical ratio",
+    "37 object of interest: convoluted",
+    "40 matrix: embedding material",
+    "50 context: environment",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "number": 11,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - C5 Atmosphere optical thickness of particulate organic matter ambient aerosol",
+   "updated_at": "2026-08-17T12:43:48Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Ecology/C6_MassFlux.ttl",
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "72 constraint: cause",
+    "corpus"
+   ],
+   "number": 12,
+   "state": "open",
+   "title": "Life Sciences - Ecology - C6 Mass flux of carbon into soil from vegetation due to senescence",
+   "updated_at": "2026-08-17T12:44:27Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Ecology/C7_TrunkCharHeight.ttl",
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "72 constraint: cause",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 13,
+   "state": "open",
+   "title": "Life Sciences - Ecology - C7 Maximum trunk char height",
+   "updated_at": "2026-09-22T13:44:30Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Ecology/C8_CWDFraction.ttl",
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 14,
+   "state": "open",
+   "title": "Life Sciences - Ecology - C8 Coarse woody debris abundance",
+   "updated_at": "2026-08-16T13:34:53Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Ecology/C9_FoliageCover.ttl",
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "number": 15,
+   "state": "open",
+   "title": "Life Sciences - Ecology- C9 Foliage projective cover in the lower canopy strata",
+   "updated_at": "2026-10-12T13:27:17Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Geology/C10_PeakGroundAcceleration.ttl",
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "91 constraint: event",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 16,
+   "state": "open",
+   "title": "Natural Sciences - Geology - C10 Peak ground acceleration",
+   "updated_at": "2026-08-18T19:59:32Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Geology/C11_StrikeBedding.ttl",
+   "labels": [
+    "116 property: angle",
+    "34 object of interest: two equal",
+    "40 matrix: embedding material",
+    "corpus"
+   ],
+   "number": 17,
+   "state": "open",
+   "title": "Natural Sciences - Geology- C11 Strike of bedding",
+   "updated_at": "2026-08-16T12:38:11Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Ecology/C12_HabitatProbability.ttl",
+   "labels": [
+    "139 property: probability",
+    "207 constraint: classification",
+    "33 object of interest: single",
+    "50 context: environment",
+    "92 constraint: normalization",
+    "97 constraint: region",
+    "99 constraint: temporal reference",
+    "corpus"
+   ],
+   "number": 18,
+   "state": "open",
+   "title": "Life Sciences - Ecology - C12 Probablity of occurence of habitat",
+   "updated_at": "2026-09-07T16:48:04Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "108 property: distance",
+    "34 object of interest: two equal",
+    "44 matrix: reference area",
+    "65 constraint: subkind",
+    "70 constraint: condition",
+    "to be changed"
+   ],
+   "number": 19,
+   "state": "open",
+   "title": "C13 Distance to nearest neighbour habitat patch",
+   "updated_at": "2026-08-17T05:23:26Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Biology/C14_FeralfreeEnclosureArea.ttl",
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "number": 20,
+   "state": "open",
+   "title": "Life Sciences - Biology - C14 Feral-free enclosure area",
+   "updated_at": "2026-08-18T20:03:00Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Biology/C15_ForaminiferSize.ttl",
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "40 matrix: embedding material",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "number": 21,
+   "state": "open",
+   "title": "Life Sciences - Biology - C15 Foraminifera, planktic, size",
+   "updated_at": "2026-08-16T07:51:11Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Biology/C16OxygenMetabolicRate.ttl",
+   "labels": [
+    "115 property: normalized",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "92 constraint: normalization",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 22,
+   "state": "open",
+   "title": "Life Sciences - Biology - C16 Standard metabolic rate in mg of Oxygen per hour",
+   "updated_at": "2026-08-19T08:24:32Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Biology/C17_DHAMassFraction.ttl",
+   "labels": [
+    "122 property: massic amount of substance",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "number": 23,
+   "state": "open",
+   "title": "Life Sciences - Biology - C17 Docosahexaenoic acid content per dry weight",
+   "updated_at": "2026-08-17T12:52:04Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/C18_BiologicalSex.ttl",
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "corpus"
+   ],
+   "number": 24,
+   "state": "open",
+   "title": "Social Sciences - Demography - C18 Biological sex",
+   "updated_at": "2026-08-16T06:46:43Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Biology/C19_CarbonRate.ttl",
+   "labels": [
+    "131 property: flux complex",
+    "35 object of interest: ratio",
+    "45 matrix: flow",
+    "70 constraint: condition",
+    "76 constraint: state",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 25,
+   "state": "open",
+   "title": "Life Sciences - Biology - C19 Weight specific ingestion Carbon rate at 15°C",
+   "updated_at": "2026-08-19T09:32:34Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Environmental Engineering/C20_DDTConcentration.ttl",
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "number": 26,
+   "state": "open",
+   "title": "Technical Sciences - Environmental Engineering - C20 Concentration of DDT impacted by industry",
+   "updated_at": "2026-08-16T13:40:28Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/C21_BloodPressure.ttl",
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "88 constraint: locomotion state",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 27,
+   "state": "open",
+   "title": "Life Sciences - Health Science - C21 Resting systolic blood pressure",
+   "updated_at": "2026-08-18T20:24:51Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/C22_SmokingStatus.ttl",
+   "labels": [
+    "101 property: nominal",
+    "32 object of interest: process",
+    "41 matrix: natural container",
+    "77 constraint: role",
+    "78 constraint: time",
+    "corpus"
+   ],
+   "number": 28,
+   "state": "open",
+   "title": "Life Sciences - Health Science - C22 Current smoking status",
+   "updated_at": "2026-08-16T07:32:52Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Toxicology/C23_NanoparticleDose.ttl",
+   "labels": [
+    "115 property: normalized",
+    "33 object of interest: single",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 29,
+   "state": "open",
+   "title": "Life Sciences - Toxicology - C23 Dose of applied nanomaterial internalised by a specific cell population per cell area (mass per cell)",
+   "updated_at": "2026-08-19T05:25:59Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Toxicology/C24_NanoparticleCount.ttl",
+   "labels": [
+    "124 property: normalized count",
+    "33 object of interest: single",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 30,
+   "state": "open",
+   "title": "Life Sciences - Toxicology - C24 Dose of applied nanomaterial internalised by a specific cell population as particle number per cell area",
+   "updated_at": "2026-08-19T05:35:48Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Material Science/C25_PolystyreneViscosity.ttl",
+   "labels": [
+    "126 property: intrinsic",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "number": 31,
+   "state": "open",
+   "title": "Technical Sciences - Material Science - C25 Dynamic shear viscosity of polystyrene",
+   "updated_at": "2026-08-18T14:01:38Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Material Science/C26_GoldSheetResistance.ttl",
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "69 constraint: thickness",
+    "corpus"
+   ],
+   "number": 32,
+   "state": "open",
+   "title": "Technical Sciences - Material Science - C26 Sheet resistance of layer of gold",
+   "updated_at": "2026-08-18T20:30:43Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Chemical Engineering/C27_IsobutyleneConcentration.ttl",
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "number": 33,
+   "state": "open",
+   "title": "Technical Sciences - Chemical Engineering - C27 Mass concentration of isobutylene in chloroform",
+   "updated_at": "2026-08-17T12:53:05Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Toruism Research/C28_CountOvernightstay.ttl",
+   "labels": [
+    "104 property: count",
+    "204 constraint: vicinity",
+    "205 constraint: rating",
+    "33 object of interest: single",
+    "42 matrix: artificial container",
+    "corpus"
+   ],
+   "number": 34,
+   "state": "open",
+   "title": "Social Sciences - Tourism Research - C28 Overnight stays in 3-star hotel near the sea shore",
+   "updated_at": "2026-08-15T14:08:21Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Psychology/C29_NervosityFrequency.ttl",
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 35,
+   "state": "open",
+   "title": "Social Sciences - Psychology - C29 Nervosity feelings in the past 30 years",
+   "updated_at": "2026-09-24T07:28:58Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/C30_LastCovidTest.ttl",
+   "labels": [
+    "137 property: instant",
+    "31 object of interest: event",
+    "41 matrix: natural container",
+    "62 constraint: agent",
+    "91 constraint: event",
+    "93 constraint: purpose",
+    "corpus"
+   ],
+   "number": 36,
+   "state": "open",
+   "title": "Life Sciences - Health Science - C30 Date of last PCR-test",
+   "updated_at": "2026-08-17T05:48:27Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Oceanography/EWCT.ttl",
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "94 constraint: part",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "number": 37,
+   "state": "open",
+   "title": "Natural Sciences - Oceanography - HFR - EWCT Surface eastward sea water velocity",
+   "updated_at": "2026-08-17T12:54:38Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "50 context: environment",
+    "94 constraint: part",
+    "96 constraint: direction"
+   ],
+   "number": 38,
+   "state": "open",
+   "title": "Ocean HFR - NSCT Surface northward sea water velocity",
+   "updated_at": "2026-08-18T09:47:57Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "41 matrix: natural container",
+    "50 context: environment",
+    "65 constraint: subkind",
+    "67 constraint: location",
+    "75 constraint: temporal extent"
+   ],
+   "number": 39,
+   "state": "open",
+   "title": "Ocean - HFR - EWCS Standard deviation of surface eastward sea water velocity",
+   "updated_at": "2026-02-12T13:37:41Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "41 matrix: natural container",
+    "50 context: environment",
+    "65 constraint: subkind",
+    "67 constraint: location",
+    "75 constraint: temporal extent"
+   ],
+   "number": 40,
+   "state": "open",
+   "title": "Ocean - HFR - NCSC Standard deviation of surface northward sea water velocity",
+   "updated_at": "2026-08-17T05:26:10Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "41 matrix: natural container",
+    "50 context: environment",
+    "67 constraint: location",
+    "to be agreed on"
+   ],
+   "number": 41,
+   "state": "open",
+   "title": "Ocean - HFR - CCOV Covariance of surface sea water velocity",
+   "updated_at": "2026-02-12T13:37:56Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "39 object of interest: variable"
+   ],
+   "number": 42,
+   "state": "open",
+   "title": "Ocean - HFR - UACC Eastward velocity uncertainty of water current in the water body by high frequency radar",
+   "updated_at": "2026-02-09T12:10:11Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Oceanography/VACC.ttl",
+   "labels": [
+    "136 property: statistical",
+    "39 object of interest: variable",
+    "corpus"
+   ],
+   "number": 43,
+   "state": "open",
+   "title": "Natural Sciences - Oceanography - HFR - VACC Northward velocity uncertainty of water current in the water body by high frequency radar",
+   "updated_at": "2026-08-18T16:33:51Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "100 part: variable",
+    "114 property: ratioless derived",
+    "38 object of interest: property"
+   ],
+   "number": 44,
+   "state": "open",
+   "title": "Ocean - HFR - GDOP Geometrical dilution of precision",
+   "updated_at": "2026-08-15T12:27:37Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 45,
+   "state": "closed",
+   "title": "HFR - TIME_QC Time quality flag",
+   "updated_at": "2025-11-09T20:47:37Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 46,
+   "state": "closed",
+   "title": "HFR - POSITION_QC Position quality flag",
+   "updated_at": "2025-11-09T20:47:42Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 47,
+   "state": "closed",
+   "title": "HFR - DEPTH_QC Depth quality flag",
+   "updated_at": "2025-11-09T20:47:47Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 48,
+   "state": "closed",
+   "title": "HFR - QCflag Overall quality flag",
+   "updated_at": "2025-11-09T20:47:23Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 49,
+   "state": "closed",
+   "title": "HFR - VART_QC Temporal derivative quality flag",
+   "updated_at": "2025-11-09T20:47:17Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Technical Engineering/GDOP_QC.ttl",
+   "labels": [
+    "103 property: boolean",
+    "200 constraint: criterion",
+    "39 object of interest: variable",
+    "corpus"
+   ],
+   "number": 50,
+   "state": "open",
+   "title": "Technical Sciences - Technical Engineering - QC GDOP threshold quality flag",
+   "updated_at": "2026-08-15T13:19:13Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 51,
+   "state": "closed",
+   "title": "HFR - DDNS_QC Data density threshold quality flag",
+   "updated_at": "2025-11-09T20:47:11Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 52,
+   "state": "closed",
+   "title": "HFR - CSPD_QC Velocity threshold quality flag",
+   "updated_at": "2025-11-09T20:46:53Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 53,
+   "state": "closed",
+   "title": "HFR - NARX Number of receive antennas",
+   "updated_at": "2025-11-09T20:46:41Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 54,
+   "state": "closed",
+   "title": "HFR - NATX Number of transmit antennas",
+   "updated_at": "2025-11-09T20:46:29Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 55,
+   "state": "closed",
+   "title": "HFR - SLTR (degree_north) Receive antenna latitudes = deployment_latitude",
+   "updated_at": "2025-11-09T20:46:35Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 56,
+   "state": "closed",
+   "title": "HFR - SLNR (degree_east) Receive antenna longitudes = deployment_longitude",
+   "updated_at": "2025-11-09T20:46:17Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 57,
+   "state": "closed",
+   "title": "HFR - SLTT (degree_north) Transmit antenna latitudes = deployment_latitude",
+   "updated_at": "2025-11-09T20:46:09Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 58,
+   "state": "closed",
+   "title": "HFR - SLNT (degree_east) Transmit antenna longitudes = deployment_longitude",
+   "updated_at": "2025-11-09T20:46:03Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 59,
+   "state": "closed",
+   "title": "HFR - SCDR Receive antenna codes",
+   "updated_at": "2025-11-09T20:45:55Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 60,
+   "state": "closed",
+   "title": "HFR - SCDT Transmit antenna codes",
+   "updated_at": "2025-11-09T20:45:45Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Oceanography/RDVA.ttl",
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "68 constraint: reference",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "number": 61,
+   "state": "open",
+   "title": "Natural Sciences - Oceanography - HFR - RDVA Radial velocity of water current",
+   "updated_at": "2026-08-26T10:56:51Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Oceanography/DRVA.ttl",
+   "labels": [
+    "117 property: direction",
+    "39 object of interest: variable",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "number": 62,
+   "state": "open",
+   "title": "Natural Sciences - Oceanography - DRVA Direction of radial velocity of water current",
+   "updated_at": "2026-08-18T09:28:24Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Oceanography/ETMP.ttl",
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "68 constraint: reference",
+    "75 constraint: temporal extent",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 63,
+   "state": "open",
+   "title": "Natural Sciences - Oceanography - HFR - ETMP Radial velocity (away from) standard deviation of water current relative to instrument in the water body by high frequency radar",
+   "updated_at": "2026-08-17T12:56:57Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Oceanography/HCSS.ttl",
+   "labels": [
+    "136 property: statistical",
+    "39 object of interest: variable",
+    "75 constraint: temporal extent",
+    "corpus"
+   ],
+   "number": 64,
+   "state": "open",
+   "title": "Natural Sciences - Oceanography- HCSS Radial velocity variance of water current relative to instrument in the water body by high frequency radar",
+   "updated_at": "2026-08-18T09:10:41Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "126 property: intrinsic",
+    "41 matrix: natural container",
+    "50 context: environment",
+    "65 constraint: subkind",
+    "67 constraint: location",
+    "68 constraint: reference",
+    "to be agreed on"
+   ],
+   "number": 65,
+   "state": "closed",
+   "title": "Ocean - HFR - EACC Radial velocity uncertainty of water current relative to instrument in the water body by high frequency radar",
+   "updated_at": "2026-01-24T19:04:49Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "50 context: environment",
+    "65 constraint: subkind",
+    "statistical modifier"
+   ],
+   "number": 66,
+   "state": "open",
+   "title": "Ocean - UVAD Eastward velocity average in the water by a moored acoustic doppler current profile (ADCP)",
+   "updated_at": "2026-08-17T05:48:52Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "50 context: environment",
+    "67 constraint: location",
+    "68 constraint: reference",
+    "70 constraint: condition",
+    "73 constraint: interpretation",
+    "statistical modifier"
+   ],
+   "number": 67,
+   "state": "open",
+   "title": "Ocean - HFR -  ESPC Radial velocity (away from) standard deviation over the scatter patch of water current",
+   "updated_at": "2026-09-07T13:30:01Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "39 object of interest: variable",
+    "70 constraint: condition",
+    "to be agreed on"
+   ],
+   "number": 68,
+   "state": "open",
+   "title": "Ocean - HRF - TIME_QC Time Quality Flag",
+   "updated_at": "2025-11-29T10:18:36Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "101 property: nominal",
+    "39 object of interest: variable",
+    "to be agreed on"
+   ],
+   "number": 69,
+   "state": "open",
+   "title": "Ocean - HFR - Position Quality Flag",
+   "updated_at": "2025-11-29T10:20:01Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "101 property: nominal",
+    "39 object of interest: variable",
+    "70 constraint: condition",
+    "to be agreed on"
+   ],
+   "number": 70,
+   "state": "open",
+   "title": "Ocean - HFR - Depth Quality Flag",
+   "updated_at": "2025-11-29T10:20:17Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "100 part: variable",
+    "101 property: nominal",
+    "38 object of interest: property",
+    "to be agreed on"
+   ],
+   "number": 71,
+   "state": "open",
+   "title": "Ocean - HFR - MDFL_QC Median filter quality flag",
+   "updated_at": "2025-11-29T10:20:32Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "101 property: nominal",
+    "39 object of interest: variable",
+    "70 constraint: condition"
+   ],
+   "number": 72,
+   "state": "open",
+   "title": "Ocean - HFR - QWTR_QC Over-water quality flag",
+   "updated_at": "2025-11-29T10:21:17Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "101 property: nominal",
+    "39 object of interest: variable",
+    "to be agreed on"
+   ],
+   "number": 73,
+   "state": "open",
+   "title": "Ocean - HFR _ CSPD_QC Velocity quality flag",
+   "updated_at": "2025-11-29T10:20:54Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "101 property: nominal",
+    "39 object of interest: variable",
+    "70 constraint: condition",
+    "to be agreed on"
+   ],
+   "number": 74,
+   "state": "open",
+   "title": "Ocean - HFR - AVRB_QC Average radial bearing quality flag",
+   "updated_at": "2025-11-29T10:21:05Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "103 property: boolean",
+    "39 object of interest: variable",
+    "82 constraint: threshold",
+    "to be agreed on"
+   ],
+   "number": 75,
+   "state": "open",
+   "title": "Ocean - HFR - RDCT_QC Radial count quality flag",
+   "updated_at": "2025-11-25T16:11:12Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "103 property: boolean",
+    "39 object of interest: variable",
+    "82 constraint: threshold",
+    "to be agreed on"
+   ],
+   "number": 76,
+   "state": "open",
+   "title": "Ocean - HFR - DDNS_QC Data density quality flag",
+   "updated_at": "2025-11-25T16:10:55Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "103 property: boolean",
+    "39 object of interest: variable",
+    "82 constraint: threshold"
+   ],
+   "number": 77,
+   "state": "open",
+   "title": "Ocean -HRF - VART_QC Variance quality flag",
+   "updated_at": "2026-08-15T06:25:38Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Chemical Engineering/BPVAR.ttl",
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 78,
+   "state": "open",
+   "title": "Technical Sciences - Chemical Engineering - Boiling point of benzene under standard conditions",
+   "updated_at": "2026-08-19T08:00:39Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Chemical Engineering/MPVAR.ttl",
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 79,
+   "state": "open",
+   "title": "Technical Sciences - Chemical Engineering - Melting point of naphthalene under standard conditions",
+   "updated_at": "2026-08-19T08:05:44Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Environmental Chemistry/CONCVAR.ttl",
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "number": 80,
+   "state": "open",
+   "title": "Life Sciences - Environmental Chemistry - Determination of iron concentration in a soil sample by colorimetric analysis using ortho-phenanthrolin",
+   "updated_at": "2026-08-16T16:19:47Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Chemical Engineering/COMVAR.ttl",
+   "labels": [
+    "134 property: energy per mole",
+    "33 object of interest: single",
+    "43 matrix: natural process",
+    "50 context: environment",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "corpus"
+   ],
+   "number": 81,
+   "state": "open",
+   "title": "Technical Sciences - Chemical Engineering- Estimation of the energy of reaction per mole upon combustion of hexanol",
+   "updated_at": "2026-08-19T08:20:02Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Hydrology/GLVAR.ttl",
+   "labels": [
+    "122 property: massic amount of substance",
+    "208 constraint: resistivity",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "number": 82,
+   "state": "open",
+   "title": "Natural Sciences - Hydrology - Solubility of molecular oxygen from air in water",
+   "updated_at": "2026-08-19T07:36:02Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Chemical Engineering/LLVAR.ttl",
+   "labels": [
+    "128 property: concentration",
+    "208 constraint: resistivity",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "76 constraint: state",
+    "84 constraint: purity",
+    "corpus"
+   ],
+   "number": 83,
+   "state": "open",
+   "title": "Technical Sciences - Environmental Engineering - Solubility of benzene in water",
+   "updated_at": "2026-09-24T08:02:55Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Chemical Engineering/SLVAR.ttl",
+   "labels": [
+    "128 property: concentration",
+    "208 constraint: resistivity",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "number": 84,
+   "state": "open",
+   "title": "Technical Sciences - Chemical Engineering - Solubility of naphthalene in water at room temperature",
+   "updated_at": "2026-08-19T07:46:03Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Chemical Engineering/DENSVAR.ttl",
+   "labels": [
+    "126 property: intrinsic",
+    "33 object of interest: single",
+    "63 constraint: volume",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "corpus"
+   ],
+   "number": 85,
+   "state": "open",
+   "title": "Technical Sciences - Environmental Engineering - Density of benzene",
+   "updated_at": "2026-09-24T07:54:09Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "39 object of interest: variable"
+   ],
+   "number": 86,
+   "state": "open",
+   "title": "Chemistry - Measurement of the rate of reaction of the iodation of acetone at room temperature",
+   "updated_at": "2026-08-18T20:30:07Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Food Engineering/PHVAR.ttl",
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "40 matrix: embedding material",
+    "corpus"
+   ],
+   "number": 87,
+   "state": "open",
+   "title": "Technical Sciences - Food Engineering - pH measurement of a sample of apple juice",
+   "updated_at": "2026-08-19T06:09:13Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Environmental Chemistry/DetritalNitrogenConc.ttl",
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "number": 88,
+   "state": "open",
+   "title": "Life Sciences - Environmental Chemistry - CS2 - Detrital Nitrogen Concentration in seabed",
+   "updated_at": "2026-08-17T13:00:26Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Toxicology/ConcEndosulfaneOstrea.ttl",
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "number": 89,
+   "state": "open",
+   "title": "Life Sciences - Toxicology - Concentration of endosulfane sulfate in wet flesh of ostrea edulis",
+   "updated_at": "2026-08-16T16:14:54Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Disaster Risk Science/FractionFloodedBuilding.ttl",
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "44 matrix: reference area",
+    "70 constraint: condition",
+    "74 constraint: spatial extent",
+    "corpus"
+   ],
+   "number": 90,
+   "state": "open",
+   "title": "Social Sciences - Disaster Risk Research - Fraction of flooded area around building",
+   "updated_at": "2026-08-19T10:48:34Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/NumChild.ttl",
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "95 constraint: age",
+    "corpus"
+   ],
+   "number": 91,
+   "state": "open",
+   "title": "Social Sciences - Demography - CS 3 - Number of children under 10 years",
+   "updated_at": "2026-08-15T13:43:00Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/ElderlyAlone.ttl",
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "95 constraint: age",
+    "corpus"
+   ],
+   "number": 92,
+   "state": "open",
+   "title": "Social Sciences - Demography - CS3 - Number of elderly people living alone",
+   "updated_at": "2026-08-15T13:49:55Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/PersWelfare.ttl",
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 93,
+   "state": "open",
+   "title": "Social Sciences - Demography - CS3 - Number of persons receiving welfare",
+   "updated_at": "2026-08-15T13:59:08Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/NoHighSchool.ttl",
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "60 constraint: education",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 94,
+   "state": "open",
+   "title": "Social Sciences - Demography - CS3 - Average number of persons without high school",
+   "updated_at": "2026-08-17T12:28:41Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/NumberPers.ttl",
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 95,
+   "state": "open",
+   "title": "Social Sciences - Demography - CS3 - Total number of people living within a statistical unit",
+   "updated_at": "2026-08-15T14:14:52Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/PercentChild.ttl",
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "95 constraint: age",
+    "corpus"
+   ],
+   "number": 96,
+   "state": "open",
+   "title": "Social Sciences -  Demography - CS3 - Percentage of number of children",
+   "updated_at": "2026-08-16T20:00:00Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Disaster Risk Science/PluvialFlood.ttl",
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "50 context: environment",
+    "91 constraint: event",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 97,
+   "state": "open",
+   "title": "Social Sciences - Disaster Risk Science - CS3 - Pluvial flood",
+   "updated_at": "2026-08-15T13:02:27Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Disaster Risk Science/FloodRiskMobility.ttl",
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "72 constraint: cause",
+    "corpus"
+   ],
+   "number": 98,
+   "state": "open",
+   "title": "Social Sciences - Disaster Risk Science - CS3 - Flood Risk Mobility",
+   "updated_at": "2026-08-19T06:49:35Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "65 constraint: subkind",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "number": 99,
+   "state": "closed",
+   "title": "Climate Change Adaptation - CS3 - Flood Risk Wellbeing",
+   "updated_at": "2025-12-30T21:24:50Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/IceConcentration.ttl",
+   "labels": [
+    "128 property: concentration",
+    "209 constraint: physical form",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "number": 100,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - Ice concentration",
+   "updated_at": "2026-08-19T11:35:39Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/SulfateAerosol.ttl",
+   "labels": [
+    "110 property: fraction",
+    "206 constraint: diameter",
+    "35 object of interest: ratio",
+    "40 matrix: embedding material",
+    "68 constraint: reference",
+    "86 constraint: composition",
+    "corpus"
+   ],
+   "number": 101,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - Sulfate Organic Nitrate in aerosol particles",
+   "updated_at": "2026-08-16T16:51:03Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "33 object of interest: single",
+    "41 matrix: natural container"
+   ],
+   "number": 102,
+   "state": "open",
+   "title": "Atmospheric Composition - Depolarization Ratio",
+   "updated_at": "2026-10-20T08:04:20Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/ActinicFlux.ttl",
+   "labels": [
+    "129 property: flux simplified",
+    "201 constraint: wavelength",
+    "33 object of interest: single",
+    "50 context: environment",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "number": 103,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - Upwelling actinic flux",
+   "updated_at": "2026-08-17T13:02:32Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Technical Engineering/AOA.ttl",
+   "labels": [
+    "116 property: angle",
+    "34 object of interest: two equal",
+    "42 matrix: artificial container",
+    "corpus"
+   ],
+   "number": 104,
+   "state": "open",
+   "title": "Technical Sciences - Technical Engineering - Angle of attack",
+   "updated_at": "2026-08-16T12:36:00Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/HeartRate.ttl",
+   "labels": [
+    "124 property: normalized count",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "92 constraint: normalization",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 105,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Mean heart rate",
+   "updated_at": "2026-08-18T15:22:57Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/HRV.ttl",
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 106,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Heart rate variability",
+   "updated_at": "2026-08-15T11:44:45Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/BMI.ttl",
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "number": 107,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Body Mass Index",
+   "updated_at": "2026-08-19T04:35:50Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/Pain.ttl",
+   "labels": [
+    "102 property: ordinal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "75 constraint: temporal extent",
+    "corpus"
+   ],
+   "number": 108,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Pain",
+   "updated_at": "2026-08-18T09:40:59Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/RadDown.ttl",
+   "labels": [
+    "129 property: flux simplified",
+    "33 object of interest: single",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "number": 109,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - CS2 - Surface Radiation",
+   "updated_at": "2026-08-19T15:16:55Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/family activity.ttl",
+   "labels": [
+    "109 property: fundamental",
+    "32 object of interest: process",
+    "41 matrix: natural container",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 110,
+   "state": "open",
+   "title": "Social Sciences - Demography - Family activity",
+   "updated_at": "2026-10-01T07:47:23Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/highest education.ttl",
+   "labels": [
+    "102 property: ordinal",
+    "200 constraint: criterion",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "number": 111,
+   "state": "open",
+   "title": "Social Sciences - Demography - highest education",
+   "updated_at": "2026-08-18T09:40:06Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/country of birth of mother.ttl",
+   "labels": [
+    "101 property: nominal",
+    "32 object of interest: process",
+    "41 matrix: natural container",
+    "61 constraint: relationship",
+    "corpus"
+   ],
+   "number": 112,
+   "state": "open",
+   "title": "Social Sciences - Demography - Country of birth of mother",
+   "updated_at": "2026-08-17T13:15:04Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Demography/date of birth of mother.ttl",
+   "labels": [
+    "137 property: instant",
+    "31 object of interest: event",
+    "41 matrix: natural container",
+    "61 constraint: relationship",
+    "corpus"
+   ],
+   "number": 113,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Date of birth of mother",
+   "updated_at": "2026-08-18T09:40:32Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/weight without clothes.ttl",
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "76 constraint: state",
+    "91 constraint: event",
+    "corpus"
+   ],
+   "number": 114,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Weight without clothes",
+   "updated_at": "2026-08-15T12:47:56Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/PMER.ttl",
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "number": 115,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - CS2 - Sea level pressure",
+   "updated_at": "2026-08-18T20:43:57Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/VAS.ttl",
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "94 constraint: part",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "number": 116,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - Northward Near-Surface Wind",
+   "updated_at": "2026-08-19T06:01:43Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/Bloodtype.ttl",
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "number": 117,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Observation of bloodtype in blood",
+   "updated_at": "2026-08-16T10:05:05Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/Rhesusform.ttl",
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "number": 118,
+   "state": "open",
+   "title": "Life Sciences- Health Science - Rhesusform in blood",
+   "updated_at": "2026-08-16T10:00:01Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Environmental Chemistry/ConcCarbon.ttl",
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "number": 119,
+   "state": "open",
+   "title": "Life Sciences - Environmental Chemistry - Concentration of dissolved organic carbon",
+   "updated_at": "2026-08-17T12:35:55Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Hydrology/WaterSampDepth.ttl",
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "number": 120,
+   "state": "open",
+   "title": "Natural Sciences - Hydrology - Water sampling depth",
+   "updated_at": "2026-08-15T12:39:57Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Environmental Engineering/ALCat.ttl",
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "number": 121,
+   "state": "open",
+   "title": "Techincal Sciences - Environmental Engineering - Concentration of Al cations",
+   "updated_at": "2026-08-17T12:36:52Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Hydrology/SoilMoist.ttl",
+   "labels": [
+    "127 property: areal density",
+    "35 object of interest: ratio",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "number": 122,
+   "state": "open",
+   "title": "Nautral Sciences - Hydrology - Soil moisture in upper soil",
+   "updated_at": "2026-08-17T12:37:32Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Hydrology/SurfRunoff.ttl",
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "70 constraint: condition",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "number": 123,
+   "state": "open",
+   "title": "Nautral Sciences - Hydrology - Surface Runoff",
+   "updated_at": "2026-08-19T08:34:35Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/PrecRate.ttl",
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "83 constraint: reporting frequency",
+    "98 constraint: process",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 124,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - Precipitation Rate",
+   "updated_at": "2026-08-19T09:34:38Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Hydrology/PotEvap.ttl",
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "number": 125,
+   "state": "open",
+   "title": "Natural Sciences - Hydrology - Potential Evaporation",
+   "updated_at": "2026-08-17T12:38:00Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Toxicology/DehpNail.ttl",
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "number": 126,
+   "state": "open",
+   "title": "Life Sciences - Toxicology - Mass ratio of dehp in nail",
+   "updated_at": "2026-08-18T09:39:10Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Toxicology/TBPHMilk.ttl",
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "number": 127,
+   "state": "open",
+   "title": "Life Sciences -Toxicology - TBPH in breast milk",
+   "updated_at": "2026-08-17T13:29:40Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Hydrology/SnowEquiv.ttl",
+   "labels": [
+    "127 property: areal density",
+    "209 constraint: physical form",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "number": 128,
+   "state": "open",
+   "title": "Natural Sciences - Hydrology - CS1 - Snow water equivalent",
+   "updated_at": "2026-08-19T08:53:04Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Toxicology/BPFOS.ttl",
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "number": 129,
+   "state": "open",
+   "title": "Life Sciences - Toxicology - BPFOS in blood",
+   "updated_at": "2026-08-18T10:03:30Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Nuclear Engineering/U236GF.ttl",
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "79 constraint: source",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 130,
+   "state": "open",
+   "title": "Technical Sciences - Nuclear Engineering - CS1 - Global fallout of U-236",
+   "updated_at": "2026-08-18T14:39:16Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Technical Engineering/SolarEnergy.ttl",
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "50 context: environment",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 131,
+   "state": "open",
+   "title": "Technical Sciences - Technical Engineering - Solar energy production",
+   "updated_at": "2026-08-18T20:37:14Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Hydrology/Turbidity.ttl",
+   "labels": [
+    "102 property: ordinal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "number": 132,
+   "state": "open",
+   "title": "Natural Sciences- Hydrology - Water turbidity of stagnant surface water",
+   "updated_at": "2026-08-18T09:39:46Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "127 property: areal density",
+    "35 object of interest: ratio",
+    "79 constraint: source"
+   ],
+   "number": 133,
+   "state": "open",
+   "title": "Climate Change Adaptation - CS1 - Point sources of U-236",
+   "updated_at": "2026-02-09T19:42:25Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Nuclear Engineering/U236LH.ttl",
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "number": 134,
+   "state": "open",
+   "title": "Technical Sciences - Nuclear Engineering - CS1 - Releases of U236 from La Hague",
+   "updated_at": "2026-08-17T12:41:52Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Nuclear Engineering/I129se40.ttl",
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "number": 135,
+   "state": "open",
+   "title": "Technical Sciences - Nuclear Engineering - I26 deposition",
+   "updated_at": "2026-08-18T14:46:16Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Atmospheric Science/sfcWindmax.ttl",
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "83 constraint: reporting frequency",
+    "91 constraint: event",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "number": 136,
+   "state": "open",
+   "title": "Natural Sciences - Atmospheric Science - CS1 - Speed of gust",
+   "updated_at": "2026-08-19T04:49:01Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio"
+   ],
+   "number": 137,
+   "state": "open",
+   "title": "Atmospheric composition - Carbon dioxide amount fraction",
+   "updated_at": "2026-02-11T11:10:02Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "127 property: areal density",
+    "35 object of interest: ratio",
+    "41 matrix: natural container"
+   ],
+   "number": 138,
+   "state": "open",
+   "title": "Atmospheric composition - Ozone total column",
+   "updated_at": "2026-11-08T19:20:26Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "106 property: length",
+    "33 object of interest: single",
+    "68 constraint: reference",
+    "79 constraint: source"
+   ],
+   "number": 139,
+   "state": "open",
+   "title": "Cryosphere - Snowfall amount",
+   "updated_at": "2026-02-13T12:50:24Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "129 property: flux simplified",
+    "37 object of interest: convoluted",
+    "65 constraint: subkind",
+    "67 constraint: location"
+   ],
+   "number": 140,
+   "state": "open",
+   "title": "Biosphere - Incoming Photosynthetic Photon Flux Density below canopy",
+   "updated_at": "2026-02-12T21:20:52Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "114 property: ratioless derived",
+    "33 object of interest: single",
+    "43 matrix: natural process"
+   ],
+   "number": 141,
+   "state": "open",
+   "title": "Ocean - Practical salinity of sea surface water",
+   "updated_at": "2026-08-06T06:54:50Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "50 context: environment",
+    "67 constraint: location"
+   ],
+   "number": 142,
+   "state": "open",
+   "title": "Ocean - Sea Surface Temperature",
+   "updated_at": "2026-08-06T06:50:21Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 143,
+   "state": "open",
+   "title": "Atmospheric composition - aerosol particle nano number size distribution",
+   "updated_at": "2026-10-20T08:11:44Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 144,
+   "state": "open",
+   "title": "Downwelling vector irradiance as energy of electromagnetic radiation (412nm wavelength) in the water body by cosine-collector radiometer",
+   "updated_at": "2026-02-13T15:03:56Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 145,
+   "state": "open",
+   "title": "Downwelling vector irradiance as energy of electromagnetic radiation (PAR wavelengths) in the water body by cosine-collector radiometer",
+   "updated_at": "2026-02-13T15:03:39Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 146,
+   "state": "open",
+   "title": "Surface elevation relative to Mean Sea Level datum of the water body by radar water level recorder (second sensor)",
+   "updated_at": "2026-02-13T15:38:03Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 147,
+   "state": "open",
+   "title": "Soil organic carbon concentration",
+   "updated_at": "2026-02-13T14:24:01Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 148,
+   "state": "open",
+   "title": "Frozen https://sirkos.github.io/iadopt-vis/ interface: limit of 266 characters in the Description field",
+   "updated_at": "2026-02-13T14:54:00Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 149,
+   "state": "open",
+   "title": "Error in the ttl export function of https://sirkos.github.io/iadopt-vis/ regarding contraints URLs/URIs",
+   "updated_at": "2026-02-13T15:19:58Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 150,
+   "state": "open",
+   "title": "Ocean - Particle Backscattering at 700 nm",
+   "updated_at": "2026-09-11T11:08:35Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 151,
+   "state": "open",
+   "title": "Ocean - Downwelling vector irradiance as energy of electromagnetic radiation (490nm wavelength) in the water body by cosine-collector radiometer",
+   "updated_at": "2026-02-13T15:22:24Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 152,
+   "state": "open",
+   "title": "Ocean - Downwelling vector irradiance as energy of electromagnetic radiation (380nm wavelength) in the water body by cosine-collector radiometer",
+   "updated_at": "2026-02-13T15:25:02Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 153,
+   "state": "open",
+   "title": "Ocean - Downwelling vector irradiance as energy of electromagnetic radiation (443nm wavelength) in the water body by cosine-collector radiometer",
+   "updated_at": "2026-02-13T15:52:17Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 154,
+   "state": "open",
+   "title": "Export : file naming issue with the https://sirkos.github.io/iadopt-vis/",
+   "updated_at": "2026-02-13T15:36:06Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 155,
+   "state": "open",
+   "title": "Ocean - Downwelling vector irradiance as energy of electromagnetic radiation (555nm wavelength) in the water body by cosine-collector radiometer",
+   "updated_at": "2026-02-13T16:21:33Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 156,
+   "state": "open",
+   "title": "Ocean - Northward velocity of water current in the water body",
+   "updated_at": "2026-02-13T16:21:12Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 157,
+   "state": "open",
+   "title": "Ocean - Eastward velocity of water current in the water body",
+   "updated_at": "2026-02-13T16:20:56Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 158,
+   "state": "open",
+   "title": "Ocean - Northward velocity standard deviation of water current in the water body",
+   "updated_at": "2026-02-13T16:20:38Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [],
+   "number": 159,
+   "state": "open",
+   "title": "Ocean - Eastward velocity standard deviation of water current in the water body",
+   "updated_at": "2026-02-13T16:24:43Z"
+  },
+  {
+   "corpus_path": "CCA/GCs137LH.ttl",
+   "labels": [
+    "135 property: massic activity",
+    "35 object of interest: ratio",
+    "50 context: environment",
+    "79 constraint: source"
+   ],
+   "number": 160,
+   "state": "open",
+   "title": "Radioactivity content of 137Cs",
+   "updated_at": "2026-08-10T06:31:43Z"
+  },
+  {
+   "corpus_path": "CCA/Cs137GF.ttl",
+   "labels": [
+    "135 property: massic activity",
+    "35 object of interest: ratio",
+    "50 context: environment",
+    "79 constraint: source"
+   ],
+   "number": 161,
+   "state": "open",
+   "title": "CCA - Radioactivity_content_of_137Cs_global_fallout",
+   "updated_at": "2026-08-10T06:32:20Z"
+  },
+  {
+   "corpus_path": "CCA/ageLH.ttl",
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "50 context: environment"
+   ],
+   "number": 162,
+   "state": "open",
+   "title": "CCA - Idealised_age_tracer_LaHage",
+   "updated_at": "2026-08-06T06:35:56Z"
+  },
+  {
+   "corpus_path": null,
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "79 constraint: source"
+   ],
+   "number": 163,
+   "state": "open",
+   "title": "CCA-CS1- Number of atoms Iodine 129 in sea water",
+   "updated_at": "2026-08-17T13:34:16Z"
+  },
+  {
+   "corpus_path": "Technical Sciences/Nuclear Engineering/TC99.ttl",
+   "labels": [
+    "135 property: massic activity",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "number": 164,
+   "state": "open",
+   "title": "Technical Sciences - Nuclear Engineering - CCA-CS1 Radioactivity content of Technetium 99",
+   "updated_at": "2026-08-16T13:46:41Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Urban Planning/NumFloors.ttl",
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "42 matrix: artificial container",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "number": 165,
+   "state": "open",
+   "title": "Social Sciences - Urban Planning - Number of floors above ground of building",
+   "updated_at": "2026-08-16T14:01:39Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Urban Planning/primfunction.ttl",
+   "labels": [
+    "101 property: nominal",
+    "202 constraint: order",
+    "33 object of interest: single",
+    "corpus"
+   ],
+   "number": 166,
+   "state": "open",
+   "title": "Social Sciences - Urban Planning - Primary function of building",
+   "updated_at": "2026-08-16T13:44:59Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Disaster Risk Science/socVul.ttl",
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "72 constraint: cause",
+    "77 constraint: role",
+    "corpus"
+   ],
+   "number": 167,
+   "state": "open",
+   "title": "Social Sciences - Disaster Risk Science - Social Vulnerability to pluvial floods of the residents",
+   "updated_at": "2026-08-16T13:43:57Z"
+  },
+  {
+   "corpus_path": "Life Sciences/Health Science/lactate.ttl",
+   "labels": [
+    "128 property: concentration",
+    "200 constraint: criterion",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "number": 168,
+   "state": "open",
+   "title": "Life Sciences - Health Science - Blood lactate concentration at lactate tolerance threshold",
+   "updated_at": "2026-08-16T13:42:30Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Disaster Risk Science/FireRisk.ttl",
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "72 constraint: cause",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 169,
+   "state": "open",
+   "title": "Social Science - Disaster Risk Science - Fire risk per district",
+   "updated_at": "2026-08-15T14:35:55Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Disaster Risk Science/HeatStress.ttl",
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "72 constraint: cause",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "number": 170,
+   "state": "open",
+   "title": "Social Science - Disaster Risk Science - Heat stress index",
+   "updated_at": "2026-08-17T13:21:56Z"
+  },
+  {
+   "corpus_path": "Natural Sciences/Space Physics/PartSolObsc.ttl",
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "number": 171,
+   "state": "open",
+   "title": "Natural Sciences - Space Physics - Partial Solar Obscuration",
+   "updated_at": "2026-08-16T19:43:51Z"
+  },
+  {
+   "corpus_path": "Social Sciences/Disaster Risk Science/CountNights.ttl",
+   "labels": [
+    "104 property: count",
+    "203 constraint: min temperature",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "corpus"
+   ],
+   "number": 172,
+   "state": "open",
+   "title": "Social Sciences - Disaster Risk Science - Count of tropic nights",
+   "updated_at": "2026-08-19T10:41:56Z"
+  }
+ ],
+ "source": "https://github.com/mabablue/I-ADOPT-examples-playground"
+}

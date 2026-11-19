@@ -1,0 +1,1439 @@
+{
+ "patterns": {
+  "100": {
+   "constrained_component": null,
+   "definition": "When two variables are compared in a system.",
+   "design": "Variable as part of a system.",
+   "kind": "system",
+   "matrix_shape": null,
+   "name": "variable",
+   "number": 100,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP100.yaml"
+   ]
+  },
+  "101": {
+   "constrained_component": null,
+   "definition": "A nominal variable has values of equal importance that cannot be ranked in any particular order (non-ordinal), e.g., species of pests, colors. The values of these variables are usually indicated by words, ideally using controlled lists.",
+   "design": "The property must be specific.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "nominal",
+   "number": 101,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP101.yaml",
+    "pattern/VDP101.md",
+    "pattern/yaml/PDP101.yaml",
+    "pattern/PDP101.md"
+   ]
+  },
+  "102": {
+   "constrained_component": null,
+   "definition": "An ordinal variable has values corresponding to a list of concepts that can be put in a certain order but are not measured. They are generally qualitative, and the classes can therefore only be ordered in relation to each other. Dates are also ordinal values.",
+   "design": "Generalize the property and put the specialization into the OoI (single). It requires a matrix.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "ordinal",
+   "number": 102,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP102.yaml"
+   ]
+  },
+  "103": {
+   "constrained_component": "property",
+   "definition": "A binary or boolean property allows exactly two values: true/false, good/bad. Quality flags are boolean.",
+   "design": "OoI with single. A constraint of type 'threshold' should be added to explain when the quality flag holds. Sometimes, however, the object of interest is a whole variable (property plus object of interest).",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "boolean",
+   "number": 103,
+   "object_shape": "single",
+   "required_constraint": "threshold",
+   "sources": [
+    "pattern/VDP103.yaml"
+   ]
+  },
+  "104": {
+   "constrained_component": null,
+   "definition": "Assigns to an entity a non-negative integer equal to the number of distinct related entities satisfying a declared relation and scope.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "count",
+   "number": 104,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP104.yaml"
+   ]
+  },
+  "105": {
+   "constrained_component": null,
+   "definition": "A unitless property with integer values (excluding counts) that are physically enforced. They can be constants or variable numbers.",
+   "design": "Use single entity in the object of interest.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "discrete",
+   "number": 105,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP105.yaml"
+   ]
+  },
+  "106": {
+   "constrained_component": null,
+   "definition": "Length of a discrete object. Length is a fundamental property. Examples are width, depth, height, circumference.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "length",
+   "number": 106,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP106.yaml"
+   ]
+  },
+  "107": {
+   "constrained_component": null,
+   "definition": "Length in relation to another object. Length is a fundamental property. Examples are width, depth, height, circumference.",
+   "design": "OoI with single. Length requires a reference point given by a constraint (reference).",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "length ref",
+   "number": 107,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/yaml/VDP107.yaml",
+    "pattern/VDP107.md",
+    "pattern/yaml/PDP107.yaml",
+    "pattern/PDP107.md"
+   ]
+  },
+  "108": {
+   "constrained_component": null,
+   "definition": "Length between two objects.",
+   "design": "OoI with two equal.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "distance",
+   "number": 108,
+   "object_shape": "symmetric",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP108.yaml"
+   ]
+  },
+  "109": {
+   "constrained_component": null,
+   "definition": "Fundamental properties are physical quantities that are conventionally accepted as functionally independent of all others, excluding lengths. These are thermodynamic temperature, time, mass, amount of substance, luminous intensity, electric current.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "fundamental",
+   "number": 109,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP109.yaml"
+   ]
+  },
+  "110": {
+   "constrained_component": null,
+   "definition": "A fraction is a ratio comparing a part to the whole where the quantities (quantitative property) are of the same kind.",
+   "design": "OoI with ratio.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "fraction",
+   "number": 110,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP110.yaml"
+   ]
+  },
+  "111": {
+   "constrained_component": null,
+   "definition": "Cover expresses the fraction of a total reference area that is occupied by the Object of Interest.",
+   "design": "Asymmetric system (numerator/denominator) at the object of interest slot. The portion is represented by the numerator, the total reference area by the denominator.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "property (cover)",
+   "number": 111,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP111.yaml"
+   ]
+  },
+  "112": {
+   "constrained_component": null,
+   "definition": "A unitless ratio comparing two geometric properties of the same kind to describe the intrinsic, static shape of a single object (e.g., Aspect Ratio).",
+   "design": "Use single entity in the object of interest.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "geometric ratio",
+   "number": 112,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP112.yaml"
+   ]
+  },
+  "113": {
+   "constrained_component": null,
+   "definition": "A quantity that describes physical relationships or the physical state of a system without an associated physical unit.",
+   "design": "Use single entity in the object of interest.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "dimensionless physical ratio",
+   "number": 113,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP113.yaml"
+   ]
+  },
+  "114": {
+   "constrained_component": null,
+   "definition": "A derived property without ratio-transformation from fundamental quantities like volume or area.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "ratioless derived",
+   "number": 114,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP114.yaml"
+   ]
+  },
+  "115": {
+   "constrained_component": "property",
+   "definition": "A relative quantity whose value is expressed relative to an explicit baseline, reference standard, or nominal state, rather than as an explicit physical ratio of two variable entities.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "normalized",
+   "number": 115,
+   "object_shape": "single",
+   "required_constraint": "normalization",
+   "sources": [
+    "pattern/VDP115.yaml"
+   ]
+  },
+  "116": {
+   "constrained_component": null,
+   "definition": "An angle measured against a local/arbitrary reference frame (e.g., the angle between two intersecting pipes, or the joint angle of a knee).",
+   "design": "OoI with two equal.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "angle",
+   "number": 116,
+   "object_shape": "symmetric",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP116.yaml"
+   ]
+  },
+  "117": {
+   "constrained_component": "property",
+   "definition": "A spatial or angular measurement indicating the orientation, heading, or trajectory of an entity relative to a specified reference frame (vector).",
+   "design": "OoI with two parts. One part must be the reference vector.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "direction",
+   "number": 117,
+   "object_shape": "symmetric",
+   "required_constraint": "teference",
+   "sources": [
+    "pattern/VDP117.yaml"
+   ]
+  },
+  "118": {
+   "constrained_component": null,
+   "definition": "A temporal property measuring the number of discrete, countable events or occurrences that take place within a specified period of time.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "event rate",
+   "number": 118,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP118.yaml"
+   ]
+  },
+  "119": {
+   "constrained_component": null,
+   "definition": "The scalar rate at which an object covers distance over time, representing the magnitude of motion regardless of direction.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "speed",
+   "number": 119,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP119.yaml"
+   ]
+  },
+  "120": {
+   "constrained_component": "property",
+   "definition": "Vector property that measures the rate of change of an object's position with respect to time, combining both speed (magnitude) and direction.",
+   "design": "OoI with single. Requires a constraint of type direction or reference",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "velocity",
+   "number": 120,
+   "object_shape": "single",
+   "required_constraint": "direction or reference",
+   "sources": [
+    "pattern/VDP120.yaml"
+   ]
+  },
+  "121": {
+   "constrained_component": null,
+   "definition": "Count of individual entities per mass of a medium.",
+   "design": "OoI with ratio.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "massic number density",
+   "number": 121,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP121.yaml"
+   ]
+  },
+  "122": {
+   "constrained_component": null,
+   "definition": "Mole per mass including molality (denominator is mass of the solvent component) and substance content (denominator is mass of the total mixture).",
+   "design": "Use asymmetric system in the object of interest.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "massic amount of substance",
+   "number": 122,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP122.yaml"
+   ]
+  },
+  "123": {
+   "constrained_component": null,
+   "definition": "Quantity per length, example is linear mass density.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "lineic density",
+   "number": 123,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP123.yaml"
+   ]
+  },
+  "124": {
+   "constrained_component": "Property",
+   "definition": "Count per entity.",
+   "design": "Property with constraint of type normalization. OoI single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "normalized count",
+   "number": 124,
+   "object_shape": "single",
+   "required_constraint": "Normalization",
+   "sources": [
+    "pattern/VDP124.yaml"
+   ]
+  },
+  "125": {
+   "constrained_component": null,
+   "definition": "Count per volume.",
+   "design": "OoI with ratio and optional matrix patterns.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "volumic number density",
+   "number": 125,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP125.yaml"
+   ]
+  },
+  "126": {
+   "constrained_component": null,
+   "definition": "A property that is inherent to the substance's chemical composition and molecular structure, like plasticity, volumic density, absorbance.",
+   "design": "Single OoI.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "intrinsic",
+   "number": 126,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP126.yaml"
+   ]
+  },
+  "127": {
+   "constrained_component": null,
+   "definition": "Quantity per area.",
+   "design": "OoI with ratio and optional matrix patterns.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "areal density",
+   "number": 127,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP127.yaml",
+    "pattern/yaml/VDP127.yaml",
+    "pattern/VDP127.md",
+    "pattern/yaml/PDP127.yaml",
+    "pattern/PDP127.md"
+   ]
+  },
+  "128": {
+   "constrained_component": null,
+   "definition": "Concentration describes how much of one substance (the solute) is present in another substance (the solvent) as a volume. Examples are mass and amount of substance concentration.",
+   "design": "Requires an ObjectOfInterest to be an asymmetric system of type ratio with numerator and denominator.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "concentration",
+   "number": 128,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/yaml/VDP128.yaml",
+    "pattern/VDP128.md",
+    "pattern/yaml/PDP128.yaml",
+    "pattern/PDP128.md"
+   ]
+  },
+  "129": {
+   "constrained_component": null,
+   "definition": "A ratio rate with an energy flow represented in a simplified way.",
+   "design": "OoI with single and Matrix with an optional natural container. Often the property is domain-specific labelled such as actinic flux.",
+   "kind": "property",
+   "matrix_shape": "single",
+   "name": "flux simplified",
+   "number": 129,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP129.yaml"
+   ]
+  },
+  "130": {
+   "constrained_component": null,
+   "definition": "A ratio rate with a material flow from a source to a target while the denominator is represented by an area.",
+   "design": "OoI with single and Matrix with flow patterns.",
+   "kind": "property",
+   "matrix_shape": "source_target",
+   "name": "flux simple",
+   "number": 130,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP130.yaml"
+   ]
+  },
+  "131": {
+   "constrained_component": null,
+   "definition": "A ratio rate with a material flow from a source to a target. Complex representation is needed when there needs to be a constraint on the denominator.",
+   "design": "OoI with ratio and Matrix with flow patterns.",
+   "kind": "property",
+   "matrix_shape": "source_target",
+   "name": "flux complex",
+   "number": 131,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP131.yaml"
+   ]
+  },
+  "132": {
+   "constrained_component": null,
+   "definition": "An index acts as a proxy property that normalizes data against a specific base point or reference value to provide relative context rather than absolute measurement. While it sometimes aggregates multiple variables into a single score, its primary function is to make diverse data sets comparable over time or across different subjects.",
+   "design": "Index must be specified (e.g. body mass index). OoI is a single entity.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "index",
+   "number": 132,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP132.yaml"
+   ]
+  },
+  "133": {
+   "constrained_component": null,
+   "definition": "Length between two objects, where one of the two is constraint.",
+   "design": "OoI with reference.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "distance ref",
+   "number": 133,
+   "object_shape": "source_target",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP133.yaml"
+   ]
+  },
+  "134": {
+   "constrained_component": null,
+   "definition": "Energy per amount of substance (molar energy).",
+   "design": "OoI with single with matrix.",
+   "kind": "property",
+   "matrix_shape": "single",
+   "name": "energy per mole",
+   "number": 134,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP134.yaml"
+   ]
+  },
+  "135": {
+   "constrained_component": null,
+   "definition": "Radioactivity content of chemical substance per mass.",
+   "design": "OoI with System.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "massic activity",
+   "number": 135,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP135.yaml"
+   ]
+  },
+  "136": {
+   "constrained_component": null,
+   "definition": "A statistical measure becomes a statistical property when it changes the dimension of the property of the measurement like variance and confidence interval.",
+   "design": "OoI is a variable.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "statistical property",
+   "number": 136,
+   "object_shape": "variable",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP136.yaml"
+   ]
+  },
+  "137": {
+   "constrained_component": null,
+   "definition": "A time-instant value, e.g. 2026-08-15T13:29:14+02:00",
+   "design": "Use single entity in the object of interest.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "instant",
+   "number": 137,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP137.yaml"
+   ]
+  },
+  "138": {
+   "constrained_component": null,
+   "definition": "Properties resulting in quantitative numbers that represent ordered points along a continuous scale with equal, measurable distances between adjacent units, but without a true absolute zero point.",
+   "design": "Use single entity in the object of interest.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "interval",
+   "number": 138,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP138.yaml"
+   ]
+  },
+  "139": {
+   "constrained_component": null,
+   "definition": "Probability is a numerical measure of how likely a specific event is to occur. It quantifies chance or uncertainty on a scale strictly bounded between 0 and 1 (or 0% and 100%).",
+   "design": "Use single entity in the object of interest.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "probability",
+   "number": 139,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP139.yaml"
+   ]
+  },
+  "140": {
+   "constrained_component": null,
+   "definition": "A property that acts as an atomic (scalar) concept, derived from fundamental physical dimensions. Examples are acceleration and speed.",
+   "design": "Single OoI.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "atomic derived property",
+   "number": 140,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP140.yaml"
+   ]
+  },
+  "141": {
+   "constrained_component": null,
+   "definition": "The rate at which an object's velocity changes with respect to time.",
+   "design": "OoI with single.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "acceleration",
+   "number": 141,
+   "object_shape": "single",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP141.yaml"
+   ]
+  },
+  "142": {
+   "constrained_component": null,
+   "definition": "Amount of substance per area.",
+   "design": "Requires an ObjectOfInterest to be an asymmetric system of type ratio with numerator and denominator.",
+   "kind": "property",
+   "matrix_shape": null,
+   "name": "areic amount of substance",
+   "number": 142,
+   "object_shape": "ratio",
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP142.md",
+    "pattern/PDP142.md"
+   ]
+  },
+  "200": {
+   "constrained_component": null,
+   "definition": "A constraint that specifies a single principle, standard, or rule used to make a judgment or decision.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "criterion",
+   "number": 200,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP200.yaml"
+   ]
+  },
+  "201": {
+   "constrained_component": null,
+   "definition": "A constraint that specifies the distance in the line of advance of a wave from any one point to the next point of corresponding phase.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "wavelength",
+   "number": 201,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP201.yaml"
+   ]
+  },
+  "202": {
+   "constrained_component": null,
+   "definition": "A constraint that specifies an order relation that formalizes the notion of sorting elements.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "order",
+   "number": 202,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP202.yaml"
+   ]
+  },
+  "203": {
+   "constrained_component": null,
+   "definition": "A constraint that specifies the average kinetic energy of the particles (atoms or molecules) in a substance, determining how hot or cold it is.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "temperature",
+   "number": 203,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP203.yaml"
+   ]
+  },
+  "204": {
+   "constrained_component": null,
+   "definition": "A constraint that specifies the surrounding area, neighborhood, or general proximity near a specific place or landmark.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "vicinity",
+   "number": 204,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP204.yaml"
+   ]
+  },
+  "205": {
+   "constrained_component": null,
+   "definition": "A constraint defined as an evaluation, assessment, or classification of something against a standardized scale or set of criteria.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "rating",
+   "number": 205,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP205.yaml"
+   ]
+  },
+  "206": {
+   "constrained_component": null,
+   "definition": "A constraint defined as the length of a straight line through the center of an object or space.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "diameter",
+   "number": 206,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP206.yaml"
+   ]
+  },
+  "207": {
+   "constrained_component": null,
+   "definition": "A constraint defined as a systematic arrangement in groups or categories according to established criteria.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "classification",
+   "number": 207,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP207.yaml"
+   ]
+  },
+  "208": {
+   "constrained_component": null,
+   "definition": "A constraint defined as an intrinsic physical property of a material that measures how strongly it opposes or resists the flow of electric current.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "resistivity",
+   "number": 208,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP208.yaml"
+   ]
+  },
+  "209": {
+   "constrained_component": null,
+   "definition": "A constraint defined refers to the visible, structural, or material state of an object or substance, describing its physical appearance, state of matter, or spatial shape.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "physical form",
+   "number": 209,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP209.yaml"
+   ]
+  },
+  "33": {
+   "constrained_component": null,
+   "definition": "A single, distinguishable \"object\" in the universe, for which a property is measured.",
+   "design": "Object of interest with a single entity.",
+   "kind": "object",
+   "matrix_shape": null,
+   "name": "single",
+   "number": 33,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/yaml/ODP33.yaml",
+    "pattern/ODP33.md"
+   ]
+  },
+  "34": {
+   "constrained_component": null,
+   "definition": "A system with two parts having the same role in the description.",
+   "design": "Symmetric system in the object of interest",
+   "kind": "object",
+   "matrix_shape": null,
+   "name": "two equal",
+   "number": 34,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "symmetric",
+   "sources": [
+    "pattern/VDP34.yaml"
+   ]
+  },
+  "35": {
+   "constrained_component": null,
+   "definition": "The variable compares two quantities by division and tells you how much of one thing there is relative to another.",
+   "design": "object of interest (asymmetric System, with numerator and denominator description roles)",
+   "kind": "object",
+   "matrix_shape": null,
+   "name": "ratio",
+   "number": 35,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "ratio",
+   "sources": [
+    "pattern/VDP35.yaml",
+    "pattern/yaml/ODP35.yaml",
+    "pattern/ODP35.md"
+   ]
+  },
+  "36": {
+   "constrained_component": null,
+   "definition": "A system of entities where the source is the reference of the target.",
+   "design": "object of interest (asymmetric system, with source and target description roles)",
+   "kind": "object",
+   "matrix_shape": null,
+   "name": "reference",
+   "number": 36,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "source_target",
+   "sources": [
+    "pattern/VDP36.yaml"
+   ]
+  },
+  "37": {
+   "constrained_component": "object of interest",
+   "definition": "An object, that is semantically complex and overloaded",
+   "design": "Simple object of interest, constrained and potentially requires a matrix to be deconvoluted.",
+   "kind": "object",
+   "matrix_shape": null,
+   "name": "convoluted",
+   "number": 37,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP37.yaml"
+   ]
+  },
+  "38": {
+   "constrained_component": null,
+   "definition": "When there is a property of the property of interest",
+   "design": "the second property becomes the role of the object of interest, requires in addition the matrix. Depending on the property type the object of interest is either a system or a single entity.",
+   "kind": "object",
+   "matrix_shape": null,
+   "name": "property",
+   "number": 38,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP38.yaml"
+   ]
+  },
+  "39": {
+   "constrained_component": null,
+   "definition": "When there is a property of a variable.",
+   "design": "the variable gets the role of the object of interest",
+   "kind": "object",
+   "matrix_shape": null,
+   "name": "variable",
+   "number": 39,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP39.yaml"
+   ]
+  },
+  "40": {
+   "constrained_component": null,
+   "definition": "The matrix must be of a different material than the object of interest. If the material is the same, the description component has a context object role.",
+   "design": "simple matrix",
+   "kind": "matrix",
+   "matrix_shape": null,
+   "name": "embedding material",
+   "number": 40,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP40.yaml"
+   ]
+  },
+  "41": {
+   "constrained_component": null,
+   "definition": "A matrix is required when the object of interest is contained in a natural body.",
+   "design": null,
+   "kind": "matrix",
+   "matrix_shape": null,
+   "name": "natural container",
+   "number": 41,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP41.yaml"
+   ]
+  },
+  "42": {
+   "constrained_component": null,
+   "definition": "A matrix is required when the object of interest is contained in an artificial vessel.",
+   "design": null,
+   "kind": "matrix",
+   "matrix_shape": null,
+   "name": "artificial container",
+   "number": 42,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP42.yaml"
+   ]
+  },
+  "43": {
+   "constrained_component": null,
+   "definition": "A phenomenon in which the object is involved.",
+   "design": "The phenomena must be repesented with a simple matrix.",
+   "kind": "matrix",
+   "matrix_shape": null,
+   "name": "natural process",
+   "number": 43,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP43.yaml"
+   ]
+  },
+  "44": {
+   "constrained_component": null,
+   "definition": "Is an area that acts as reference like a study area.",
+   "design": "matrix needed.",
+   "kind": "matrix",
+   "matrix_shape": null,
+   "name": "reference area",
+   "number": 44,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "single",
+   "sources": [
+    "pattern/VDP44.yaml"
+   ]
+  },
+  "45": {
+   "constrained_component": null,
+   "definition": "Flow of material from one source to a target.",
+   "design": "A matrix as asymmetric system is required for a flux property. The components associated with to the system are source and target, via the respective properties hasSource and hasTarget.",
+   "kind": "matrix",
+   "matrix_shape": null,
+   "name": "flow",
+   "number": 45,
+   "object_shape": null,
+   "required_constraint": null,
+   "shape": "source_target",
+   "sources": [
+    "pattern/VDP45.yaml"
+   ]
+  },
+  "50": {
+   "constrained_component": null,
+   "definition": "Can be a natural or artificial environment, which is not the matrix itself. Sometimes it is required to distinguish it from another environment.",
+   "design": "simple context object",
+   "kind": "context",
+   "matrix_shape": null,
+   "name": "environment",
+   "number": 50,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP50.yaml"
+   ]
+  },
+  "60": {
+   "constrained_component": null,
+   "definition": "A constraint defined as the systematic process of facilitating learning, acquiring knowledge, skills, values, beliefs, and habits through instruction, training, research, or discussion.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "education",
+   "number": 60,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP60.yaml"
+   ]
+  },
+  "61": {
+   "constrained_component": "Entity",
+   "definition": "A constraint defined as a significant connection, association, or involvement between two or more people, groups, or entities, characterized by mutual interaction, influence, or relevance.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "relationship",
+   "number": 61,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP61.yaml"
+   ]
+  },
+  "62": {
+   "constrained_component": "Entity",
+   "definition": "A constraint that specifies an entity, either human, artificial, biological, or organizational, that senses its environment and acts upon it autonomously to achieve a specific goal or purpose.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "agent",
+   "number": 62,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP62.yaml"
+   ]
+  },
+  "64": {
+   "constrained_component": null,
+   "definition": "provides a material type information about the constrained component",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "material type",
+   "number": 64,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP64.yaml"
+   ]
+  },
+  "66": {
+   "constrained_component": null,
+   "definition": "provides the sampling frequency that applies for the constrained component",
+   "design": "constraint on statistical modifier",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "sampling frequency",
+   "number": 66,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP66.yaml"
+   ]
+  },
+  "67": {
+   "constrained_component": null,
+   "definition": "provides a location-specific information about the constrained component",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "location",
+   "number": 67,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP67.yaml"
+   ]
+  },
+  "68": {
+   "constrained_component": null,
+   "definition": "provides a reference point or information for the constrained component",
+   "design": "measurement",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "reference",
+   "number": 68,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/yaml/CT68.yaml",
+    "pattern/CT68.md"
+   ]
+  },
+  "69": {
+   "constrained_component": null,
+   "definition": "constraints the component specifying in which layer the variable is measured",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "layer",
+   "number": 69,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP69.yaml"
+   ]
+  },
+  "70": {
+   "constrained_component": null,
+   "definition": "a contextual circumstance or environmental feature that limits or qualifies the constrained component",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "condition",
+   "number": 70,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP70.yaml"
+   ]
+  },
+  "72": {
+   "constrained_component": null,
+   "definition": "indicates the cause or originating factor that explains why the constrained component occurs or holds",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "cause",
+   "number": 72,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP72.yaml"
+   ]
+  },
+  "73": {
+   "constrained_component": null,
+   "definition": "provides specific information enabling better interpretation of the constrained component",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "constraint (interpretation)",
+   "number": 73,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP73.yaml"
+   ]
+  },
+  "74": {
+   "constrained_component": null,
+   "definition": "indicates the spatial coverage within which the constrained component applies",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "spatial extent",
+   "number": 74,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP74.yaml"
+   ]
+  },
+  "75": {
+   "constrained_component": null,
+   "definition": "indicates the temporal coverage within which the constrained component applies",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "temporal extent",
+   "number": 75,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP75.yaml"
+   ]
+  },
+  "76": {
+   "constrained_component": null,
+   "definition": "indicates the physical, chemical or qualitative condition, including phases, of the constrained component",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "state",
+   "number": 76,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP76.yaml"
+   ]
+  },
+  "77": {
+   "constrained_component": null,
+   "definition": "indicates the role a person might have in the context of the variable",
+   "design": "constraint on entity, entity must be a human",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "role",
+   "number": 77,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP77.yaml"
+   ]
+  },
+  "78": {
+   "constrained_component": null,
+   "definition": "provides time-specific information about the constrained component",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "time",
+   "number": 78,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP78.yaml"
+   ]
+  },
+  "79": {
+   "constrained_component": null,
+   "definition": "specifies the source, provenance, or starting point of the constrained component",
+   "design": null,
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "source",
+   "number": 79,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP79.yaml"
+   ]
+  },
+  "80": {
+   "constrained_component": null,
+   "definition": "is the arrangement of individual entities or measurements across a specific geographic area or 3D space",
+   "design": "constraint on statistical modifier or entity",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "spatial distribution",
+   "number": 80,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP80.yaml"
+   ]
+  },
+  "81": {
+   "constrained_component": null,
+   "definition": "provides the range of allowed values",
+   "design": "constraint on property",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "range",
+   "number": 81,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP81.yaml"
+   ]
+  },
+  "82": {
+   "constrained_component": null,
+   "definition": "defines the value limit that triggers a quality flag, indicating whether the measurement satisfies the threshold criterion.",
+   "design": "a constraint of type 'threshold'",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "threshold",
+   "number": 82,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP82.yaml"
+   ]
+  },
+  "83": {
+   "constrained_component": null,
+   "definition": "defines how often a final data point is reported",
+   "design": "constraint on statistical modifier",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "reporting frequency",
+   "number": 83,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP83.yaml"
+   ]
+  },
+  "84": {
+   "constrained_component": null,
+   "definition": "specifies the degree of quality or purity of a substance or generally of the component",
+   "design": "constraint on entity",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "purity",
+   "number": 84,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP84.yaml"
+   ]
+  },
+  "87": {
+   "constrained_component": null,
+   "definition": "specifies the quantity in which the entity occurs",
+   "design": "constraint on entity",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "quantity",
+   "number": 87,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP87.yaml"
+   ]
+  },
+  "88": {
+   "constrained_component": null,
+   "definition": "refers to the distinct physiological, kinematic, or mechanical mode of self-propelled movement exhibited by an organism.",
+   "design": "constraint on entity",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "locomotion state",
+   "number": 88,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP88.yaml"
+   ]
+  },
+  "90": {
+   "constrained_component": null,
+   "definition": "refers to a process that occurs when measuring the property",
+   "design": "constraint on entity",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "process",
+   "number": 90,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP90.yaml"
+   ]
+  },
+  "91": {
+   "constrained_component": null,
+   "definition": "Identifies a specific occurrence, that bounds or triggers the observation, serving as a contextual anchor when explicit calendar time or duration is unknown or non-applicable.",
+   "design": "Apply the constraint on the constrained component.",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "event",
+   "number": 91,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP91.yaml"
+   ]
+  },
+  "92": {
+   "constrained_component": "Denominator",
+   "definition": "Specifies the reference quantity to which a measurement is rescaled.",
+   "design": "Apply the constraint on the denominator of the asymmetric system.",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "normalization",
+   "number": 92,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP92.yaml"
+   ]
+  },
+  "94": {
+   "constrained_component": null,
+   "definition": "A constraint that specifies a structural, anatomical, or biological sub-component (e.g., leaf, liver, root, surface layer) of an entity.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "part",
+   "number": 94,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP94.yaml"
+   ]
+  },
+  "95": {
+   "constrained_component": null,
+   "definition": "A constraint that restricts the human subject or population to a defined age interval, specific age value, or life stage.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "age",
+   "number": 95,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP95.yaml"
+   ]
+  },
+  "96": {
+   "constrained_component": "property",
+   "definition": "A constraint that specifies the spatial orientation, vector heading, or flow orientation (e.g., downward, northward, incoming, outward) of the observed phenomenon relative to a spatial coordinate system, physical boundary, or reference feature. When the direction is defined relative to an absolute, globally understood coordinate system, a reference constraint is redundant and unnecessary.",
+   "design": "Apply the constraint on property",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "direction",
+   "number": 96,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP96.yaml"
+   ]
+  },
+  "97": {
+   "constrained_component": null,
+   "definition": "A constraint that specifies an area of land or space that shares unifying characteristics, setting it apart from surrounding areas.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "region",
+   "number": 97,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP97.yaml"
+   ]
+  },
+  "98": {
+   "constrained_component": null,
+   "definition": "A constraint defined as a series of systematic, ordered actions or steps taken to achieve a specific end or result.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "process",
+   "number": 98,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP98.yaml"
+   ]
+  },
+  "99": {
+   "constrained_component": null,
+   "definition": "A constraint defined as a linguistic mechanism, point of origin, or benchmark used to locate events, actions, or states in time relative to another point in time.",
+   "design": "Apply the constraint on constrained component",
+   "kind": "constraint",
+   "matrix_shape": null,
+   "name": "temporal reference",
+   "number": 99,
+   "object_shape": null,
+   "required_constraint": null,
+   "sources": [
+    "pattern/VDP99.yaml"
+   ]
+  }
+ },
+ "source": {
+  "commit": "ecca3470bebc90cc70ce6dca9785f2dd3bf7f9c0",
+  "repository": "https://github.com/mabablue/I-ADOPT-patterns-playground"
+ }
+}

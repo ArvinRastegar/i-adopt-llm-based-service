@@ -1,0 +1,45 @@
+Sources of the data files in this folder
+========================================
+
+trees.json, patterns.json, constraint_types.json
+-------------------------------------------------
+
+Built by ../rulebook.py from the I-ADOPT Patterns,
+https://github.com/mabablue/I-ADOPT-patterns-playground
+at commit ecca3470bebc90cc70ce6dca9785f2dd3bf7f9c0 (2026-11-09).
+
+The I-ADOPT Patterns were modelled by Barbara Magagna, Sirko Schindler, Stuart Chalk and
+Marvin Friedl. They are licensed under the Creative Commons Attribution 4.0 International
+License (CC BY 4.0), https://creativecommons.org/licenses/by/4.0/ ; see the LICENSE file of
+that repository.
+
+Changes made here:
+
+- The decision trees (Mermaid flowcharts), the pattern files and the table of constraint types
+  were read into JSON. The files of one numbered pattern were merged into one entry with its
+  name, definition, design note and the shapes it asks for.
+- The patterns' "example" and "gh_issue" fields were left out.
+- Pattern 44 (reference area) is filed as a matrix pattern, as the trees and the example tags
+  use it.
+- One tree leaf was corrected: DT3 node F now ends on pattern 114. The reason is stored under
+  "corrections" in trees.json.
+- One answer label was shortened: in DT5, "false:VolumicDensity" became "false".
+- The four slips found in the upstream trees while reading them are listed under "slips" in
+  trees.json.
+
+issues_snapshot.json, route_key.json
+------------------------------------
+
+Built by ../route_key.py from the issues of the I-ADOPT examples repository,
+https://github.com/mabablue/I-ADOPT-examples-playground
+as they were on 2026-11-19: issue number, title, state, date of last update, labels and the
+corpus file each issue links to. route_key.json holds the same labels read as pattern tags for
+the 102 corpus variables.
+
+That repository declares no licence.
+
+Not in this folder
+------------------
+
+The variable definitions and gold decompositions come from the I-ADOPT corpus,
+https://github.com/i-adopt/Corpus, tag v2.0.1, as the lab loads it.

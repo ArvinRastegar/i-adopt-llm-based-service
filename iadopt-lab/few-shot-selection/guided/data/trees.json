@@ -1,0 +1,1387 @@
+{
+ "corrections": [
+  {
+   "node": "F",
+   "reason": "Upstream labels this leaf 'DT1' and links DT2.mmd. Following the link loops (DT2 -> DT3 -> DT2) and DT1 is the tree for unitless ratios. Pattern 114 (ratioless derived) is defined for exactly this branch, appears in DT7, and its own stored route ends here (Ratio(F) -> PropOfProp(F)).",
+   "set": {
+    "kind": "pattern",
+    "pattern": 114,
+    "text": "RATIOLESS DERIVED"
+   },
+   "tree": "DT3"
+  }
+ ],
+ "slips": [
+  "DT0 node O: labelled VDP105, links VDP104.yaml",
+  "DT2 node N: labelled VDP106, links VD1P06.yaml",
+  "DT3 node F: labelled DT1, links DT2.mmd",
+  "DT5 edge G -> H: answer written as 'false:VolumicDensity'"
+ ],
+ "source": {
+  "commit": "ecca3470bebc90cc70ce6dca9785f2dd3bf7f9c0",
+  "repository": "https://github.com/mabablue/I-ADOPT-patterns-playground"
+ },
+ "trees": {
+  "DT0": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "B"
+    },
+    {
+     "from": "B",
+     "label": "true",
+     "to": "N"
+    },
+    {
+     "from": "B",
+     "label": "false",
+     "to": "C"
+    },
+    {
+     "from": "C",
+     "label": "categorical",
+     "to": "D"
+    },
+    {
+     "from": "D",
+     "label": "binary",
+     "to": "E"
+    },
+    {
+     "from": "D",
+     "label": "nominal",
+     "to": "F"
+    },
+    {
+     "from": "D",
+     "label": "ordinal",
+     "to": "G"
+    },
+    {
+     "from": "C",
+     "label": "quantitative",
+     "to": "H"
+    },
+    {
+     "from": "H",
+     "label": "natural-numbers",
+     "to": "I"
+    },
+    {
+     "from": "I",
+     "label": "true",
+     "to": "Q"
+    },
+    {
+     "from": "I",
+     "label": "false",
+     "to": "P"
+    },
+    {
+     "from": "H",
+     "label": "non-count-discrete",
+     "to": "O"
+    },
+    {
+     "from": "H",
+     "label": "time-instant",
+     "to": "K"
+    },
+    {
+     "from": "H",
+     "label": "continuous-intermediates",
+     "to": "L"
+    },
+    {
+     "from": "H",
+     "label": "ratio",
+     "to": "M"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "Check observation results or description"
+    },
+    "B": {
+     "kind": "question",
+     "text": "Are units associated with the result values? Percentage is not a unit"
+    },
+    "C": {
+     "kind": "question",
+     "text": "Are the results categorical or quantitative?"
+    },
+    "D": {
+     "kind": "question",
+     "text": "Which categorical scale applies?"
+    },
+    "E": {
+     "kind": "pattern",
+     "pattern": 103,
+     "text": "BOOLEAN"
+    },
+    "F": {
+     "kind": "pattern",
+     "pattern": 101,
+     "text": "NOMINAL"
+    },
+    "G": {
+     "kind": "pattern",
+     "pattern": 102,
+     "text": "ORDINAL"
+    },
+    "H": {
+     "kind": "question",
+     "text": "Which quantitative scale applies?"
+    },
+    "I": {
+     "kind": "question",
+     "text": "Normalized?"
+    },
+    "K": {
+     "kind": "pattern",
+     "pattern": 137,
+     "text": "INSTANT"
+    },
+    "L": {
+     "kind": "pattern",
+     "pattern": 138,
+     "text": "INTERVAL"
+    },
+    "M": {
+     "kind": "jump",
+     "text": "DECIMAL VALUE UNITLESS",
+     "tree": "DT1"
+    },
+    "N": {
+     "kind": "jump",
+     "text": "QUANTITY",
+     "tree": "DT2"
+    },
+    "O": {
+     "kind": "pattern",
+     "pattern": 105,
+     "text": "DISCRETE"
+    },
+    "P": {
+     "kind": "pattern",
+     "pattern": 104,
+     "text": "COUNT"
+    },
+    "Q": {
+     "kind": "pattern",
+     "pattern": 124,
+     "text": "NORMALIZED COUNT"
+    }
+   },
+   "start": "A",
+   "title": "PROPERTY UNITLESS"
+  },
+  "DT1": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "B"
+    },
+    {
+     "from": "B",
+     "label": "false",
+     "to": "C"
+    },
+    {
+     "from": "B",
+     "label": "true",
+     "to": "D"
+    },
+    {
+     "from": "D",
+     "label": "false",
+     "to": "E"
+    },
+    {
+     "from": "D",
+     "label": "true",
+     "to": "L"
+    },
+    {
+     "from": "E",
+     "label": "true",
+     "to": "G"
+    },
+    {
+     "from": "E",
+     "label": "false",
+     "to": "H"
+    },
+    {
+     "from": "H",
+     "label": "false",
+     "to": "I"
+    },
+    {
+     "from": "H",
+     "label": "true",
+     "to": "J"
+    },
+    {
+     "from": "L",
+     "label": "true",
+     "to": "M"
+    },
+    {
+     "from": "L",
+     "label": "false",
+     "to": "N"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "PROPERTY DERIVED FROM RATIO/ PHYSICAL RELATIONSHIP"
+    },
+    "B": {
+     "kind": "question",
+     "text": "Is it calculated from comparing the same physical quantity?"
+    },
+    "C": {
+     "kind": "pattern",
+     "pattern": 132,
+     "text": "INDEX"
+    },
+    "D": {
+     "kind": "question",
+     "text": "Can the value exceed 1.0?"
+    },
+    "E": {
+     "kind": "question",
+     "text": "Is it cover?"
+    },
+    "G": {
+     "kind": "pattern",
+     "pattern": 111,
+     "text": "COVER"
+    },
+    "H": {
+     "kind": "question",
+     "text": "Is it probability of occurrence?"
+    },
+    "I": {
+     "kind": "pattern",
+     "pattern": 110,
+     "text": "FRACTION"
+    },
+    "J": {
+     "kind": "pattern",
+     "pattern": 139,
+     "text": "PROBABILITY"
+    },
+    "L": {
+     "kind": "question",
+     "text": "Does the number describe a static spatial geometry?"
+    },
+    "M": {
+     "kind": "pattern",
+     "pattern": 112,
+     "text": "GEOMETRIC RATIOS"
+    },
+    "N": {
+     "kind": "pattern",
+     "pattern": 113,
+     "text": "DIMENSIONLESS PHYSICAL RATIO"
+    }
+   },
+   "start": "A",
+   "title": "DECIMAL VALUE UNITLESS"
+  },
+  "DT2": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "C"
+    },
+    {
+     "from": "C",
+     "label": "true",
+     "to": "E"
+    },
+    {
+     "from": "C",
+     "label": "false",
+     "to": "F"
+    },
+    {
+     "from": "F",
+     "label": "true",
+     "to": "G"
+    },
+    {
+     "from": "G",
+     "label": "true",
+     "to": "H"
+    },
+    {
+     "from": "G",
+     "label": "false",
+     "to": "I"
+    },
+    {
+     "from": "F",
+     "label": "false",
+     "to": "M"
+    },
+    {
+     "from": "E",
+     "label": "true",
+     "to": "N"
+    },
+    {
+     "from": "E",
+     "label": "false",
+     "to": "O"
+    },
+    {
+     "from": "O",
+     "label": "true",
+     "to": "P"
+    },
+    {
+     "from": "P",
+     "label": "false",
+     "to": "R"
+    },
+    {
+     "from": "P",
+     "label": "true",
+     "to": "S"
+    },
+    {
+     "from": "O",
+     "label": "false",
+     "to": "Q"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "Quantitative Property"
+    },
+    "C": {
+     "kind": "question",
+     "text": "Is it length?"
+    },
+    "E": {
+     "kind": "question",
+     "text": "Is it length of a distinct object?"
+    },
+    "F": {
+     "kind": "question",
+     "text": "Is it thermodynamic temperature, time, mass, amount of substance electric current or luminous intensity?"
+    },
+    "G": {
+     "kind": "question",
+     "text": "Is it normalized?"
+    },
+    "H": {
+     "kind": "pattern",
+     "pattern": 115,
+     "text": "NORMALIZED"
+    },
+    "I": {
+     "kind": "pattern",
+     "pattern": 109,
+     "text": "FUNDAMENTAL QUANTITY"
+    },
+    "M": {
+     "kind": "jump",
+     "text": "DERIVED PROPERTY",
+     "tree": "DT3"
+    },
+    "N": {
+     "kind": "pattern",
+     "pattern": 106,
+     "text": "LENGTH"
+    },
+    "O": {
+     "kind": "question",
+     "text": "Is it distance between two equal objects?"
+    },
+    "P": {
+     "kind": "question",
+     "text": "Is one object constrained?"
+    },
+    "Q": {
+     "kind": "pattern",
+     "pattern": 107,
+     "text": "LENGTH REF"
+    },
+    "R": {
+     "kind": "pattern",
+     "pattern": 108,
+     "text": "DISTANCE"
+    },
+    "S": {
+     "kind": "pattern",
+     "pattern": 133,
+     "text": "DISTANCE REF"
+    }
+   },
+   "start": "A",
+   "title": "QUANTITY"
+  },
+  "DT3": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "AB"
+    },
+    {
+     "from": "AB",
+     "label": "true",
+     "to": "Y"
+    },
+    {
+     "from": "AB",
+     "label": "false",
+     "to": "ABB"
+    },
+    {
+     "from": "ABB",
+     "label": "true",
+     "to": "Z"
+    },
+    {
+     "from": "ABB",
+     "label": "false",
+     "to": "B"
+    },
+    {
+     "from": "B",
+     "label": "true",
+     "to": "N"
+    },
+    {
+     "from": "B",
+     "label": "false",
+     "to": "D"
+    },
+    {
+     "from": "D",
+     "label": "true",
+     "to": "G"
+    },
+    {
+     "from": "D",
+     "label": "false",
+     "to": "F"
+    },
+    {
+     "from": "N",
+     "label": "true",
+     "to": "E"
+    },
+    {
+     "from": "E",
+     "label": "false",
+     "to": "K"
+    },
+    {
+     "from": "E",
+     "label": "true",
+     "to": "J"
+    },
+    {
+     "from": "N",
+     "label": "false",
+     "to": "O"
+    },
+    {
+     "from": "O",
+     "label": "true",
+     "to": "P"
+    },
+    {
+     "from": "O",
+     "label": "false",
+     "to": "Q"
+    },
+    {
+     "from": "Q",
+     "label": "false",
+     "to": "R"
+    },
+    {
+     "from": "R",
+     "label": "true",
+     "to": "L"
+    },
+    {
+     "from": "R",
+     "label": "false",
+     "to": "M"
+    },
+    {
+     "from": "Q",
+     "label": "true",
+     "to": "S"
+    },
+    {
+     "from": "S",
+     "label": "true",
+     "to": "X"
+    },
+    {
+     "from": "S",
+     "label": "false",
+     "to": "V"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "Derived quantitative property"
+    },
+    "AB": {
+     "kind": "question",
+     "text": "Is it an intrinsic, inherent characteristic?"
+    },
+    "ABB": {
+     "kind": "question",
+     "text": "Is it atomic derived?"
+    },
+    "B": {
+     "kind": "question",
+     "text": "Is the unit a ratio? Check the units"
+    },
+    "D": {
+     "kind": "question",
+     "text": "Is it involving a variance or a confidence interval?"
+    },
+    "E": {
+     "kind": "question",
+     "text": "Measure of an occurrence?"
+    },
+    "F": {
+     "kind": "pattern",
+     "pattern": 114,
+     "text": "RATIOLESS DERIVED"
+    },
+    "G": {
+     "kind": "pattern",
+     "pattern": 136,
+     "text": "STATISTICAL PROPERTY"
+    },
+    "J": {
+     "kind": "pattern",
+     "pattern": 118,
+     "text": "EVENT RATE"
+    },
+    "K": {
+     "kind": "jump",
+     "text": "FLUX",
+     "tree": "DT4"
+    },
+    "L": {
+     "kind": "pattern",
+     "pattern": 116,
+     "text": "ANGLE"
+    },
+    "M": {
+     "kind": "pattern",
+     "pattern": 117,
+     "text": "DIRECTION"
+    },
+    "N": {
+     "kind": "question",
+     "text": "Time in the denominator?"
+    },
+    "O": {
+     "kind": "question",
+     "text": "Involving different quantities?"
+    },
+    "P": {
+     "kind": "jump",
+     "text": "RATIO",
+     "tree": "DT5"
+    },
+    "Q": {
+     "kind": "question",
+     "text": "Involving different physical entities?"
+    },
+    "R": {
+     "kind": "question",
+     "text": "Is one of the two an external reference?"
+    },
+    "S": {
+     "kind": "question",
+     "text": "Is it cover?"
+    },
+    "V": {
+     "kind": "pattern",
+     "pattern": 110,
+     "text": "FRACTION"
+    },
+    "X": {
+     "kind": "pattern",
+     "pattern": 111,
+     "text": "COVER"
+    },
+    "Y": {
+     "kind": "pattern",
+     "pattern": 126,
+     "text": "INTRINSIC"
+    },
+    "Z": {
+     "kind": "pattern",
+     "pattern": 140,
+     "text": "ATOMIC DERIVED"
+    }
+   },
+   "start": "A",
+   "title": "PROPERTY DERIVED"
+  },
+  "DT4": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "B"
+    },
+    {
+     "from": "B",
+     "label": "false",
+     "to": "C"
+    },
+    {
+     "from": "C",
+     "label": "Energy/Quantum",
+     "to": "D"
+    },
+    {
+     "from": "C",
+     "label": "Length",
+     "to": "E"
+    },
+    {
+     "from": "E",
+     "label": "true",
+     "to": "J"
+    },
+    {
+     "from": "E",
+     "label": "false",
+     "to": "K"
+    },
+    {
+     "from": "C",
+     "label": "Mass/Volume",
+     "to": "F"
+    },
+    {
+     "from": "F",
+     "label": "false",
+     "to": "I"
+    },
+    {
+     "from": "F",
+     "label": "true",
+     "to": "G"
+    },
+    {
+     "from": "G",
+     "label": "true",
+     "to": "H"
+    },
+    {
+     "from": "G",
+     "label": "false",
+     "to": "I"
+    },
+    {
+     "from": "B",
+     "label": "true",
+     "to": "H"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "FLUX: Time-based Rate with Physical Quantity in the Numerator"
+    },
+    "B": {
+     "kind": "question",
+     "text": "mass or volume in the denominator?"
+    },
+    "C": {
+     "kind": "question",
+     "text": "What is the numerator?"
+    },
+    "D": {
+     "kind": "pattern",
+     "pattern": 129,
+     "text": "FLUX SIMPLIFIED"
+    },
+    "E": {
+     "kind": "question",
+     "text": "Is it a vector quantity?"
+    },
+    "F": {
+     "kind": "question",
+     "text": "Area in the denominator?"
+    },
+    "G": {
+     "kind": "question",
+     "text": "Area constrained?"
+    },
+    "H": {
+     "kind": "pattern",
+     "pattern": 131,
+     "text": "FLUX COMPLEX"
+    },
+    "I": {
+     "kind": "pattern",
+     "pattern": 130,
+     "text": "FLUX SIMPLE"
+    },
+    "J": {
+     "kind": "pattern",
+     "pattern": 120,
+     "text": "VELOCITY"
+    },
+    "K": {
+     "kind": "pattern",
+     "pattern": 140,
+     "text": "ATOMIC DERIVED"
+    }
+   },
+   "start": "A",
+   "title": "PROPERTY FLUX"
+  },
+  "DT5": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "B"
+    },
+    {
+     "from": "B",
+     "label": "Area",
+     "to": "C"
+    },
+    {
+     "from": "B",
+     "label": "Mass",
+     "to": "E"
+    },
+    {
+     "from": "B",
+     "label": "Amount of Substance",
+     "to": "R"
+    },
+    {
+     "from": "B",
+     "label": "Length",
+     "to": "D"
+    },
+    {
+     "from": "E",
+     "label": "Amount of Substance",
+     "to": "P"
+    },
+    {
+     "from": "E",
+     "label": "Radioactive activity",
+     "to": "Q"
+    },
+    {
+     "from": "E",
+     "label": "Entity",
+     "to": "L"
+    },
+    {
+     "from": "B",
+     "label": "Volume",
+     "to": "G"
+    },
+    {
+     "from": "G",
+     "label": "false",
+     "to": "H"
+    },
+    {
+     "from": "G",
+     "label": "true",
+     "to": "J"
+    },
+    {
+     "from": "J",
+     "label": "true",
+     "to": "I"
+    },
+    {
+     "from": "J",
+     "label": "false",
+     "to": "M"
+    },
+    {
+     "from": "I",
+     "label": "",
+     "to": "N"
+    },
+    {
+     "from": "C",
+     "label": "Amount of Substance",
+     "to": "F"
+    },
+    {
+     "from": "C",
+     "label": "Entity",
+     "to": "K"
+    },
+    {
+     "from": "F",
+     "label": "",
+     "to": "N"
+    },
+    {
+     "from": "K",
+     "label": "",
+     "to": "N"
+    },
+    {
+     "from": "D",
+     "label": "",
+     "to": "O"
+    },
+    {
+     "from": "R",
+     "label": "Energy",
+     "to": "S"
+    },
+    {
+     "from": "H",
+     "label": "",
+     "to": "O"
+    },
+    {
+     "from": "P",
+     "label": "",
+     "to": "N"
+    },
+    {
+     "from": "M",
+     "label": "",
+     "to": "N"
+    },
+    {
+     "from": "S",
+     "label": "",
+     "to": "O"
+    },
+    {
+     "from": "Q",
+     "label": "",
+     "to": "N"
+    },
+    {
+     "from": "L",
+     "label": "",
+     "to": "N"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "Ratio without Time; different Quantities"
+    },
+    "B": {
+     "kind": "question",
+     "text": "What is the denominator?"
+    },
+    "C": {
+     "kind": "question",
+     "text": "What is the numerator?"
+    },
+    "D": {
+     "kind": "pattern",
+     "pattern": 123,
+     "text": "LINEIC DENSITY"
+    },
+    "E": {
+     "kind": "question",
+     "text": "What is the numerator?"
+    },
+    "F": {
+     "kind": "pattern",
+     "pattern": 142,
+     "text": "Areic Amount of Substance"
+    },
+    "G": {
+     "kind": "question",
+     "text": "Is it a mixture of substances?"
+    },
+    "H": {
+     "kind": "pattern",
+     "pattern": 126,
+     "text": "INTRINSIC"
+    },
+    "I": {
+     "kind": "pattern",
+     "pattern": 125,
+     "text": "VOLUMIC NUMBER DENSITY"
+    },
+    "J": {
+     "kind": "question",
+     "text": "Is it count per volume?"
+    },
+    "K": {
+     "kind": "pattern",
+     "pattern": 127,
+     "text": "Areal Number Density"
+    },
+    "L": {
+     "kind": "pattern",
+     "pattern": 121,
+     "text": "MASSIC NUMBER DENSITY"
+    },
+    "M": {
+     "kind": "pattern",
+     "pattern": 128,
+     "text": "CONCENTRATION"
+    },
+    "N": {
+     "kind": "pattern",
+     "pattern": 35,
+     "text": "RATIO"
+    },
+    "O": {
+     "kind": "pattern",
+     "pattern": 33,
+     "text": "SINGLE"
+    },
+    "P": {
+     "kind": "pattern",
+     "pattern": 122,
+     "text": "MASSIC AMOUNT OF SUBSTANCE"
+    },
+    "Q": {
+     "kind": "pattern",
+     "pattern": 135,
+     "text": "MASSIC ACTIVITY"
+    },
+    "R": {
+     "kind": "question",
+     "text": "What is the numerator?"
+    },
+    "S": {
+     "kind": "pattern",
+     "pattern": 134,
+     "text": "ENERGY PER MOLE"
+    }
+   },
+   "start": "A",
+   "title": "PROPERTY RATIO - OBJECT OF INTEREST"
+  },
+  "DT6": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "AB"
+    },
+    {
+     "from": "AB",
+     "label": "false",
+     "to": "B"
+    },
+    {
+     "from": "AB",
+     "label": "true",
+     "to": "O"
+    },
+    {
+     "from": "B",
+     "label": "true",
+     "to": "C"
+    },
+    {
+     "from": "B",
+     "label": "false",
+     "to": "D"
+    },
+    {
+     "from": "D",
+     "label": "false",
+     "to": "E"
+    },
+    {
+     "from": "D",
+     "label": "true",
+     "to": "F"
+    },
+    {
+     "from": "F",
+     "label": "true",
+     "to": "G"
+    },
+    {
+     "from": "F",
+     "label": "false",
+     "to": "H"
+    },
+    {
+     "from": "H",
+     "label": "true",
+     "to": "I"
+    },
+    {
+     "from": "H",
+     "label": "false",
+     "to": "J"
+    },
+    {
+     "from": "O",
+     "label": "false",
+     "to": "Q"
+    },
+    {
+     "from": "O",
+     "label": "true",
+     "to": "R"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "VARIABLE"
+    },
+    "AB": {
+     "kind": "question",
+     "text": "Is there more than one property involved?"
+    },
+    "B": {
+     "kind": "question",
+     "text": "Is the entity semantically convoluted?"
+    },
+    "C": {
+     "kind": "pattern",
+     "pattern": 37,
+     "text": "CONVOLUTED"
+    },
+    "D": {
+     "kind": "question",
+     "text": "Is it a system of entities?"
+    },
+    "E": {
+     "kind": "pattern",
+     "pattern": 33,
+     "text": "SINGLE"
+    },
+    "F": {
+     "kind": "question",
+     "text": "Are the entities equal in the system?"
+    },
+    "G": {
+     "kind": "pattern",
+     "pattern": 34,
+     "text": "TWO EQUAL"
+    },
+    "H": {
+     "kind": "question",
+     "text": "Is one entity a reference for the other?"
+    },
+    "I": {
+     "kind": "pattern",
+     "pattern": 36,
+     "text": "REFERENCE"
+    },
+    "J": {
+     "kind": "pattern",
+     "pattern": 35,
+     "text": "RATIO"
+    },
+    "O": {
+     "kind": "question",
+     "text": "Is there more than one ObjectOfInterest involved?"
+    },
+    "Q": {
+     "kind": "pattern",
+     "pattern": 38,
+     "text": "PROPERTY"
+    },
+    "R": {
+     "kind": "pattern",
+     "pattern": 39,
+     "text": "VARIABLE"
+    }
+   },
+   "start": "A",
+   "title": "OBJECT OF INTEREST"
+  },
+  "DT7": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "C"
+    },
+    {
+     "from": "B",
+     "label": "",
+     "to": "C"
+    },
+    {
+     "from": "D",
+     "label": "",
+     "to": "C"
+    },
+    {
+     "from": "E",
+     "label": "",
+     "to": "C"
+    },
+    {
+     "from": "I",
+     "label": "",
+     "to": "F"
+    },
+    {
+     "from": "M",
+     "label": "",
+     "to": "F"
+    },
+    {
+     "from": "L",
+     "label": "",
+     "to": "F"
+    },
+    {
+     "from": "Q",
+     "label": "",
+     "to": "C"
+    },
+    {
+     "from": "P",
+     "label": "",
+     "to": "F"
+    },
+    {
+     "from": "Q",
+     "label": "",
+     "to": "K"
+    },
+    {
+     "from": "G",
+     "label": "",
+     "to": "F"
+    },
+    {
+     "from": "G",
+     "label": "",
+     "to": "R"
+    },
+    {
+     "from": "I",
+     "label": "",
+     "to": "K"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "pattern",
+     "pattern": 106,
+     "text": "LENGTH"
+    },
+    "B": {
+     "kind": "pattern",
+     "pattern": 109,
+     "text": "FUNDAMENTAL"
+    },
+    "C": {
+     "kind": "pattern",
+     "pattern": 33,
+     "text": "SINGLE"
+    },
+    "D": {
+     "kind": "pattern",
+     "pattern": 114,
+     "text": "RATIOLESS DERIVED"
+    },
+    "E": {
+     "kind": "pattern",
+     "pattern": 129,
+     "text": "FLUX SIMPLIFIED"
+    },
+    "F": {
+     "kind": "pattern",
+     "pattern": 35,
+     "text": "RATIO"
+    },
+    "G": {
+     "kind": "pattern",
+     "pattern": 108,
+     "text": "DISTANCE"
+    },
+    "I": {
+     "kind": "pattern",
+     "pattern": 131,
+     "text": "FLUX COMPLEX"
+    },
+    "K": {
+     "kind": "pattern",
+     "pattern": 45,
+     "text": "MATRIX: FLOW"
+    },
+    "L": {
+     "kind": "pattern",
+     "pattern": 110,
+     "text": "FRACTION"
+    },
+    "M": {
+     "kind": "pattern",
+     "pattern": 128,
+     "text": "CONCENTRATION"
+    },
+    "P": {
+     "kind": "pattern",
+     "pattern": 111,
+     "text": "COVER"
+    },
+    "Q": {
+     "kind": "pattern",
+     "pattern": 130,
+     "text": "FLUX SIMPLE"
+    },
+    "R": {
+     "kind": "pattern",
+     "pattern": 34,
+     "text": "TWO EQUAL"
+    }
+   },
+   "start": "A",
+   "title": "PROPERTY - OBJECT OF INTEREST - MATRIX"
+  },
+  "DT8": {
+   "edges": [
+    {
+     "from": "A",
+     "label": "",
+     "to": "AB"
+    },
+    {
+     "from": "AB",
+     "label": "false",
+     "to": "B"
+    },
+    {
+     "from": "AB",
+     "label": "true",
+     "to": "O"
+    },
+    {
+     "from": "B",
+     "label": "true",
+     "to": "C"
+    },
+    {
+     "from": "B",
+     "label": "false",
+     "to": "D"
+    },
+    {
+     "from": "D",
+     "label": "false",
+     "to": "E"
+    },
+    {
+     "from": "D",
+     "label": "true",
+     "to": "F"
+    },
+    {
+     "from": "E",
+     "label": "true",
+     "to": "G"
+    },
+    {
+     "from": "E",
+     "label": "false",
+     "to": "H"
+    },
+    {
+     "from": "H",
+     "label": "false",
+     "to": "I"
+    },
+    {
+     "from": "H",
+     "label": "true",
+     "to": "J"
+    }
+   ],
+   "nodes": {
+    "A": {
+     "kind": "start",
+     "text": "OBJECT OF INTEREST"
+    },
+    "AB": {
+     "kind": "question",
+     "text": "Is it involved in a material flow?"
+    },
+    "B": {
+     "kind": "question",
+     "text": "Is it involved in a natural process?"
+    },
+    "C": {
+     "kind": "pattern",
+     "pattern": 43,
+     "text": "NATURAL PROCESS"
+    },
+    "D": {
+     "kind": "question",
+     "text": "Does it require a reference area?"
+    },
+    "E": {
+     "kind": "question",
+     "text": "Is it embedded within a different material?"
+    },
+    "F": {
+     "kind": "pattern",
+     "pattern": 44,
+     "text": "REFERENCE AREA"
+    },
+    "G": {
+     "kind": "pattern",
+     "pattern": 40,
+     "text": "EMBEDDING MATERIAL"
+    },
+    "H": {
+     "kind": "question",
+     "text": "Is it within a natural container?"
+    },
+    "I": {
+     "kind": "pattern",
+     "pattern": 42,
+     "text": "ARTIFICIAL CONTAINER"
+    },
+    "J": {
+     "kind": "pattern",
+     "pattern": 41,
+     "text": "NATURAL CONTAINER"
+    },
+    "O": {
+     "kind": "pattern",
+     "pattern": 45,
+     "text": "FLOW"
+    }
+   },
+   "start": "A",
+   "title": "MATRIX"
+  }
+ }
+}

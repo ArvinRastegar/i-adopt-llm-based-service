@@ -1,0 +1,3450 @@
+{
+ "date": "2026-11-19",
+ "source": "https://github.com/mabablue/I-ADOPT-examples-playground",
+ "variables": {
+  "urn:iadopt-lab:variable:020b54e6471071c90d4962ba7bbbd76deb2a1e8a522b8cb09b74d40afa2547a9": {
+   "constraint": [
+    202
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 166,
+   "labels": [
+    "101 property: nominal",
+    "202 constraint: order",
+    "33 object of interest: single",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "101": "nominal",
+    "202": "order",
+    "33": "single"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Social Sciences/Urban Planning/primfunction.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:0a391d2792b061bfbff2612a5dddfa79eaa489a291395190800f951f47cbf723": {
+   "constraint": [
+    200
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 111,
+   "labels": [
+    "102 property: ordinal",
+    "200 constraint: criterion",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "102": "ordinal",
+    "200": "criterion",
+    "33": "single",
+    "41": "natural container"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    102
+   ],
+   "source_path": "Social Sciences/Demography/highest education.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:0f3e9954aef6497d1eaeeb026c643c23dc0e24127c4f4a26938827039cabe944": {
+   "constraint": [
+    204,
+    205
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 34,
+   "labels": [
+    "104 property: count",
+    "204 constraint: vicinity",
+    "205 constraint: rating",
+    "33 object of interest: single",
+    "42 matrix: artificial container",
+    "corpus"
+   ],
+   "matrix": [
+    42
+   ],
+   "names": {
+    "104": "count",
+    "204": "vicinity",
+    "205": "rating",
+    "33": "single",
+    "42": "artificial container"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Toruism Research/C28_CountOvernightstay.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:115cb337bc5127dc70c162b03b94980fe37fccb8b939995636461081f58faf60": {
+   "constraint": [
+    72
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 12,
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "72 constraint: cause",
+    "corpus"
+   ],
+   "matrix": [
+    45
+   ],
+   "names": {
+    "130": "flux simple",
+    "33": "single",
+    "45": "flow",
+    "72": "cause"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    130
+   ],
+   "source_path": "Life Sciences/Ecology/C6_MassFlux.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:1242d6077c15153ff51859811733dc782e572fd06a9f1584f727d5d39ecef9e4": {
+   "constraint": [
+    70
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 20,
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "140": "atomic derived",
+    "33": "single",
+    "70": "condition"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    140
+   ],
+   "source_path": "Life Sciences/Biology/C14_FeralfreeEnclosureArea.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:12b00c359adcf48b4a1dbef25c0e123e0dd41230bc29efcdf160b201be399f0a": {
+   "constraint": [
+    60,
+    70,
+    92
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 94,
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "60 constraint: education",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [],
+   "names": {
+    "104": "count",
+    "33": "single",
+    "50": "environment",
+    "60": "education",
+    "70": "condition",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Demography/NoHighSchool.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:12d0bb86102fa82e6c55f1b3f178abd9fd14fb55a497ab442c94ed3ecd41e539": {
+   "constraint": [
+    76,
+    92,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 22,
+   "labels": [
+    "115 property: normalized",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "92 constraint: normalization",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "115": "normalized",
+    "33": "single",
+    "41": "natural container",
+    "76": "state",
+    "92": "normalization",
+    "98": "process"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    115
+   ],
+   "source_path": "Life Sciences/Biology/C16OxygenMetabolicRate.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:139c80cce9c15999097bed86c8562e543eed77f8528d532f01a00f90778c0043": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 117,
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "101": "nominal",
+    "33": "single",
+    "41": "natural container"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Life Sciences/Health Science/Bloodtype.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:17b44234089af8f003abef095347985e0d50b8cc418721ed2058c26b2dff1556": {
+   "constraint": [
+    68
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 62,
+   "labels": [
+    "117 property: direction",
+    "39 object of interest: variable",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "117": "direction",
+    "39": "variable",
+    "68": "reference"
+   },
+   "object": [
+    39
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    117
+   ],
+   "source_path": "Natural Sciences/Oceanography/DRVA.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:1a039be29796c65ca05176b0d2752323eeae0711597ee9b9fb034a72e08f56e5": {
+   "constraint": [
+    70,
+    76,
+    84,
+    208
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 83,
+   "labels": [
+    "128 property: concentration",
+    "208 constraint: resistivity",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "76 constraint: state",
+    "84 constraint: purity",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "128": "concentration",
+    "208": "resistivity",
+    "35": "ratio",
+    "70": "condition",
+    "76": "state",
+    "84": "purity"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Technical Sciences/Chemical Engineering/LLVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:1e8966f5353f9625d602da4a30952ce6b4e93d27cd2b697cbc207f5e2412edd3": {
+   "constraint": [
+    70,
+    74
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 90,
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "44 matrix: reference area",
+    "70 constraint: condition",
+    "74 constraint: spatial extent",
+    "corpus"
+   ],
+   "matrix": [
+    44
+   ],
+   "names": {
+    "111": "cover",
+    "35": "ratio",
+    "44": "reference area",
+    "70": "condition",
+    "74": "spatial extent"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    111
+   ],
+   "source_path": "Social Sciences/Disaster Risk Science/FractionFloodedBuilding.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:1fb91561bbe2053641717975757bd26625f7ed3783ecec84fb9bf961c20d8c5c": {
+   "constraint": [
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 21,
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "40 matrix: embedding material",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "matrix": [
+    40
+   ],
+   "names": {
+    "101": "nominal",
+    "33": "single",
+    "40": "embedding material",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Life Sciences/Biology/C15_ForaminiferSize.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:21171d68ac4530e2bd43a74c04c52ee72c7a7ba44ffd0f826b0cc7d47361c4c5": {
+   "constraint": [
+    76
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 23,
+   "labels": [
+    "122 property: massic amount of substance",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "122": "massic amount of substance",
+    "35": "ratio",
+    "76": "state"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    122
+   ],
+   "source_path": "Life Sciences/Biology/C17_DHAMassFraction.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:2565d5b011b0e824979513379a0b892aa101b0af9f5b1ccf5b584bb06decd20a": {
+   "constraint": [
+    70,
+    84
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 81,
+   "labels": [
+    "134 property: energy per mole",
+    "33 object of interest: single",
+    "43 matrix: natural process",
+    "50 context: environment",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "corpus"
+   ],
+   "matrix": [
+    43
+   ],
+   "names": {
+    "134": "energy per mole",
+    "33": "single",
+    "43": "natural process",
+    "50": "environment",
+    "70": "condition",
+    "84": "purity"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    134
+   ],
+   "source_path": "Technical Sciences/Chemical Engineering/COMVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:269247ba0afcd49573d5f3890800dbe57cbab4de0abe23e35363dd4c408eeab7": {
+   "constraint": [
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 105,
+   "labels": [
+    "124 property: normalized count",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "92 constraint: normalization",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "124": "normalized count",
+    "33": "single",
+    "41": "natural container",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    124
+   ],
+   "source_path": "Life Sciences/Health Science/HeartRate.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:2cb06286f2a57367046baecdc253e1cc9d0b87e3ff744ece77467dbc2b209cd3": {
+   "constraint": [
+    83,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 124,
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "83 constraint: reporting frequency",
+    "98 constraint: process",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [
+    45
+   ],
+   "names": {
+    "130": "flux simple",
+    "33": "single",
+    "45": "flow",
+    "83": "reporting frequency",
+    "98": "process"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    130
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/PrecRate.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:2d841267b59eb532e8db494d719e9d128904ae20ebb2abeb25c504a9a0b14e49": {
+   "constraint": [
+    68
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 120,
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "107": "length ref",
+    "33": "single",
+    "68": "reference"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    107
+   ],
+   "source_path": "Natural Sciences/Hydrology/WaterSampDepth.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:2dd616ab1ece243177b4aa960182191480db4df69fb2be2c9896e7207224dc29": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 33,
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "128": "concentration",
+    "35": "ratio"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Technical Sciences/Chemical Engineering/C27_IsobutyleneConcentration.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:3156d2522edc6464b49d91de55ab1f0db472eebe63229283ad583824e8381844": {
+   "constraint": [
+    72,
+    77
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 167,
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "72 constraint: cause",
+    "77 constraint: role",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "132": "index",
+    "33": "single",
+    "41": "natural container",
+    "72": "cause",
+    "77": "role"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    132
+   ],
+   "source_path": "Social Sciences/Disaster Risk Science/socVul.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:33c4eb606b35dd5cbba886825fab3368a2ccec7e8648f0ea739ffdaa8e7ac381": {
+   "constraint": [
+    76
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 119,
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "128": "concentration",
+    "35": "ratio",
+    "76": "state"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Life Sciences/Environmental Chemistry/ConcCarbon.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:3463a1ebf16c0dcd563cc90b3740697c0490c2761a31eb2f09bf3d164c327dd8": {
+   "constraint": [
+    68,
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 61,
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "68 constraint: reference",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "120": "velocity",
+    "33": "single",
+    "68": "reference",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    120
+   ],
+   "source_path": "Natural Sciences/Oceanography/RDVA.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:3a580edca2d246b8cacb94c1a25f05c414f9bf30ebb89ad44d7d3243ddefd5ab": {
+   "constraint": [
+    200
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 168,
+   "labels": [
+    "128 property: concentration",
+    "200 constraint: criterion",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "128": "concentration",
+    "200": "criterion",
+    "35": "ratio",
+    "41": "natural container"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Life Sciences/Health Science/lactate.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:3f70359c18e6b25d95bd9792608b167905fb117d9dfe9119e2a8e82e96298cd8": {
+   "constraint": [
+    70,
+    84,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 78,
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "109": "fundamental",
+    "33": "single",
+    "70": "condition",
+    "84": "purity",
+    "98": "process"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    109
+   ],
+   "source_path": "Technical Sciences/Chemical Engineering/BPVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:417e2fc4ad6d614f1aa6fbffac30a659c313db707818b36fe36e1636ceda31b0": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 43,
+   "labels": [
+    "136 property: statistical",
+    "39 object of interest: variable",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "136": "statistical",
+    "39": "variable"
+   },
+   "object": [
+    39
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    136
+   ],
+   "source_path": "Natural Sciences/Oceanography/VACC.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:4468d192503a3df852da9a2e6b2232d2cf888db8e57a183bb36b150f90a4dfb3": {
+   "constraint": [
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 15,
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "111": "cover",
+    "35": "ratio",
+    "94": "part"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    111
+   ],
+   "source_path": "Life Sciences/Ecology/C9_FoliageCover.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:4b1ffc374bdc9207ab2fc2962eb67279e1e797192acbeee027a80ef115f510dd": {
+   "constraint": [
+    70
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 31,
+   "labels": [
+    "126 property: intrinsic",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "126": "intrinsic",
+    "33": "single",
+    "70": "condition"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    126
+   ],
+   "source_path": "Technical Sciences/Material Science/C25_PolystyreneViscosity.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:4edf88dc05da570ff0a74d75b6ff939c6b1e117977a4ba2ffba0c74089389e3b": {
+   "constraint": [
+    76,
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 132,
+   "labels": [
+    "102 property: ordinal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "102": "ordinal",
+    "33": "single",
+    "41": "natural container",
+    "76": "state",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    102
+   ],
+   "source_path": "Natural Sciences/Hydrology/Turbidity.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:5195f6d2757865fa53c1a58080743c04f77f21da30e35252076d7011836494cc": {
+   "constraint": [
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 30,
+   "labels": [
+    "124 property: normalized count",
+    "33 object of interest: single",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "124": "normalized count",
+    "33": "single",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    124
+   ],
+   "source_path": "Life Sciences/Toxicology/C24_NanoparticleCount.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:5317b68c9c25dcbcb480f80a5c6386eb1465f1ed03f95eb6593f4f08e06c1f0a": {
+   "constraint": [
+    70
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 125,
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "matrix": [
+    45
+   ],
+   "names": {
+    "130": "flux simple",
+    "33": "single",
+    "45": "flow",
+    "70": "condition"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    130
+   ],
+   "source_path": "Natural Sciences/Hydrology/PotEvap.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:5382e8c971d5accb754b9b3c8c5052ac2a94ddc4c18bf7c14b05a8986546d509": {
+   "constraint": [
+    70,
+    92
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 95,
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "104": "count",
+    "33": "single",
+    "50": "environment",
+    "70": "condition",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Demography/NumberPers.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:587d6311a5003ffcbe1e5bb00b55fb2dd32f30f2245f9b0a275f7f11d3fef6b3": {
+   "constraint": [
+    70,
+    84,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 79,
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "109": "fundamental",
+    "33": "single",
+    "70": "condition",
+    "84": "purity",
+    "98": "process"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    109
+   ],
+   "source_path": "Technical Sciences/Chemical Engineering/MPVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:5aa2c10675a4b91f044861bac4875458821f234a139c770757ad4a880072dfdc": {
+   "constraint": [
+    83,
+    91,
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 136,
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "83 constraint: reporting frequency",
+    "91 constraint: event",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [],
+   "names": {
+    "140": "atomic derived",
+    "33": "single",
+    "83": "reporting frequency",
+    "91": "event",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    140
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/sfcWindmax.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:608502045635ff2f6185e327ed3dabb4915ae7fcf480bf5aaeea346544d85dfb": {
+   "constraint": [
+    79
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 135,
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "121": "massic number density",
+    "35": "ratio",
+    "79": "source"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    121
+   ],
+   "source_path": "Technical Sciences/Nuclear Engineering/I129se40.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:60c22a22493fe14d9b49056deb34f93814298c43443f3d47bd63346ea2042820": {
+   "constraint": [
+    61
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 113,
+   "labels": [
+    "137 property: instant",
+    "31 object of interest: event",
+    "41 matrix: natural container",
+    "61 constraint: relationship",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "137": "instant",
+    "31": "event",
+    "41": "natural container",
+    "61": "relationship"
+   },
+   "object": [
+    31
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    137
+   ],
+   "source_path": "Social Sciences/Demography/date of birth of mother.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:661c259486249b392894bc315cc14457401c22ed1abb25e42110c733dc2a6128": {
+   "constraint": [
+    63,
+    70,
+    84
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 85,
+   "labels": [
+    "126 property: intrinsic",
+    "33 object of interest: single",
+    "63 constraint: volume",
+    "70 constraint: condition",
+    "84 constraint: purity",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "126": "intrinsic",
+    "33": "single",
+    "63": "volume",
+    "70": "condition",
+    "84": "purity"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    126
+   ],
+   "source_path": "Technical Sciences/Chemical Engineering/DENSVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:66573786130211b53d89b40adb2dd34e4d2a9ac5d10afb19efe67f5f67d848d5": {
+   "constraint": [
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 29,
+   "labels": [
+    "115 property: normalized",
+    "33 object of interest: single",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "115": "normalized",
+    "33": "single",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    115
+   ],
+   "source_path": "Life Sciences/Toxicology/C23_NanoparticleDose.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:6acb9aa06141dd9fcd79f02b1d5392f8c23964bc78dd9d5c9f527112df22a2cc": {
+   "constraint": [
+    88,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 27,
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "88 constraint: locomotion state",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "140": "atomic derived",
+    "33": "single",
+    "41": "natural container",
+    "88": "locomotion state",
+    "98": "process"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    140
+   ],
+   "source_path": "Life Sciences/Health Science/C21_BloodPressure.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:6ec5ae0362bf74208b82522e05fc9a04eb209e0f4151ab66664a85f91a284b26": {
+   "constraint": [
+    79
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 164,
+   "labels": [
+    "135 property: massic activity",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "135": "massic activity",
+    "35": "ratio",
+    "79": "source"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    135
+   ],
+   "source_path": "Technical Sciences/Nuclear Engineering/TC99.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:717337f051d717841411f05ae41c2b0a0a324cac1368e3345c586113deed2efb": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 2,
+   "labels": [
+    "101 property: nominal",
+    "32 object of interest: process",
+    "42 matrix: artificial container",
+    "corpus"
+   ],
+   "matrix": [
+    42
+   ],
+   "names": {
+    "101": "nominal",
+    "32": "process",
+    "42": "artificial container"
+   },
+   "object": [
+    32
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Technical Sciences/Material Science/CirculationMode-Water.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:7a725c87db996829ebc171a000be0a2d49f868ec0778ab96908b28a38ba03be0": {
+   "constraint": [
+    203
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 172,
+   "labels": [
+    "104 property: count",
+    "203 constraint: min temperature",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "corpus"
+   ],
+   "matrix": [
+    44
+   ],
+   "names": {
+    "104": "count",
+    "203": "min temperature",
+    "33": "single",
+    "44": "reference area"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Disaster Risk Science/CountNights.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:7d6c1caebd3c452280950447af4540609b014535c0e213c6c3debec1974dda6e": {
+   "constraint": [
+    70,
+    92,
+    95
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 91,
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "95 constraint: age",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "104": "count",
+    "33": "single",
+    "50": "environment",
+    "70": "condition",
+    "92": "normalization",
+    "95": "age"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Demography/NumChild.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:81090208701502225e3d267c474d06634e0f1263e2d67acdfbd4e7261a1a8bb9": {
+   "constraint": [
+    76,
+    91
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 114,
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "76 constraint: state",
+    "91 constraint: event",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "109": "fundamental",
+    "33": "single",
+    "76": "state",
+    "91": "event"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    109
+   ],
+   "source_path": "Life Sciences/Health Science/weight without clothes.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:813fb954c1d636e93647a6d410a659f6fba1f8115f92ba98d7d7e19bbb755dd7": {
+   "constraint": [
+    61
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 112,
+   "labels": [
+    "101 property: nominal",
+    "32 object of interest: process",
+    "41 matrix: natural container",
+    "61 constraint: relationship",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "101": "nominal",
+    "32": "process",
+    "41": "natural container",
+    "61": "relationship"
+   },
+   "object": [
+    32
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Social Sciences/Demography/country of birth of mother.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:878175094008ac6deec037a29c435ac9fed4dbdc682b10e6a0c77d2c1ece6cbf": {
+   "constraint": [
+    70,
+    92,
+    95
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 96,
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "95 constraint: age",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "110": "fraction",
+    "35": "ratio",
+    "70": "condition",
+    "92": "normalization",
+    "95": "age"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    110
+   ],
+   "source_path": "Social Sciences/Demography/PercentChild.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:878908f20228224335acf3157a9fc32acc26f6f85629e31c18e1cc006e1005a7": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 17,
+   "labels": [
+    "116 property: angle",
+    "34 object of interest: two equal",
+    "40 matrix: embedding material",
+    "corpus"
+   ],
+   "matrix": [
+    40
+   ],
+   "names": {
+    "116": "angle",
+    "34": "two equal",
+    "40": "embedding material"
+   },
+   "object": [
+    34
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    116
+   ],
+   "source_path": "Natural Sciences/Geology/C11_StrikeBedding.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:8a816547d513e441cc011c55b73bc5051ee086c3a1b888e4a7c8d41c7b4f3531": {
+   "constraint": [
+    70,
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 123,
+   "labels": [
+    "130 property: flux simple",
+    "33 object of interest: single",
+    "45 matrix: flow",
+    "70 constraint: condition",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "matrix": [
+    45
+   ],
+   "names": {
+    "130": "flux simple",
+    "33": "single",
+    "45": "flow",
+    "70": "condition",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    130
+   ],
+   "source_path": "Natural Sciences/Hydrology/SurfRunoff.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:8b4f1caa8c7add1f5a3d21c7cc9dc6ca911b9abe84e3a583725215f55d662aed": {
+   "constraint": [
+    70,
+    79,
+    208
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 82,
+   "labels": [
+    "122 property: massic amount of substance",
+    "208 constraint: resistivity",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "122": "massic amount of substance",
+    "208": "resistivity",
+    "35": "ratio",
+    "70": "condition",
+    "79": "source"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    122
+   ],
+   "source_path": "Natural Sciences/Hydrology/GLVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:8d27743a45d71ccb81557972728e6d7ea00c992a3b0d2418017c1cc8164bc9aa": {
+   "constraint": [
+    76
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 89,
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "110": "fraction",
+    "35": "ratio",
+    "41": "natural container",
+    "76": "state"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    110
+   ],
+   "source_path": "Life Sciences/Toxicology/ConcEndosulfaneOstrea.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:92a52afc878553041b4682672dc8abfc92c0896f95c73336360d8a796744527f": {
+   "constraint": [
+    68,
+    72
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 13,
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "72 constraint: cause",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "107": "length ref",
+    "33": "single",
+    "41": "natural container",
+    "68": "reference",
+    "72": "cause"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    107
+   ],
+   "source_path": "Life Sciences/Ecology/C7_TrunkCharHeight.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:94719dbcd8c79fb7f55cdb872573b52ee8398796ac52a589951e8472aced0d60": {
+   "constraint": [
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 35,
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "104": "count",
+    "33": "single",
+    "41": "natural container",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Psychology/C29_NervosityFrequency.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:94c8b7bd1fa12f07063e6a58e2010aec82166c544f047ec3bb4c77ad8dff0d6c": {
+   "constraint": [
+    70,
+    76,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 25,
+   "labels": [
+    "131 property: flux complex",
+    "35 object of interest: ratio",
+    "45 matrix: flow",
+    "70 constraint: condition",
+    "76 constraint: state",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [
+    45
+   ],
+   "names": {
+    "131": "flux complex",
+    "35": "ratio",
+    "45": "flow",
+    "70": "condition",
+    "76": "state",
+    "98": "process"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    131
+   ],
+   "source_path": "Life Sciences/Biology/C19_CarbonRate.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:952fc81981fc7d4547db0c91e48ffda4f7d0aff25e904a1f9990925e51c71aeb": {
+   "constraint": [
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 14,
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "111": "cover",
+    "35": "ratio",
+    "92": "normalization"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    111
+   ],
+   "source_path": "Life Sciences/Ecology/C8_CWDFraction.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:953999c61f77ad952f55fb1703c27b2a55552faa8fc64ea31c371a5f6030a1dc": {
+   "constraint": [
+    70,
+    76,
+    208
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 84,
+   "labels": [
+    "128 property: concentration",
+    "208 constraint: resistivity",
+    "35 object of interest: ratio",
+    "70 constraint: condition",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "128": "concentration",
+    "208": "resistivity",
+    "35": "ratio",
+    "70": "condition",
+    "76": "state"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Technical Sciences/Chemical Engineering/SLVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:97c0d174694730417df0203456a0f37230e2c0ce5f274b935f6d98b43fdbe3e6": {
+   "constraint": [
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 171,
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "111": "cover",
+    "35": "ratio",
+    "41": "natural container",
+    "98": "process"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    111
+   ],
+   "source_path": "Natural Sciences/Space Physics/PartSolObsc.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:987bba365ef3af30223b59be3a4645f4b3eeebdb44d220a57297989b05b9d1b4": {
+   "constraint": [
+    200
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 50,
+   "labels": [
+    "103 property: boolean",
+    "200 constraint: criterion",
+    "39 object of interest: variable",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "103": "boolean",
+    "200": "criterion",
+    "39": "variable"
+   },
+   "object": [
+    39
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    103
+   ],
+   "source_path": "Technical Sciences/Technical Engineering/GDOP_QC.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:9a1bcaa3713875100d9cbe9674f0052b9ac3d630077e18f5a38af890d951e1b8": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 7,
+   "labels": [
+    "125 property: volumic number density",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "125": "volumic number density",
+    "35": "ratio"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    125
+   ],
+   "source_path": "Natural Sciences/Space Physics/C1_ElectronDensity.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:a4a56a127a33fbe72d44d3ede195283abc9ebd3cc91f6fc1d1edcdb19c059b3c": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 118,
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "101": "nominal",
+    "33": "single",
+    "41": "natural container"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Life Sciences/Health Science/Rhesusform.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:a9e223c0f78dc8a8414c9b9d360d5e1db2d366c2aa648ff2b5ff16a831257abd": {
+   "constraint": [
+    70,
+    92,
+    95
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 92,
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "95 constraint: age",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "104": "count",
+    "33": "single",
+    "50": "environment",
+    "70": "condition",
+    "92": "normalization",
+    "95": "age"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Demography/ElderlyAlone.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:ada58f9fe9584da4aaa4150be9b06059f78b486ffc2ac1d4b39577b9a470cfb0": {
+   "constraint": [
+    79
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 26,
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "110": "fraction",
+    "35": "ratio",
+    "79": "source"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    110
+   ],
+   "source_path": "Technical Sciences/Environmental Engineering/C20_DDTConcentration.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:ae25b03bee8478d390a375f70a0531261a54eccc7446157ca2ae321affd7151f": {
+   "constraint": [
+    68,
+    86,
+    206
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 101,
+   "labels": [
+    "110 property: fraction",
+    "206 constraint: diameter",
+    "35 object of interest: ratio",
+    "40 matrix: embedding material",
+    "68 constraint: reference",
+    "86 constraint: composition",
+    "corpus"
+   ],
+   "matrix": [
+    40
+   ],
+   "names": {
+    "110": "fraction",
+    "206": "diameter",
+    "35": "ratio",
+    "40": "embedding material",
+    "68": "reference",
+    "86": "composition"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    110
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/SulfateAerosol.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:aebc981b8a7c3b11c86873342ff8f898f1f176f006b22ce44d5e8d94e3045d30": {
+   "constraint": [
+    75
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 108,
+   "labels": [
+    "102 property: ordinal",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "75 constraint: temporal extent",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "102": "ordinal",
+    "33": "single",
+    "41": "natural container",
+    "75": "temporal extent"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    102
+   ],
+   "source_path": "Life Sciences/Health Science/Pain.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:b0f873292fd5c5cb027c9cd579cb8e3ee0caa43c8484a7ec13fcef359b9a4dc3": {
+   "constraint": [
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 122,
+   "labels": [
+    "127 property: areal density",
+    "35 object of interest: ratio",
+    "94 constraint: part",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "127": "areal density",
+    "35": "ratio",
+    "94": "part"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    127
+   ],
+   "source_path": "Natural Sciences/Hydrology/SoilMoist.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:b20c2d3335ce8d0dce00c52eebc46ef46751d5dd096401ffcbdb63417ee66ddf": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 126,
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "110": "fraction",
+    "35": "ratio",
+    "41": "natural container"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    110
+   ],
+   "source_path": "Life Sciences/Toxicology/DehpNail.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:b90c883f92cfcdecaa3d8b1fd8919c8b30d6a418911ee830f2355ebc534539eb": {
+   "constraint": [
+    96
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 109,
+   "labels": [
+    "129 property: flux simplified",
+    "33 object of interest: single",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "129": "flux simplified",
+    "33": "single",
+    "96": "direction"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    129
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/RadDown.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:bcf8da54d7d4702b8504d46846b99ee56311cc7c02cc4eb05583985cdaba1035": {
+   "constraint": [
+    62,
+    91,
+    93
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 36,
+   "labels": [
+    "137 property: instant",
+    "31 object of interest: event",
+    "41 matrix: natural container",
+    "62 constraint: agent",
+    "91 constraint: event",
+    "93 constraint: purpose",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "137": "instant",
+    "31": "event",
+    "41": "natural container",
+    "62": "agent",
+    "91": "event",
+    "93": "purpose"
+   },
+   "object": [
+    31
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    137
+   ],
+   "source_path": "Life Sciences/Health Science/C30_LastCovidTest.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:be13d0c77988f1372cbf74852cb579075674ae54fa55544a738663a2e7c80a8b": {
+   "constraint": [
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 110,
+   "labels": [
+    "109 property: fundamental",
+    "32 object of interest: process",
+    "41 matrix: natural container",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "109": "fundamental",
+    "32": "process",
+    "41": "natural container",
+    "92": "normalization"
+   },
+   "object": [
+    32
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    109
+   ],
+   "source_path": "Social Sciences/Demography/family activity.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:be409fd08196b9beb4ca9dd34a086364956a118732d70f7e32470db1eabf09b1": {
+   "constraint": [
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 106,
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "109": "fundamental",
+    "33": "single",
+    "41": "natural container",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    109
+   ],
+   "source_path": "Life Sciences/Health Science/HRV.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:c0790d823a647be47f348636e8da4a75ffd8f2dcad8a48b1d2e2d03021dc9c9c": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 127,
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "128": "concentration",
+    "35": "ratio",
+    "41": "natural container"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Life Sciences/Toxicology/TBPHMilk.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:c0869f1a2e2b556709d84a82f1019f35009cfea1b5d9136eb8bd37e818c14acd": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 9,
+   "labels": [
+    "111 property: cover",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "111": "cover",
+    "35": "ratio"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    111
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/C3_CloudCover.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:c3b92d4d53c7e4fcd4f7828c49c2ea92eb4b9c4c418c4be5d45236c41962df41": {
+   "constraint": [
+    76,
+    209
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 128,
+   "labels": [
+    "127 property: areal density",
+    "209 constraint: physical form",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "127": "areal density",
+    "209": "physical form",
+    "35": "ratio",
+    "76": "state"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    127
+   ],
+   "source_path": "Natural Sciences/Hydrology/SnowEquiv.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:c46691dd03f6017faa351ae588d1175ae66635850e4cbf1d6f1bb675d7b9ea72": {
+   "constraint": [
+    92
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 131,
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "50 context: environment",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "140": "atomic derived",
+    "33": "single",
+    "50": "environment",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    140
+   ],
+   "source_path": "Technical Sciences/Technical Engineering/SolarEnergy.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:c51a8273fd7c9585fb0b04292e4caa3359f0aebbfca17a01c475087959f898bd": {
+   "constraint": [
+    68,
+    83
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 8,
+   "labels": [
+    "109 property: fundamental",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "83 constraint: reporting frequency",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "109": "fundamental",
+    "33": "single",
+    "41": "natural container",
+    "68": "reference",
+    "83": "reporting frequency"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    109
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/C2_AirDailyMaximumTemperature.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:caab50139f9d111922ea593b8244419b2e6115a573396edc1eb9d6aed23afcbb": {
+   "constraint": [
+    91,
+    92
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 97,
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "50 context: environment",
+    "91 constraint: event",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "107": "length ref",
+    "33": "single",
+    "50": "environment",
+    "91": "event",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    107
+   ],
+   "source_path": "Social Sciences/Disaster Risk Science/PluvialFlood.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:cff656b05040363687eb6536a0bcfe96d6c1de14b290074e555d3c79c2337235": {
+   "constraint": [
+    64,
+    206
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 1,
+   "labels": [
+    "101 property: nominal",
+    "206 constraint: diameter",
+    "33 object of interest: single",
+    "64 constraint: material type",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "101": "nominal",
+    "206": "diameter",
+    "33": "single",
+    "64": "material type"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Technical Sciences/Material Science/StateOfPipeConnection.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:d0bdb658e4dd94099f168ce241e60f31580a3d7828c32150d3cb70497f2d0883": {
+   "constraint": [
+    75
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 64,
+   "labels": [
+    "136 property: statistical",
+    "39 object of interest: variable",
+    "75 constraint: temporal extent",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "136": "statistical",
+    "39": "variable",
+    "75": "temporal extent"
+   },
+   "object": [
+    39
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    136
+   ],
+   "source_path": "Natural Sciences/Oceanography/HCSS.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:d180f3a34543a369866a04e5979fbca47d9a6a0ee2fba3aaa714e3dee8d64467": {
+   "constraint": [
+    77,
+    78
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 28,
+   "labels": [
+    "101 property: nominal",
+    "32 object of interest: process",
+    "41 matrix: natural container",
+    "77 constraint: role",
+    "78 constraint: time",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "101": "nominal",
+    "32": "process",
+    "41": "natural container",
+    "77": "role",
+    "78": "time"
+   },
+   "object": [
+    32
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Life Sciences/Health Science/C22_SmokingStatus.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:d462a876c62066943e00b9eb2f84590d2b5bfd4c2081010038cd08ce6ca318d9": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 107,
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "132": "index",
+    "33": "single",
+    "41": "natural container"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    132
+   ],
+   "source_path": "Life Sciences/Health Science/BMI.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:d669d5b3b0e87ea025a415a71bc8fb405e5c55d5a8f00b2dd6d1ea4b886e2816": {
+   "constraint": [
+    68
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 165,
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "42 matrix: artificial container",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "matrix": [
+    42
+   ],
+   "names": {
+    "104": "count",
+    "33": "single",
+    "42": "artificial container",
+    "68": "reference"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Urban Planning/NumFloors.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:d7acd37edc79c8ab54b7e6e786539acafea9d6b0ae22e042f6580bc7e058f808": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 24,
+   "labels": [
+    "101 property: nominal",
+    "33 object of interest: single",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "101": "nominal",
+    "33": "single"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    101
+   ],
+   "source_path": "Social Sciences/Demography/C18_BiologicalSex.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:d8164cf2a4d4be23ca63fc588e2850efbb8041ad653843e104594e7295140d5d": {
+   "constraint": [
+    70,
+    92
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 93,
+   "labels": [
+    "104 property: count",
+    "33 object of interest: single",
+    "50 context: environment",
+    "70 constraint: condition",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "104": "count",
+    "33": "single",
+    "50": "environment",
+    "70": "condition",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    104
+   ],
+   "source_path": "Social Sciences/Demography/PersWelfare.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:dba56f70c849f8cfa4504a0809eb2b26c5a98977be127d1751d7fe5299e51738": {
+   "constraint": [
+    72,
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 170,
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "72 constraint: cause",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [
+    44
+   ],
+   "names": {
+    "132": "index",
+    "33": "single",
+    "44": "reference area",
+    "72": "cause",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    132
+   ],
+   "source_path": "Social Sciences/Disaster Risk Science/HeatStress.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:dd48a859a45f080afb4ad91bae5ffe6faca6e7977293938cfdebcfc817617c10": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 87,
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "40 matrix: embedding material",
+    "corpus"
+   ],
+   "matrix": [
+    40
+   ],
+   "names": {
+    "132": "index",
+    "33": "single",
+    "40": "embedding material"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    132
+   ],
+   "source_path": "Technical Sciences/Food Engineering/PHVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:dd8a2e64f426a03fd3fd01019b26230b02d3e9bdcf58f5abd5cfd2691857e68d": {
+   "constraint": [
+    72,
+    92
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 169,
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "72 constraint: cause",
+    "92 constraint: normalization",
+    "corpus"
+   ],
+   "matrix": [
+    44
+   ],
+   "names": {
+    "132": "index",
+    "33": "single",
+    "44": "reference area",
+    "72": "cause",
+    "92": "normalization"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    132
+   ],
+   "source_path": "Social Sciences/Disaster Risk Science/FireRisk.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:df36cf7940a82ca381cddb35720d6f50d4bf8dc22cc4d0432c366692e66edff9": {
+   "constraint": [
+    79,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 130,
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "79 constraint: source",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "121": "massic number density",
+    "35": "ratio",
+    "41": "natural container",
+    "79": "source",
+    "98": "process"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    121
+   ],
+   "source_path": "Technical Sciences/Nuclear Engineering/U236GF.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:e0317a54033f0807fc0f47b3ffeb83ee2bff7d26ecb11b9c99151d45c9b56b79": {
+   "constraint": [
+    94,
+    96
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 37,
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "94 constraint: part",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "120": "velocity",
+    "33": "single",
+    "94": "part",
+    "96": "direction"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    120
+   ],
+   "source_path": "Natural Sciences/Oceanography/EWCT.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:e083e69a7197e4552a2c1926b148f8f33f3221128338977308be3037895b75d0": {
+   "constraint": [
+    96,
+    201
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 103,
+   "labels": [
+    "129 property: flux simplified",
+    "201 constraint: wavelength",
+    "33 object of interest: single",
+    "50 context: environment",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "129": "flux simplified",
+    "201": "wavelength",
+    "33": "single",
+    "50": "environment",
+    "96": "direction"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    129
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/ActinicFlux.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:e189d709bb080629b6f2950a197aa73858c4ccf00852cf9c0f7bdb006b71b264": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 80,
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "110": "fraction",
+    "35": "ratio"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    110
+   ],
+   "source_path": "Life Sciences/Environmental Chemistry/CONCVAR.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:e33e70cb59c148b02b366352b4e69075ce1dce0a9a657fbb991c598fc4f79d5a": {
+   "constraint": [
+    79
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 134,
+   "labels": [
+    "121 property: massic number density",
+    "35 object of interest: ratio",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "121": "massic number density",
+    "35": "ratio",
+    "79": "source"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    121
+   ],
+   "source_path": "Technical Sciences/Nuclear Engineering/U236LH.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:e3641426a8b3febb4bf69bf5bc59f8f4f66294a1c12ace90ce5ec878bbfc1772": {
+   "constraint": [
+    72
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 98,
+   "labels": [
+    "132 property: index",
+    "33 object of interest: single",
+    "44 matrix: reference area",
+    "72 constraint: cause",
+    "corpus"
+   ],
+   "matrix": [
+    44
+   ],
+   "names": {
+    "132": "index",
+    "33": "single",
+    "44": "reference area",
+    "72": "cause"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    132
+   ],
+   "source_path": "Social Sciences/Disaster Risk Science/FloodRiskMobility.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:e711a0b9e881efdba4f65439c20f340aeaedcbb8666fcad26684e5b08fc2d241": {
+   "constraint": [
+    70
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 11,
+   "labels": [
+    "113 property: dimensionless physical ratio",
+    "37 object of interest: convoluted",
+    "40 matrix: embedding material",
+    "50 context: environment",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "matrix": [
+    40
+   ],
+   "names": {
+    "113": "dimensionless physical ratio",
+    "37": "convoluted",
+    "40": "embedding material",
+    "50": "environment",
+    "70": "condition"
+   },
+   "object": [
+    37
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    113
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/C5_OpticalThickness.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:e8d2143d78c4c1199d8ba8e4c7383efc56ee9c46f184c12400fe906755eeb4ef": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 121,
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "128": "concentration",
+    "35": "ratio"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Technical Sciences/Environmental Engineering/ALCat.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:eac2ff5b242695c88bac645ba7dc4d3e18fd1e7ebdb1aaa53cedb7db5114cb63": {
+   "constraint": [
+    76,
+    209
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 100,
+   "labels": [
+    "128 property: concentration",
+    "209 constraint: physical form",
+    "35 object of interest: ratio",
+    "76 constraint: state",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "128": "concentration",
+    "209": "physical form",
+    "35": "ratio",
+    "76": "state"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/IceConcentration.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:ec5852427c1b8a6c433d8cc423f3c169f71cc1501bd5a76bc7e92688549cc687": {
+   "constraint": [
+    68,
+    75,
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 63,
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "68 constraint: reference",
+    "75 constraint: temporal extent",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [],
+   "names": {
+    "120": "velocity",
+    "33": "single",
+    "68": "reference",
+    "75": "temporal extent",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    120
+   ],
+   "source_path": "Natural Sciences/Oceanography/ETMP.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:ecff8ef3ee2a279b44f9099b3f0a55ec66697e541fbbe477bb97cb9582bef3d7": {
+   "constraint": [
+    68,
+    98
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 10,
+   "labels": [
+    "107 property: length ref",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "98 constraint: process",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "107": "length ref",
+    "33": "single",
+    "41": "natural container",
+    "68": "reference",
+    "98": "process"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    107
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/C4_ABLHeight.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:f2751bbdb87cf55ba61dc1e17ad3256788975592c4ba3408e3b8b29e1e074e56": {
+   "constraint": [],
+   "context": [],
+   "flags": [],
+   "issue": 104,
+   "labels": [
+    "116 property: angle",
+    "34 object of interest: two equal",
+    "42 matrix: artificial container",
+    "corpus"
+   ],
+   "matrix": [
+    42
+   ],
+   "names": {
+    "116": "angle",
+    "34": "two equal",
+    "42": "artificial container"
+   },
+   "object": [
+    34
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    116
+   ],
+   "source_path": "Technical Sciences/Technical Engineering/AOA.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:f438e56a0a51290ecd91f1ead7450bc4eb2dd18cd70026bb63a49e8e77f2195f": {
+   "constraint": [
+    68
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 115,
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "68 constraint: reference",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "140": "atomic derived",
+    "33": "single",
+    "41": "natural container",
+    "68": "reference"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    140
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/PMER.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:f545e06ffe881f040e259b1cd249fe36767622ffd3039adbfaa1705eabae60b3": {
+   "constraint": [
+    94,
+    96
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 116,
+   "labels": [
+    "120 property: velocity",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "94 constraint: part",
+    "96 constraint: direction",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "120": "velocity",
+    "33": "single",
+    "41": "natural container",
+    "94": "part",
+    "96": "direction"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    120
+   ],
+   "source_path": "Natural Sciences/Atmospheric Science/VAS.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:f8d903201bc77e3994d801fb2cda158b7cc1a89a71de3c1babcabe2cb8726168": {
+   "constraint": [
+    76,
+    79
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 88,
+   "labels": [
+    "128 property: concentration",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "76 constraint: state",
+    "79 constraint: source",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "128": "concentration",
+    "35": "ratio",
+    "41": "natural container",
+    "76": "state",
+    "79": "source"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    128
+   ],
+   "source_path": "Life Sciences/Environmental Chemistry/DetritalNitrogenConc.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:f8e21ac2d8c3c437bc7c1cf4e9310bc9b41526343ddb304fc13233c909b900ff": {
+   "constraint": [
+    92,
+    97,
+    99,
+    207
+   ],
+   "context": [
+    50
+   ],
+   "flags": [],
+   "issue": 18,
+   "labels": [
+    "139 property: probability",
+    "207 constraint: classification",
+    "33 object of interest: single",
+    "50 context: environment",
+    "92 constraint: normalization",
+    "97 constraint: region",
+    "99 constraint: temporal reference",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "139": "probability",
+    "207": "classification",
+    "33": "single",
+    "50": "environment",
+    "92": "normalization",
+    "97": "region",
+    "99": "temporal reference"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    139
+   ],
+   "source_path": "Life Sciences/Ecology/C12_HabitatProbability.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:f9116d407ac2c3dc30d6dd10f91db8dd711714338782555b8c22a0189c59cb46": {
+   "constraint": [
+    91,
+    94
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 16,
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "41 matrix: natural container",
+    "91 constraint: event",
+    "94 constraint: part",
+    "corpus",
+    "statistical modifier"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "140": "atomic derived",
+    "33": "single",
+    "41": "natural container",
+    "91": "event",
+    "94": "part"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    140
+   ],
+   "source_path": "Natural Sciences/Geology/C10_PeakGroundAcceleration.ttl",
+   "statistical_modifier": true
+  },
+  "urn:iadopt-lab:variable:fb8647925b080ca866644af56bca0c2431a7212e342819ee085c9b810e4418ed": {
+   "constraint": [
+    70
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 129,
+   "labels": [
+    "110 property: fraction",
+    "35 object of interest: ratio",
+    "41 matrix: natural container",
+    "70 constraint: condition",
+    "corpus"
+   ],
+   "matrix": [
+    41
+   ],
+   "names": {
+    "110": "fraction",
+    "35": "ratio",
+    "41": "natural container",
+    "70": "condition"
+   },
+   "object": [
+    35
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    110
+   ],
+   "source_path": "Life Sciences/Toxicology/BPFOS.ttl",
+   "statistical_modifier": false
+  },
+  "urn:iadopt-lab:variable:fedb7e476e30b8cb236e17415a872aeafadf626df6a8dcb44b066a1cf1e36154": {
+   "constraint": [
+    69
+   ],
+   "context": [],
+   "flags": [],
+   "issue": 32,
+   "labels": [
+    "140 property: atomic derived",
+    "33 object of interest: single",
+    "69 constraint: thickness",
+    "corpus"
+   ],
+   "matrix": [],
+   "names": {
+    "140": "atomic derived",
+    "33": "single",
+    "69": "thickness"
+   },
+   "object": [
+    33
+   ],
+   "other": [],
+   "part": [],
+   "property": [
+    140
+   ],
+   "source_path": "Technical Sciences/Material Science/C26_GoldSheetResistance.ttl",
+   "statistical_modifier": false
+  }
+ }
+}

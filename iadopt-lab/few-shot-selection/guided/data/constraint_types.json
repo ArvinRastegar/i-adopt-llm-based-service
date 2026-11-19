@@ -1,0 +1,456 @@
+{
+ "source": {
+  "commit": "ecca3470bebc90cc70ce6dca9785f2dd3bf7f9c0",
+  "repository": "https://github.com/mabablue/I-ADOPT-patterns-playground"
+ },
+ "types": [
+  {
+   "category": "conditional",
+   "definition": "A single principle, standard, or rule used to make a judgment or decision.",
+   "name": "criterion",
+   "number": 200,
+   "observation": "qualitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "An order relation that formalizes the notion of sorting elements.",
+   "name": "order",
+   "number": 202,
+   "observation": "qualitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "a contextual circumstance or environmental feature that limits or qualifies the constrained component",
+   "name": "condition",
+   "number": 70,
+   "observation": "quantitative",
+   "targets": [
+    "property",
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "indicates the physical, chemical or qualitative condition, including phases, of the constrained component",
+   "name": "state",
+   "number": 76,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "specifies the degree of quality or purity of a substance or generally of the component",
+   "name": "purity",
+   "number": 84,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "an evaluation, assessment, or classification of something against a standardized scale or set of criteria.",
+   "name": "rating",
+   "number": 205,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "refers to the visible, structural, or material state of an object or substance, describing its physical appearance, state of matter, or spatial shape",
+   "name": "physical form",
+   "number": 209,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "the systematic process of facilitating learning, acquiring knowledge, skills, values, beliefs, and habits through instruction, training, research, or discussion.",
+   "name": "education",
+   "number": 60,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "conditional",
+   "definition": "refers to the distinct physiological, kinematic, or mechanical mode of self-propelled movement exhibited by an organism",
+   "name": "locomotion state",
+   "number": 88,
+   "observation": "quantitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "context",
+   "definition": "a significant connection, association, or involvement between two or more people, groups, or entities, characterized by mutual interaction, influence, or relevance.",
+   "name": "relationship",
+   "number": 61,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "context",
+   "definition": "an entity—either human, artificial, biological, or organizational—that senses its environment and acts upon it autonomously to achieve a specific goal or purpose.",
+   "name": "agent",
+   "number": 62,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "context",
+   "definition": "indicates the cause that explains why the constrained component occurs or holds",
+   "name": "cause",
+   "number": 72,
+   "observation": "qualitative",
+   "targets": [
+    "property",
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "context",
+   "definition": "specifies the source, provenance, or starting point of the constrained component",
+   "name": "source",
+   "number": 79,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "nature",
+   "definition": "provides a material type information about the constrained component",
+   "name": "material type",
+   "number": 64,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest"
+   ]
+  },
+  {
+   "category": "nature",
+   "definition": "indicates the role a person might have in the context of the variable",
+   "name": "role",
+   "number": 77,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "nature",
+   "definition": "systematic arrangement in groups or categories according to established criteria",
+   "name": "classification",
+   "number": 207,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "provides a location-specific information about the constrained component",
+   "name": "location",
+   "number": 67,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "provides a reference point or information for the constrained component",
+   "name": "reference",
+   "number": 68,
+   "observation": "qualitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "constraints the component specifying in which layer the variable is measured",
+   "name": "layer",
+   "number": 69,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "indicates the spatial coverage within which the constrained component applies",
+   "name": "spatial extent",
+   "number": 74,
+   "observation": "quantitative",
+   "targets": [
+    "property",
+    "object of interest",
+    "matrix",
+    "statistical modifier"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "defines the domain or criteria over which a statistical measure is calculated",
+   "name": "spatial distribution",
+   "number": 80,
+   "observation": "quantitative",
+   "targets": [
+    "statistical modifier"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "specifies a structural, anatomical, or biological sub-component (e.g., leaf, liver, root, surface layer) of an entity.",
+   "name": "part",
+   "number": 94,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "specifies the spatial orientation, vector heading, or flow orientation (e.g., downward, northward, incoming, outward) of the observed phenomenon relative to a spatial coordinate system, physical boundary, or reference feature.",
+   "name": "direction",
+   "number": 96,
+   "observation": "qualitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "specifies an area of land or space that shares unifying characteristics, setting it apart from surrounding areas",
+   "name": "region",
+   "number": 97,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "spatial",
+   "definition": "the surrounding area, neighborhood, or general proximity near a specific place or landmark.",
+   "name": "vicinity",
+   "number": 204,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "provides the sampling frequency that applies for the constrained component",
+   "name": "sampling frequency",
+   "number": 66,
+   "observation": "quantitative",
+   "targets": [
+    "statistical modifier"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "indicates the temporal coverage within which the constrained component applies",
+   "name": "temporal extent",
+   "number": 75,
+   "observation": "quantitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "provides time-specific information about the constrained component",
+   "name": "time",
+   "number": 78,
+   "observation": "quantitative",
+   "targets": [
+    "property",
+    "object of interest"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "defines how often a final data point is reported",
+   "name": "reporting frequency",
+   "number": 83,
+   "observation": "qualitative",
+   "targets": [
+    "statistical modifier"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "refers to a process that occurs when measuring the property",
+   "name": "process",
+   "number": 90,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "identifies a specific occurrence, process, or life-stage event (e.g., birth, flooding, surgical procedure) that bounds or triggers the observation, serving as a contextual anchor when explicit calendar time or duration is unknown or non-applicable.",
+   "name": "event",
+   "number": 91,
+   "observation": "qualitative",
+   "targets": []
+  },
+  {
+   "category": "temporal",
+   "definition": "restricts the human subject or population to a defined age interval, specific age value, or life stage.",
+   "name": "age",
+   "number": 95,
+   "observation": "quantitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "a series of systematic, ordered actions or steps taken to achieve a specific end or result.",
+   "name": "process",
+   "number": 98,
+   "observation": "qualitative",
+   "targets": [
+    "property",
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "temporal",
+   "definition": "a linguistic mechanism, point of origin, or benchmark used to locate events, actions, or states in time relative to another point in time.",
+   "name": "temporal reference",
+   "number": 99,
+   "observation": "qualitative",
+   "targets": [
+    "property",
+    "statistical modifier"
+   ]
+  },
+  {
+   "category": "value",
+   "definition": "specifies the quantity in which the entity occurs",
+   "name": "quantity",
+   "number": 87,
+   "observation": "qualitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "value",
+   "definition": "provides the range of allowed values",
+   "name": "range",
+   "number": 81,
+   "observation": "quantitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "value",
+   "definition": "defines the value limit that triggers a quality flag, indicating whether the measurement satisfies the threshold criterion.",
+   "name": "threshold",
+   "number": 82,
+   "observation": "qualitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "value",
+   "definition": "specifies the reference quantity to which a measurement is rescaled.",
+   "name": "normalization",
+   "number": 92,
+   "observation": "quantitative",
+   "targets": []
+  },
+  {
+   "category": "value",
+   "definition": "the distance in the line of advance of a wave from any one point to the next point of corresponding phase",
+   "name": "wavelength",
+   "number": 201,
+   "observation": "qualitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "value",
+   "definition": "the average kinetic energy of the particles in a substance, determining how hot or cold it is.",
+   "name": "temperature",
+   "number": 203,
+   "observation": "quantitative",
+   "targets": [
+    "property",
+    "object of interest",
+    "matrix"
+   ]
+  },
+  {
+   "category": "value",
+   "definition": "the length of a straight line through the center of an object or space",
+   "name": "diameter",
+   "number": 206,
+   "observation": "quantitative",
+   "targets": [
+    "property"
+   ]
+  },
+  {
+   "category": "value",
+   "definition": "an intrinsic physical property of a material that measures how strongly it opposes or resists the flow of electric current.",
+   "name": "resistivity",
+   "number": 208,
+   "observation": "quantitative",
+   "targets": [
+    "object of interest",
+    "matrix"
+   ]
+  }
+ ]
+}
