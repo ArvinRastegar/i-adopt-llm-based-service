@@ -200,7 +200,7 @@ cross-check. The model is loaded from the local Hugging Face cache only.
 
 Until `uv sync` has been run, the lab's interpreter runs everything read-only:
 `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=iadopt-linking/src iadopt-lab/.venv/bin/python -m iadopt_linking.cli ...`
-from the repo root. The rules for working here are in [`AGENTS.md`](AGENTS.md).
+from the repo root.
 
 ## Status
 
