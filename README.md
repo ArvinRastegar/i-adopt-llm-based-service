@@ -1,84 +1,68 @@
 # i-adopt-llm-based-service
 
-<!-- Link to [I-Adopt workshop notes](https://docs.google.com/document/d/1eY9UGJv_YMGi1iYKPb-6SLo8GjZWMFy1oD4wWv8MsKY/edit?usp=sharing).
-
-Link to [I-Adopt workshop Summary](https://docs.google.com/document/d/1YmfNovC-78ECMQCWaqeEndo3LW47REKYvqPEr9vMtK0/edit?usp=sharing). -->
-
-## Latest results
-
-**[`configuration-results.csv`](configuration-results.csv) holds the latest experiment
-results for now.** It is a plain CSV — no database or setup needed, and GitHub renders it
-as a sortable table.
-
-Every one of the 298 model configurations that completed the full 97-variable evaluation,
-sorted by Close F1 descending:
-
-| Column | Meaning |
-|---|---|
-| `model_id`, `provider` | which model, on which provider |
-| `prompt`, `shots`, `temperature`, `reasoning` | the configuration that was run |
-| `close_precision`, `close_recall`, `close_f1` | scored with similarity ≥ 0.8 |
-| `exact_precision`, `exact_recall`, `exact_f1` | scored on identical text |
-
-Best configuration is `z-ai/glm-5.2` with the matrix-decomposition prompt, 5 examples,
-temperature 0.5 and reasoning enabled, at **0.4206** Close F1.
-
-The experiment that produced these numbers lives in [`iadopt-lab/`](iadopt-lab/); the
-commentary is in [`iadopt-lab/docs/results-top-configurations.md`](iadopt-lab/docs/results-top-configurations.md)
-and [`results-model-comparison.md`](iadopt-lab/docs/results-model-comparison.md).
-
-## Entity linking
-
-Linking slot values to controlled vocabularies (Wikidata, QUDT, OM) is a separate experiment in
-[`iadopt-linking/`](iadopt-linking/). Its baseline with the Qwen3 reranker, 194 of 294 slots
-correct, is reported in [`iadopt-linking/results/baseline-20261014/report.md`](iadopt-linking/results/baseline-20261014/report.md).
-
-## Getting started
-
-1. Install Dependencies
-
-From the root of the repository, install all required Python packages:
-
-pip install -r requirements.txt
-
-2. Configure Environment Variables
-
-Create a .env file in the root directory of the project and add your OpenRouter API key:
-
-OPENROUTER_API_KEY=your_api_key_here
-
-
-Make sure the .env file is located at the project root so it can be detected by the scripts.
-
-3. Phase One: Variable Decomposition
-
-To reproduce the variable decomposition output, run the following script:
-
-python3 ./benchmarking_example/randomShotsPhaseOne.py --mode fixed-examples-grid
-
-
-This script performs the decomposition of variables using a fixed example grid configuration.
-
-4. Phase One (Merged): Decomposition + Vocabulary Linking
-
-To reproduce both:
-
-the variable decomposition, and
-
-the linking of controlled vocabularies to Wikidata entities,
-
-run the merged script:
-
-python3 ./benchmarking_example/phaseOneThreeMerged.py
-
-
-This script assumes:
-
-all dependencies are installed,
-
-the .env file is present, and
-
-the OPENROUTER_API_KEY is correctly set.
-
+Experiments on turning the definition of a scientific variable into an [I-ADOPT](https://w3id.org/iadopt/) description with
+language models. Two questions are measured apart: how well a model takes a definition apart into six fields
+(**decomposition**), and how well it links the parts to entries in Wikidata, QUDT and OM (**linking**). The web service that uses the
+results is [`iadopt-variable-description-service`](https://github.com/ArvinRastegar/iadopt-variable-description-service).
 
 [![DOI](https://zenodo.org/badge/946537030.svg)](https://doi.org/10.5281/zenodo.18108687)
+
+The DOI's latest version is from 13 October 2026; the linking experiments were added on 15 and 16 October and are not in it.
+
+## Results
+
+| What was measured | Result | Read it in |
+|---|---|---|
+| 298 configurations that completed, of 396 planned (9 model deployments), 97 variables, one run each | best Close F1 0.4206: `z-ai/glm-5.2`, 5 examples, temperature 0.5, reasoning on; 18 of its 36 configurations completed | [`configuration-results.csv`](configuration-results.csv), [campaign log](iadopt-lab/docs/campaign-log.md) |
+| More examples in the prompt, `Qwen3.8-27B`, 72 variables | one run each: 0.224 with none, 0.451 with 20, 0.456 with 30; ten repetitions each at 20, 25 and 30: 0.456, 0.451, 0.468, no difference significant | [`shot-pool-30-results.md`](iadopt-lab/few-shot-selection/shot-pool-30-results.md) |
+| Choosing 25 examples, 24 variables, 15 repetitions | 0.4890 (SD 0.0252); +0.0367 over three random sets pooled (p = 0.0002), +0.0133 over the best of them (p = 0.156, not significant) | [`example-selection-report.md`](iadopt-lab/few-shot-selection/example_selection/output/example-selection-report.md) |
+| Linking, 284 reachable slots, one pass each | reranker 194, chat model 206, `jev-1.13` 213 right; neither difference from the reranker can be told from zero, the gains are in Wikidata and the losses in QUDT | [`iadopt-linking`](iadopt-linking/README.md) |
+
+The rankings of the main experiment and the exploratory studies under `few-shot-selection/` are kept apart. Providers are confounded with models
+([how to read the tables](iadopt-lab/docs/results-model-comparison.md)), and rows of different studies are not comparable: the official runs ask an
+invalid answer again, the studies count it as empty.
+
+## What is where
+
+| Folder | What |
+|---|---|
+| [`iadopt-lab/`](iadopt-lab/README.md) | The decomposition experiments: corpus, prompts, providers, scorer, PostgreSQL store, reports |
+| [`iadopt-lab/few-shot-selection/`](iadopt-lab/few-shot-selection/example_selection/README.md) | Exploratory studies on examples in the prompt; `guided/` has code and data of a later one, its results are not public |
+| [`iadopt-linking/`](iadopt-linking/README.md) | The linking experiments, with the raw answers of each run in `results/` |
+| [`configuration-results.csv`](configuration-results.csv) | One row per configuration of the main experiment |
+| `error_analysis/` | Analysis scripts |
+| `Expert-Assessment/` | A spreadsheet with expert evaluations of the corpus and of model outputs, see the [note in the folder](Expert-Assessment/Corpus%20Analysis%20-%20readme.md) |
+| `misc/` | Older experiments and the first pipeline, kept as they were |
+
+## Quick start
+
+Needs [uv](https://docs.astral.sh/uv/) and Python 3.12; no key and no database. Both projects run their tests offline.
+
+```bash
+git clone https://github.com/ArvinRastegar/i-adopt-llm-based-service.git
+cd i-adopt-llm-based-service/iadopt-lab
+uv sync
+uv run pytest -q -rs
+uv run iadopt-lab verify
+```
+
+```bash
+cd ../iadopt-linking
+uv sync
+uv run pytest -q
+```
+
+Database tests skip without a dedicated test database; `-rs` lists what skipped. `verify` checks the hashes of the corpus files. Asking a
+model needs a provider key and an explicit authorisation, see the [runbook](iadopt-lab/docs/runbook.md).
+
+The older scripts of the first experiments are in `misc/benchmarking_example/`.
+
+## Contributors
+
+In the history of `main` up to 20 November 2026 (`4c56487`): Arvin Rastegar, Barbara Magagna, Cristian Berrio Aroca, esgg and Saurav Kumar. The corpus is
+the work of the [I-ADOPT Corpus](https://github.com/i-adopt/Corpus) contributors.
+
+## Licence
+
+[MIT](LICENSE). The corpus files are CC BY 4.0 ([provenance](iadopt-lab/data/corpus/LICENSE-PROVENANCE.md),
+[notices](iadopt-lab/THIRD_PARTY_NOTICES.md)).
