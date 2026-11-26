@@ -1,0 +1,171 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.1/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      },
+      "about": {
+        "@id": "./"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "i-adopt-llm-based-service",
+      "description": "Measures how well language models describe scientific variables: decomposing definitions into the parts of the I-ADOPT framework and linking the parts to controlled vocabularies.",
+      "datePublished": "2026-11-26",
+      "license": {
+        "@id": "https://spdx.org/licenses/MIT"
+      },
+      "identifier": "https://doi.org/10.5281/zenodo.18108687",
+      "url": "https://github.com/ArvinRastegar/i-adopt-llm-based-service",
+      "author": [
+        {
+          "@id": "#arvin-rastegar"
+        },
+        {
+          "@id": "#barbara-magagna"
+        },
+        {
+          "@id": "#cristian-berrio-aroca"
+        },
+        {
+          "@id": "#esgg"
+        },
+        {
+          "@id": "#saurav-kumar"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "results/best-pipeline.json"
+        },
+        {
+          "@id": "results/best-pipeline.schema.json"
+        },
+        {
+          "@id": "results/pattern-retrieval.csv"
+        },
+        {
+          "@id": "results/shot-count.csv"
+        },
+        {
+          "@id": "configuration-results.csv"
+        },
+        {
+          "@id": "iadopt-lab/"
+        },
+        {
+          "@id": "iadopt-lab/data/corpus/"
+        },
+        {
+          "@id": "iadopt-linking/"
+        },
+        {
+          "@id": "CITATION.cff"
+        }
+      ]
+    },
+    {
+      "@id": "https://spdx.org/licenses/MIT",
+      "@type": "CreativeWork",
+      "name": "MIT License"
+    },
+    {
+      "@id": "https://spdx.org/licenses/CC-BY-4.0",
+      "@type": "CreativeWork",
+      "name": "Creative Commons Attribution 4.0 International"
+    },
+    {
+      "@id": "#arvin-rastegar",
+      "@type": "Person",
+      "name": "Arvin Rastegar"
+    },
+    {
+      "@id": "#barbara-magagna",
+      "@type": "Person",
+      "name": "Barbara Magagna"
+    },
+    {
+      "@id": "#cristian-berrio-aroca",
+      "@type": "Person",
+      "name": "Cristian Berrio Aroca"
+    },
+    {
+      "@id": "#esgg",
+      "@type": "Person",
+      "name": "esgg"
+    },
+    {
+      "@id": "#saurav-kumar",
+      "@type": "Person",
+      "name": "Saurav Kumar"
+    },
+    {
+      "@id": "results/best-pipeline.json",
+      "@type": "File",
+      "name": "Best decomposition pipeline so far",
+      "description": "The pipeline shown in the README; its scores are read from the CSV it names.",
+      "encodingFormat": "application/json",
+      "conformsTo": {
+        "@id": "results/best-pipeline.schema.json"
+      }
+    },
+    {
+      "@id": "results/best-pipeline.schema.json",
+      "@type": "File",
+      "name": "JSON Schema of best-pipeline.json",
+      "encodingFormat": "application/schema+json"
+    },
+    {
+      "@id": "results/pattern-retrieval.csv",
+      "@type": "File",
+      "name": "Close F1 of each way of choosing the worked examples",
+      "description": "102 variables, qwen/qwen3.8-27b, ten runs per setting; gains against one fixed set of 25 examples and against the 25 most similar, with 95% intervals from resampling the variables; the last row is the setting chosen fold by fold. Exploratory.",
+      "encodingFormat": "text/csv"
+    },
+    {
+      "@id": "results/shot-count.csv",
+      "@type": "File",
+      "name": "Close F1 by number of worked examples",
+      "description": "72 variables, Qwen3.8-27B, micro Close F1 over the scored answers. Exploratory.",
+      "encodingFormat": "text/csv"
+    },
+    {
+      "@id": "configuration-results.csv",
+      "@type": "File",
+      "name": "Results per model configuration",
+      "encodingFormat": "text/csv"
+    },
+    {
+      "@id": "iadopt-lab/",
+      "@type": "Dataset",
+      "name": "Decomposition experiments",
+      "description": "Prompts, providers, the scorer, the PostgreSQL store, campaigns and reports."
+    },
+    {
+      "@id": "iadopt-lab/data/corpus/",
+      "@type": "Dataset",
+      "name": "I-ADOPT corpus of 102 variables",
+      "license": {
+        "@id": "https://spdx.org/licenses/CC-BY-4.0"
+      },
+      "description": "Expert decompositions used as the benchmark; see LICENSE-PROVENANCE.md in the folder."
+    },
+    {
+      "@id": "iadopt-linking/",
+      "@type": "Dataset",
+      "name": "Linking experiments",
+      "description": "Linking the decomposed parts to controlled vocabularies, with the answers of every run in results/."
+    },
+    {
+      "@id": "CITATION.cff",
+      "@type": "File",
+      "name": "Citation metadata",
+      "encodingFormat": "application/x-yaml"
+    }
+  ]
+}

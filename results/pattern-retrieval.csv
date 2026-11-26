@@ -1,0 +1,13 @@
+setting,name,close_f1,sd,vs_fixed_gain,vs_fixed_low,vs_fixed_high,vs_25_nearest_gain,vs_25_nearest_low,vs_25_nearest_high
+base,One fixed set of 25 examples,0.5934,0.0125,,,,,,
+rag-10,10 most similar examples,0.6567,0.0072,0.0632,0.0202,0.1071,-0.0211,-0.0447,0.0019
+rag-25,25 most similar examples,0.6777,0.0114,0.0843,0.0454,0.1235,,,
+rag-25+retry,"25 most similar, unusable answers asked again once",0.6814,0.0071,0.0879,0.0492,0.127,0.0036,0.0009,0.0072
+rag-50,50 most similar examples,0.6828,0.0114,0.0894,0.051,0.1296,0.0051,-0.01,0.0206
+rag-85,All 85 examples from the other folds,0.6843,0.014,0.0909,0.0528,0.1312,0.0066,-0.0132,0.0271
+rag-25-first,"25 most similar, most similar first",0.6734,0.0104,0.08,0.0429,0.118,-0.0043,-0.0177,0.0093
+fixed+rag-10,The fixed 25 plus the 10 most similar,0.6829,0.0124,0.0895,0.0545,0.1272,0.0052,-0.0144,0.0253
+rag-25-mmr,25 similar and varied examples,0.6805,0.012,0.0871,0.0487,0.1265,0.0028,-0.0116,0.0173
+rag-25-labels,25 examples picked with a draft's labels,0.6839,0.0062,0.0904,0.0538,0.1275,0.0061,-0.0083,0.0212
+rag-25-words,25 most similar by shared words,0.6403,0.01,0.0468,0.0041,0.0887,-0.0375,-0.0592,-0.0169
+chosen,Setting chosen on the other five folds,0.6743,0.0096,0.0809,0.0444,0.1189,-0.0034,-0.0201,0.0135

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "best-pipeline.schema.json",
+  "title": "Best pipeline so far",
+  "description": "The pipeline shown in the README. Scores are read from the rows `best` and `before` of the CSV named in `source`.",
+  "type": "object",
+  "required": ["task", "status", "date", "model", "variables", "runs", "metric", "steps", "source", "best", "before", "why", "caveat", "code"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "task": {"type": "string"},
+    "status": {"enum": ["exploratory", "official"]},
+    "date": {"type": "string", "format": "date"},
+    "model": {"type": "string"},
+    "variables": {"type": "integer", "minimum": 1},
+    "runs": {"type": "integer", "minimum": 1},
+    "metric": {"type": "string"},
+    "steps": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+    "source": {"type": "string", "pattern": "^results/.+\\.csv$"},
+    "best": {"type": "string"},
+    "before": {"type": "string"},
+    "why": {"type": "string", "description": "Why this row is shown although other rows may score a little higher."},
+    "caveat": {"type": "string"},
+    "code": {"type": "string"}
+  },
+  "additionalProperties": false
+}

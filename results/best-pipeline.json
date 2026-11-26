@@ -1,0 +1,23 @@
+{
+  "$schema": "./best-pipeline.schema.json",
+  "task": "Decompose a variable definition into the six I-ADOPT parts",
+  "status": "exploratory",
+  "date": "2026-11-20",
+  "model": "qwen/qwen3.8-27b",
+  "variables": 102,
+  "runs": 10,
+  "metric": "Close F1",
+  "steps": [
+    "Variable definition",
+    "Find the 25 most similar variables that experts already decomposed",
+    "Prompt with those 25 as worked examples",
+    "Language model (Qwen3.8-27B)",
+    "The six I-ADOPT parts"
+  ],
+  "source": "results/pattern-retrieval.csv",
+  "best": "rag-25",
+  "before": "base",
+  "why": "No other way of choosing the examples does reliably better, and asking an unusable answer again once adds only +0.004.",
+  "caveat": "Tuned on these 102 variables, so a new variable may score lower.",
+  "code": "iadopt-lab/few-shot-selection/guided/rag_tuning.py"
+}

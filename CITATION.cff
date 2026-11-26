@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "i-adopt-llm-based-service"
+abstract: >-
+  Measures how well language models describe scientific variables: taking a definition apart
+  into the parts of the I-ADOPT framework, and linking those parts to controlled vocabularies.
+authors:
+  - given-names: Arvin
+    family-names: Rastegar
+  - given-names: Barbara
+    family-names: Magagna
+  - given-names: Cristian
+    family-names: Berrio Aroca
+  - alias: esgg
+  - given-names: Saurav
+    family-names: Kumar
+license: MIT
+doi: 10.5281/zenodo.18108687
+repository-code: "https://github.com/ArvinRastegar/i-adopt-llm-based-service"
+keywords:
+  - I-ADOPT
+  - variable description
+  - large language models
+  - FAIR

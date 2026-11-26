@@ -1,0 +1,23 @@
+# Lint and README checks before each commit, the offline tests before each push.
+# Enable once: uv tool install pre-commit && pre-commit install --hook-type pre-commit --hook-type pre-push
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff check
+        entry: uv run --project iadopt-lab --no-sync ruff check
+        language: system
+        types: [python]
+        files: ^(iadopt-lab/(src|tests)|iadopt-linking|scripts)/
+      - id: readme-results
+        name: README best pipeline matches results/
+        entry: python3 -I scripts/readme_results.py --check
+        language: system
+        pass_filenames: false
+        files: ^(README\.md|results/|scripts/readme_results\.py)
+      - id: tests
+        name: offline tests
+        entry: bash -c 'cd iadopt-lab && uv run --no-sync pytest -q && uv run --no-sync pytest -q few-shot-selection && cd ../iadopt-linking && uv run --no-sync pytest -q'
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
