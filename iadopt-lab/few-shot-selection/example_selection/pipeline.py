@@ -160,7 +160,7 @@ def write_report(path: Path, results: Mapping[str, Any]) -> None:
         "# Example-selection optimization — result",
         "",
         "**Exploratory side experiment.** Not part of the official experiment; these numbers",
-        "cannot enter an official ranking. See [the plan](../README.md).",
+        "cannot enter an official ranking.",
         "",
         f"Split: pool {results['split']['P']}, search-eval {results['split']['E']}, "
         f"confirmation {results['split']['C']}.",

@@ -313,6 +313,7 @@ def main() -> int:
 
     document = render(rows, total, rows[0]["variables"]) + METHOD
     destination = ROOT / args.out
+    destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(document, encoding="utf-8")
     print(f"wrote {destination} ({len(document):,} chars, {len(rows)} configurations)")
     for row in rows:

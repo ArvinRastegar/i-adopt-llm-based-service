@@ -313,6 +313,7 @@ def main() -> int:
         identity = verify_comparable(conn)
         rows = collect(conn)
     document = render(rows, identity) + NOTES
+    (ROOT / args.out).parent.mkdir(parents=True, exist_ok=True)
     (ROOT / args.out).write_text(document, encoding="utf-8")
     print(f"wrote {ROOT / args.out} ({len(document):,} chars, {len(rows)} models)\n")
     for row in rows:

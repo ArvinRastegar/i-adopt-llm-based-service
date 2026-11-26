@@ -1,7 +1,7 @@
 # Example-selection optimization — result
 
 **Exploratory side experiment.** Not part of the official experiment; these numbers
-cannot enter an official ranking. See [the plan](../README.md).
+cannot enter an official ranking.
 
 Split: pool 40, search-eval 38, confirmation 24.
 

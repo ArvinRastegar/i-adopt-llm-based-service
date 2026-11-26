@@ -166,7 +166,6 @@ __pycache__/
 htmlcov/
 dist/
 outputs/*
-!outputs/README.md
 data/embeddings/
 
 # The repository-root .gitignore excludes *.ttl for the older benchmark project.
@@ -188,7 +187,6 @@ data/embeddings/
 # ---------------------------------------------------------------------------
 iadopt-lab/.runtime/
 iadopt-lab/outputs/*
-!iadopt-lab/outputs/README.md
 # Side-experiment raw results: a 15 MB JSONL and its Excel workbook for the shot-count
 # ablation, and a 378 MB call cache plus its observation log for the example-selection
 # search. Ignored for the same reason official rankings are - they are large, regenerated
@@ -213,6 +211,9 @@ benchmarking_example/iadopt_benchmark_presentation_v2.ipynb
 external/I-ADOPT-patterns-playground
 /external
 
-# Paper revision workspace: separate PRIVATE repository (i-adopt-llm-based-service-paper).
-# Contains confidential peer-review material; never add it to this public repository.
-/paper/
+# Private documentation repository (paper revision, docs, records), mounted at docs/.
+# `paper` is a link to it that keeps older paths working. Never add either to this repository.
+/docs/
+/paper
+# Local link into it: the lab docs, where the ops report scripts write.
+/iadopt-lab/docs

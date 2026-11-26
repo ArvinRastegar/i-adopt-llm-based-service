@@ -155,7 +155,7 @@ def build() -> str:
     write("# Best-known configuration — complete session record")
     write("")
     write("**Exploratory side experiment, not an official result.** The configuration below won a")
-    write("held-out comparison inside [the example-selection study](README.md); it carries no campaign")
+    write("held-out comparison inside the example-selection study; it carries no campaign")
     write("identity and must not enter an official ranking or results table. It is recorded here so the")
     write("exact prompt, the exact 25 examples and the exact request body can be reused elsewhere —")
     write("for instance by a web service — without re-deriving them from the run logs.")
