@@ -52,9 +52,9 @@
   ],
   "code": {
     "files": 35,
-    "git_base_commit": "763a675f74215fc4b377067f85c6ff69a6c63eff",
+    "git_base_commit": "d25ccdb27193ce70145cc9239a85cf6a63d24064",
     "git_dirty": false,
-    "source_sha256": "7ffd9eae4dd53c0c66fef462caced34a1329d2f1169ea8f6c029290c66e26287"
+    "source_sha256": "2fd207d9c18d70a30b96e5db05b5feae870b38f9926fc9065d18e13a446f37fc"
   },
   "corpus": {
     "commit": "2598bf91fa927b78a6529bae7864ef0f7d485b73",
@@ -63,7 +63,7 @@
     "source_lock_sha256": "f3d162c655a9c09672a80593f7fc2aee6d403e7559ebd3768d9e3c9a87906583",
     "tag": "v2.0.1"
   },
-  "created_at": "2026-11-27T10:52:40+00:00",
+  "created_at": "2026-11-27T11:21:54+00:00",
   "evidence_code_sha256": "a342a3b6435978a9af2376f7a490f808b895118d609cbb7f5ac19fd76e4492f1",
   "evidence_period": {
     "first_request": "2026-10-15T18:35:06+00:00",
@@ -76,8 +76,8 @@
     "outcomes.csv": "27fa3b604fb187ad5bdb0e64bc164243926cd681fa68278ade2adc57f9535c64",
     "plan.json": "c4e87c1e89a55ea143df9d7466137e334d7372ad9205e73f1e7338e1a77baad7",
     "probabilities.csv": "42ef719944190f633b51b117a405e82a2ecb95e9464779bd13bc80ad986fbd9f",
-    "provenance.json": "5ad3d32d3f15192577859eda779df142ff4353df54739f2af05c78ef965f39e7",
-    "report.md": "753d354b72f243255d36a299452500b1fa048b4e340ac1058ffdf3932909cd73",
+    "provenance.json": "9a9307784de82f6ba7d4441056ff512d51e466d9a44410fd4ad41fe25178901a",
+    "report.md": "7e562e8b2e42f10b76bdf8c7f1f44593f1a2c48ee3b56fb3d94d382c79b990b0",
     "responses.jsonl": "9be831035cc3fa99fa6285f6f0a233d57b0f8113e231c06d6b9801523adba047",
     "summary.json": "59f2b4b6b676ef17cfde0e6f7fac36706744a184472b1fdd1cce8908f7d5e6c1"
   },
@@ -148,6 +148,22 @@
       },
       "source_sha256": "7ffd9eae4dd53c0c66fef462caced34a1329d2f1169ea8f6c029290c66e26287",
       "started_at": "2026-11-27T10:52:40+00:00",
+      "workers": 1
+    },
+    {
+      "asking": null,
+      "cap_usd": null,
+      "finished_at": "2026-11-27T11:21:54+00:00",
+      "git_dirty": false,
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-27.2.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 0.0
+      },
+      "source_sha256": "2fd207d9c18d70a30b96e5db05b5feae870b38f9926fc9065d18e13a446f37fc",
+      "started_at": "2026-11-27T11:21:54+00:00",
       "workers": 1
     }
   ],

@@ -105,6 +105,28 @@
       },
       "started_at": "2026-11-27T10:52:40+00:00",
       "workers": 1
+    },
+    {
+      "asking": null,
+      "cap_usd": null,
+      "client": {},
+      "code": {
+        "files": 35,
+        "git_base_commit": "d25ccdb27193ce70145cc9239a85cf6a63d24064",
+        "git_dirty": false,
+        "source_sha256": "2fd207d9c18d70a30b96e5db05b5feae870b38f9926fc9065d18e13a446f37fc"
+      },
+      "evidence_code_sha256": "a342a3b6435978a9af2376f7a490f808b895118d609cbb7f5ac19fd76e4492f1",
+      "finished_at": "2026-11-27T11:21:54+00:00",
+      "max_requests": 1500,
+      "outcome": "completed",
+      "platform": "macOS-27.2.1-arm64-arm-64bit",
+      "python": "3.12.1",
+      "seconds": {
+        "asking": 9.159848559647799e-07
+      },
+      "started_at": "2026-11-27T11:21:54+00:00",
+      "workers": 1
     }
   ],
   "schema": 1
