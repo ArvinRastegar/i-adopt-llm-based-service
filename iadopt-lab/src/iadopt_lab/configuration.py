@@ -26,13 +26,7 @@ class _UniqueLoader(yaml.SafeLoader):
 
 
 def _mapping(loader: _UniqueLoader, node: yaml.MappingNode, deep: bool = False) -> dict:
-    """Build a mapping while rejecting duplicate keys and non-string keys.
-
-    Args: loader: Safe YAML parser; node: mapping node; deep: recursive construction flag.
-    Returns: One dictionary of parsed values.
-    Raises: ConfigurationError for duplicate/non-string keys.
-    Side Effects: None beyond parser-local state.
-    """
+    """Build a mapping while rejecting duplicate keys and non-string keys."""
     result = {}
     for key_node, value_node in node.value:
         key = loader.construct_object(key_node, deep=deep)
@@ -55,35 +49,17 @@ class Configuration:
 
     @property
     def data(self) -> dict[str, Any]:
-        """Return an independent JSON copy of this snapshot.
-
-        Args: None beyond the snapshot.
-        Returns: Configuration dictionary whose mutation cannot change this object.
-        Raises: JSONDecodeError only if constructed with corrupt bytes.
-        Side Effects: None.
-        """
+        """Return an independent JSON copy of this snapshot."""
         return json.loads(self.canonical_bytes)
 
     @property
     def sha256(self) -> str:
-        """Hash the canonical selected snapshot.
-
-        Args: None.
-        Returns: Deterministic SHA-256 hex digest.
-        Raises: TypeError only for incorrectly constructed non-byte state.
-        Side Effects: None.
-        """
+        """Hash the canonical selected snapshot."""
         return sha256_bytes(self.canonical_bytes)
 
 
 def load_parameters(path: str | Path, schema_path: str | Path | None = None) -> Configuration:
-    """Read and validate an explicit draft YAML file without resolving unknown live facts.
-
-    Args: path: Parameter file; schema_path: explicit schema or the packaged project schema.
-    Returns: Byte-backed original configuration with valid finite JSON primitives.
-    Raises: OSError for unavailable files; ConfigurationError for unsafe YAML/schema violations.
-    Side Effects: Reads only the two selected local files; no credentials/database/network.
-    """
+    """Read and validate an explicit draft YAML file without resolving unknown live facts."""
     original = Path(path).read_bytes()
     if len(original) > 2_000_000:
         raise ConfigurationError("Parameter YAML exceeds the documented 2 MB limit")
@@ -108,13 +84,7 @@ def load_parameters(path: str | Path, schema_path: str | Path | None = None) -> 
 
 
 def resolve_configuration(raw: Configuration, environment_capabilities: Mapping | None = None) -> Configuration:
-    """Canonicalize only selected provider/model entries and report missing planning facts.
-
-    Args: raw: Schema-valid snapshot; environment_capabilities: optional injected non-secret facts.
-    Returns: Selected immutable snapshot and all plan-readiness issue paths.
-    Raises: ConfigurationError for ownership/duplicate/model/mode inconsistencies.
-    Side Effects: None; no model capability is inferred or fetched.
-    """
+    """Canonicalize only selected provider/model entries and report missing planning facts."""
     data = raw.data
     issues = []
     selected = sorted(data["campaign"]["providers"])
@@ -194,11 +164,7 @@ def resolve_configuration(raw: Configuration, environment_capabilities: Mapping 
 def validate_live_readiness(resolved: Configuration, facts: Mapping | None = None) -> dict:
     """Evaluate all live gates against injected evidence without making a request.
 
-    Args: resolved: Selected configuration; facts: checked artifacts/DB/credentials/estimate/approval.
-    Returns: Safe report containing readiness, issue list, snapshot hash and live mode.
-    Raises: ConfigurationError for malformed injected facts.
-    Side Effects: None; facts must already be read by explicit boundary services.
-    """
+    Facts must already be read by explicit boundary services."""
     facts = facts or {}
     data = resolved.data
     issues = list(resolved.issues)
@@ -224,55 +190,27 @@ class RuntimeSecrets:
     """Private process-local settings; representation and serialization never expose values."""
 
     def __init__(self, values: Mapping[str, str]) -> None:
-        """Copy already allowlisted literal secret values.
-
-        Args: values: Name/value mapping selected by the loader.
-        Returns: None.
-        Raises: TypeError for a non-mapping.
-        Side Effects: Private in-memory allocation only.
-        """
+        """Copy already allowlisted literal secret values."""
         self.__values = dict(values)
 
     def get(self, name: str) -> str | None:
         """Resolve one allowed setting for an explicit connection boundary.
 
-        Args: name: Previously allowlisted setting name.
-        Returns: Literal value or None; callers must never log returned secrets.
-        Raises: None.
-        Side Effects: None.
-        """
+        Callers must never log returned secrets."""
         return self.__values.get(name) or None
 
     def __repr__(self) -> str:
-        """Return a secret-free description.
-
-        Args: None.
-        Returns: Fixed redacted text.
-        Raises: None.
-        Side Effects: None.
-        """
+        """Return a secret-free description."""
         return "RuntimeSecrets(<redacted>)"
 
     def __reduce__(self) -> Any:
-        """Prevent accidental pickle serialization of credentials.
-
-        Args: None.
-        Returns: Never returns.
-        Raises: TypeError always.
-        Side Effects: None.
-        """
+        """Prevent accidental pickle serialization of credentials."""
         raise TypeError("Runtime secrets cannot be serialized")
 
 
 def load_runtime_secrets(env_file: str | Path | None, required_names: list[str],
                          process_environment: Mapping[str, str]) -> RuntimeSecrets:
-    """Load allowlisted literal environment settings without executing or interpolating text.
-
-    Args: env_file: Explicit optional file; required_names: allowlist; process_environment: injected environment.
-    Returns: Non-serializable private resolver, with process values taking precedence.
-    Raises: OSError for unavailable explicit file; ConfigurationError for malformed selected entries.
-    Side Effects: Reads only the selected file; never changes the environment or persists values.
-    """
+    """Load allowlisted literal environment settings without executing or interpolating text."""
     if any(not re.fullmatch(r"[A-Z][A-Z0-9_]*", name) for name in required_names):
         raise ConfigurationError("Invalid runtime setting allowlist")
     allowed = set(required_names)

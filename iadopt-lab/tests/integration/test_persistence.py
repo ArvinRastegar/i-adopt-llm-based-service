@@ -69,11 +69,7 @@ def fixture_campaign(
     provider_cap=None,
     global_cap=None,
 ):
-    """Create uniquely named synthetic fixtures and return campaign/runs/variables.
-
-    Inputs allow a provider union, population size and explicit live-gate tests.
-    Writes only dedicated test-database records; no provider calls or deletions.
-    """
+    """Create uniquely named synthetic fixtures and return campaign/runs/variables."""
     unique = uuid.uuid4().hex
     gold = {
         "hasStatisticalModifier": "",
@@ -531,11 +527,7 @@ def test_sql_identity_and_attempt_counter_cannot_be_rewritten(repo):
 
 
 def test_provider_metadata_never_blocks_raw_preservation(repo):
-    """A field the provider happened to name `password` must not discard a paid answer.
-
-    Rejecting it rolled back the whole transaction, taking the raw response with it. The
-    value is replaced and never stored; the substitution is recorded as evidence.
-    """
+    """A field the provider happened to name `password` must not discard a paid answer."""
     campaign, _, _ = fixture_campaign(repo)
     lease = repo.claim_tasks(campaign, "redaction-worker")[0]
     attempt = repo.start_attempt(lease, request_for(lease))

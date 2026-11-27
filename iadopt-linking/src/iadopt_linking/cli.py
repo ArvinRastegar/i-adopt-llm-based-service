@@ -30,21 +30,9 @@ STOPS = (RunError, RetrievalTimeout, PoolError, ScoreError, StoreError)
 
 
 def _positive(kind: type) -> Callable[[str], Any]:
-    """Build an argparse type that accepts only a finite number above zero.
-
-    Args: kind: int or float.
-    Returns: a parser that raises ArgumentTypeError for anything else.
-    Raises: None.
-    Side effects: none.
-    """
+    """Build an argparse type that accepts only a finite number above zero."""
     def parse(text: str) -> Any:
-        """Read one option value.
-
-        Args: text: the command-line text.
-        Returns: the number.
-        Raises: argparse.ArgumentTypeError when it is not a finite number above zero.
-        Side effects: none.
-        """
+        """Read one option value."""
         try:
             value = kind(text)
         except ValueError:
@@ -56,13 +44,7 @@ def _positive(kind: type) -> Callable[[str], Any]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Define the command line.
-
-    Args: none.
-    Returns: the argument parser.
-    Raises: None.
-    Side effects: none.
-    """
+    """Define the command line."""
     parser = argparse.ArgumentParser(
         prog="iadopt-linking", description=__doc__,
         epilog="Exit codes: 0 success; 2 a check or limit stopped the run, or the request is invalid.")
@@ -137,13 +119,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _specs(names: str | None) -> list[PassSpec]:
-    """Read the pass names of a command line.
-
-    Args: names: comma-separated pass names, or None for all.
-    Returns: the passes in the order given (or PASSES).
-    Raises: UsageError for an unknown name.
-    Side effects: none.
-    """
+    """Read the pass names of a command line."""
     if not names:
         return list(PASSES)
     try:
@@ -153,13 +129,7 @@ def _specs(names: str | None) -> list[PassSpec]:
 
 
 def _jev_plan(args: argparse.Namespace, only: list[str] | None) -> None:
-    """Show what a Jev run would send and cost, without calling anything.
-
-    Args: args: parsed arguments; only: variable stems or None.
-    Returns: None.
-    Raises: RunError if the baseline is not usable.
-    Side effects: prints; reads the baseline and the corpus.
-    """
+    """Show what a Jev run would send and cost, without calling anything."""
     baseline = load_baseline(args.baseline, lab_root=args.lab_root, only=only)
     tasks, asked = build_tasks(baseline, _specs(args.passes), session_id="iadopt-linking/plan")
     summary = estimate(tasks, PRICE_PER_INPUT_TOKEN_USD)
@@ -173,13 +143,7 @@ def _jev_plan(args: argparse.Namespace, only: list[str] | None) -> None:
 
 
 def _chat_specs(names: str | None) -> list[PassSpec]:
-    """Read the pass names of a PSNC command line.
-
-    Args: names: comma-separated pass names, or None for all of the chat passes.
-    Returns: the passes in the order given (or CHAT_PASSES).
-    Raises: UsageError for a name that is not a chat pass.
-    Side effects: none.
-    """
+    """Read the pass names of a PSNC command line."""
     if not names:
         return list(CHAT_PASSES)
     by_name = {spec.name: spec for spec in CHAT_PASSES}
@@ -191,13 +155,7 @@ def _chat_specs(names: str | None) -> list[PassSpec]:
 
 
 def _chat_plan(args: argparse.Namespace, only: list[str] | None) -> None:
-    """Show what a PSNC run would send, without calling anything.
-
-    Args: args: parsed arguments; only: variable stems or None.
-    Returns: None.
-    Raises: RunError if the baseline is not usable.
-    Side effects: prints; reads the baseline and the corpus.
-    """
+    """Show what a PSNC run would send, without calling anything."""
     baseline = load_baseline(args.baseline, lab_root=args.lab_root, only=only)
     tasks, asked = build_chat_tasks(baseline, _chat_specs(args.passes), model=args.model)
     log(f"{asked['slots']} slots, {asked['empty_pools']} without candidates (not asked)")
@@ -209,13 +167,7 @@ def _chat_plan(args: argparse.Namespace, only: list[str] | None) -> None:
 
 
 def _dispatch(args: argparse.Namespace) -> int:
-    """Run the chosen command.
-
-    Args: args: parsed arguments.
-    Returns: 0 on success.
-    Raises: UsageError for an invalid request; the STOPS errors when a run is stopped.
-    Side effects: depends on the command.
-    """
+    """Run the chosen command."""
     if args.command == "compare":
         text = render_comparison(compare_runs(args.first, args.second),
                                  (Path(args.first).name, Path(args.second).name))
@@ -256,13 +208,7 @@ def _dispatch(args: argparse.Namespace) -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """Run a command.
-
-    Args: argv: arguments; defaults to sys.argv.
-    Returns: 0 on success, 2 when a check, a limit or the request stopped the run.
-    Raises: SystemExit from argparse for bad usage.
-    Side effects: depends on the command.
-    """
+    """Run a command."""
     parser = build_parser()
     args = parser.parse_args(argv)
     try:

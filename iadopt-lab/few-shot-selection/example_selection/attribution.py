@@ -1,10 +1,4 @@
-"""Per-example contribution estimation — see contracts/attribution.md.
-
-The design matrix is rank-deficient by construction: every subset has exactly 25 of 40 members,
-so the inclusion columns sum to a constant and are collinear with the intercept. Columns are
-centred and ridge-regularised so the coefficients are identified; fitting raw columns without a
-penalty returns an arbitrary point on a solution ray.
-"""
+"""Per-example contribution estimation — see contracts/attribution.md."""
 
 from __future__ import annotations
 
@@ -16,13 +10,7 @@ import numpy as np
 
 def fit(pool: list[str], observations: Sequence[tuple[tuple[str, ...], float]],
         alpha: float = 1.0, seed: int = 0) -> dict:
-    """Ridge-fit centred inclusion indicators to observed subset scores.
-
-    Args: pool: candidate pool ids; observations: (subset, close_f1) pairs; alpha: ridge penalty; seed: split-half seed.
-    Returns: {"coefficients": {id: float}, "intercept": float, "r2": float, "split_half": float, "n": int}.
-    Raises: ValueError for too few observations, an id outside the pool, alpha <= 0, or a score outside [0, 1].
-    Side Effects: none. Deterministic given the same observations, alpha and seed.
-    """
+    """Ridge-fit centred inclusion indicators to observed subset scores."""
     if alpha <= 0:
         raise ValueError("alpha must be positive; the design matrix is rank-deficient")
     columns = sorted(pool)
@@ -51,28 +39,12 @@ def fit(pool: list[str], observations: Sequence[tuple[tuple[str, ...], float]],
 
 
 def ranking(coefficients: Mapping[str, float]) -> list[tuple[str, float]]:
-    """Order pool members by estimated contribution, descending.
-
-    Args: coefficients: per-id fitted contribution.
-    Returns: (id, coefficient) pairs, highest first, ties broken by sorted variable_id.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Order pool members by estimated contribution, descending."""
     return sorted(coefficients.items(), key=lambda item: (-item[1], item[0]))
 
 
 def _ridge(matrix: "np.ndarray", scores: "np.ndarray", alpha: float) -> "np.ndarray":
-    """Solve centred ridge regression.
-
-    Args: matrix: n x p binary inclusion design; scores: n observed values; alpha: penalty.
-    Returns: p coefficients.
-    Raises: nothing; the penalty guarantees the normal equations are non-singular.
-    Side Effects: none. Deterministic.
-
-    Centring is not cosmetic. Every subset has exactly the same number of members, so the raw
-    columns sum to a constant along each row and are collinear with the intercept; the uncentred
-    normal equations are singular and the solver would return an arbitrary point on a ray.
-    """
+    """Solve centred ridge regression."""
     centred = matrix - matrix.mean(axis=0)
     target = scores - scores.mean()
     gram = centred.T @ centred + alpha * np.eye(centred.shape[1])
@@ -80,13 +52,7 @@ def _ridge(matrix: "np.ndarray", scores: "np.ndarray", alpha: float) -> "np.ndar
 
 
 def _split_half(matrix: "np.ndarray", scores: "np.ndarray", alpha: float, seed: int) -> float:
-    """Correlate coefficients fitted on two random halves, as a stability statistic.
-
-    Args: matrix: design; scores: observations; alpha: penalty; seed: partition seed.
-    Returns: Pearson correlation of the two coefficient vectors; 0.0 when either is constant.
-    Raises: nothing.
-    Side Effects: none. Deterministic given `seed`.
-    """
+    """Correlate coefficients fitted on two random halves, as a stability statistic."""
     order = list(range(matrix.shape[0]))
     random.Random(seed).shuffle(order)
     cut = len(order) // 2

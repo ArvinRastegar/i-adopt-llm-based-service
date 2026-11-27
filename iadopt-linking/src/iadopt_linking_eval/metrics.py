@@ -1,8 +1,4 @@
-"""Exact-match link metrics as numerator/denominator receipts.
-
-Input is one mapping per scored slot (see ``evaluate_slot``). Nothing here reads a file, calls a
-service or consults a clock, and no ratio is ever held as a float.
-"""
+"""Exact-match link metrics as numerator/denominator receipts."""
 
 from __future__ import annotations
 
@@ -25,36 +21,17 @@ SCORER_VERSION = "exact-identity-pooled-top1-v3"
 
 
 def _count(numerator: int, denominator: int) -> dict[str, int]:
-    """Record a count ratio without reducing it.
-
-    Args: numerator: items satisfying a condition; denominator: items considered.
-    Returns: {"numerator", "denominator"}.
-    Raises: None.
-    Side effects: none.
-    """
+    """Record a count ratio without reducing it."""
     return {"numerator": numerator, "denominator": denominator}
 
 
 def _exact(value: Fraction) -> dict[str, int]:
-    """Record an exact rational, reduced.
-
-    Args: value: any Fraction.
-    Returns: {"numerator", "denominator"} in lowest terms.
-    Raises: None.
-    Side effects: none.
-    """
+    """Record an exact rational, reduced."""
     return {"numerator": value.numerator, "denominator": value.denominator}
 
 
 def choose(pool: Sequence[Mapping[str, Any]]) -> int | None:
-    """Pick the candidate the reranker would select.
-
-    Args: pool: candidates with ``score``, ``source`` and ``rank``.
-    Returns: index of the highest score; ties go to the earlier source, then the earlier rank;
-    None for an empty pool.
-    Raises: ValueError for a source outside SOURCE_ORDER.
-    Side effects: none; deterministic.
-    """
+    """Pick the candidate the reranker would select."""
     best: tuple[Any, ...] | None = None
     chosen: int | None = None
     for index, candidate in enumerate(pool):
@@ -65,51 +42,25 @@ def choose(pool: Sequence[Mapping[str, Any]]) -> int | None:
 
 
 def _best_in(pool: Sequence[Mapping[str, Any]], source: str) -> Mapping[str, Any] | None:
-    """Pick the best-scoring candidate of one source.
-
-    Args: pool: candidates; source: one of SOURCE_ORDER.
-    Returns: the candidate, or None when that source returned nothing.
-    Raises: ValueError for a source outside SOURCE_ORDER.
-    Side effects: none.
-    """
+    """Pick the best-scoring candidate of one source."""
     members = [candidate for candidate in pool if candidate["source"] == source]
     index = choose(members)
     return None if index is None else members[index]
 
 
 def _is(candidate: Mapping[str, Any] | None, gold: tuple[str, str]) -> bool:
-    """Say whether a candidate is the gold entity.
-
-    Args: candidate: a pool entry or None; gold: (vocabulary, local identifier).
-    Returns: False when there is no candidate.
-    Raises: KeyError if the candidate lacks its identity fields.
-    Side effects: none.
-    """
+    """Say whether a candidate is the gold entity."""
     return candidate is not None and (candidate["vocabulary"], candidate["local_id"]) == gold
 
 
 def _wikidata_matches(candidate: Mapping[str, Any]) -> set[str]:
-    """List the Wikidata items a QUDT candidate says it matches.
-
-    Args: candidate: a pool entry.
-    Returns: Wikidata local identifiers from its ``wikidata_match`` extra; empty for others.
-    Raises: None.
-    Side effects: none.
-    """
+    """List the Wikidata items a QUDT candidate says it matches."""
     return {iri.rsplit("/", 1)[-1] for iri in candidate.get("extras", {}).get("wikidata_match", [])}
 
 
 def _equivalent(chosen: Mapping[str, Any] | None, gold: tuple[str, str],
                 pool: Sequence[Mapping[str, Any]]) -> bool:
-    """Say whether a selection is the gold entity or its QUDT/Wikidata counterpart.
-
-    Args: chosen: the selected pool entry or None; gold: (vocabulary, local identifier); pool:
-    the slot's candidates, which carry QUDT's wikidataMatch.
-    Returns: True for the gold itself, for a QUDT kind whose wikidataMatch is the gold Wikidata
-    item, and for the Wikidata item that the gold QUDT kind (when retrieved) matches.
-    Raises: None.
-    Side effects: none.
-    """
+    """Say whether a selection is the gold entity or its QUDT/Wikidata counterpart."""
     if chosen is None:
         return False
     if (chosen["vocabulary"], chosen["local_id"]) == gold:
@@ -123,15 +74,7 @@ def _equivalent(chosen: Mapping[str, Any] | None, gold: tuple[str, str],
 
 
 def evaluate_slot(record: Mapping[str, Any]) -> dict[str, Any]:
-    """Judge one scored slot against its gold identity.
-
-    Args: record: slot fields plus ``gold`` {vocabulary, local_id} and ``pool`` candidates, each
-    with source, rank, vocabulary, local_id, label and score.
-    Returns: the slot's outcome: category, correctness, the selected candidate and the
-    diagnostics (gold in pool, routing, per-source and native-order comparisons).
-    Raises: KeyError for a missing field; ValueError for an unknown source.
-    Side effects: none.
-    """
+    """Judge one scored slot against its gold identity."""
     gold = (record["gold"]["vocabulary"], record["gold"]["local_id"])
     pool = record["pool"]
     keys = [(candidate["vocabulary"], candidate["local_id"]) for candidate in pool]
@@ -177,13 +120,7 @@ def evaluate_slot(record: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _macro(outcomes: Sequence[Mapping[str, Any]], field: str = "correct") -> dict[str, int]:
-    """Average a boolean outcome per variable, then across variables.
-
-    Args: outcomes: evaluate_slot results; field: boolean outcome to average.
-    Returns: the exact mean of per-variable accuracies; denominator 1 when nothing was judged.
-    Raises: None.
-    Side effects: none.
-    """
+    """Average a boolean outcome per variable, then across variables."""
     groups: dict[str, list[bool]] = defaultdict(list)
     for outcome in outcomes:
         if outcome[field] is not None:
@@ -195,26 +132,14 @@ def _macro(outcomes: Sequence[Mapping[str, Any]], field: str = "correct") -> dic
 
 
 def _block(outcomes: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    """Summarise one population of outcomes.
-
-    Args: outcomes: evaluate_slot results for the population.
-    Returns: counts and receipts for accuracy, retrieval recall, routing and diagnostics.
-    Raises: None.
-    Side effects: none.
-    """
+    """Summarise one population of outcomes."""
     total = len(outcomes)
     reachable = [o for o in outcomes if o["reachable"]]
     routed = [o for o in reachable if o["routed_correctly"] is not None]
     in_pool = [o for o in reachable if o["gold_in_pool"]]
 
     def tally(field: str, population: Sequence[Mapping[str, Any]]) -> dict[str, int]:
-        """Count a boolean diagnostic over the slots where it is defined.
-
-        Args: field: boolean diagnostic; population: outcomes to consider.
-        Returns: count receipt over slots whose diagnostic is not None.
-        Raises: None.
-        Side effects: none.
-        """
+        """Count a boolean diagnostic over the slots where it is defined."""
         judged = [o for o in population if o[field] is not None]
         return _count(sum(bool(o[field]) for o in judged), len(judged))
 
@@ -241,13 +166,7 @@ def _block(outcomes: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
 
 
 def _threshold_rows(outcomes: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """Trade coverage against precision by accepting only confident selections.
-
-    Args: outcomes: evaluate_slot results.
-    Returns: one row per threshold: slots accepted (selected score >= threshold) and correct.
-    Raises: None.
-    Side effects: none.
-    """
+    """Trade coverage against precision by accepting only confident selections."""
     rows = []
     total = len(outcomes)
     for threshold in THRESHOLDS:
@@ -260,13 +179,7 @@ def _threshold_rows(outcomes: Sequence[Mapping[str, Any]]) -> list[dict[str, Any
 
 
 def term_consistency_ceiling(outcomes: Sequence[Mapping[str, Any]]) -> dict[str, int]:
-    """Bound what any system that sees only the term can reach.
-
-    Args: outcomes: evaluate_slot results.
-    Returns: slots explained by the majority gold identity of their term, over all slots.
-    Raises: None.
-    Side effects: none.
-    """
+    """Bound what any system that sees only the term can reach."""
     by_term: dict[str, Counter] = defaultdict(Counter)
     for outcome in outcomes:
         by_term[outcome["query_key"]][tuple(outcome["gold"])] += 1
@@ -274,16 +187,7 @@ def term_consistency_ceiling(outcomes: Sequence[Mapping[str, Any]]) -> dict[str,
 
 
 def summarise(outcomes: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    """Aggregate a run into the reported metrics.
-
-    Args: outcomes: evaluate_slot results for every slot in the population.
-    Returns: populations (all controlled-vocabulary slots, reachable and unreachable
-    vocabularies, by gold vocabulary, by slot, top-level versus members, by term length), the source-confusion
-    counts, the threshold table, how many selections were decided by a small score margin and
-    the most repeated terms.
-    Raises: None.
-    Side effects: none.
-    """
+    """Aggregate a run into the reported metrics."""
     populations: dict[str, list[Mapping[str, Any]]] = {
         "all": list(outcomes), "reachable": [o for o in outcomes if o["reachable"]],
         "unreachable": [o for o in outcomes if not o["reachable"]]}

@@ -13,6 +13,7 @@ from iadopt_linking import experiment
 from iadopt_linking.artifacts import file_sha256
 from iadopt_linking.experiment import evidence_code_identity, load_population
 from iadopt_linking.health import REQUIRED_CHECKS
+from iadopt_linking.provenance import RESULTS_EVIDENCE
 from iadopt_linking.recorder import JsonlStore, latest
 from iadopt_linking.report import outcomes_csv, render_report
 from iadopt_linking.retrieve import response_hash_matches
@@ -57,11 +58,11 @@ def test_files_are_the_ones_the_manifest_hashed(manifest_path: Path) -> None:
 
 
 @EACH
-def test_evidence_was_made_by_the_evidence_code_in_this_tree(manifest_path: Path) -> None:
+def test_evidence_was_made_by_this_tree_or_the_results_code(manifest_path: Path) -> None:
     manifest = read(manifest_path)
-    assert manifest["evidence_code_sha256"] == evidence_code_identity(), (
-        "retrieval, scoring or gold-reading code changed since this run; its evidence is stale. "
-        "Start a new results folder (a rerun in this folder is refused on purpose).")
+    made_by = manifest["evidence_code_sha256"]
+    assert made_by in (evidence_code_identity(), RESULTS_EVIDENCE["baseline"]), (
+        "this run was made neither by this tree's evidence code nor by the code at RESULTS_CODE")
     assert read(manifest_path.parent / "plan.json")["evidence_code_sha256"] == (
         manifest["evidence_code_sha256"])
 

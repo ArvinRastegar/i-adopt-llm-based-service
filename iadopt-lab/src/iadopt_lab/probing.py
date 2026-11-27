@@ -1,26 +1,7 @@
 """Provider capability probing: establish per-model evidence before a plan is frozen.
 
-`parameters.yml` gates live execution on per-model capability fields and states
-plainly that they must not be inferred from a model name. This module measures
-them against the live deployment so an operator fills those fields from
-observation. It freezes nothing, scores nothing, and never sends a corpus
-prompt: every probe is a short throwaway request with a small output ceiling.
-
-The reasoning verdict needs two observations, not one. Sending the off-switch
-and seeing no reasoning proves nothing on its own, because a model that never
-reasons looks identical. So each model is probed without any reasoning field to
-learn its default, then with each candidate switch to learn whether it changes
-that default.
-
-Three things make that verdict trustworthy rather than lucky. The probe prompt
-asks for real decomposition work, because a trivial prompt provokes no reasoning
-and makes every switch look effective. Each candidate is tried several times and
-accepted only if every attempt is clean, because a routing gateway sends
-successive requests to different upstream providers and they do not all honour
-the same switch. And a switch that merely hides reasoning while still generating
-and billing it is rejected, since suppressing the field is not suppressing the
-cost.
-"""
+`parameters.yml` gates live execution on per-model capability fields and states plainly that they
+must not be inferred from a model name."""
 
 from __future__ import annotations
 
@@ -87,19 +68,7 @@ _JSON_PROBE_PROMPT = 'Reply with exactly this JSON object and nothing else: {"ok
 
 
 def chat_models(catalog: list[dict]) -> list[dict]:
-    """Reduce a provider catalog to unique chat-capable models, from either shape.
-
-    LiteLLM deployments answer /model/info with `model_name` plus a `model_info` block;
-    OpenRouter answers /models with `id`, `context_length`, `pricing` and
-    `supported_parameters`. Both are normalized here so probing does not care which
-    provider it is talking to, and so pricing evidence travels with the model when the
-    provider publishes it.
-
-    Args: catalog: The `data` array from either endpoint.
-    Returns: One entry per model id, sorted by id.
-    Raises: Nothing.
-    Side effects: None.
-    """
+    """Reduce a provider catalog to unique chat-capable models, from either shape."""
     seen: dict[str, dict] = {}
     for entry in catalog:
         name = entry.get("model_name") or entry.get("id")
@@ -125,14 +94,7 @@ def chat_models(catalog: list[dict]) -> list[dict]:
 
 async def _one_call(client: httpx.AsyncClient, url: str, headers: dict, model_id: str,
                     prompt: str, extra: dict, suffix: str = "") -> dict:
-    """Send one probe request and reduce the response to the facts a verdict needs.
-
-    Args: client: open async client; url: chat-completions endpoint; headers: auth headers;
-        model_id: exact provider model id; prompt: throwaway probe text; extra: additional body fields.
-    Returns: Mapping with status, latency, reasoning/answer sizes and finish reason.
-    Raises: Nothing; transport and protocol failures are returned as `error`.
-    Side effects: One provider request. No corpus data leaves the machine.
-    """
+    """Send one probe request and reduce the response to the facts a verdict needs."""
     body = {"model": model_id, "messages": [{"role": "user", "content": prompt + suffix}],
             "temperature": 0.5, "top_p": 1.0, "seed": 7,
             "max_tokens": _PROBE_MAX_TOKENS, "stream": False, **extra}
@@ -170,18 +132,7 @@ async def _one_call(client: httpx.AsyncClient, url: str, headers: dict, model_id
 
 
 def _hidden_reasoning(probe: dict) -> bool:
-    """Detect billed generation that the response does not show.
-
-    A switch can suppress the reasoning FIELD while the model still generates and bills the
-    tokens. That reads as a working switch and is not one: the cost is unchanged and the
-    latency is unchanged. Completion tokens far above what the visible answer needs is the
-    signature, since the answer is the only thing those tokens could otherwise be.
-
-    Args: probe: One `_one_call` result.
-    Returns: True when billed output greatly exceeds the visible answer.
-    Raises: Nothing.
-    Side effects: None.
-    """
+    """Detect billed generation that the response does not show."""
     produced = probe.get("completion_tokens")
     if not isinstance(produced, int):
         return False
@@ -191,18 +142,7 @@ def _hidden_reasoning(probe: dict) -> bool:
 
 async def _probe_one(client: httpx.AsyncClient, url: str, headers: dict, model: dict,
                      semaphore: asyncio.Semaphore) -> dict:
-    """Probe one model's reasoning, structured output and sampling support.
-
-    Deployments disagree on how reasoning is switched off, so every candidate is tried and
-    the one that works is recorded rather than assumed. A candidate counts only if it both
-    silences the reasoning channel AND stops the tokens being produced.
-
-    Args: client: open async client; url: chat-completions endpoint; headers: auth headers;
-        model: catalog entry from `chat_models`; semaphore: provider concurrency guard.
-    Returns: Catalog facts, raw probe results, the working switch, and a verdict.
-    Raises: Nothing.
-    Side effects: Up to five short provider requests per model.
-    """
+    """Probe one model's reasoning, structured output and sampling support."""
     async with semaphore:
         baseline = await _one_call(client, url, headers, model["id"], _PROBE_PROMPT, {})
         attempts, switched = [], None
@@ -274,15 +214,7 @@ async def _probe_one(client: httpx.AsyncClient, url: str, headers: dict, model: 
 
 async def probe_provider(*, base_url: str, api_key: str, path: str, models: list[dict],
                          concurrency: int, timeout_seconds: float) -> list[dict]:
-    """Probe every supplied model against one provider deployment.
-
-    Args: base_url: provider root; api_key: bearer credential, never logged or stored;
-        path: chat-completions path; models: catalog entries; concurrency: parallel models;
-        timeout_seconds: per-request ceiling.
-    Returns: One verdict mapping per model, in the supplied order.
-    Raises: Nothing; per-model failures are reported in their own mapping.
-    Side effects: Three short provider requests per model.
-    """
+    """Probe every supplied model against one provider deployment."""
     url = base_url.rstrip("/") + path
     headers = {"Authorization": "Bearer " + api_key, "Content-Type": "application/json"}
     semaphore = asyncio.Semaphore(max(1, concurrency))
@@ -292,18 +224,7 @@ async def probe_provider(*, base_url: str, api_key: str, path: str, models: list
 
 
 def fetch_catalog(*, base_url: str, api_key: str, timeout_seconds: float = 60.0) -> list[dict]:
-    """Read the provider's own model catalog, from whichever endpoint it serves.
-
-    LiteLLM deployments expose /model/info; OpenRouter and OpenAI-shaped gateways expose
-    /models. Both are tried rather than assumed from the URL, because the endpoint is a
-    property of the deployment and guessing it from a hostname is exactly the kind of
-    inference this module exists to avoid.
-
-    Args: base_url: provider root; api_key: bearer credential; timeout_seconds: request ceiling.
-    Returns: The raw `data` array from the endpoint that answered.
-    Raises: LabError when neither endpoint yields a catalog.
-    Side effects: One or two provider requests.
-    """
+    """Read the provider's own model catalog, from whichever endpoint it serves."""
     root = base_url.rstrip("/")
     headers = {"Authorization": "Bearer " + api_key}
     failures = []
@@ -321,13 +242,7 @@ def fetch_catalog(*, base_url: str, api_key: str, timeout_seconds: float = 60.0)
 
 
 def _quote(value: str) -> str:
-    """Render a string as a double-quoted YAML scalar.
-
-    Args: value: Text to quote.
-    Returns: The quoted scalar.
-    Raises: Nothing.
-    Side effects: None.
-    """
+    """Render a string as a double-quoted YAML scalar."""
     # Newlines are escaped, not emitted raw: a control suffix such as "\n/no_think" would
     # otherwise break the scalar across lines and silently change what gets sent.
     return '"' + value.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"'
@@ -335,18 +250,7 @@ def _quote(value: str) -> str:
 
 def models_block(results: list[dict], *, provider_label: str, base_url: str,
                  verified_at: str | None = None) -> str:
-    """Render probe verdicts as the `models:` block of a provider in parameters.yml.
-
-    Every capability written here is backed by an observation in `results`; nothing is
-    inferred from a model name. A model whose reasoning could not be switched off is
-    emitted disabled, with the measurement that disqualified it recorded beside it.
-
-    Args: results: verdicts from `probe_provider`; provider_label: name for display strings;
-        base_url: deployment probed, recorded as evidence; verified_at: ISO date of the probe.
-    Returns: YAML text indented to sit under `providers.<name>:`.
-    Raises: Nothing.
-    Side effects: None.
-    """
+    """Render probe verdicts as the `models:` block of a provider in parameters.yml."""
     when = verified_at or date.today().isoformat()
     source = (f"iadopt-lab probe-models against {base_url}: context_window and parameter support "
               "from the LiteLLM /model/info catalog; reasoning control, structured output and "
@@ -431,18 +335,7 @@ def models_block(results: list[dict], *, provider_label: str, base_url: str,
 
 
 def replace_models_block(text: str, provider: str, block: str) -> str:
-    """Substitute one provider's `models:` block, leaving the rest of the file byte-identical.
-
-    parameters.yml is human-edited and carries the reasoning behind every value in its
-    comments, so it is edited in place as text rather than round-tripped through a YAML
-    serializer that would discard them.
-
-    Args: text: current parameters.yml contents; provider: provider key under `providers:`;
-        block: replacement block from `models_block`.
-    Returns: The updated file text.
-    Raises: LabError when the provider or its models block cannot be located unambiguously.
-    Side effects: None; the caller decides whether to write.
-    """
+    """Substitute one provider's `models:` block, leaving the rest of the file byte-identical."""
     lines = text.splitlines(keepends=True)
     try:
         start = next(i for i, line in enumerate(lines) if line.rstrip("\n") == f"  {provider}:")
@@ -460,12 +353,6 @@ def replace_models_block(text: str, provider: str, block: str) -> str:
 
 
 def write_models_block(path: Path, provider: str, block: str) -> None:
-    """Rewrite one provider's models block in parameters.yml on disk.
-
-    Args: path: parameters.yml; provider: provider key; block: replacement block.
-    Returns: None.
-    Raises: LabError when the block cannot be located.
-    Side effects: Overwrites parameters.yml.
-    """
+    """Rewrite one provider's models block in parameters.yml on disk."""
     text = path.read_text(encoding="utf-8")
     path.write_text(replace_models_block(text, provider, block), encoding="utf-8")

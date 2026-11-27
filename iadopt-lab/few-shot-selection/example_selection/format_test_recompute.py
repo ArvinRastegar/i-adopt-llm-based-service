@@ -1,15 +1,5 @@
 #!/usr/bin/env python
-"""Independent recomputation of the example-layout test's headline numbers.
-
-Standard library only: imports nothing from the project, numpy or scipy, so a mistake in
-`format_test.py`'s aggregation or statistics cannot repeat itself here. It reads the stored call
-and score records, rebuilds micro Close F1 per repetition from the per-item TP/FP/FN counts,
-redoes Welch's test with its own t distribution, and compares everything with
-`format-test-summary.json`.
-
-    ./format_test_recompute.py                 # recompute and compare
-    ./format_test_recompute.py --validate-study # first check the F1 formula on the study's data
-"""
+"""Independent recomputation of the example-layout test's headline numbers."""
 
 from __future__ import annotations
 
@@ -26,13 +16,7 @@ STUDY_CANDIDATE = "2d56af0e65d42748"
 
 
 def jsonl(path: Path):
-    """Stream the rows of a JSON-lines file.
-
-    Args: path: the file.
-    Returns: an iterator over the parsed rows; blank lines are skipped.
-    Raises: OSError when the file cannot be read; json.JSONDecodeError on a malformed line.
-    Side Effects: reads the file lazily.
-    """
+    """Stream the rows of a JSON-lines file."""
     with path.open(encoding="utf-8") as handle:
         for line in handle:
             if line.strip():
@@ -40,26 +24,14 @@ def jsonl(path: Path):
 
 
 def counts(evaluation: dict) -> tuple[Fraction, Fraction, Fraction]:
-    """Read one item's exact Close counts from its stored evaluation.
-
-    Args: evaluation: a stored per-item evaluation record.
-    Returns: (TP, FP, FN) as exact fractions.
-    Raises: KeyError when the record lacks Close totals.
-    Side Effects: none. Deterministic.
-    """
+    """Read one item's exact Close counts from its stored evaluation."""
     totals = evaluation["close"]["totals"]
     return tuple(Fraction(totals[k]["numerator"], totals[k]["denominator"])
                  for k in ("tp", "fp", "fn"))
 
 
 def micro_f1(items: list[tuple[Fraction, Fraction, Fraction]]) -> float:
-    """Micro F1 from summed exact counts, zero when precision and recall are both zero.
-
-    Args: items: (TP, FP, FN) per item.
-    Returns: F1 as a float, computed exactly and converted once at the end.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Micro F1 from summed exact counts, zero when precision and recall are both zero."""
     tp = sum(i[0] for i in items)
     fp = sum(i[1] for i in items)
     fn = sum(i[2] for i in items)
@@ -69,13 +41,7 @@ def micro_f1(items: list[tuple[Fraction, Fraction, Fraction]]) -> float:
 
 
 def _betacf(a: float, b: float, x: float) -> float:
-    """Evaluate the incomplete beta continued fraction (modified Lentz).
-
-    Args: a, b: positive shape parameters; x: point in (0, 1).
-    Returns: the continued-fraction factor used by `betainc`.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Evaluate the incomplete beta continued fraction (modified Lentz)."""
     tiny, qab, qap, qam = 1e-300, a + b, a + 1.0, a - 1.0
     c, d = 1.0, 1.0 - qab * x / qap
     d = 1.0 / (d if abs(d) > tiny else tiny)
@@ -99,13 +65,7 @@ def _betacf(a: float, b: float, x: float) -> float:
 
 
 def betainc(a: float, b: float, x: float) -> float:
-    """Regularized incomplete beta function I_x(a, b).
-
-    Args: a, b: positive shape parameters; x: point, clipped to [0, 1].
-    Returns: I_x(a, b).
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Regularized incomplete beta function I_x(a, b)."""
     if x <= 0.0:
         return 0.0
     if x >= 1.0:
@@ -118,24 +78,12 @@ def betainc(a: float, b: float, x: float) -> float:
 
 
 def t_two_sided_p(t: float, df: float) -> float:
-    """Two-sided p-value of Student's t.
-
-    Args: t: the statistic; df: degrees of freedom, positive.
-    Returns: P(|T| >= |t|).
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Two-sided p-value of Student's t."""
     return betainc(df / 2.0, 0.5, df / (df + t * t))
 
 
 def t_quantile_975(df: float) -> float:
-    """The 97.5% quantile of Student's t, by bisection on the two-sided p-value.
-
-    Args: df: degrees of freedom, positive.
-    Returns: the quantile, to about 1e-13.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """The 97.5% quantile of Student's t, by bisection on the two-sided p-value."""
     low, high = 0.0, 100.0
     for _ in range(200):
         mid = (low + high) / 2.0
@@ -147,14 +95,7 @@ def t_quantile_975(df: float) -> float:
 
 
 def welch(b: list[float], a: list[float]) -> dict[str, float]:
-    """Welch's two-sided t-test of mean(b) - mean(a), with a 95% confidence interval.
-
-    Args: b, a: per-repetition scores, at least two in each with non-zero spread.
-    Returns: difference, t, df, p, ci_low, ci_high.
-    Raises: statistics.StatisticsError with fewer than two values; ZeroDivisionError when
-        both groups are constant.
-    Side Effects: none. Deterministic.
-    """
+    """Welch's two-sided t-test of mean(b) - mean(a), with a 95% confidence interval."""
     diff = statistics.fmean(b) - statistics.fmean(a)
     vb, va = statistics.variance(b) / len(b), statistics.variance(a) / len(a)
     se = math.sqrt(vb + va)
@@ -166,13 +107,7 @@ def welch(b: list[float], a: list[float]) -> dict[str, float]:
 
 
 def latest_calls(path: Path) -> dict[tuple, dict]:
-    """Keep one record per call: the first successful one, else the last failure.
-
-    Args: path: the calls file.
-    Returns: {(model, layout, repetition, variable_id): record}.
-    Raises: as `jsonl`.
-    Side Effects: reads the file.
-    """
+    """Keep one record per call: the first successful one, else the last failure."""
     chosen: dict[tuple, dict] = {}
     for row in jsonl(path):
         key = (row["model"], row["format"], row["repetition"], row["variable_id"])
@@ -183,13 +118,7 @@ def latest_calls(path: Path) -> dict[tuple, dict]:
 
 
 def recompute() -> dict:
-    """Rebuild per-repetition Close F1 for every cell from the stored records.
-
-    Args: none.
-    Returns: {"targets", "per_rep", "cells"}; a repetition missing a call is left out.
-    Raises: KeyError when a call has no stored score.
-    Side Effects: reads the calls and scores files.
-    """
+    """Rebuild per-repetition Close F1 for every cell from the stored records."""
     calls = latest_calls(OUTPUT / "format-test-calls.jsonl")
     scores = {tuple(r["key"]): r for r in jsonl(OUTPUT / "format-test-scores.jsonl")}
     targets = sorted({key[3] for key in calls})
@@ -211,13 +140,7 @@ def recompute() -> dict:
 
 
 def validate_study() -> None:
-    """Check the F1 formula against values the study's own pipeline stored.
-
-    Args: none.
-    Returns: nothing; prints the largest difference over the study's 15 top25 repetitions.
-    Raises: ValueError when the study's files hold no top25 confirmation rows.
-    Side Effects: reads the study's calls and observations files (about 400 MB).
-    """
+    """Check the F1 formula against values the study's own pipeline stored."""
     stored = {row["repetition"]: row["result"]["close_f1_as_run"]
               for row in jsonl(OUTPUT / "example-selection-observations.jsonl")
               if row["stage"] == "confirm" and row["name"] == "top25"}
@@ -233,13 +156,7 @@ def validate_study() -> None:
 
 
 def main() -> int:
-    """Recompute, compare with the summary and print the comparison.
-
-    Args: none; reads --validate-study from the command line.
-    Returns: 0.
-    Raises: KeyError when the summary lacks a recomputed cell or comparison.
-    Side Effects: reads the output files; prints to standard output.
-    """
+    """Recompute, compare with the summary and print the comparison."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--validate-study", action="store_true")
     args = parser.parse_args()

@@ -1,11 +1,4 @@
-"""A polite HTTP client: one request at a time per host, bounded retries, no silent failure.
-
-Built on the standard library on purpose. Wikimedia's edge answers python-httpx requests with a
-generic "respect our robot policy" 403 even with an honest user agent and a trivial request
-rate (diagnosed 2026-10-13: the same URL and user agent succeed through curl and urllib), so
-httpx is not used here. The client still identifies itself truthfully, never runs requests in
-parallel against one host and waits at least ``min_interval_s`` between them.
-"""
+"""A polite HTTP client: one request at a time per host, bounded retries, no silent failure."""
 
 from __future__ import annotations
 
@@ -28,14 +21,7 @@ Transport = Callable[[str, Mapping[str, str], float], tuple[int, Mapping[str, st
 
 def urllib_transport(url: str, headers: Mapping[str, str],
                      timeout_s: float) -> tuple[int, Mapping[str, str], bytes]:
-    """Perform one GET with urllib.
-
-    Args: url: full URL; headers: request headers; timeout_s: socket timeout.
-    Returns: status, lower-cased response headers and body bytes; HTTP error statuses are
-    returned, not raised.
-    Raises: OSError or http.client.HTTPException for connection-level failures.
-    Side effects: network I/O.
-    """
+    """Perform one GET with urllib."""
     request = urllib.request.Request(url, headers=dict(headers))
     try:
         with urllib.request.urlopen(request, timeout=timeout_s) as response:
@@ -46,23 +32,13 @@ def urllib_transport(url: str, headers: Mapping[str, str],
 
 
 def snippet(body: bytes) -> str:
-    """Shorten an error body so the reason a service gave is not lost.
-
-    Args: body: response bytes.
-    Returns: the first SNIPPET_CHARS characters with whitespace collapsed; "" for an empty body.
-    Raises: None.
-    Side effects: none.
-    """
+    """Shorten an error body so the reason a service gave is not lost."""
     return re.sub(r"\s+", " ", body.decode("utf-8", "replace")).strip()[:SNIPPET_CHARS]
 
 
 @dataclass(frozen=True)
 class Fetched:
-    """What one logical request ended with, after any retries.
-
-    ``latency_s`` is the wall time including waits; ``request_s`` is the final transport call
-    alone, which is what the service took.
-    """
+    """What one logical request ended with, after any retries."""
 
     url: str
     status: int | None
@@ -82,15 +58,7 @@ class PoliteClient:
                  transport: Transport = urllib_transport,
                  clock: Callable[[], float] = time.monotonic,
                  sleep: Callable[[float], None] = time.sleep) -> None:
-        """Configure the client.
-
-        Args: user_agent: sent on every request; min_interval_s: minimum gap between requests to
-        one host; timeout_s: per-attempt timeout; max_attempts: hard cap per logical request;
-        backoff_s: waits between attempts; transport/clock/sleep: injectable for tests.
-        Returns: None.
-        Raises: ValueError for a non-positive attempt cap.
-        Side effects: none.
-        """
+        """Configure the client."""
         if max_attempts < 1:
             raise ValueError("max_attempts must be at least 1")
         self._user_agent = user_agent
@@ -104,34 +72,16 @@ class PoliteClient:
         self._last: dict[str, float] = {}
 
     def settings(self) -> dict[str, object]:
-        """Report how the client behaves, for the run manifest.
-
-        Args: none.
-        Returns: user agent, minimum interval, timeout, attempt cap, backoff and Retry-After cap.
-        Raises: None.
-        Side effects: none.
-        """
+        """Report how the client behaves, for the run manifest."""
         return {"user_agent": self._user_agent, "min_interval_s": self._interval,
                 "timeout_s": self._timeout, "max_attempts": self._max_attempts,
                 "backoff_s": list(self._backoff), "max_retry_after_s": MAX_RETRY_AFTER_S}
 
     def close(self) -> None:
-        """Release resources; the stdlib transport holds none.
-
-        Args: none.
-        Returns: None.
-        Raises: None.
-        Side effects: none.
-        """
+        """Release resources; the stdlib transport holds none."""
 
     def _wait(self, host: str) -> None:
-        """Sleep so consecutive requests to one host respect the minimum interval.
-
-        Args: host: network location of the next request.
-        Returns: None.
-        Raises: None.
-        Side effects: may sleep.
-        """
+        """Sleep so consecutive requests to one host respect the minimum interval."""
         last = self._last.get(host)
         if last is not None:
             remaining = last + self._interval - self._clock()
@@ -140,16 +90,7 @@ class PoliteClient:
 
     def get(self, url: str, params: Mapping[str, str] | None = None,
             headers: Mapping[str, str] | None = None) -> Fetched:
-        """Fetch a URL, retrying 429, 5xx and connection errors at most max_attempts times.
-
-        Args: url: endpoint; params: query parameters; headers: extra request headers.
-        Returns: Fetched with status 200 and text on success; otherwise the last status and an
-        error string that includes the start of the service's own explanation. ``retries`` lists
-        every failed attempt before the last, with the Retry-After it was given and the wait.
-        Never raises for network or HTTP problems.
-        Raises: None for network or HTTP failures.
-        Side effects: network I/O; sleeps between requests and attempts.
-        """
+        """Fetch a URL, retrying 429, 5xx and connection errors at most max_attempts times."""
         full_url = url + ("?" + urllib.parse.urlencode(params) if params else "")
         host = urlsplit(url).netloc
         sent = {"User-Agent": self._user_agent, **(headers or {})}

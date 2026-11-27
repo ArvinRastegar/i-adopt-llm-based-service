@@ -1,11 +1,4 @@
-"""Emit one line per noteworthy campaign event; exit when there is nothing left to watch.
-
-Written for an unattended multi-hour run: it stays quiet through normal progress except
-at ten-percent milestones, and speaks up for the things worth interrupting someone over
-- a paused provider, a jump in permanently lost tasks, the supervisor dying, or the
-campaign finishing. Silence therefore means "running normally", and every way the run
-can end produces a line, so silence can never be mistaken for a stalled job.
-"""
+"""Emit one line per noteworthy campaign event; exit when there is nothing left to watch."""
 
 from __future__ import annotations
 

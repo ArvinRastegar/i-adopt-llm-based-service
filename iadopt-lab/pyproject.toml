@@ -18,6 +18,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Excel export (ops/export-best-configuration.py, few-shot build_ablation_excel.py) and statistics
+# (few-shot example_selection/format_test.py).
+analysis = ["openpyxl>=3.1,<4", "scipy>=1.14,<2"]
 embeddings = ["sentence-transformers>=5.0,<6", "numpy>=2.2,<3"]
 
 [project.scripts]

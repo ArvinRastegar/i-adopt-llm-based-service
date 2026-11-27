@@ -1,31 +1,5 @@
 #!/usr/bin/env python
-"""Repeated measurements at 20/25/30 shots — EXPLORATORY, not the official experiment.
-
-The single-repetition thirty-shot run put 20, 25 and 30 shots within 0.004 Close F1 of each
-other, which one repetition cannot separate from sampling noise. This repeats each of those
-three levels ten times so the spread can be measured instead of guessed.
-
-Method
-------
-Ten repetitions per level, all collected identically: same model, same configuration, same
-thirty-variable pool, same 72 evaluation variables. No seed is sent, so the variation is the
-provider's own sampling at temperature 0.5 - which is exactly the quantity an error bar on
-these numbers should describe.
-
-The earlier single run is deliberately NOT reused as repetition 1. Ten observations gathered
-the same way cost three extra minutes and remove any question about whether the first one was
-collected under different conditions.
-
-Reported metric is micro Close F1, aggregated as the official experiment aggregates. Both
-scoring rules are reported: `as-run` drops predictions that fail validation, `official-style`
-scores them as an explicit empty prediction and keeps the variable in the population, which is
-what the official pipeline does. The two differ by up to 0.013 here.
-
-Isolation
----------
-Same as its siblings: lives in `few-shot-selection/`, which no artifact collector walks; writes no
-campaign, run or task row; writes only `few-shot-selection/output/`; cannot enter an official ranking.
-"""
+"""Repeated measurements at 20/25/30 shots — EXPLORATORY, not the official experiment."""
 
 from __future__ import annotations
 
@@ -77,12 +51,7 @@ def done_keys() -> set:
 
 
 def _interval(values: list[float]) -> tuple[float, float, float]:
-    """Mean, sample standard deviation and standard error for one level's repetitions.
-
-    Args: values: per-repetition micro Close F1, at least one.
-    Returns: (mean, sd, sem); sd and sem are 0.0 for a single observation.
-    Side Effects: none.
-    """
+    """Mean, sample standard deviation and standard error for one level's repetitions."""
     if len(values) < 2:
         return (values[0], 0.0, 0.0)
     sd = statistics.stdev(values)

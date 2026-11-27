@@ -1,14 +1,4 @@
-"""Reasoning as an experimental dimension, and the identity safety it requires.
-
-The danger in adding `reasoning = enabled` is not that the new tasks are wrong. It is that
-introducing the dimension might change the identity of the ~21,000 tasks already completed
-and paid for, so a continuation silently re-runs them. These tests pin the property that
-makes that impossible: adding a second reasoning profile ADDS configurations and leaves
-every existing one byte-identical.
-
-They drive the real configuration and planner rather than a hand-built fixture, because the
-identity being protected is the one the real planner computes.
-"""
+"""Reasoning as an experimental dimension, and the identity safety it requires."""
 
 import copy
 from pathlib import Path
@@ -78,10 +68,7 @@ def test_adding_the_enabled_profile_leaves_existing_identities_untouched(base, t
 
 
 def test_the_off_mechanism_is_part_of_identity_too(base, tmp_path):
-    """qwen3-32b disables reasoning by prompt suffix, qwen3-8b by request field.
-
-    Treating those as one configuration would merge results produced by different requests.
-    """
+    """qwen3-32b disables reasoning by prompt suffix, qwen3-8b by request field."""
     field_off = {c["configuration_id"] for c in _expand(base, [DISABLED], tmp_path)["configurations"]}
     prompt_off = {c["configuration_id"] for c in _expand(base, [SUFFIX_OFF], tmp_path)["configurations"]}
     assert field_off.isdisjoint(prompt_off)

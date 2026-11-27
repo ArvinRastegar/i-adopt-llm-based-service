@@ -1,17 +1,7 @@
 """Guards for the derived cost-estimate evidence document.
 
-The estimate refuses to guess, so the generator must either derive a value from
-something real or refuse. These tests pin the places that matters: billing comes
-from the frozen price card execution reserves against rather than a parallel
-derivation, a model missing from that card is refused rather than defaulted to
-free, the output ceiling comes from the plan so a stale plan cannot borrow
-today's number, and the ceiling assertion stays unmade until an operator
-supplies a specific basis.
-
-The tokenizer is injected throughout. Loading a real cached model would make
-these tests depend on an undeclared local prerequisite, so only the one test
-that is about the real tokenizer asks for it, and it skips when absent.
-"""
+The estimate refuses to guess, so the generator must either derive a value from something real or
+refuse."""
 
 import json
 from pathlib import Path

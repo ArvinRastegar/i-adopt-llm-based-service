@@ -1,7 +1,4 @@
-"""Export the small public tables in `results/` from the stored answers (which are not in Git).
-
-Run from `iadopt-lab/`: `uv run python -I few-shot-selection/export_results.py`.
-"""
+"""Export the small public tables in `results/` from the stored answers (which are not in Git)."""
 
 from __future__ import annotations
 
@@ -47,11 +44,7 @@ def shot_count() -> list[dict]:
 
 
 def retrieval() -> list[dict]:
-    """Close F1 of each way of choosing the examples, on the 102 variables, ten runs each.
-
-    Gains are against the fixed 25 and against the 25 most similar, with 95% intervals from
-    resampling the variables. The last row is the setting chosen fold by fold on the other folds.
-    """
+    """Close F1 of each way of choosing the examples, on the 102 variables, ten runs each."""
     summary = json.loads((OUTPUT / "retrieval" / "tuning-summary.json").read_text(encoding="utf-8"))
     chosen = summary["chosen"]
     scores = {**summary["arms"], "chosen": {"f1_mean": chosen["f1_mean"],

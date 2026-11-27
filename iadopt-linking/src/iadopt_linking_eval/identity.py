@@ -1,10 +1,4 @@
-"""Controlled-vocabulary identity of an IRI: which vocabulary, which local identifier.
-
-The vocabularies' own IRIs are ``http://`` (Wikidata, QUDT, OM) while the corpus mostly writes
-``https://`` and carries a few malformed IRIs, so evaluation compares (vocabulary, local
-identifier) rather than strings and records how each IRI had to be read. Pure and standard
-library only.
-"""
+"""Controlled-vocabulary identity of an IRI: which vocabulary, which local identifier."""
 
 from __future__ import annotations
 
@@ -35,13 +29,7 @@ _NON_VOCABULARY_HOSTS = ("example.org", "www.example.org", "github.com")
 
 @dataclass(frozen=True)
 class Identity:
-    """One IRI read as a vocabulary and a local identifier.
-
-    ``form`` says how the IRI was written: ``canonical`` (the vocabulary's own ``http://``
-    form), ``scheme`` (only ``https://`` instead), ``variant`` (another valid path such as
-    Wikidata's ``/wiki/``), ``repaired`` (malformed in the source and recovered here) or
-    ``opaque`` (no canonical form is defined for it).
-    """
+    """One IRI read as a vocabulary and a local identifier."""
 
     vocabulary: str
     local_id: str
@@ -49,24 +37,12 @@ class Identity:
 
     @property
     def key(self) -> tuple[str, str]:
-        """Give the pair that two IRIs must share to name the same entity.
-
-        Args: none.
-        Returns: (vocabulary, local_id).
-        Raises: None.
-        Side effects: none.
-        """
+        """Give the pair that two IRIs must share to name the same entity."""
         return (self.vocabulary, self.local_id)
 
 
 def classify(iri: str) -> Identity:
-    """Read an IRI as a controlled-vocabulary identity.
-
-    Args: iri: an IRI as the corpus or a retrieval source wrote it.
-    Returns: its Identity; non-vocabulary and unrecognised hosts are labelled, not rejected.
-    Raises: ValueError when the text is not scheme://host/path at all.
-    Side effects: none; deterministic.
-    """
+    """Read an IRI as a controlled-vocabulary identity."""
     match = _IRI.match(iri.strip())
     if match is None:
         raise ValueError(f"Not an IRI: {iri!r}")
@@ -99,11 +75,5 @@ def classify(iri: str) -> Identity:
 
 
 def is_controlled_vocabulary(identity: Identity) -> bool:
-    """Say whether an identity names a term of a controlled vocabulary.
-
-    Args: identity: a classified IRI.
-    Returns: False for placeholder, repository and unrecognised IRIs.
-    Raises: None.
-    Side effects: none.
-    """
+    """Say whether an identity names a term of a controlled vocabulary."""
     return identity.vocabulary not in (NON_VOCABULARY, UNKNOWN)

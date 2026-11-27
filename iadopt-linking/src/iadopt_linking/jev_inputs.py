@@ -1,10 +1,4 @@
-"""What Jev is asked: the baseline's frozen slots and candidates, turned into requests.
-
-A Jev run never retrieves anything. It reads a finished, hash-verified baseline folder, proves that
-the corpus and the code in this tree still reproduce that baseline's queries and candidate documents
-exactly, and builds one request per (slot, pass). Whatever differs between the two experiments is
-therefore the scorer, not the information it was given.
-"""
+"""What Jev is asked: the baseline's frozen slots and candidates, turned into requests."""
 
 from __future__ import annotations
 
@@ -32,7 +26,7 @@ from .jev import (
     request_sha256,
 )
 from .population import Slot, normalise_term
-from .provenance import evidence_code_identity
+from .provenance import RESULTS_CODE, RESULTS_EVIDENCE, evidence_code_identity
 from .recorder import JsonlStore, latest
 from .rerank import build_document
 from .score import slot_query
@@ -55,13 +49,7 @@ class Baseline:
 
     @property
     def identity(self) -> dict[str, Any]:
-        """Identify the baseline for a plan: which run, which bytes, which code.
-
-        Args: none.
-        Returns: folder name, the manifest's file hashes of the evidence, and its code hashes.
-        Raises: KeyError if the manifest lacks a field.
-        Side effects: none.
-        """
+        """Identify the baseline for a plan: which run, which bytes, which code."""
         files = self.manifest["files"]
         return {"folder": self.root.name, "run_id": self.manifest["run_id"],
                 "scores_sha256": files["scores.jsonl"], "candidates_sha256": files["candidates.jsonl"],
@@ -85,25 +73,12 @@ class Task:
 
     @property
     def key(self) -> tuple[str, str]:
-        """Name the task for resuming.
-
-        Args: none.
-        Returns: (slot id, pass name).
-        Raises: None.
-        Side effects: none.
-        """
+        """Name the task for resuming."""
         return (self.slot.slot_id, self.spec.name)
 
 
 def _verify_manifest(root: Path) -> dict[str, Any]:
-    """Prove that a baseline folder is finished, unaltered and made by the code in this tree.
-
-    Args: root: the baseline's results folder.
-    Returns: its manifest.
-    Raises: RunError for a missing or unreadable manifest, a file that no longer matches its hash,
-    a baseline that did not pass every check or was a pilot, or evidence code that has changed.
-    Side effects: hashes every published file.
-    """
+    """Prove a baseline is finished, unaltered, and made by this tree's or RESULTS_CODE's evidence code."""
     path = root / "manifest.json"
     if not path.is_file():
         raise RunError(f"{root} is not a finished baseline: manifest.json is missing")
@@ -119,23 +94,16 @@ def _verify_manifest(root: Path) -> dict[str, Any]:
         raise RunError(f"{root.name} is a pilot, not a baseline")
     if not all(check["passed"] is True for check in manifest["checks"]):
         raise RunError(f"{root.name} did not pass every one of its checks")
-    if manifest["evidence_code_sha256"] != evidence_code_identity():
-        raise RunError(f"the retrieval, scoring and gold code changed since {root.name} was made, "
-                       "so this tree can no longer prove it reproduces the baseline's inputs")
+    made_by = manifest["evidence_code_sha256"]
+    if made_by not in (evidence_code_identity(), RESULTS_EVIDENCE["baseline"]):
+        raise RunError(f"{root.name} was made neither by this tree's retrieval, scoring and gold code "
+                       f"nor by that code at {RESULTS_CODE[:7]}, so its inputs cannot be proven")
     return manifest
 
 
 def _verify_inputs(slots: Sequence[Slot], records: Mapping[str, Mapping[str, Any]],
                    cap: int | None) -> None:
-    """Prove that what Jev will be given is exactly what the baseline scored.
-
-    Args: slots: the population from this tree; records: the baseline's scores by slot id; cap:
-    the baseline's description cap.
-    Returns: None.
-    Raises: RunError naming the first difference: a slot with no record, a different term, gold,
-    query or candidate document, or two candidates with the same identity in one pool.
-    Side effects: none.
-    """
+    """Prove that what Jev will be given is exactly what the baseline scored."""
     for slot in slots:
         record = records.get(slot.slot_id)
         if record is None:
@@ -159,15 +127,7 @@ def _verify_inputs(slots: Sequence[Slot], records: Mapping[str, Mapping[str, Any
 
 def load_baseline(root: Path | str, *, lab_root: Path | str | None = None,
                   only: Sequence[str] | None = None) -> Baseline:
-    """Load a baseline run and verify it end to end.
-
-    Args: root: the baseline's results folder; lab_root: iadopt-lab root; only: variable stems to
-    keep (a pilot).
-    Returns: the baseline with its slots and scores records.
-    Raises: RunError if the folder is not a finished, unaltered, current baseline or if what Jev
-    would be given differs from what the baseline scored; UsageError for an unknown stem.
-    Side effects: filesystem reads; hashing.
-    """
+    """Load a baseline run and verify it end to end."""
     folder = Path(root)
     manifest = _verify_manifest(folder)
     records = dict(latest(JsonlStore(folder / "scores.jsonl").read(), lambda r: r["slot_id"]))
@@ -179,15 +139,7 @@ def load_baseline(root: Path | str, *, lab_root: Path | str | None = None,
 
 def build_tasks(baseline: Baseline, specs: Sequence[PassSpec], *, session_id: str | None
                 ) -> tuple[list[Task], dict[str, int]]:
-    """Build every request of a run.
-
-    Args: baseline: the verified baseline; specs: the passes; session_id: OpenRouter log grouping
-    label.
-    Returns: the tasks, pass by pass in population order, and counts: slots and empty pools. A
-    slot with no candidates is not asked about: there is nothing to choose.
-    Raises: ValueError for a pool too large for the options Jev accepts.
-    Side effects: none; deterministic.
-    """
+    """Build every request of a run."""
     tasks: list[Task] = []
     empty = sum(not baseline.records[slot.slot_id]["pool"] for slot in baseline.slots)
     for spec in specs:
@@ -209,15 +161,7 @@ def build_tasks(baseline: Baseline, specs: Sequence[PassSpec], *, session_id: st
 
 
 def estimate(tasks: Sequence[Task], price_per_token_usd: str) -> dict[str, Any]:
-    """Estimate a run's cost before any billed call, erring high.
-
-    Args: tasks: the requests; price_per_token_usd: the model's input price per token as a decimal
-    string.
-    Returns: requests, request characters, the assumed characters per token, the token estimate,
-    the price and the estimated cost in USD as a fixed-point string.
-    Raises: decimal.InvalidOperation for a malformed price.
-    Side effects: none.
-    """
+    """Estimate a run's cost before any billed call, erring high."""
     chars = sum(task.chars for task in tasks)
     tokens = int(chars / ASSUMED_CHARS_PER_TOKEN) + 1
     cost = Decimal(price_per_token_usd) * tokens

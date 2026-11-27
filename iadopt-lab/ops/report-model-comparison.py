@@ -1,17 +1,4 @@
-"""Best configuration per model across every ranked full-grid campaign.
-
-Reasoning is treated as one parameter among prompt variant, shot count and temperature:
-each model appears once, showing whichever configuration scored highest, with the losing
-reasoning setting reported as a delta where both were actually measured.
-
-Only the three full 36-configuration-per-model grids are pooled. They are comparable by
-construction and the generator verifies it: identical population hash, evaluation size,
-scorer version and Close threshold, checked before anything is reported. Every metric is
-recomputed from per-variable receipts with exact rational arithmetic and cross-checked
-against the value the ranking stored.
-
-Usage:  .venv/bin/python ops/report-model-comparison.py [--out PATH]
-"""
+"""Best configuration per model across every ranked full-grid campaign."""
 
 from __future__ import annotations
 

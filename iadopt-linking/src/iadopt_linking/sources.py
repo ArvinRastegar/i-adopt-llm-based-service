@@ -1,10 +1,4 @@
-"""The three live retrieval sources: Wikidata, QUDT quantity kinds and OM quantities.
-
-Each source turns a query key (a lower-cased, normalised term) into a request and turns the
-raw response text into at most ten ranked candidates. Parsing is strict: a response that does
-not have the expected shape raises SourceError so it is recorded as a failure, never as an
-empty result.
-"""
+"""The three live retrieval sources: Wikidata, QUDT quantity kinds and OM quantities."""
 
 from __future__ import annotations
 
@@ -56,13 +50,7 @@ class Request:
 
 
 def _json(text: str, source: str) -> Any:
-    """Decode a JSON response body.
-
-    Args: text: response body; source: source name for the message.
-    Returns: the decoded value.
-    Raises: SourceError when the body is not JSON.
-    Side effects: none.
-    """
+    """Decode a JSON response body."""
     try:
         return json.loads(text)
     except json.JSONDecodeError as exc:
@@ -70,25 +58,12 @@ def _json(text: str, source: str) -> Any:
 
 
 def _words(text: str) -> str:
-    """Collapse whitespace so multi-line descriptions fit one document line.
-
-    Args: text: any description.
-    Returns: single-spaced text.
-    Raises: None.
-    Side effects: none.
-    """
+    """Collapse whitespace so multi-line descriptions fit one document line."""
     return re.sub(r"\s+", " ", text).strip()
 
 
 def _strict(parse: Callable[[Any, str], list[Candidate]]) -> Callable[[Any, str], list[Candidate]]:
-    """Turn any structural failure of a parser into a SourceError.
-
-    Args: parse: a source's parse method.
-    Returns: the same method, raising SourceError for a response of the wrong inner shape, so it
-    is recorded as a failure with its text instead of escaping as a KeyError or AttributeError.
-    Raises: None here; the wrapped method raises SourceError.
-    Side effects: none.
-    """
+    """Turn any structural failure of a parser into a SourceError."""
     @functools.wraps(parse)
     def wrapper(self: Any, text: str) -> list[Candidate]:
         try:
@@ -107,13 +82,7 @@ class WikidataSource:
     name = "wikidata"
 
     def request(self, key: str) -> Request:
-        """Build the search request.
-
-        Args: key: query key.
-        Returns: GET request for at most RESULT_LIMIT English items.
-        Raises: None.
-        Side effects: none.
-        """
+        """Build the search request."""
         return Request(WIKIDATA_ENDPOINT, {
             "action": "wbsearchentities", "search": key, "language": "en", "uselang": "en",
             "type": "item", "limit": str(RESULT_LIMIT), "format": "json"},
@@ -121,14 +90,7 @@ class WikidataSource:
 
     @_strict
     def parse(self, text: str) -> list[Candidate]:
-        """Read the ranked items from a response.
-
-        Args: text: response body.
-        Returns: candidates in the API's own order.
-        Raises: SourceError for an API error, a missing success flag, a malformed item, a
-        non-item id or too many items.
-        Side effects: none.
-        """
+        """Read the ranked items from a response."""
         data = _json(text, self.name)
         if not isinstance(data, dict) or "error" in data or "search" not in data:
             raise SourceError(f"wikidata: unexpected response {str(data)[:160]}")
@@ -158,14 +120,7 @@ class QudtSource:
     name = "qudt"
 
     def request(self, key: str) -> Request | None:
-        """Build the query: kinds whose English label contains every word of the key.
-
-        Args: key: query key.
-        Returns: GET request ordered by label length (an exact label sorts first), at most
-        RESULT_LIMIT kinds; None when the key has no searchable word.
-        Raises: None.
-        Side effects: none.
-        """
+        """Build the query: kinds whose English label contains every word of the key."""
         words = [w for w in re.findall(r"[^\W_]+", key.lower()) if w not in QUDT_STOPWORDS]
         if not words:
             return None
@@ -192,15 +147,7 @@ SELECT ?qk ?len ?label ?description ?wikidata ?definedBy WHERE {{
 
     @_strict
     def parse(self, text: str) -> list[Candidate]:
-        """Group the result rows into one candidate per quantity kind.
-
-        Args: text: SPARQL JSON results.
-        Returns: candidates ordered by label length, then IRI; the English label is preferred
-        to en-US, and the Wikidata match and release IRI travel in ``extras``.
-        Raises: SourceError for a missing section, a row of the wrong shape or more than
-        RESULT_LIMIT kinds.
-        Side effects: none.
-        """
+        """Group the result rows into one candidate per quantity kind."""
         data = _json(text, self.name)
         try:
             rows = data["results"]["bindings"]
@@ -242,13 +189,7 @@ class OmSource:
     name = "om"
 
     def request(self, key: str) -> Request:
-        """Build the search request restricted to descendants of om:Quantity.
-
-        Args: key: query key.
-        Returns: GET request for at most RESULT_LIMIT OM quantity classes.
-        Raises: None.
-        Side effects: none.
-        """
+        """Build the search request restricted to descendants of om:Quantity."""
         return Request(OLS_ENDPOINT, {
             "q": key, "ontology": "om", "allChildrenOf": OM_QUANTITY, "rows": str(RESULT_LIMIT),
             "fieldList": "iri,label,description,type,ontology_name"},
@@ -256,15 +197,7 @@ class OmSource:
 
     @_strict
     def parse(self, text: str) -> list[Candidate]:
-        """Read the ranked classes from a response.
-
-        Args: text: OLS search JSON.
-        Returns: candidates in OLS relevance order.
-        Raises: SourceError for a missing section, a non-zero service status, a document count
-        that contradicts numFound, a foreign ontology, a label or description that is not text,
-        or too many documents.
-        Side effects: none.
-        """
+        """Read the ranked classes from a response."""
         data = _json(text, self.name)
         try:
             documents = data["response"]["docs"]

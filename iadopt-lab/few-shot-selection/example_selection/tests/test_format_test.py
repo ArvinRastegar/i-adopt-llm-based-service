@@ -12,36 +12,18 @@ DOCUMENTED_TARGET = "number of persons receiving welfare"
 
 @pytest.fixture(scope="module")
 def inputs():
-    """Load the real corpus, targets, examples, template and schema once per module.
-
-    Args: none.
-    Returns: the mapping from `format_test.load_inputs`.
-    Raises: ValueError when the examples are not the study's top25.
-    Side Effects: reads local files.
-    """
+    """Load the real corpus, targets, examples, template and schema once per module."""
     return ft.load_inputs()
 
 
 def _documented_prompt() -> str:
-    """Read the prompt the study recorded verbatim in best-configuration-session.md.
-
-    Args: none.
-    Returns: the first ````text block, without the newline the fence adds.
-    Raises: IndexError when the document has no such block.
-    Side Effects: reads the document.
-    """
+    """Read the prompt the study recorded verbatim in best-configuration-session.md."""
     doc = (ft.HERE / "best-configuration-session.md").read_text(encoding="utf-8")
     return doc.split("````text\n", 1)[1].split("\n````", 1)[0]
 
 
 def _target(inputs, prefix):
-    """Find the corpus record whose definition starts with `prefix`.
-
-    Args: inputs: the fixture; prefix: the start of a definition.
-    Returns: the first matching record.
-    Raises: StopIteration when nothing matches.
-    Side Effects: none.
-    """
+    """Find the corpus record whose definition starts with `prefix`."""
     return next(r for r in inputs["records"].values() if r["definition"].startswith(prefix))
 
 
@@ -106,24 +88,11 @@ def test_schedule_covers_the_grid_once(inputs):
 
 def _stub(answer='{"hasStatisticalModifier": ""}', *, status=200, reasoning="",
           prompt_tokens=4000, completion_tokens=100):
-    """Build a stub transport that records every request and returns one fixed reply.
-
-    Args: answer: reply text; status: HTTP status (non-200 means a failed call); reasoning:
-        reasoning text to return; prompt_tokens, completion_tokens: usage to report.
-    Returns: (transport, calls), where `calls` collects every request body sent.
-    Raises: nothing.
-    Side Effects: none until the transport is awaited.
-    """
+    """Build a stub transport that records every request and returns one fixed reply."""
     calls = []
 
     async def transport(body):
-        """Record the request and return the fixed reply.
-
-        Args: body: the request body.
-        Returns: a transport result shaped like `format_test.psnc_transport`'s.
-        Raises: nothing.
-        Side Effects: appends `body` to `calls`.
-        """
+        """Record the request and return the fixed reply."""
         calls.append(body)
         if status != 200:
             return {"ok": False, "status": status, "error": f"HTTP {status}", "latency": 0.1}

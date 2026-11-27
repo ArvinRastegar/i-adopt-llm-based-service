@@ -28,11 +28,7 @@ SNAPSHOTS = {
 
 @pytest.fixture(scope="module")
 def prompt_inputs():
-    """Load immutable examples and a deterministic non-demo target once per module.
-
-    Args: none. Returns: (approved demo pool, first non-demo target) tuple.
-    Raises: corpus integrity errors. Side effects: read-only corpus access.
-    """
+    """Load immutable examples and a deterministic non-demo target once per module."""
     records = load_canonical_records(ROOT)
     pool = tuple(next(record for record in records if record["source_path"] == path) for path in DEMONSTRATION_PATHS)
     target = next(record for record in records if record["source_path"] not in DEMONSTRATION_PATHS)
@@ -42,11 +38,7 @@ def prompt_inputs():
 @pytest.mark.parametrize("family", list(SNAPSHOTS))
 @pytest.mark.parametrize("shots", [0, 1, 3, 5])
 def test_all_prompt_shot_snapshots(prompt_inputs, family, shots):
-    """Prove exact schema, example order, target-only rendering and all12 frozen hashes.
-
-    Args: corpus fixture, family and shot count. Returns: None.
-    Raises: AssertionError on protocol byte drift or leakage. Side effects: artifact reads.
-    """
+    """Prove exact schema, example order, target-only rendering and all12 frozen hashes."""
     pool, target = prompt_inputs
     schema = load_schema_bytes(ROOT)
     result = render_base_prompt(load_prompt_version(family, ROOT), target["definition"], schema,
@@ -62,12 +54,7 @@ def test_all_prompt_shot_snapshots(prompt_inputs, family, shots):
 
 
 def test_retained_prompt_limitations_and_historical_evidence(prompt_inputs):
-    """Keep accepted no-inference rules and unchanged non-literal/geographic demo gold.
-
-    Args: approved prompt fixtures. Returns: None.
-    Raises: AssertionError if historical policy or demonstration gold is repaired.
-    Side effects: template/registry reads only.
-    """
+    """Keep accepted no-inference rules and unchanged non-literal/geographic demo gold."""
     pool, _ = prompt_inputs
     expected_matrix = {0: "atmosphere", 2: "person", 3: "sewer line", 4: "urban area"}
     for index, expected in expected_matrix.items():
@@ -85,11 +72,7 @@ def test_retained_prompt_limitations_and_historical_evidence(prompt_inputs):
 
 
 def test_demonstration_guards(prompt_inputs):
-    """Reject reordered examples, invalid shot counts and target/demo overlap.
-
-    Args: verified corpus fixture. Returns: None.
-    Raises: AssertionError if leakage guards fail. Side effects: artifact reads.
-    """
+    """Reject reordered examples, invalid shot counts and target/demo overlap."""
     pool, _ = prompt_inputs
     with pytest.raises(ValueError):
         select_demonstrations(reversed(pool), 3)
@@ -103,12 +86,7 @@ def test_demonstration_guards(prompt_inputs):
 
 
 def test_correction_round_trip_and_predecessor_isolation(prompt_inputs):
-    """Retain only immediate prior visible output/errors with unchanged base science.
-
-    Args: verified prompt fixture. Returns: None.
-    Raises: AssertionError on history accumulation, encoding loss or lineage mismatch.
-    Side effects: template/schema reads only.
-    """
+    """Retain only immediate prior visible output/errors with unchanged base science."""
     _, target = prompt_inputs
     base = render_base_prompt(load_prompt_version("strict-minimal", ROOT), target["definition"], load_schema_bytes(ROOT))
     raw1 = 'attempt one ```\n{"text":"é \\" } {{target_definition}}"}\n'
@@ -128,11 +106,7 @@ def test_correction_round_trip_and_predecessor_isolation(prompt_inputs):
 
 
 def test_target_placeholder_text_is_not_recursively_rendered():
-    """Preserve braces, quotes, Unicode and template-looking target text exactly once.
-
-    Args: none. Returns: None.
-    Raises: AssertionError on recursive substitution. Side effects: artifact reads.
-    """
+    """Preserve braces, quotes, Unicode and template-looking target text exactly once."""
     target = 'A definition with {{schema}}, "quotes", braces {}, ``` and é.\n'
     result = render_base_prompt(load_prompt_version("strict-minimal", ROOT), target, load_schema_bytes(ROOT))
     assert target in result.content

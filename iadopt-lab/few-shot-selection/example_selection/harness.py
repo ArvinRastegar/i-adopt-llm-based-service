@@ -1,9 +1,4 @@
-"""Candidate evaluation against a fixed evaluation set — see contracts/harness.md.
-
-Owns the only provider access in this experiment and the call cache that makes every stage
-resumable. The cache is keyed per call, not per candidate, so an interruption costs at most one
-in-flight request rather than a whole candidate.
-"""
+"""Candidate evaluation against a fixed evaluation set — see contracts/harness.md."""
 
 from __future__ import annotations
 
@@ -70,25 +65,13 @@ class HarnessContext:
 
 
 def candidate_hash(candidate: Sequence[str]) -> str:
-    """Compute a stable order-independent identity for a candidate set.
-
-    Args: candidate: variable ids forming the example set.
-    Returns: 16 hex characters, SHA-256 over the sorted ids.
-    Raises: nothing.
-    Side Effects: none. Deterministic across processes and machines.
-    """
+    """Compute a stable order-independent identity for a candidate set."""
     joined = "\n".join(sorted(candidate)).encode("utf-8")
     return hashlib.sha256(joined).hexdigest()[:16]
 
 
 def load_cache(path: Path) -> dict:
-    """Rebuild the per-call cache from the calls JSONL.
-
-    Args: path: the calls JSONL, which need not exist.
-    Returns: {(candidate_hash, repetition, variable_id): record}; empty when the file is absent.
-    Raises: nothing; a malformed trailing line is skipped rather than failing a resume.
-    Side Effects: reads the file.
-    """
+    """Rebuild the per-call cache from the calls JSONL."""
     if not path.exists():
         return {}
     cache: dict = {}
@@ -107,13 +90,7 @@ def load_cache(path: Path) -> dict:
 
 
 def build_context(root: Path, concurrency: int = CONCURRENCY) -> HarnessContext:
-    """Assemble corpus, prompt template, schema, scorer backend and PSNC credentials.
-
-    Args: root: the iadopt-lab root; concurrency: provider concurrency ceiling.
-    Returns: a HarnessContext ready for `evaluate`.
-    Raises: LabError when PSNC credentials are absent.
-    Side Effects: reads local files and the .env; opens no network connection.
-    """
+    """Assemble corpus, prompt template, schema, scorer backend and PSNC credentials."""
     import os
 
     from iadopt_lab.cli import _configuration, _similarity_backend
@@ -144,14 +121,7 @@ def build_context(root: Path, concurrency: int = CONCURRENCY) -> HarnessContext:
 
 async def evaluate(candidate: Sequence[str], targets: Sequence[str], repetition: int,
                    context: HarnessContext) -> dict:
-    """Score one candidate example-set against one evaluation set.
-
-    Args: candidate: 25 example ids; targets: evaluation ids; repetition: 1-based; context: harness context.
-    Returns: close_f1_official, close_f1_as_run, precision, recall, scored, invalid, failed_calls, latency, tokens.
-    Raises: ValueError when the candidate is not size 25 or intersects `targets`.
-    Side Effects: issues provider calls for uncached targets and appends them to the calls JSONL.
-        Idempotent: a repeat call for the same key issues no request.
-    """
+    """Score one candidate example-set against one evaluation set."""
     if len(set(candidate)) != CANDIDATE_SIZE:
         raise ValueError(f"candidate must be exactly {CANDIDATE_SIZE} distinct ids, got {len(set(candidate))}")
     overlap = set(candidate) & set(targets)
@@ -204,13 +174,7 @@ async def evaluate(candidate: Sequence[str], targets: Sequence[str], repetition:
 
 async def _psnc_transport(url: str, headers: Mapping[str, str], body: Mapping[str, Any],
                           client: Any = None) -> dict:
-    """Issue one PSNC chat-completion request over a shared client.
-
-    Args: url: endpoint; headers: auth headers; body: request body; client: shared AsyncClient.
-    Returns: {"ok", "latency", and on success "answer", "finish_reason", token counts}.
-    Raises: nothing; a transport error is reported as ok=False so one call cannot kill a stage.
-    Side Effects: one outbound HTTPS request on the shared connection pool.
-    """
+    """Issue one PSNC chat-completion request over a shared client."""
     started = time.monotonic()
     owned = client is None
     if owned:
@@ -236,13 +200,7 @@ async def _psnc_transport(url: str, headers: Mapping[str, str], body: Mapping[st
 
 
 def _summarise(records: Sequence[dict], targets: Sequence[str], context: HarnessContext) -> dict:
-    """Aggregate one candidate's per-call records under both scoring rules.
-
-    Args: records: per-target call records; targets: evaluation ids; context: for gold and scorer.
-    Returns: the result mapping described in contracts/harness.md.
-    Raises: nothing.
-    Side Effects: none. `denominator_official` is always len(targets), by construction.
-    """
+    """Aggregate one candidate's per-call records under both scoring rules."""
     scored = [r for r in records if r.get("evaluation")]
     as_run = _aggregate([r["evaluation"] for r in scored], [r["variable_id"] for r in scored])
 

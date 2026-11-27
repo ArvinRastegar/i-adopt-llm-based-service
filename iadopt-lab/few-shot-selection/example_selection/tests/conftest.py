@@ -37,11 +37,7 @@ def corpus_ids(records) -> list[str]:
 
 
 def _stub_context(tmp_path, records_by_id, mode: str):
-    """A HarnessContext whose transport is a stub, so no provider is ever contacted.
-
-    `mode` selects what the fake provider does: "valid" returns a well-formed decomposition,
-    "invalid" returns unparseable text, "fail" simulates a transport error.
-    """
+    """A HarnessContext whose transport is a stub, so no provider is ever contacted."""
     import sys
     from pathlib import Path as _Path
 

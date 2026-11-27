@@ -1,8 +1,4 @@
 """What produced a run: its code, corpus, environment, each invocation and the services' releases.
-
-A run may be interrupted and resumed, possibly by different code versions of the report side, on
-another day or machine. ``provenance.json`` journals every invocation, so the manifest describes
-the evidence that is there rather than only the last invocation that touched it.
 """
 
 from __future__ import annotations
@@ -28,61 +24,43 @@ EVIDENCE_FILES = (
     "iadopt_linking/gold.py", "iadopt_linking/http.py", "iadopt_linking/population.py",
     "iadopt_linking/recorder.py", "iadopt_linking/rerank.py", "iadopt_linking/retrieve.py",
     "iadopt_linking/score.py", "iadopt_linking/sources.py", "iadopt_linking_eval/identity.py")
+# The committed results were made by the evidence modules at RESULTS_CODE (public main before the
+# refactor). These are their evidence hashes there; tests re-derive them from git.
+RESULTS_CODE = "83b463ce185fcc7f2219a82ce50c1016f459f535"
+RESULTS_EVIDENCE = {
+    "baseline": "c88a30e9c0748db51eed01f8937d6ab9e8d03e1941b507320385419468b0c0a7",
+    "jev": "8a5e2e78f4086e6b44c34101d19f8a39295d313b14849705111d5c3d179048f8",
+    "psnc": "a342a3b6435978a9af2376f7a490f808b895118d609cbb7f5ac19fd76e4492f1",
+}
 JOURNAL_SCHEMA = 1
 LIBRARIES = ("torch", "sentence_transformers", "transformers")
 OM_RELEASE_FIELDS = ("version", "loaded", "fileHash", "numberOfTerms", "status")
 
 
 def now_utc() -> str:
-    """Timestamp for the journal and manifest.
-
-    Args: none.
-    Returns: UTC time to the second, ISO 8601.
-    Raises: None.
-    Side effects: reads the clock.
-    """
+    """Timestamp for the journal and manifest."""
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
 def evidence_code_identity(project_root: Path = PROJECT_ROOT,
                            files: Sequence[str] = EVIDENCE_FILES) -> str:
-    """Hash the modules that produce a run's evidence.
-
-    Args: project_root: the iadopt-linking folder; files: module paths under ``src``, which
-    default to the baseline's EVIDENCE_FILES (the Jev experiment passes its own list).
-    Returns: a hexadecimal SHA-256 over those files, names and bytes.
-    Raises: OSError if a listed module is missing.
-    Side effects: filesystem reads.
-    """
+    """Hash the modules that produce a run's evidence."""
     digest = hashlib.sha256()
     for name in files:
         digest.update(name.encode() + b"\0" + (project_root / "src" / name).read_bytes())
     return digest.hexdigest()
 
 
-def code_identity(project_root: Path = PROJECT_ROOT) -> dict[str, Any]:
-    """Identify the code that is running.
 
-    Args: project_root: the iadopt-linking folder.
-    Returns: a hash over the project's source and pyproject, the git commit the tree is based on
-    and whether the tree differs from it (results and outputs excluded). A tree that was never
-    committed is dirty, so the hash, not the commit, identifies it.
-    Raises: None.
-    Side effects: runs git read-only.
-    """
+def code_identity(project_root: Path = PROJECT_ROOT) -> dict[str, Any]:
+    """Identify the code that is running."""
     digest = hashlib.sha256()
     files = sorted([*project_root.joinpath("src").rglob("*.py"), project_root / "pyproject.toml"])
     for path in files:
         digest.update(path.relative_to(project_root).as_posix().encode() + b"\0" + path.read_bytes())
 
     def git(*args: str) -> str | None:
-        """Run a read-only git command.
-
-        Args: args: git arguments.
-        Returns: stripped output, or None when git fails.
-        Raises: None.
-        Side effects: runs git.
-        """
+        """Run a read-only git command."""
         try:
             done = subprocess.run(["git", "-C", str(project_root), *args], capture_output=True,
                                   text=True, timeout=30, check=True)
@@ -97,13 +75,7 @@ def code_identity(project_root: Path = PROJECT_ROOT) -> dict[str, Any]:
 
 
 def corpus_identity(lab_root: Path) -> dict[str, Any]:
-    """Identify the corpus release the gold came from.
-
-    Args: lab_root: iadopt-lab root.
-    Returns: tag, commit and manifest hashes of the pinned corpus.
-    Raises: OSError or KeyError if the manifest is missing or malformed.
-    Side effects: filesystem read.
-    """
+    """Identify the corpus release the gold came from."""
     manifest = json.loads((lab_root / "data/manifests/corpus-v2.0.1.json").read_bytes())
     lock = json.loads((lab_root / "data/manifests/corpus-source-lock-v2.0.1.json").read_bytes())
     return {"tag": lock["tag"], "commit": lock["commit"], "repository": lock["repository"],
@@ -112,14 +84,7 @@ def corpus_identity(lab_root: Path) -> dict[str, Any]:
 
 
 def fetch_om_release(client: Any) -> dict[str, Any]:
-    """Record which OM release the search service currently serves.
-
-    Args: client: HTTP client.
-    Returns: probe time and the service's version, load time, file hash, term count and status;
-    {"probed_at", "error"} when the service did not give a release.
-    Raises: None.
-    Side effects: one network request.
-    """
+    """Record which OM release the search service currently serves."""
     probe: dict[str, Any] = {"probed_at": now_utc()}
     fetched = client.get(OLS_ONTOLOGY_ENDPOINT, None, {"Accept": "application/json"})
     if fetched.text is None:
@@ -134,14 +99,7 @@ def fetch_om_release(client: Any) -> dict[str, Any]:
 
 
 def fetch_qudt_release(client: Any) -> dict[str, Any]:
-    """Record when the QUDT endpoint's data was last modified.
-
-    Args: client: HTTP client.
-    Returns: probe time and ``graph_modified``; {"probed_at", "error"} when the endpoint did not
-    give a modification time.
-    Raises: None.
-    Side effects: one network request.
-    """
+    """Record when the QUDT endpoint's data was last modified."""
     probe: dict[str, Any] = {"probed_at": now_utc()}
     fetched = client.get(QUDT_ENDPOINT, {"query": QUDT_RELEASE_QUERY},
                          {"Accept": "application/sparql-results+json"})
@@ -158,25 +116,12 @@ def fetch_qudt_release(client: Any) -> dict[str, Any]:
 
 
 def probe_releases(client: Any) -> dict[str, Any]:
-    """Ask both services what data they currently serve.
-
-    Args: client: HTTP client.
-    Returns: {"om": ..., "qudt": ...}, each a probe as fetch_*_release returns it.
-    Raises: None.
-    Side effects: two network requests.
-    """
+    """Ask both services what data they currently serve."""
     return {"om": fetch_om_release(client), "qudt": fetch_qudt_release(client)}
 
 
 def merge_releases(invocations: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    """Combine the release probes of every invocation.
-
-    Args: invocations: journal invocations in order.
-    Returns: per service the latest usable probe, how many probes were made and failed, and how
-    many distinct releases were seen; Wikidata has no release identifier.
-    Raises: None.
-    Side effects: none.
-    """
+    """Combine the release probes of every invocation."""
     merged: dict[str, Any] = {}
     for name in ("om", "qudt"):
         probes = [inv["source_releases"][name] for inv in invocations
@@ -192,14 +137,7 @@ def merge_releases(invocations: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
 
 
 def load_journal(path: Path, *, evidence_exists: bool) -> dict[str, Any]:
-    """Read a results folder's journal, or start one.
-
-    Args: path: provenance.json; evidence_exists: whether the folder already holds retrieval or
-    scoring evidence.
-    Returns: the journal; a new empty one when the folder is new.
-    Raises: RunError for evidence without a journal, or a journal that cannot be read.
-    Side effects: filesystem read.
-    """
+    """Read a results folder's journal, or start one."""
     if not path.is_file():
         if evidence_exists:
             raise RunError(f"{path.parent} holds evidence but no {path.name}; without it nothing "
@@ -218,15 +156,7 @@ def load_journal(path: Path, *, evidence_exists: bool) -> dict[str, Any]:
 
 def begin_invocation(journal: dict[str, Any], *, evidence_sha256: str,
                      http_settings: Mapping[str, Any]) -> dict[str, Any]:
-    """Open a journal entry for this invocation.
-
-    Args: journal: the journal; evidence_sha256: hash of the evidence-producing code; http_settings:
-    how the client behaves.
-    Returns: the new entry, already appended to the journal; its outcome is "running" until the
-    invocation ends.
-    Raises: None.
-    Side effects: runs git read-only; hashes the source files.
-    """
+    """Open a journal entry for this invocation."""
     invocation: dict[str, Any] = {
         "started_at": now_utc(), "finished_at": None, "outcome": "running",
         "code": code_identity(), "evidence_code_sha256": evidence_sha256,
@@ -238,13 +168,7 @@ def begin_invocation(journal: dict[str, Any], *, evidence_sha256: str,
 
 
 def summed_seconds(invocations: Sequence[Mapping[str, Any]]) -> dict[str, float]:
-    """Add up the time each phase took over all invocations.
-
-    Args: invocations: journal invocations.
-    Returns: phase -> seconds to a tenth.
-    Raises: None.
-    Side effects: none.
-    """
+    """Add up the time each phase took over all invocations."""
     total: Counter[str] = Counter()
     for invocation in invocations:
         total.update(invocation["seconds"])
@@ -252,13 +176,7 @@ def summed_seconds(invocations: Sequence[Mapping[str, Any]]) -> dict[str, float]
 
 
 def invocation_summaries(invocations: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """Condense the journal for the manifest.
-
-    Args: invocations: journal invocations.
-    Returns: one entry per invocation: times, outcome, what it did, where it ran and which code.
-    Raises: KeyError for a malformed entry.
-    Side effects: none.
-    """
+    """Condense the journal for the manifest."""
     return [{"started_at": i["started_at"], "finished_at": i["finished_at"],
              "outcome": i["outcome"], "seconds": {k: round(v, 1) for k, v in i["seconds"].items()},
              "retrieval": i["retrieval"], "scoring": i["scoring"], "python": i["python"],
@@ -268,14 +186,7 @@ def invocation_summaries(invocations: Sequence[Mapping[str, Any]]) -> list[dict[
 
 def model_summary(records: Mapping[str, Mapping[str, Any]],
                   invocations: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    """Describe the model and devices that produced the stored scores.
-
-    Args: records: scores records by slot id; invocations: journal invocations.
-    Returns: model, revision and batch size from the records, how many slots each device scored
-    and the library versions of the latest invocation that loaded the model.
-    Raises: None.
-    Side effects: none.
-    """
+    """Describe the model and devices that produced the stored scores."""
     scoring = [record.get("scoring") or {} for record in records.values()]
     first = scoring[0] if scoring else {}
     devices = Counter(s.get("device") for s in scoring)

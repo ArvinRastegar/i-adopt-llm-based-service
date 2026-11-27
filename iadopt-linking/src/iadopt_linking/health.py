@@ -1,9 +1,4 @@
-"""Run health: the checks a run must pass, the retrieval summary and the report's notes.
-
-Everything here is a function of stored evidence; nothing reads a file or calls a service. A check
-has three states: True (passed), False (failed, which stops the run) and None (not run, shown as
-such and refused for every check except the device cross-check, which may be skipped).
-"""
+"""Run health: the checks a run must pass, the retrieval summary and the report's notes."""
 
 from __future__ import annotations
 
@@ -44,27 +39,12 @@ OPTIONAL_CHECKS = (CHECK_DEVICE,)
 
 
 def check(name: str, passed: bool | None, detail: str) -> dict[str, Any]:
-    """Form one check result.
-
-    Args: name: the check's name; passed: True, False, or None when it was not run; detail: the
-    numbers behind the result.
-    Returns: {"name", "passed", "detail"}.
-    Raises: None.
-    Side effects: none.
-    """
+    """Form one check result."""
     return {"name": name, "passed": passed, "detail": detail}
 
 
 def population_check(slots: Sequence[Slot], counts: Mapping[str, int]) -> dict[str, Any]:
-    """Check that every linked node is either scored or left out for a stated reason.
-
-    Args: slots: the population; counts: population counts, with ``gold_links`` counted from the
-    gold's own link lists rather than by the population loop.
-    Returns: the check; it passes when the gold's links, the population loop's links and the sum
-    of scored, label-only and non-vocabulary nodes agree, and the slots match the scored count.
-    Raises: None.
-    Side effects: none.
-    """
+    """Check that every linked node is either scored or left out for a stated reason."""
     kept = counts.get("slots", 0)
     label_only = counts.get("excluded_label_only", 0)
     other = counts.get("excluded_non_vocabulary", 0)
@@ -76,14 +56,7 @@ def population_check(slots: Sequence[Slot], counts: Mapping[str, int]) -> dict[s
 
 def retrieval_checks(keys: Sequence[str], history: Sequence[Mapping[str, Any]] | None,
                      releases: Mapping[str, Any] | None) -> list[dict[str, Any]]:
-    """Check the retrieval evidence.
-
-    Args: keys: query keys; history: every stored retrieval record in file order, or None when
-    retrieval has not run; releases: merge_releases output, or None.
-    Returns: the four retrieval checks in REQUIRED_CHECKS order.
-    Raises: None.
-    Side effects: none.
-    """
+    """Check the retrieval evidence."""
     names = (CHECK_RETRIEVED, CHECK_ANSWERED, CHECK_HASHES, CHECK_RELEASES)
     if history is None:
         return [check(name, None, "not run yet") for name in names]
@@ -132,14 +105,7 @@ def retrieval_checks(keys: Sequence[str], history: Sequence[Mapping[str, Any]] |
 
 def scoring_checks(slots: Sequence[Slot], records: Mapping[str, Mapping[str, Any]] | None,
                    max_description_chars: int | None) -> list[dict[str, Any]]:
-    """Check the scoring evidence.
-
-    Args: slots: the population; records: scores records by slot id, or None when scoring has
-    not run; max_description_chars: the description cap the run asked for.
-    Returns: the four scoring checks in REQUIRED_CHECKS order.
-    Raises: None.
-    Side effects: none.
-    """
+    """Check the scoring evidence."""
     names = (CHECK_SCORED, CHECK_RANGE, CHECK_LIMIT, CHECK_CONFIG)
     if records is None:
         return [check(name, None, "not run yet") for name in names]
@@ -170,13 +136,7 @@ def scoring_checks(slots: Sequence[Slot], records: Mapping[str, Mapping[str, Any
 
 
 def device_consistency_check(device: Mapping[str, Any] | None) -> dict[str, Any]:
-    """Turn a device cross-check into its check result.
-
-    Args: device: devices.device_check output, or None when it was not run.
-    Returns: the check; None when the cross-check was skipped.
-    Raises: KeyError for a malformed result.
-    Side effects: none.
-    """
+    """Turn a device cross-check into its check result."""
     if device is None:
         return check(CHECK_DEVICE, None, "the cross-device check was not run")
     return check(CHECK_DEVICE, device_passed(device), describe_device_check(device))
@@ -188,30 +148,14 @@ def build_checks(*, slots: Sequence[Slot], counts: Mapping[str, int], keys: Sequ
                  releases: Mapping[str, Any] | None = None,
                  records: Mapping[str, Mapping[str, Any]] | None = None,
                  device: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """List every required check with its current state.
-
-    Args: slots, counts, keys: the population; max_description_chars: the asked-for cap; history:
-    stored retrieval records or None; releases: merged release probes or None; records: scores
-    records by slot id or None; device: device cross-check or None.
-    Returns: one result per REQUIRED_CHECKS name, in that order; a phase that has not run
-    contributes "not run" results.
-    Raises: None.
-    Side effects: none.
-    """
+    """List every required check with its current state."""
     return [population_check(slots, counts), *retrieval_checks(keys, history, releases),
             *scoring_checks(slots, records, max_description_chars),
             device_consistency_check(device)]
 
 
 def ensure_checks(checks: Sequence[Mapping[str, Any]], *, final: bool) -> None:
-    """Stop the run if a check failed, or, for a final report, if one was not run.
-
-    Args: checks: build_checks output; final: True before a report is written.
-    Returns: None.
-    Raises: RunError naming each failed check and its numbers; with final, also each check that
-    was not run, except those in OPTIONAL_CHECKS.
-    Side effects: none.
-    """
+    """Stop the run if a check failed, or, for a final report, if one was not run."""
     failed = [c for c in checks if c["passed"] is False]
     if failed:
         raise RunError("health check failed: " + "; ".join(
@@ -224,30 +168,14 @@ def ensure_checks(checks: Sequence[Mapping[str, Any]], *, final: bool) -> None:
 
 
 def _spread(values: Sequence[float]) -> dict[str, float | None]:
-    """Describe a list of durations.
-
-    Args: values: seconds.
-    Returns: median and maximum to milliseconds; None for both when there are none.
-    Raises: None.
-    Side effects: none.
-    """
+    """Describe a list of durations."""
     if not values:
         return {"median": None, "max": None}
     return {"median": round(statistics.median(values), 3), "max": round(max(values), 3)}
 
 
 def retrieval_summary(history: Sequence[Mapping[str, Any]], keys: Sequence[str]) -> dict[str, Any]:
-    """Summarise retrieval health per source, counting failures that were later repeated.
-
-    Args: history: every stored retrieval record in file order; keys: query keys.
-    Returns: per source: keys answered, empty results, candidate-count distribution, candidates
-    and how many lack a description, the longest description, requests that needed an HTTP retry
-    with the causes, failed requests that were repeated with the causes, and service and wall
-    time; for QUDT also the distinct kinds, the vocabularies defining them and the number of
-    kinds outside the core vocabulary.
-    Raises: None.
-    Side effects: none.
-    """
+    """Summarise retrieval health per source, counting failures that were later repeated."""
     wanted = set(keys)
     mine = [r for r in history if r["query_key"] in wanted]
     final: dict[tuple[str, str], Mapping[str, Any]] = {}
@@ -285,14 +213,7 @@ def retrieval_summary(history: Sequence[Mapping[str, Any]], keys: Sequence[str])
 
 
 def evidence_period(history: Sequence[Mapping[str, Any]], keys: Sequence[str]) -> dict[str, Any]:
-    """Say when the retrieved evidence was gathered.
-
-    Args: history: stored retrieval records in file order; keys: query keys.
-    Returns: the earliest and latest retrieval time of the answers in use; None for both when
-    there are none.
-    Raises: None.
-    Side effects: none.
-    """
+    """Say when the retrieved evidence was gathered."""
     wanted = set(keys)
     final: dict[tuple[str, str], Mapping[str, Any]] = {}
     for record in history:
@@ -306,15 +227,7 @@ def notes_for(*, counts: Mapping[str, int], retrieval: Mapping[str, Any],
               summary: Mapping[str, Any], device: Mapping[str, Any] | None,
               releases: Mapping[str, Any], period: Mapping[str, Any],
               max_description_chars: int | None) -> list[str]:
-    """Write the caveats a reader of the report needs, from this run's own numbers.
-
-    Args: counts: population counts; retrieval: retrieval_summary output; summary: metrics
-    summary; device: device cross-check or None; releases: merged release probes; period:
-    evidence_period output; max_description_chars: the description cap.
-    Returns: one sentence per caveat.
-    Raises: KeyError for a malformed input.
-    Side effects: none.
-    """
+    """Write the caveats a reader of the report needs, from this run's own numbers."""
     pops = summary["populations"]
     om = retrieval["om"]
     cap = (f"cut to {max_description_chars} characters when a document is built"

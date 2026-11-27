@@ -1,14 +1,4 @@
-"""Export the best-scoring configuration's 97 answers to an Excel workbook.
-
-The winning configuration is found by searching every fully-scored configuration across
-the three comparable full grids, not hardcoded, and the overall Close F1 that wins is
-re-derived from per-variable receipts and checked against the value the ranking stored.
-Per-variable and per-component scores are likewise recomputed from stored contributions
-with exact rational arithmetic and cross-checked against the scorer's own recorded F1, so
-the workbook cannot drift from the database.
-
-Usage:  .venv/bin/python ops/export-best-configuration.py [--out PATH]
-"""
+"""Export the best-scoring configuration's 97 answers to an Excel workbook."""
 
 from __future__ import annotations
 

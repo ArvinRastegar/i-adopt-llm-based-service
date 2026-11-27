@@ -1,9 +1,4 @@
-"""Pool the candidates of all sources for each slot and score them with one reranker.
-
-A scorer sees only recorded candidates, so it can never reach a retrieval service, and the same
-pool is available to every scorer that is compared on it later. Every scored record carries the
-configuration that produced it, so a folder can never silently mix description caps or models.
-"""
+"""Pool the candidates of all sources for each slot and score them with one reranker."""
 
 from __future__ import annotations
 
@@ -27,13 +22,7 @@ class PoolError(ValueError):
 
 
 def scoring_provenance(scorer: Scorer, max_description_chars: int | None) -> dict[str, Any]:
-    """Describe what produced a score, to be stored in every record it scores.
-
-    Args: scorer: the reranker; max_description_chars: description cap in force.
-    Returns: model, revision, device and batch size when the scorer reports them, plus the cap.
-    Raises: None.
-    Side effects: may load the model, because describing it needs its revision.
-    """
+    """Describe what produced a score, to be stored in every record it scores."""
     describe = getattr(scorer, "describe", None)
     described = describe() if describe is not None else {}
     return {**{k: described.get(k) for k in PROVENANCE_FIELDS},
@@ -42,15 +31,7 @@ def scoring_provenance(scorer: Scorer, max_description_chars: int | None) -> dic
 
 def pool_candidates(slot: Slot, retrieved: Mapping[tuple[str, str], Mapping[str, Any]],
                     sources: Sequence[str]) -> list[dict[str, Any]]:
-    """Gather one slot's candidates from every source in a fixed source order.
-
-    Args: slot: the slot; retrieved: (source, query key) -> successful retrieval record;
-    sources: source names in pooling order.
-    Returns: candidates with source, rank, IRI, identity, label, description and extras.
-    Raises: PoolError for a missing retrieval, a candidate whose IRI belongs to another
-    vocabulary than its source, or more than RESULT_LIMIT candidates from a source.
-    Side effects: none.
-    """
+    """Gather one slot's candidates from every source in a fixed source order."""
     pool: list[dict[str, Any]] = []
     for name in sources:
         record = retrieved.get((name, slot.query_key))
@@ -72,29 +53,14 @@ def pool_candidates(slot: Slot, retrieved: Mapping[tuple[str, str], Mapping[str,
 
 
 def slot_query(slot: Slot) -> str:
-    """Form the plain query a slot is scored with.
-
-    Args: slot: the slot.
-    Returns: the legacy query text; the term keeps its case, the definition its words.
-    Raises: None.
-    Side effects: none.
-    """
+    """Form the plain query a slot is scored with."""
     return build_query(normalise_term(slot.term), slot.definition)
 
 
 def score_slot(slot: Slot, pool: Sequence[dict[str, Any]], scorer: Scorer,
                max_description_chars: int | None,
                provenance: Mapping[str, Any] | None = None) -> dict[str, Any]:
-    """Score one slot's pool.
-
-    Args: slot: the slot; pool: pool_candidates output; scorer: the reranker;
-    max_description_chars: description cap used to build documents; provenance: scoring
-    provenance to store with the record.
-    Returns: the scores record: slot fields, gold identity, query text, the scored pool and the
-    provenance.
-    Raises: ScoreError if the scorer returns a wrong count or an impossible score.
-    Side effects: model inference.
-    """
+    """Score one slot's pool."""
     query = slot_query(slot)
     documents = [build_document(c["label"], c["description"], max_description_chars) for c in pool]
     scores = validate_scores(scorer.score(query, documents), len(documents)) if documents else []
@@ -113,16 +79,7 @@ def score_all(slots: Sequence[Slot], retrieved: Mapping[tuple[str, str], Mapping
               scorer: Scorer, store: JsonlStore, *, sources: Sequence[str],
               max_description_chars: int | None,
               progress: Callable[[int, int], None] | None = None) -> Counter[str]:
-    """Score every slot that has no record yet.
-
-    Args: slots: the population; retrieved: successful retrieval records; scorer: the reranker;
-    store: scores JSONL; sources: pooling order; max_description_chars: description cap;
-    progress: callback(done, total) after each slot.
-    Returns: counters: scored, skipped, reused (same variable, same query text), empty_pool.
-    Raises: PoolError for missing or inconsistent candidates, or when existing records were
-    scored with another description cap or another model revision; ScoreError from scoring.
-    Side effects: model inference; one appended, fsynced line per scored slot.
-    """
+    """Score every slot that has no record yet."""
     recorded = latest(store.read(), lambda record: record["slot_id"])
     caps = {(record.get("scoring") or {}).get("max_description_chars") for record in recorded.values()}
     if caps and caps != {max_description_chars}:
@@ -163,23 +120,11 @@ class _Replay:
     """Reuse the scores of an identical earlier slot (same variable, same query text)."""
 
     def __init__(self, record: Mapping[str, Any]) -> None:
-        """Remember the earlier record's scores.
-
-        Args: record: a scores record for the identical query.
-        Returns: None.
-        Raises: None.
-        Side effects: none.
-        """
+        """Remember the earlier record's scores."""
         self._scores = [candidate["score"] for candidate in record["pool"]]
 
     def score(self, query: str, documents: Sequence[str]) -> list[float]:
-        """Return the remembered scores.
-
-        Args: query: ignored; documents: must match the remembered count.
-        Returns: the remembered scores.
-        Raises: ValueError if the document count differs.
-        Side effects: none.
-        """
+        """Return the remembered scores."""
         if len(documents) != len(self._scores):
             raise ValueError("Replayed pool differs from the original pool")
         return list(self._scores)

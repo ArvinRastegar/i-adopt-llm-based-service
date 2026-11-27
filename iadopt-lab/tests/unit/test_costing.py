@@ -15,11 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def _estimate_inputs():
-    """Build a six-task/two-provider synthetic plan with fully artificial price evidence.
-
-    Args: none. Returns: (plan,prompt_evidence,billing,assumptions) fixture tuple.
-    Raises: fixture configuration errors. Side effects: public parameter read only.
-    """
+    """Build a six-task/two-provider synthetic plan with fully artificial price evidence."""
     config = synthetic_configuration(load_parameters(ROOT / "parameters.yml"))
     identities = {key: key + "-fixture" for key in ("corpus", "population", "prompts", "schema", "scorer", "runtime")}
     targets = [{"variable_id": "fixture-" + str(number)} for number in range(3)]
@@ -37,12 +33,7 @@ def _estimate_inputs():
 
 
 def test_exact_cost_excludes_nonbilled_provider_but_retains_calls():
-    """Calculate hand-checked costs while retaining PSNC request counts at explicit zero charge.
-
-    Args: none. Returns: None.
-    Raises: AssertionError on Decimal arithmetic or non-billed data loss.
-    Side effects: public YAML read only; no price fetch or live call.
-    """
+    """Calculate hand-checked costs while retaining PSNC request counts at explicit zero charge."""
     result = estimate_campaign_cost(*_estimate_inputs())
     assert result["ready"] and result["totals"]["initial_calls"] == 6
     assert result["totals"]["maximum_calls"] == 18
@@ -54,11 +45,7 @@ def test_exact_cost_excludes_nonbilled_provider_but_retains_calls():
 
 
 def test_retry_input_contains_base_and_immediate_previous_output():
-    """Count correction-request input growth instead of multiplying only original call cost.
-
-    Args: none. Returns: None.
-    Raises: AssertionError on incorrect retry cost model. Side effects: YAML read only.
-    """
+    """Count correction-request input growth instead of multiplying only original call cost."""
     plan, prompts, billing, assumptions = _estimate_inputs()
     assumptions.update(attempt2_fraction="0.5", attempt3_fraction="0.25")
     result = estimate_campaign_cost(plan, prompts, billing, assumptions)
@@ -70,11 +57,7 @@ def test_retry_input_contains_base_and_immediate_previous_output():
 
 @pytest.mark.parametrize("change", ["price", "fx", "billing_basis", "token_coverage", "ceiling", "reasoning", "output_assumption"])
 def test_missing_evidence_never_becomes_zero_or_ready(change):
-    """Keep missing rates/tokens/ceilings visible as unavailable or blocked estimates.
-
-    Args: missing-evidence mutation name. Returns: None.
-    Raises: AssertionError on silently invented zero/ready state. Side effects: YAML read only.
-    """
+    """Keep missing rates/tokens/ceilings visible as unavailable or blocked estimates."""
     plan, prompts, billing, assumptions = _estimate_inputs()
     paid = billing["models"]["openrouter/synthetic-fixture-v1"]
     if change == "price":
@@ -98,11 +81,7 @@ def test_missing_evidence_never_becomes_zero_or_ready(change):
 
 
 def test_estimate_plan_binding_and_deterministic_identity():
-    """Bind every estimate to exact plan and evidence; changes require a new identity.
-
-    Args: none. Returns: None.
-    Raises: AssertionError for stale-plan or hash errors. Side effects: YAML read only.
-    """
+    """Bind every estimate to exact plan and evidence; changes require a new identity."""
     inputs = _estimate_inputs()
     first = estimate_campaign_cost(*inputs)
     assert first == estimate_campaign_cost(*copy.deepcopy(inputs))
@@ -116,11 +95,7 @@ def test_estimate_plan_binding_and_deterministic_identity():
 
 @pytest.mark.parametrize("a2,a3", [("0.25", "0.5"), ("1.1", "0"), ("0", "-0.1")])
 def test_invalid_retry_fractions(a2, a3):
-    """Reject impossible continuation fractions before calculating an estimate.
-
-    Args: invalid second/third-attempt fractions. Returns: None.
-    Raises: AssertionError on invalid estimate acceptance. Side effects: YAML read only.
-    """
+    """Reject impossible continuation fractions before calculating an estimate."""
     plan, prompts, billing, assumptions = _estimate_inputs()
     assumptions.update(attempt2_fraction=a2, attempt3_fraction=a3)
     with pytest.raises(LabError):
@@ -129,23 +104,13 @@ def test_invalid_retry_fractions(a2, a3):
 
 @pytest.mark.parametrize("value", [True, False, "NaN", "Infinity", "-1", "not-number"])
 def test_invalid_money_quantities(value):
-    """Reject boolean, negative, malformed and non-finite monetary values.
-
-    Args: invalid numeric input. Returns: None.
-    Raises: AssertionError on unsafe Decimal acceptance. Side effects: none.
-    """
+    """Reject boolean, negative, malformed and non-finite monetary values."""
     with pytest.raises(LabError):
         decimal_value(value)
 
 
 def test_price_card_must_cover_every_planned_model(tmp_path):
-    """The blocker: a ready zero-cost estimate preceded a mid-run crash on model two.
-
-    `cost_policy` raises for an uncovered model, and it raises from inside the worker
-    pool where the failure cancels unrelated in-flight tasks. The check therefore has to
-    happen once, up front, against the whole plan - and a non-billed provider is not
-    exempt, because an evidenced zero is still evidence.
-    """
+    """The blocker: a ready zero-cost estimate preceded a mid-run crash on model two."""
     import yaml
 
     from iadopt_lab.cli import _live_services

@@ -1,44 +1,5 @@
 #!/usr/bin/env python
-"""Thirty-shot extension of the shot-count ablation — EXPLORATORY, not the official experiment.
-
-Question: the ten-shot ablation left `Qwen3.8-27B` still climbing at its ceiling. Where does
-it actually stop? This carries the same model and configuration out to thirty examples.
-
-What changed from `shot_count_ablation.py`
-------------------------------------------
-* One model only (`Qwen3.8-27B`), at the identical configuration.
-* Shot levels 0/1/3/5/7/10/15/20/25/30.
-* The reserved pool grows from ten variables to thirty, so the evaluation population shrinks
-  from 92 to 72.
-
-That last point makes this **not comparable to the ten-shot run's numbers**, even at the shot
-levels they share: a different set of variables is being scored. Only the trend within this
-run is meaningful. The results therefore go to their own file rather than extending the
-existing one, whose resume key would otherwise silently mix two populations.
-
-Pool construction
------------------
-Positions 1-10 are the frozen ten of the earlier ablation, in their order, so the prompts at
-0/1/3/5/7/10 are byte-identical to that run. The twenty additions are stratified by domain so
-the completed thirty mirrors the corpus distribution (Life 9, Natural 9, Social 6, Technical
-6 against a corpus of 29.4/28.4/21.6/20.6%).
-
-The frozen ten are badly skewed on their own — five of ten are Social Sciences against a
-corpus share of 21.6%, and only one is Natural Sciences against 28.4% — so the twenty are
-allocated to *correct* that rather than to be proportional among themselves. Being
-proportional among themselves would carry the skew through to the final pool.
-
-Their order is chosen greedily: at each step the domain that leaves the cumulative pool
-closest to the corpus distribution wins, ties broken alphabetically and within a domain by
-sorted `variable_id`. That keeps the intermediate prefixes at 15, 20 and 25 shots
-domain-balanced too, instead of feeding the model a run of one domain.
-
-Isolation
----------
-Identical to the ten-shot ablation: lives in `few-shot-selection/`, which no artifact collector
-walks; writes no campaign, run or task row; reads `parameters.yml` for nothing; writes only
-`few-shot-selection/output/`. Its results cannot enter an official ranking.
-"""
+"""Thirty-shot extension of the shot-count ablation — EXPLORATORY, not the official experiment."""
 
 from __future__ import annotations
 
@@ -86,12 +47,7 @@ TIMEOUT = 120.0
 
 
 def _quota(total: int, counts: Counter) -> dict[str, int]:
-    """Apportion `total` slots across domains by largest remainder.
-
-    Args: total: slots to hand out; counts: domain -> corpus frequency.
-    Returns: domain -> integer slots, summing exactly to `total`.
-    Side Effects: none. Deterministic.
-    """
+    """Apportion `total` slots across domains by largest remainder."""
     size = sum(counts.values())
     exact = {domain: counts[domain] / size * total for domain in counts}
     base = {domain: int(value) for domain, value in exact.items()}
@@ -102,13 +58,7 @@ def _quota(total: int, counts: Counter) -> dict[str, int]:
 
 
 def extend_pool(records: list[dict], base: list[dict]) -> list[dict]:
-    """Grow the frozen ten-variable pool to thirty, domain-representative at every prefix.
-
-    Args: records: all canonical corpus rows; base: the frozen ten, in their order.
-    Returns: thirty rows - `base` unchanged at the front, then the twenty additions.
-    Raises: ValueError when a domain cannot supply its allocation.
-    Side Effects: none. Deterministic, so the pool is reproducible without storing it.
-    """
+    """Grow the frozen ten-variable pool to thirty, domain-representative at every prefix."""
     corpus = Counter(row["category"] for row in records)
     share = {domain: corpus[domain] / sum(corpus.values()) for domain in corpus}
     quota = _quota(POOL_SIZE, corpus)

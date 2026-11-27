@@ -1,21 +1,4 @@
-"""A PSNC chat model as a scorer on the baseline's frozen candidates (DECISIONS L-016 and L-017).
-
-This module is the second ``Experiment`` of the engine in ``jev_experiment``: the same slots, the
-same candidates, the same candidate orders and the same evaluator as the Jev run, with a chat model
-asked the same question as a numbered list and its answer read from the log-probabilities of its
-first token (``chat_choice``). It differs from the Jev experiment only where the service does:
-
-- the service is not billed to the owner, so a run is limited by a number of requests, not money;
-- a chat model has no vendor-documented confidence value, so the "confidence" signal is the
-  probability of its own choice, and the formula check of Jev's documented value is not made;
-- there is no pointwise arm (one yes/no per candidate would need one request per candidate);
-- the run can be compared with a finished Jev run on the same slots (``reference``), the second
-  pre-specified comparison, from that run's published and hash-verified outcomes.
-
-Requests are sent one at a time by default: answers depend slightly on what else the server is
-processing (identical requests sent concurrently gave different probabilities in development,
-identical requests sent one after another did not).
-"""
+"""A PSNC chat model as a scorer on the baseline's frozen candidates (DECISIONS L-016 and L-017)."""
 
 from __future__ import annotations
 
@@ -89,15 +72,7 @@ SIGNALS = ["llm_selected_probability", "llm_confidence", "llm_margin", "llm_cand
 
 
 def analysis_plan() -> dict[str, Any]:
-    """Write the analysis down before the data exist.
-
-    Args: none.
-    Returns: the plan stored in plan.json before the first request: the primary result, the
-    pre-specified comparison with Jev, the bootstrap, the confidence signals and what is
-    exploratory.
-    Raises: None.
-    Side effects: none.
-    """
+    """Write the analysis down before the data exist."""
     return {
         "primary": {
             "pass": PRIMARY_PASS, "population": "reachable: gold in Wikidata, QUDT or OM",
@@ -131,18 +106,7 @@ def analysis_plan() -> dict[str, Any]:
 # --- the reference run ---
 
 def load_reference(folder: Path | str, baseline: Baseline) -> dict[str, Any]:
-    """Read a finished Jev run's per-slot outcomes after proving it is what it says it is.
-
-    Args: folder: the Jev results folder; baseline: the verified baseline of this run.
-    Returns: its identity (folder, experiment and the hashes of its responses, plan and outcomes,
-    which are its evidence; a rebuilt report does not change them) and its outcomes by slot id,
-    each shaped like an evaluate_slot outcome as far as a comparison needs.
-    Raises: RunError for a folder without a manifest, a file that no longer matches its hash, a
-    run that is not a finished Jev run with its primary pass over this baseline's candidates, one
-    that failed a check, or an outcomes file that does not cover exactly this run's slots (so a
-    pilot is a valid reference only for a pilot of the same variables).
-    Side effects: filesystem reads; hashing.
-    """
+    """Read a finished Jev run's per-slot outcomes after proving it is what it says it is."""
     root = Path(folder)
     path = root / "manifest.json"
     try:
@@ -185,15 +149,7 @@ def load_reference(folder: Path | str, baseline: Baseline) -> dict[str, Any]:
 
 
 def plan_extra(reference: Path | str | None, baseline: Baseline) -> dict[str, Any]:
-    """Name the reference run in the plan, so a rerun cannot quietly use another.
-
-    Args: reference: the Jev results folder, or None; baseline: this run's verified baseline.
-    Returns: {} without a reference, otherwise {"reference": its identity}.
-    Raises: RunError as load_reference, and when the reference is not in the baseline's parent
-    folder: the plan stores only its name, and the report phase (a rebuild included) looks it up
-    there, so a reference anywhere else would pass planning, cost every request and then fail.
-    Side effects: filesystem reads.
-    """
+    """Name the reference run in the plan, so a rerun cannot quietly use another."""
     if reference is None:
         return {}
     here = Path(os.path.abspath(baseline.root)).parent
@@ -206,15 +162,7 @@ def plan_extra(reference: Path | str | None, baseline: Baseline) -> dict[str, An
 
 def extra_analysis(plan: Mapping[str, Any], baseline: Baseline, results: Mapping[str, Any],
                    analysis: Mapping[str, Any]) -> dict[str, Any]:
-    """Compare the primary pass with the reference run on the same slots.
-
-    Args: plan: the stored plan; baseline: the verified baseline (the reference folder is looked up
-    beside it); results: pass_results by pass name; analysis: the analysis so far.
-    Returns: {} for a run without a reference, otherwise {"reference": ...} with the reference's
-    top-1 on each population and the paired, term-level and equivalence comparisons.
-    Raises: RunError if the reference folder changed since the plan named it.
-    Side effects: filesystem reads; hashing.
-    """
+    """Compare the primary pass with the reference run on the same slots."""
     if "reference" not in plan:
         return {}
     named = plan["reference"]
@@ -243,14 +191,7 @@ def extra_analysis(plan: Mapping[str, Any], baseline: Baseline, results: Mapping
 # --- checks, notes, accounting ---
 
 def tokens_of(text: str | None) -> tuple[int, int] | None:
-    """Read the tokens a stored response says it used, whether or not it was a valid answer.
-
-    Args: text: a response body, or None.
-    Returns: (prompt tokens, completion tokens), or None when the text is not JSON or reports no
-    usable counts.
-    Raises: None.
-    Side effects: none.
-    """
+    """Read the tokens a stored response says it used, whether or not it was a valid answer."""
     if text is None:
         return None
     try:
@@ -268,16 +209,7 @@ def chat_checks(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mappin
                 problems: Mapping[str, Sequence[Any]], *, history: Sequence[Mapping[str, Any]],
                 inputs: Mapping[str, int], cap_usd: Decimal | None,
                 max_requests: int | None, model: str = MODEL) -> list[dict[str, Any]]:
-    """Run every check on the stored evidence of a chat-model run.
-
-    Args: tasks: the requests; recorded: latest stored exchange per task key; parsed and problems:
-    read_answers output; history: every stored exchange, including superseded failures; inputs:
-    counts from the baseline verification; cap_usd and max_requests: unused (the service is not
-    billed, and its request limit was enforced while asking); model: the model asked.
-    Returns: the checks, in the order REQUIRED_CHAT_CHECKS lists them.
-    Raises: None.
-    Side effects: none.
-    """
+    """Run every check on the stored evidence of a chat-model run."""
     total = len(tasks)
     done = [recorded[t.key] for t in tasks if t.key in parsed]
     retried = sum(r["attempts"] > 1 for r in done)
@@ -341,16 +273,7 @@ def chat_checks(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mappin
 def chat_spend(parsed: Mapping[Any, Mapping[str, Any]], recorded: Mapping[Any, Mapping[str, Any]],
                history: Sequence[Mapping[str, Any]], cap_usd: Decimal | None,
                plan: Mapping[str, Any], max_requests: int | None = None) -> dict[str, Any]:
-    """Account for what the run used.
-
-    Args: parsed: parsed answers; recorded: the latest stored exchange per task; history: every
-    stored exchange, rejected ones included; cap_usd: unused; plan: the stored plan; max_requests:
-    the request limit of the invocation.
-    Returns: answered requests with their tokens, the service's latency, the request limit, and the
-    fact that the service is not billed to the owner.
-    Raises: KeyError for a malformed answer.
-    Side effects: none.
-    """
+    """Account for what the run used."""
     latencies = [r["request_s"] for r in history if r.get("request_s") is not None]
     return {"requests": len(parsed),
             "responses_stored": sum(r.get("response_text") is not None for r in history),
@@ -371,17 +294,7 @@ def chat_notes(summary: Mapping[str, Any], counts: Mapping[str, int], asked: Map
                margin_ties: tuple[int, int], rejected: Mapping[str, int], cap: int | None,
                has_repeat: bool, parsed: Mapping[Any, Mapping[str, Any]], model: str = MODEL
                ) -> list[str]:
-    """Write the report's notes from this run's numbers.
-
-    Args: summary: the run summary; counts: population counts; asked: slots and empty pools;
-    margin_ties: (primary selections that tie with their runner-up, primary selections that have
-    a runner-up); rejected: reason -> number of stored responses that failed the validity rule
-    and were asked again; cap: the description cap the model saw; has_repeat: whether an identical
-    repeat pass was run; parsed: parsed answers; model: the model asked.
-    Returns: the notes.
-    Raises: KeyError for a malformed summary.
-    Side effects: none.
-    """
+    """Write the report's notes from this run's numbers."""
     pops = summary["primary"]["populations"]
     unreachable = pops.get("unreachable", {"n": 0})["n"]
     ties, with_runner_up = margin_ties
@@ -448,14 +361,7 @@ def chat_notes(summary: Mapping[str, Any], counts: Mapping[str, int], asked: Map
 
 def chat_model_block(parsed: Mapping[Any, Mapping[str, Any]], plan: Mapping[str, Any]
                      ) -> dict[str, Any]:
-    """Describe the model asked and the build that answered.
-
-    Args: parsed: parsed answers; plan: the stored plan.
-    Returns: requested and served model, the provider, the server builds seen, and the request
-    parameters.
-    Raises: KeyError for a malformed answer or plan.
-    Side effects: none.
-    """
+    """Describe the model asked and the build that answered."""
     return {"requested": plan["model"]["requested"],
             "served": sorted({a["model"] for a in parsed.values()}),
             "providers": sorted({str(a["provider"]) for a in parsed.values()}),
@@ -467,13 +373,7 @@ def chat_model_block(parsed: Mapping[Any, Mapping[str, Any]], plan: Mapping[str,
 # --- the voice ---
 
 def _cost_sentence(manifest: Mapping[str, Any]) -> str:
-    """Say how many requests were answered and what they used.
-
-    Args: manifest: run manifest.
-    Returns: the sentence that follows the period of the requests in the header.
-    Raises: KeyError if the manifest lacks a field.
-    Side effects: none.
-    """
+    """Say how many requests were answered and what they used."""
     spend = manifest["spend"]
     seconds = spend["request_seconds"]
     workers = [i["workers"] for i in manifest["invocations"] if i["asking"]]
@@ -487,13 +387,7 @@ def _cost_sentence(manifest: Mapping[str, Any]) -> str:
 
 
 def _intro(manifest: Mapping[str, Any]) -> str:
-    """Describe how the model was asked and what the primary result is.
-
-    Args: manifest: run manifest.
-    Returns: the paragraph that follows the identity paragraph.
-    Raises: KeyError if the manifest lacks a field.
-    Side effects: none.
-    """
+    """Describe how the model was asked and what the primary result is."""
     cap = manifest["prompt"]["max_description_chars"]
     name = manifest["model"]["requested"]
     phrases = {"shuffle-a": "an identical repeat of the primary request",
@@ -524,13 +418,7 @@ def _intro(manifest: Mapping[str, Any]) -> str:
 
 
 def _confidence_notes(analysis: Mapping[str, Any]) -> list[str]:
-    """Say what the own-choice probability measures when the model refuses.
-
-    Args: analysis: the analysis block.
-    Returns: the paragraphs that follow the signals table, as Markdown lines.
-    Raises: KeyError for a malformed analysis.
-    Side effects: none.
-    """
+    """Say what the own-choice probability measures when the model refuses."""
     a = analysis["abstention"]
     return ["", "The model has no confidence value of its own; its own-choice probability is the "
             "probability of the option it answered with, `none_of_these` included. For "
@@ -541,13 +429,7 @@ def _confidence_notes(analysis: Mapping[str, Any]) -> list[str]:
 
 
 def _reference_sections(summary: Mapping[str, Any], voice_name: str) -> list[str]:
-    """Write the comparison with the reference (Jev) run.
-
-    Args: summary: the run summary; voice_name: the model's name.
-    Returns: Markdown lines; none for a run without a reference.
-    Raises: KeyError for a malformed summary.
-    Side effects: none.
-    """
+    """Write the comparison with the reference (Jev) run."""
     ref = summary["analysis"].get("reference")
     if ref is None:
         return []
@@ -577,26 +459,14 @@ def _reference_sections(summary: Mapping[str, Any], voice_name: str) -> list[str
 
 
 def _paired_sentence(block: Mapping[str, Any], voice_name: str) -> str:
-    """Show the paired counts of two systems in one sentence.
-
-    Args: block: compare output; voice_name: the first system.
-    Returns: a sentence naming the slots both got right, only one got right, and neither.
-    Raises: KeyError for a malformed block.
-    Side effects: none.
-    """
+    """Show the paired counts of two systems in one sentence."""
     return (f"On the {block['n']} reachable slots both are right on {block['both']}, only "
             f"{voice_name} on {block['only_first']}, only Jev on {block['only_second']} and "
             f"neither on {block['neither']}.")
 
 
 def voice_for(model: str) -> Voice:
-    """Name a chat model for the published files.
-
-    Args: model: the PSNC model id.
-    Returns: the voice that describes it.
-    Raises: None.
-    Side effects: none.
-    """
+    """Name a chat model for the published files."""
     return Voice(
         key="llm", name=model, own_confidence_word="an own-choice probability",
         own_confidence_short="own-choice probability",
@@ -615,26 +485,13 @@ def voice_for(model: str) -> Voice:
 # --- the experiment ---
 
 def _client(env_file: str | None, root: Path) -> RedactingChatClient:
-    """Build the client for a real run.
-
-    Args: env_file: credential file or None; root: iadopt-lab root, whose parent holds ``.env``.
-    Returns: a chat client that holds the key privately and redacts the forms of failure text that
-    ``chat.scrub`` leaves (``chat_redact``).
-    Raises: RunError when no key can be read or the base URL is not allowed.
-    Side effects: reads the credential file.
-    """
+    """Build the client for a real run."""
     key, base_url = credentials_from(env_file or _default_env(root), os.environ)
     return RedactingChatClient(key, base_url=base_url)
 
 
 def _model_plan(model: str) -> dict[str, Any]:
-    """Describe the model and the service for the plan.
-
-    Args: model: the PSNC model id.
-    Returns: the model requested, the gateway host and the billing basis.
-    Raises: None.
-    Side effects: none.
-    """
+    """Describe the model and the service for the plan."""
     return {"requested": model, "gateway": "llm.hpc.psnc.pl",
             "billing": "not billed to the owner (owner-reported free access, recorded in the lab's "
                        "parameters.yml); the run is limited by a number of requests"}
@@ -643,11 +500,7 @@ def _model_plan(model: str) -> dict[str, Any]:
 def chat_experiment(model: str = MODEL) -> Experiment:
     """Describe the experiment of one PSNC chat model.
 
-    Args: model: the PSNC model id; it must have a measured way to turn reasoning off.
-    Returns: the experiment the engine runs.
-    Raises: KeyError for a model without one.
-    Side effects: none.
-    """
+    The model must have a measured way to turn reasoning off."""
     if model not in REASONING_OFF:
         raise KeyError(f"{model!r} has no measured control for turning reasoning off; known: "
                        f"{sorted(REASONING_OFF)}")
@@ -677,19 +530,7 @@ def run_chat(out_dir: Path | str, *, baseline_dir: Path | str, max_requests: int
              only: Sequence[str] | None = None, passes: Sequence[str] | None = None,
              workers: int = 1, run_id: str | None = None, resamples: int = DEFAULT_RESAMPLES,
              client_factory: Any = None, reference: Path | str | None = None) -> dict[str, Any]:
-    """Run the whole experiment of a PSNC chat model: verify, plan, ask, check, analyse, report.
-
-    Args: out_dir: results folder; baseline_dir: the finished baseline to compare against and take
-    candidates from; max_requests: the request limit (required while requests are pending);
-    model: the PSNC model id; env_file: credential file defining PSNC_API_KEY, used only when
-    requests are pending; lab_root: iadopt-lab root; only: variable stems for a pilot; passes: pass
-    names (default all); workers: parallel requests (one by default, see the module docstring);
-    run_id: name recorded in the manifest; resamples: bootstrap replicates; client_factory:
-    injectable for tests; reference: a finished Jev run on the same candidates to compare with.
-    Returns: the manifest.
-    Raises: as run_experiment; KeyError for a model without a measured reasoning control.
-    Side effects: network I/O, files in out_dir.
-    """
+    """Run the whole experiment of a PSNC chat model: verify, plan, ask, check, analyse, report."""
     return run_experiment(chat_experiment(model), out_dir, baseline_dir=baseline_dir,
                           max_requests=max_requests, env_file=env_file, lab_root=lab_root,
                           only=only, passes=passes, workers=workers, run_id=run_id,

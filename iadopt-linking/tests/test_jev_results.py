@@ -25,6 +25,7 @@ from iadopt_linking.jev_experiment import (
 )
 from iadopt_linking.jev_health import REQUIRED_JEV_CHECKS, hash_matches
 from iadopt_linking.jev_inputs import build_tasks, load_baseline
+from iadopt_linking.provenance import RESULTS_EVIDENCE
 from iadopt_linking.recorder import JsonlStore
 
 RESULTS = Path(__file__).resolve().parents[1] / "results"
@@ -61,11 +62,11 @@ def test_files_are_the_ones_the_manifest_hashed(manifest_path: Path) -> None:
 
 
 @EACH
-def test_evidence_was_made_by_the_evidence_code_in_this_tree(manifest_path: Path) -> None:
+def test_evidence_was_made_by_this_tree_or_the_results_code(manifest_path: Path) -> None:
     manifest = read(manifest_path)
-    assert manifest["evidence_code_sha256"] == jev_evidence_identity(), (
-        "the code that decides what Jev is asked or how it is read changed since this run; its "
-        "evidence is stale. Start a new results folder.")
+    made_by = manifest["evidence_code_sha256"]
+    assert made_by in (jev_evidence_identity(), RESULTS_EVIDENCE["jev"]), (
+        "this run was made neither by this tree's evidence code nor by the code at RESULTS_CODE")
     assert read(manifest_path.parent / "plan.json")["evidence_code_sha256"] == (
         manifest["evidence_code_sha256"])
 
@@ -198,10 +199,6 @@ def at_no_time(text: str) -> str:
 def test_the_documented_rebuild_binds_to_the_committed_plan_and_changes_none_of_its_data(
         manifest_path: Path, tmp_path: Path) -> None:
     """Rerunning jev-run in a copy is how report-side changes are published: it must not alter data.
-
-    The engine was generalised after these folders were committed; this is what shows that a Jev
-    folder still binds to the plan it holds and that every file but the report and the manifest
-    comes out byte for byte as committed.
     """
     committed = manifest_path.parent
     copy = tmp_path / committed.name

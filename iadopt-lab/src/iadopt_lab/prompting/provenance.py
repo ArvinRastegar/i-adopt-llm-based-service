@@ -20,17 +20,7 @@ PROMPTS = (
 
 
 def build_prompt_registry(repository: Path | str, project_root: Path | str) -> dict[str, Any]:
-    """Verify historical Git bytes and record exact adapted-template unified diffs.
-
-    Args: local experiment Git repository with immutable January commit and lab root
-    containing the three already authored compatibility templates.
-    Actions: read historical blobs only, assert known hashes and conservative text,
-    record full historical bytes, template hashes, diff and adaptation classification.
-    Returns: timestamp-free JSON-compatible registry with self-excluding content hash.
-    Raises: ValueError for changed reference or missing no-inference instructions;
-    subprocess/filesystem errors for inaccessible evidence.
-    Side effects: read-only Git/template access; no legacy imports or network calls.
-    """
+    """Verify historical Git bytes and record exact adapted-template unified diffs."""
     repo, root = Path(repository), Path(project_root)
     entries = []
     for family, display, filename, expected in PROMPTS:
@@ -56,13 +46,7 @@ def build_prompt_registry(repository: Path | str, project_root: Path | str) -> d
 
 
 def materialize_prompt_registry(repository: Path | str, project_root: Path | str) -> dict[str, Any]:
-    """Publish a verified immutable prompt registry for runtime use.
-
-    Args: historical local Git repository and iadopt-lab root with templates.
-    Returns: exact registry mapping also written as canonical UTF-8 JSON.
-    Raises: provenance verification errors or existing-artifact content conflicts.
-    Side effects: creates only data/manifests/prompt-registry-v1.json; no provider calls.
-    """
+    """Publish a verified immutable prompt registry for runtime use."""
     registry = build_prompt_registry(repository, project_root)
     raw = json.dumps(registry, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     _write_immutable(Path(project_root) / "data/manifests/prompt-registry-v1.json", raw)

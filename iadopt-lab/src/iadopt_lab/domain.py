@@ -32,13 +32,7 @@ class ProviderResult:
     raw_response_base64: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        """Copy the complete result into persistence-safe JSON primitives.
-
-        Args: None beyond this immutable record.
-        Returns: Independent dictionary of all available response evidence.
-        Raises: TypeError if a caller constructed a non-copyable field.
-        Side Effects: None; no parsing or extra network request.
-        """
+        """Copy the complete result into persistence-safe JSON primitives."""
         return asdict(self)
 
 

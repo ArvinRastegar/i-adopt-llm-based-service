@@ -12,20 +12,7 @@ from .configuration import Configuration, ConfigurationError, resolve_configurat
 
 def expand_campaign(configuration: Configuration, targets: list[dict] | tuple[dict, ...],
                     *, artifact_identities: dict, mode: str = "live") -> dict[str, Any]:
-    """Expand the selected-provider union into deterministic configurations, runs and tasks.
-
-    Args:
-        configuration: Resolved, plan-ready snapshot; live authorization is not required.
-        targets: Canonical non-demonstration records. Real plans require exactly 97.
-        artifact_identities: Verified corpus, population, prompts, schema, scorer and runtime hashes.
-        mode: ``live`` for the real population or explicitly labelled ``synthetic`` fixtures.
-    Returns:
-        JSON-compatible plan with every owned run/task, exact call counts and SHA-256 identity.
-    Raises:
-        ConfigurationError: Unresolved settings, wrong/duplicate population or missing artifacts.
-    Side Effects:
-        None. Input order is canonicalized; no credential, database or network access occurs.
-    """
+    """Expand the selected-provider union into deterministic configurations, runs and tasks."""
     if configuration.issues:
         raise ConfigurationError("Cannot freeze a draft plan: " + "; ".join(configuration.issues))
     if mode not in {"live", "synthetic"}:
@@ -93,17 +80,7 @@ def expand_campaign(configuration: Configuration, targets: list[dict] | tuple[di
 
 
 def synthetic_configuration(original: Configuration) -> Configuration:
-    """Create a separate tiny, explicit test snapshot without modifying live parameters.
-
-    Args:
-        original: Schema-valid user YAML snapshot supplying accepted scientific policies.
-    Returns:
-        Resolved snapshot with two mock-owned model IDs, three target fixtures and no live rights.
-    Raises:
-        ConfigurationError: Original policy is incompatible with fixture resolution.
-    Side Effects:
-        None. The original file and snapshot are unchanged; no real model is simulated by name.
-    """
+    """Create a separate tiny, explicit test snapshot without modifying live parameters."""
     data = original.data
     # Mirror whichever providers the base configuration actually carries; hardcoding
     # both breaks a deliberately single-provider campaign.

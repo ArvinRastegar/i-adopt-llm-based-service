@@ -1,14 +1,5 @@
 #!/usr/bin/env python
-"""Render the shot-count ablation JSONL into its own Excel workbook.
-
-Kept separate from the official reporting path on purpose: this reads only the ablation's
-own results file and writes only into `few-shot-selection/output/`, so nothing it produces can be
-mistaken for, or merged into, an official ranking.
-
-Aggregation matches the official experiment — micro metrics via `aggregate_items`, summing
-contributions across variables and computing F1 once — so the numbers mean the same thing
-as the ones in the official rankings.
-"""
+"""Render the shot-count ablation JSONL into its own Excel workbook."""
 
 from __future__ import annotations
 

@@ -1,12 +1,4 @@
-"""Generate the top-configurations results document straight from stored evidence.
-
-Every figure is recomputed from `evaluation_item` receipts with exact rational
-arithmetic, never copied from a summary, and the overall F1 it derives is checked
-against the value the ranking stored. Run it again and the document regenerates; the
-numbers cannot drift from the database because nothing is transcribed by hand.
-
-Usage:  .venv/bin/python ops/report-top-configurations.py [--top N] [--out PATH]
-"""
+"""Generate the top-configurations results document straight from stored evidence."""
 
 from __future__ import annotations
 

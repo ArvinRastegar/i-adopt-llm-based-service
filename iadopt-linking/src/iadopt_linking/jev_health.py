@@ -1,10 +1,4 @@
-"""Run health for a scorer's run: what must hold before its numbers are allowed to mean anything.
-
-Everything here is a function of stored evidence: nothing reads a file or calls a service. A check
-has the baseline's three states (passed, failed, not run) and the baseline's rule that a failed
-check stops the run before a report is written. A paid response is stored by the worker that
-received it whether or not it is a valid answer; the checks judge what is stored.
-"""
+"""Run health for a scorer's run: what must hold before its numbers are allowed to mean anything."""
 
 from __future__ import annotations
 
@@ -43,26 +37,14 @@ hash_matches = response_hash_matches
 
 
 def answered_ok(record: Mapping[str, Any] | None) -> bool:
-    """Say whether a stored exchange is a finished, successful answer.
-
-    Args: record: the latest stored exchange for a task, or None.
-    Returns: True for a 200 with text, no error, no parse error and a matching hash.
-    Raises: None.
-    Side effects: none.
-    """
+    """Say whether a stored exchange is a finished, successful answer."""
     return (record is not None and record.get("status") == 200 and record.get("error") is None
             and record.get("parse_error") is None and record.get("response_text") is not None
             and hash_matches(record))
 
 
 def parse_answer(task: Task, text: str) -> dict[str, Any]:
-    """Read a response to a task with the parser for its arm.
-
-    Args: task: the request; text: the response body.
-    Returns: parse_choice or parse_noul output.
-    Raises: JevError if the response is not a valid answer to that request.
-    Side effects: none.
-    """
+    """Read a response to a task with the parser for its arm."""
     if task.spec.arm == ARM_CHOICE:
         return parse_choice(text, task.offered)
     return parse_noul(text, task.offered)
@@ -71,16 +53,7 @@ def parse_answer(task: Task, text: str) -> dict[str, Any]:
 def read_answers(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mapping[str, Any]],
                  parse: Callable[[Task, str], dict[str, Any]] | None = None
                  ) -> tuple[dict[tuple[str, str], dict[str, Any]], dict[str, list[Any]]]:
-    """Parse every stored answer and sort out the tasks that have none.
-
-    Args: tasks: the requests of the run; recorded: the latest stored exchange per task key; parse:
-    the scorer's answer parser (Jev's by default).
-    Returns: parsed answers by task key, and the problems: ``missing`` (never sent), ``failed``
-    (sent, no usable response), ``bad_hash`` and ``unparseable`` (a response that is not a valid
-    answer, with the reason).
-    Raises: None; a parser bug (anything but JevError) propagates.
-    Side effects: none.
-    """
+    """Parse every stored answer and sort out the tasks that have none."""
     parse = parse or parse_answer
     parsed: dict[tuple[str, str], dict[str, Any]] = {}
     problems: dict[str, list[Any]] = {"missing": [], "failed": [], "bad_hash": [], "unparseable": []}
@@ -101,16 +74,7 @@ def read_answers(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mappi
 
 
 def reported_cost(text: str | None) -> Decimal | None:
-    """Read the cost a response reports, whether or not the response is a valid answer.
-
-    A response the validity rule rejects was still paid for, so its cost has to be counted.
-
-    Args: text: a response body, or None.
-    Returns: ``usage.cost`` in USD rounded to a picodollar, or None when the text is not JSON or
-    carries no usable cost (missing, negative, not finite, or too large to represent).
-    Raises: None.
-    Side effects: none.
-    """
+    """Read the cost a response reports, whether or not the response is a valid answer."""
     if text is None:
         return None
     try:
@@ -130,14 +94,7 @@ def reported_cost(text: str | None) -> Decimal | None:
 def history_spend(history: Sequence[Mapping[str, Any]],
                   cost_of: Callable[[str | None], Decimal | None] | None = None
                   ) -> tuple[Decimal, int]:
-    """Add up what every stored response cost, valid or rejected.
-
-    Args: history: every stored exchange in file order; cost_of: reads the cost a response text
-    reports (Jev's ``usage.cost`` by default).
-    Returns: the exact total in USD and how many stored 200 responses report no cost.
-    Raises: None.
-    Side effects: none.
-    """
+    """Add up what every stored response cost, valid or rejected."""
     cost_of = cost_of or reported_cost
     total, unpriced = Decimal(0), 0
     for record in history:
@@ -151,13 +108,7 @@ def history_spend(history: Sequence[Mapping[str, Any]],
 
 
 def unverified(history: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
-    """Find stored exchanges whose response no longer matches its hash, superseded ones included.
-
-    Args: history: every stored exchange in file order.
-    Returns: the exchanges that fail the hash check.
-    Raises: None.
-    Side effects: none.
-    """
+    """Find stored exchanges whose response no longer matches its hash, superseded ones included."""
     return [record for record in history if not hash_matches(record)]
 
 
@@ -165,16 +116,7 @@ def jev_checks(tasks: Sequence[Task], recorded: Mapping[tuple[str, str], Mapping
                parsed: Mapping[tuple[str, str], Mapping[str, Any]],
                problems: Mapping[str, Sequence[Any]], *, history: Sequence[Mapping[str, Any]],
                inputs: Mapping[str, int], cap_usd: Decimal | None) -> list[dict[str, Any]]:
-    """Run every check on the stored evidence.
-
-    Args: tasks: the requests; recorded: latest stored exchange per task key; parsed and problems:
-    read_answers output; history: every stored exchange, including superseded failures; inputs:
-    counts from the baseline verification (slots, candidates, files); cap_usd: the spending cap,
-    or None for no cap.
-    Returns: the checks in REQUIRED_JEV_CHECKS order.
-    Raises: None.
-    Side effects: none.
-    """
+    """Run every check on the stored evidence."""
     total = len(tasks)
     done = [recorded[t.key] for t in tasks if t.key in parsed]
     retried = sum(r["attempts"] > 1 for r in done)

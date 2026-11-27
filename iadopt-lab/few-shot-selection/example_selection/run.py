@@ -1,14 +1,5 @@
 #!/usr/bin/env python
-"""Entry point for the example-selection optimization — see README.md and contracts/.
-
-EXPLORATORY side experiment. Writes no campaign, run or task row; reads nothing from
-`parameters.yml`; writes only under `few-shot-selection/example_selection/output/`. Its results
-cannot enter an official ranking.
-
-    ./run.py --plan-only            # budget and split, no provider calls
-    ./run.py --subsets 12 --reps 2  # end-to-end smoke test
-    ./run.py                        # full run, resumable
-"""
+"""Entry point for the example-selection optimization — see README.md and contracts/."""
 
 from __future__ import annotations
 
@@ -34,12 +25,7 @@ from iadopt_lab.corpus.ingestion import load_canonical_records  # noqa: E402
 def _falsification(confirm: dict) -> dict:
     """Decide whether the attribution model learned anything real.
 
-    Args: confirm: per-candidate held-out statistics from stage D.
-    Returns: {"passed": bool, "margin_bottom": float, "margin_random": float}.
-    Raises: nothing.
-    Side Effects: none. The top-25 must beat BOTH controls; the bottom-25 arm is attenuated
-        by its necessary 10-member overlap, so the random arm carries equal weight.
-    """
+    The top-25 must beat both controls."""
     top = confirm.get("top25", {}).get("mean", 0.0)
     bottom = confirm.get("bottom25", {}).get("mean", 0.0)
     randoms = [row["mean"] for name, row in confirm.items() if name.startswith("random-")]

@@ -1,14 +1,4 @@
-"""Twenty checks that a live campaign is behaving the way the finished ones did.
-
-Run every ten minutes by `ops/healthcheck.sh`. Each check states the observed baseline
-it is judged against, so a failure says what changed rather than only that something
-did. Thresholds sit well outside the range both completed campaigns produced: these
-detect breakage, not mediocrity, because a model scoring badly is a result and a
-campaign that has stopped scoring at all is an incident.
-
-Checks skip rather than fail while a sample is too small; a fresh campaign should not
-alarm anyone in its first minute.
-"""
+"""Twenty checks that a live campaign is behaving the way the finished ones did."""
 
 from __future__ import annotations
 
@@ -27,11 +17,7 @@ def test_the_supervisor_process_is_alive(health):
 
 
 def test_work_is_actually_in_flight(health):
-    """Leases are the only proof that requests are being made right now.
-
-    A campaign row can say `running` for days after its process died, so liveness has to
-    be read from leases, not from the state column.
-    """
+    """Leases are the only proof that requests are being made right now."""
     if health["settled"] >= health["total"]:
         pytest.skip("campaign has finished; no leases expected")
     assert health["leases"] > 0, (
@@ -40,11 +26,7 @@ def test_work_is_actually_in_flight(health):
 
 
 def test_settled_work_advanced_since_the_previous_check(health):
-    """Ten minutes of a healthy campaign always settles more tasks.
-
-    This is the check that would have caught the whitespace deadlock: the supervisor was
-    alive and retrying, the provider was ready, and nothing moved for two hours.
-    """
+    """Ten minutes of a healthy campaign always settles more tasks."""
     previous = health["previous"]
     if previous is None:
         pytest.skip("first run for this campaign; nothing to compare against")
@@ -65,10 +47,7 @@ def test_settled_work_advanced_since_the_previous_check(health):
 
 
 def test_throughput_is_in_a_workable_band(health):
-    """Far below the observed rate means something is throttling or retrying hard.
-
-    Both completed campaigns sustained well over 1,000 attempts/hour at concurrency 8.
-    """
+    """Far below the observed rate means something is throttling or retrying hard."""
     previous = health["previous"]
     if previous is None or health["settled"] >= health["total"]:
         pytest.skip("needs a previous check and unfinished work")
@@ -144,11 +123,7 @@ def test_the_valid_json_rate_has_not_collapsed(health):
 
 
 def test_every_model_is_producing_valid_output(health):
-    """A single collapsed model is invisible in the campaign-wide average.
-
-    In `844df00e` one model's scattered failures cost 33 of its 36 configurations while
-    the overall numbers still looked healthy.
-    """
+    """A single collapsed model is invisible in the campaign-wide average."""
     sampled = {model: stats for model, stats in health["per_model"].items()
                if stats["responses"] >= MIN_SAMPLE}
     if not sampled:
@@ -165,11 +140,7 @@ def test_every_model_is_producing_valid_output(health):
 
 
 def test_truncation_stays_negligible(health):
-    """Both completed campaigns truncated zero times; the ceiling is 8,000 tokens.
-
-    A truncated answer is a terminal failure that cannot be retried, so a rising rate
-    directly erodes how many configurations end up rankable.
-    """
+    """Both completed campaigns truncated zero times; the ceiling is 8,000 tokens."""
     if health["responses"] < MIN_SAMPLE:
         pytest.skip(f"only {health['responses']} responses so far")
     assert health["truncation_rate"] <= 0.02, (
@@ -178,11 +149,7 @@ def test_truncation_stays_negligible(health):
 
 
 def test_predictions_fill_the_two_universal_fields(health):
-    """Every gold decomposition has hasProperty and hasObjectOfInterest, all 97 of them.
-
-    Predictions filled them 94.8-98.5% of the time. A collapse means the model has
-    stopped decomposing and is emitting near-empty objects that still pass the schema.
-    """
+    """Every gold decomposition has hasProperty and hasObjectOfInterest, all 97 of them."""
     if health["predictions"] < MIN_SAMPLE:
         pytest.skip(f"only {health['predictions']} predictions so far")
     assert health["property_filled"] >= 0.70 and health["object_filled"] >= 0.70, (
@@ -200,11 +167,7 @@ def test_empty_predictions_stay_rare(health):
 
 
 def test_scores_are_in_range_and_not_degenerate(health):
-    """F1 must stay in [0,1], and an all-zero distribution means scoring is broken.
-
-    Zero-F1 share was 37.5% and 47.0%; universally zero would mean gold and prediction
-    are no longer being compared to each other at all.
-    """
+    """F1 must stay in [0,1], and an all-zero distribution means scoring is broken."""
     if health["scored"] < MIN_SAMPLE:
         pytest.skip(f"only {health['scored']} evaluations so far")
     assert 0.0 <= health["f1_min"] and health["f1_max"] <= 1.0, (
@@ -250,11 +213,7 @@ def test_the_projected_total_stays_under_the_cap(health):
 
 
 def test_permanent_losses_stay_below_the_rankability_line(health):
-    """Lost tasks are never retried and destroy whole configurations.
-
-    In `844df00e`, 144 losses spread across one model left 3 of its 36 configurations
-    rankable. 1% of the population is the point where that starts to bite.
-    """
+    """Lost tasks are never retried and destroy whole configurations."""
     if health["settled"] < MIN_SAMPLE:
         pytest.skip(f"only {health['settled']} tasks settled")
     share = health["lost"] / health["settled"]
@@ -265,10 +224,7 @@ def test_permanent_losses_stay_below_the_rankability_line(health):
 
 
 def test_every_model_is_progressing(health):
-    """Provider-fair scheduling should keep all five models moving together.
-
-    One model starved of work distorts the comparison the experiment exists to make.
-    """
+    """Provider-fair scheduling should keep all five models moving together."""
     if health["complete"] < MIN_SAMPLE * 5:
         pytest.skip(f"only {health['complete']} tasks complete; too early to compare models")
     # No assertion on the model count: it is read from this campaign's own resolved runs,

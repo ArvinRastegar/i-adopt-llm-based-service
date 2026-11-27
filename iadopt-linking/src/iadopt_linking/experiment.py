@@ -1,10 +1,6 @@
 """The baseline experiment: plan, retrieve, score, check, report, with a health gate per phase.
 
-Phases append to evidence files in one results folder, so any phase can be rerun and resumes where
-it stopped. ``plan.json`` binds the folder to the code, corpus, population and configuration that
-started it, and ``provenance.json`` journals every invocation. A failed check stops the run with a
-named reason before the next phase; a report is written only when every check that must run passed.
-"""
+A report is written only when every check that must run passed."""
 
 from __future__ import annotations
 
@@ -77,68 +73,32 @@ class Paths:
 
     @property
     def candidates(self) -> Path:
-        """Return the retrieval JSONL path.
-
-        Args: none.
-        Returns: path of candidates.jsonl.
-        Raises: None.
-        Side effects: none.
-        """
+        """Return the retrieval JSONL path."""
         return self.root / "candidates.jsonl"
 
     @property
     def scores(self) -> Path:
-        """Return the scores JSONL path.
-
-        Args: none.
-        Returns: path of scores.jsonl.
-        Raises: None.
-        Side effects: none.
-        """
+        """Return the scores JSONL path."""
         return self.root / "scores.jsonl"
 
     def named(self, name: str) -> Path:
-        """Return a file inside the results folder.
-
-        Args: name: file name.
-        Returns: its path.
-        Raises: None.
-        Side effects: none.
-        """
+        """Return a file inside the results folder."""
         return self.root / name
 
     def has_evidence(self) -> bool:
-        """Say whether the folder already holds retrieval, scoring or provenance data.
-
-        Args: none.
-        Returns: True when any of those files exists and is not empty.
-        Raises: None.
-        Side effects: filesystem checks.
-        """
+        """Say whether the folder already holds retrieval, scoring or provenance data."""
         return any(path.is_file() and path.stat().st_size > 0
                    for path in (self.candidates, self.scores, self.named("provenance.json")))
 
 
 def log(message: str) -> None:
-    """Print a timestamped progress line immediately.
-
-    Args: message: text to print.
-    Returns: None.
-    Raises: None.
-    Side effects: writes to stdout and flushes.
-    """
+    """Print a timestamped progress line immediately."""
     print(f"{now_utc()[11:19]} {message}", flush=True)
 
 
 @contextmanager
 def timed(seconds: dict[str, float], phase: str) -> Iterator[None]:
-    """Add the time a block takes to a phase's total, even when the block fails.
-
-    Args: seconds: phase -> seconds; phase: the phase's name.
-    Returns: a context manager.
-    Raises: whatever the block raises.
-    Side effects: updates ``seconds``.
-    """
+    """Add the time a block takes to a phase's total, even when the block fails."""
     started = time.monotonic()
     try:
         yield
@@ -148,14 +108,7 @@ def timed(seconds: dict[str, float], phase: str) -> Iterator[None]:
 
 def load_population(lab_root: Path | str | None = None, only: Sequence[str] | None = None
                     ) -> tuple[tuple[GoldVariable, ...], tuple[Slot, ...], dict[str, int]]:
-    """Load the gold and select the scored slots, optionally for a few variables.
-
-    Args: lab_root: iadopt-lab root; only: variable file stems to keep (a pilot).
-    Returns: the variables kept, their slots and the population counts, which include
-    ``gold_links``: the links as the gold lists them, counted apart from the population loop.
-    Raises: UsageError for a stem that matches no variable.
-    Side effects: filesystem reads.
-    """
+    """Load the gold and select the scored slots, optionally for a few variables."""
     variables = load_gold_links(lab_root)
     if only:
         wanted = set(only)
@@ -169,24 +122,12 @@ def load_population(lab_root: Path | str | None = None, only: Sequence[str] | No
 
 
 def query_keys(slots: Sequence[Slot]) -> list[str]:
-    """List the distinct retrieval queries a population needs.
-
-    Args: slots: the population.
-    Returns: sorted distinct query keys.
-    Raises: None.
-    Side effects: none.
-    """
+    """List the distinct retrieval queries a population needs."""
     return sorted({slot.query_key for slot in slots})
 
 
 def run_config(max_description_chars: int | None) -> dict[str, Any]:
-    """Describe the configuration that shapes a run's evidence.
-
-    Args: max_description_chars: description cap, or None for no cap.
-    Returns: result limit, sources, cap and the reranker's query and document templates.
-    Raises: None.
-    Side effects: none.
-    """
+    """Describe the configuration that shapes a run's evidence."""
     return {"result_limit_per_source": RESULT_LIMIT, "sources": list(SOURCE_NAMES),
             "max_description_chars": max_description_chars,
             "rerank_query": 'Definition of "{term}" in context: "{definition}"',
@@ -196,16 +137,7 @@ def run_config(max_description_chars: int | None) -> dict[str, Any]:
 def bind_to_run(paths: Paths, *, evidence_sha256: str, only: Sequence[str] | None,
                 keys: Sequence[str], counts: Mapping[str, int], config: Mapping[str, Any],
                 corpus: Mapping[str, Any]) -> dict[str, Any]:
-    """Tie a results folder to the run that starts it, or check that this run continues it.
-
-    Args: paths: results folder; evidence_sha256: hash of the evidence-producing code; only:
-    pilot filter or None; keys: query keys; counts: population counts; config: run_config
-    output; corpus: corpus_identity output.
-    Returns: the plan, as stored in plan.json.
-    Raises: RunError when plan.json cannot be read or differs in code, variables, configuration,
-    corpus or queries, or when the folder holds evidence but no plan.
-    Side effects: writes plan.json for a new folder.
-    """
+    """Tie a results folder to the run that starts it, or check that this run continues it."""
     expected: dict[str, Any] = {
         "evidence_code_sha256": evidence_sha256, "only": sorted(only) if only else None,
         "config": dict(config), "corpus": dict(corpus), "query_keys": list(keys)}
@@ -232,39 +164,19 @@ def bind_to_run(paths: Paths, *, evidence_sha256: str, only: Sequence[str] | Non
 
 
 def save_journal(paths: Paths, journal: Mapping[str, Any]) -> None:
-    """Write the provenance journal.
-
-    Args: paths: results folder; journal: the journal.
-    Returns: None.
-    Raises: TypeError or ValueError for a value JSON cannot hold.
-    Side effects: replaces provenance.json atomically.
-    """
+    """Write the provenance journal."""
     write_json(paths.named("provenance.json"), journal)
 
 
 def retrieval_phase(paths: Paths, keys: Sequence[str], *, client: PoliteClient,
                     max_minutes: float, sources: Mapping[str, Any] = SOURCES
                     ) -> tuple[dict[tuple[str, str], Mapping[str, Any]], Counter[str]]:
-    """Retrieve every (source, key) and prove none failed.
-
-    Args: paths: results folder; keys: query keys; client: HTTP client; max_minutes: wall-clock
-    budget for this call; sources: name -> source.
-    Returns: the successful retrieval records keyed by (source, key), and the pass's counters.
-    Raises: RetrievalTimeout when the budget runs out; RunError when any request still has no
-    successful record. Rerunning resumes and retries only the failures.
-    Side effects: network I/O; appends to candidates.jsonl.
-    """
+    """Retrieve every (source, key) and prove none failed."""
     store = JsonlStore(paths.candidates)
     started = time.monotonic()
 
     def show(done: int, total: int, record: Mapping[str, Any]) -> None:
-        """Print retrieval progress.
-
-        Args: done: requests finished; total: requests pending; record: the one just stored.
-        Returns: None.
-        Raises: None.
-        Side effects: writes to stdout.
-        """
+        """Print retrieval progress."""
         failed = not is_ok(record)
         if failed or done % 20 == 0 or done == total:
             elapsed = time.monotonic() - started
@@ -290,68 +202,32 @@ class LazyScorer:
     """Load the reranker on first use, so a run that only rebuilds its report never loads it."""
 
     def __init__(self, factory: Callable[[str | None], Any], device: str | None) -> None:
-        """Remember how to build the scorer.
-
-        Args: factory: device -> scorer; device: the device to ask for, or None for the default.
-        Returns: None.
-        Raises: None.
-        Side effects: none until the scorer is first used.
-        """
+        """Remember how to build the scorer."""
         self._factory, self._device, self._scorer = factory, device, None
 
     @property
     def loaded(self) -> bool:
-        """Say whether the model has been loaded.
-
-        Args: none.
-        Returns: True once the scorer exists.
-        Raises: None.
-        Side effects: none.
-        """
+        """Say whether the model has been loaded."""
         return self._scorer is not None
 
     def _get(self) -> Any:
-        """Build the scorer if it does not exist yet.
-
-        Args: none.
-        Returns: the scorer.
-        Raises: whatever the factory raises, for example a model missing from the local cache.
-        Side effects: may load the model.
-        """
+        """Build the scorer if it does not exist yet."""
         if self._scorer is None:
             self._scorer = self._factory(self._device)
         return self._scorer
 
     def score(self, query: str, documents: Sequence[str]) -> list[float]:
-        """Score documents with the underlying scorer.
-
-        Args: query: plain query text; documents: plain document texts.
-        Returns: one score per document.
-        Raises: whatever the scorer raises.
-        Side effects: may load the model; model inference.
-        """
+        """Score documents with the underlying scorer."""
         return self._get().score(query, documents)
 
     def describe(self) -> dict[str, Any]:
-        """Identify the model and runtime.
-
-        Args: none.
-        Returns: what the scorer reports about itself; empty when it reports nothing.
-        Raises: whatever loading raises.
-        Side effects: may load the model.
-        """
+        """Identify the model and runtime."""
         scorer = self._get()
         return scorer.describe() if hasattr(scorer, "describe") else {}
 
 
 def default_scorer(device: str | None) -> Scorer:
-    """Build the baseline reranker from the local model cache.
-
-    Args: device: "mps", "cpu" or None to prefer mps.
-    Returns: the Qwen3 reranker.
-    Raises: the loader's error when the weights are not in the local cache.
-    Side effects: loads about 2.4 GB of weights.
-    """
+    """Build the baseline reranker from the local model cache."""
     from .rerank import Qwen3Reranker
     return Qwen3Reranker(device)
 
@@ -359,25 +235,12 @@ def default_scorer(device: str | None) -> Scorer:
 def scoring_phase(paths: Paths, slots: Sequence[Slot], retrieved: Mapping[Any, Any],
                   scorer: Scorer, *, max_description_chars: int | None
                   ) -> tuple[dict[str, dict], Counter[str]]:
-    """Score every slot and prove none is missing.
-
-    Args: paths: results folder; slots: the population; retrieved: successful retrievals;
-    scorer: the reranker; max_description_chars: description cap.
-    Returns: the scores records keyed by slot id, and the pass's counters.
-    Raises: RunError when a slot has no record afterwards; PoolError or ScoreError from scoring.
-    Side effects: model inference; appends to scores.jsonl.
-    """
+    """Score every slot and prove none is missing."""
     store = JsonlStore(paths.scores)
     started = time.monotonic()
 
     def show(done: int, total: int) -> None:
-        """Print scoring progress.
-
-        Args: done: slots handled; total: slots in the population.
-        Returns: None.
-        Raises: None.
-        Side effects: writes to stdout.
-        """
+        """Print scoring progress."""
         if done % 25 == 0 or done == total:
             elapsed = time.monotonic() - started
             log(f"score {done}/{total} slots [{elapsed:.0f}s elapsed, "
@@ -396,15 +259,7 @@ def scoring_phase(paths: Paths, slots: Sequence[Slot], retrieved: Mapping[Any, A
 def device_phase(paths: Paths, journal: dict[str, Any], records: Mapping[str, Mapping[str, Any]],
                  primary: LazyScorer, make_scorer: Callable[[str | None], Any], *,
                  check_devices: bool, recheck_devices: bool) -> dict[str, Any] | None:
-    """Cross-check the scores on the other device, or reuse a passed check of these exact scores.
-
-    Args: paths: results folder; journal: the journal; records: scores records by slot id;
-    primary: the scorer that made them; make_scorer: device -> scorer; check_devices: False to
-    skip a new check; recheck_devices: True to ignore a stored result.
-    Returns: the check result, or None when none exists and none was asked for.
-    Raises: ScoreError if a scorer returns an impossible score.
-    Side effects: model inference on both devices; updates the journal.
-    """
+    """Cross-check the scores on the other device, or reuse a passed check of these exact scores."""
     scores_sha256 = file_sha256(paths.scores)
     stored = journal.get("device_check")
     if (stored and not recheck_devices and stored.get("passed")
@@ -420,13 +275,7 @@ def device_phase(paths: Paths, journal: dict[str, Any], records: Mapping[str, Ma
     started = time.monotonic()
 
     def show(done: int, total: int) -> None:
-        """Print device-check progress.
-
-        Args: done: slots rescored; total: slots to rescore.
-        Returns: None.
-        Raises: None.
-        Side effects: writes to stdout.
-        """
+        """Print device-check progress."""
         if done % 10 == 0 or done == total:
             elapsed = time.monotonic() - started
             log(f"device check {done}/{total} slots [{elapsed:.0f}s elapsed, "
@@ -445,17 +294,7 @@ def device_phase(paths: Paths, journal: dict[str, Any], records: Mapping[str, Ma
 def report_phase(paths: Paths, slots: Sequence[Slot], counts: Mapping[str, int],
                  keys: Sequence[str], *, plan: Mapping[str, Any], journal: dict[str, Any],
                  run_id: str, device: Mapping[str, Any] | None) -> dict[str, Any]:
-    """Evaluate the stored evidence and write summary, outcomes, report and manifest.
-
-    Args: paths: results folder; slots: population; counts: population counts; keys: query keys;
-    plan: the stored plan; journal: the provenance journal; run_id: name of the run; device:
-    device cross-check or None.
-    Returns: the manifest.
-    Raises: RunError if any check failed or a required check did not run; KeyError for a
-    malformed record.
-    Side effects: writes provenance.json, summary.json, outcomes.csv, report.md and, last,
-    manifest.json.
-    """
+    """Evaluate the stored evidence and write summary, outcomes, report and manifest."""
     history = JsonlStore(paths.candidates).read()
     scored = latest(JsonlStore(paths.scores).read(), lambda r: r["slot_id"])
     records = {slot.slot_id: scored[slot.slot_id] for slot in slots if slot.slot_id in scored}
@@ -497,17 +336,7 @@ def _execute(paths: Paths, journal: dict[str, Any], invocation: dict[str, Any], 
              plan: Mapping[str, Any], client: PoliteClient, primary: LazyScorer,
              make_scorer: Callable[[str | None], Any], max_retrieval_minutes: float,
              check_devices: bool, recheck_devices: bool, run_id: str) -> dict[str, Any]:
-    """Run the phases of one invocation, each behind its health checks.
-
-    Args: paths: results folder; journal and invocation: the provenance journal and this
-    invocation's entry; slots, counts, keys: the population; plan: the stored plan; client: HTTP
-    client; primary: the reranker; make_scorer: device -> scorer; max_retrieval_minutes:
-    retrieval budget; check_devices and recheck_devices: device cross-check options; run_id:
-    name recorded in the manifest.
-    Returns: the manifest.
-    Raises: RunError, RetrievalTimeout, PoolError or ScoreError; nothing is reported after one.
-    Side effects: network I/O, model inference, files in the results folder.
-    """
+    """Run the phases of one invocation, each behind its health checks."""
     seconds = invocation["seconds"]
     cap = plan["config"]["max_description_chars"]
     common: dict[str, Any] = {"slots": slots, "counts": counts, "keys": keys,
@@ -547,19 +376,7 @@ def run(out_dir: Path | str, *, lab_root: Path | str | None = None,
         client_factory: Callable[[], PoliteClient] | None = None,
         scorer_factory: Callable[[str | None], Any] | None = None,
         run_id: str | None = None) -> dict[str, Any]:
-    """Run the whole baseline: retrieve, score, check, report.
-
-    Args: out_dir: results folder; lab_root: iadopt-lab root; only: variable stems for a pilot;
-    max_retrieval_minutes: retrieval budget; max_description_chars: description cap; device:
-    reranker device; check_devices: False to skip a new cross-device check; recheck_devices:
-    True to repeat a stored one; client_factory and scorer_factory: injectable for tests;
-    run_id: name recorded in the manifest.
-    Returns: the manifest.
-    Raises: RunError, RetrievalTimeout, PoolError, ScoreError, StoreError or UsageError; nothing
-    is reported after one, and the journal records why the invocation stopped.
-    Side effects: network I/O, model inference, files in out_dir; removes an earlier
-    manifest.json at once, so an invocation that stops leaves no manifest behind.
-    """
+    """Run the whole baseline: retrieve, score, check, report."""
     paths = Paths(Path(out_dir))
     paths.root.mkdir(parents=True, exist_ok=True)
     root = resolve_lab_root(lab_root)

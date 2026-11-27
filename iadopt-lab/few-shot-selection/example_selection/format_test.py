@@ -1,32 +1,5 @@
 #!/usr/bin/env python
-"""Example-layout test: the study's one-line examples against output-shaped examples.
-
-EXPLORATORY side experiment, 2026-11-18. Not part of the official experiment: nothing it
-produces may enter an official ranking, campaign, results table or the paper. The plan and the
-results are recorded in the private paper repository,
-`paper/tracking/EXAMPLE_FORMAT_TEST_20261118.md`.
-
-Question. The example-selection study shows its 25 examples as one compact JSON line in which
-each answer comes before its definition and the fields are in alphabetical order, the reverse
-of the order the model is asked to answer in. Does showing each example as its definition
-followed by the exact JSON answer, in the field order and layout of the expected output,
-decompose better?
-
-Grid: {Qwen3.8-27B, GLM-5.2} x {A: the study's layout, B: output-shaped layout}, the study's
-winning `top25` examples, the 24 held-out confirmation variables `C`, 15 repetitions per cell.
-Only the examples block differs between A and B, and A is byte-identical to the prompt the
-study measured. GLM-5.3 was planned but failed the reasoning gate (with thinking off it never
-produced an answer); Arvin approved GLM-5.2 in its place on 2026-11-18.
-
-    ./format_test.py --plan-only    # fingerprints and call counts, no provider calls
-    ./format_test.py --probe        # reasoning-control probe on an invented target
-    ./format_test.py --run          # the grid, resumable; failed calls are retried on resume
-    ./format_test.py --score        # score the stored answers and write the summary
-
-Isolation as for the sibling runners: lives in `few-shot-selection/`, which no artifact
-collector walks; writes no campaign, run, task or evaluation row; writes only
-`few-shot-selection/example_selection/output/format-test-*`.
-"""
+"""Example-layout test: the study's one-line examples against output-shaped examples."""
 
 from __future__ import annotations
 
@@ -138,13 +111,7 @@ Transport = Callable[[Mapping[str, Any]], Awaitable[dict]]
 # --- prompts -----------------------------------------------------------------------------
 
 def _ordered(value: Any, order: Sequence[str]) -> Any:
-    """Re-key nested dicts into the given order; unknown keys follow, sorted.
-
-    Args: value: a JSON value; order: key order for this level (deeper levels use NESTED_KEYS).
-    Returns: an equal value whose dict keys follow the order.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Re-key nested dicts into the given order; unknown keys follow, sorted."""
     if isinstance(value, dict):
         keys = [k for k in order if k in value] + sorted(k for k in value if k not in order)
         return {k: _ordered(value[k], NESTED_KEYS) for k in keys}
@@ -154,24 +121,12 @@ def _ordered(value: Any, order: Sequence[str]) -> Any:
 
 
 def answer_text(gold: Mapping[str, Any]) -> str:
-    """Render a gold decomposition exactly as the model is expected to return it.
-
-    Args: gold: the six-field gold decomposition.
-    Returns: indent-2 JSON in the schema's field order, non-ASCII characters kept.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Render a gold decomposition exactly as the model is expected to return it."""
     return json.dumps(_ordered(gold, TOP_KEYS), ensure_ascii=False, indent=2)
 
 
 def examples_block_b(examples: Sequence[Mapping[str, Any]]) -> str:
-    """Render layout B: each example's definition followed by the answer it should produce.
-
-    Args: examples: corpus records with `definition` and `gold`, in prompt order.
-    Returns: the examples block, one `Example n` section per record.
-    Raises: KeyError when a record lacks `definition` or `gold`.
-    Side Effects: none. Deterministic.
-    """
+    """Render layout B: each example's definition followed by the answer it should produce."""
     return "\n\n".join(f"Example {n}\nDefinition: {example['definition']}\nOutput:\n"
                        f"{answer_text(example['gold'])}"
                        for n, example in enumerate(examples, 1))
@@ -179,14 +134,7 @@ def examples_block_b(examples: Sequence[Mapping[str, Any]]) -> str:
 
 def render_b(template: Any, schema_text: str, examples: Sequence[Mapping[str, Any]],
              definition: str) -> str:
-    """Render a layout-B prompt with format A's template and single substitution pass.
-
-    Args: template: the prompt version; schema_text: the schema JSON; examples: the 25 records;
-        definition: the target definition.
-    Returns: the full prompt; only the examples block differs from format A.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Render a layout-B prompt with format A's template and single substitution pass."""
     values = {"schema": schema_text, "demonstrations": examples_block_b(examples),
               "target_definition": definition}
     return re.sub(r"\{\{(schema|demonstrations|target_definition)\}\}",
@@ -197,37 +145,19 @@ RENDERERS = {"A": render_a, "B": render_b}
 
 
 def examples_block(prompt: str) -> str:
-    """Cut the examples block out of a rendered prompt, between the two template headings.
-
-    Args: prompt: a prompt rendered from the matrix-decomposition template.
-    Returns: the text between "ORDERED DEMONSTRATIONS" and "TARGET DEFINITION".
-    Raises: IndexError when the prompt lacks the first heading.
-    Side Effects: none. Deterministic.
-    """
+    """Cut the examples block out of a rendered prompt, between the two template headings."""
     return prompt.split("ORDERED DEMONSTRATIONS\n", 1)[1].split("\n\nTARGET DEFINITION", 1)[0]
 
 
 def sha256(text: str) -> str:
-    """Hash text for the fingerprints and the stored prompt identities.
-
-    Args: text: any string.
-    Returns: the SHA-256 hex digest of its UTF-8 bytes.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Hash text for the fingerprints and the stored prompt identities."""
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 # --- inputs ------------------------------------------------------------------------------
 
 def load_inputs(root: Path = ROOT) -> dict[str, Any]:
-    """Load corpus, held-out targets, examples, template and schema. No network, no secrets.
-
-    Args: root: the iadopt-lab root.
-    Returns: {"records", "targets", "examples", "template", "schema", "schema_text"}.
-    Raises: ValueError when the examples are not the study's top25 or overlap the targets.
-    Side Effects: reads local files only. Deterministic for a given corpus.
-    """
+    """Load corpus, held-out targets, examples, template and schema. No network, no secrets."""
     from iadopt_lab.corpus.ingestion import load_canonical_records
     from iadopt_lab.prompting.renderer import load_prompt_version
     from iadopt_lab.validation import load_schema_bytes
@@ -246,25 +176,13 @@ def load_inputs(root: Path = ROOT) -> dict[str, Any]:
 
 
 def prompt_for(inputs: Mapping[str, Any], fmt: str, definition: str) -> str:
-    """Render the prompt that one call sends.
-
-    Args: inputs: from `load_inputs`; fmt: "A" or "B"; definition: the target definition.
-    Returns: the full prompt text.
-    Raises: KeyError for an unknown layout.
-    Side Effects: none. Deterministic.
-    """
+    """Render the prompt that one call sends."""
     return RENDERERS[fmt](inputs["template"], inputs["schema_text"], inputs["examples"],
                           definition)
 
 
 def fingerprints(inputs: Mapping[str, Any]) -> dict[str, Any]:
-    """Hash what the test sends: runner, template, schema, examples blocks and every prompt.
-
-    Args: inputs: from `load_inputs`.
-    Returns: hex digests, plus the mean prompt length per layout.
-    Raises: nothing.
-    Side Effects: reads this file. Deterministic.
-    """
+    """Hash what the test sends: runner, template, schema, examples blocks and every prompt."""
     result: dict[str, Any] = {
         "runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "template_sha256": sha256(inputs["template"].text),
@@ -283,13 +201,7 @@ def fingerprints(inputs: Mapping[str, Any]) -> dict[str, Any]:
 
 def schedule(targets: Sequence[str], models: Sequence[str] = MODELS,
              repetitions: int = REPETITIONS, seed: int = SCHEDULE_SEED) -> list[tuple]:
-    """List every call of the grid, with A and B for one target and model side by side.
-
-    Args: targets: evaluation ids; models: model ids; repetitions: per cell; seed: shuffle seed.
-    Returns: (model, layout, repetition, variable_id) tuples, each exactly once.
-    Raises: nothing.
-    Side Effects: none. Deterministic for a given seed.
-    """
+    """List every call of the grid, with A and B for one target and model side by side."""
     rng = random.Random(seed)
     jobs: list[tuple] = []
     for repetition in range(1, repetitions + 1):
@@ -306,14 +218,7 @@ def schedule(targets: Sequence[str], models: Sequence[str] = MODELS,
 # --- provider ----------------------------------------------------------------------------
 
 def psnc_transport(concurrency: int = CONCURRENCY) -> tuple[Transport, Any]:
-    """Build a PSNC chat-completions transport over one shared client; stores no headers.
-
-    Args: concurrency: size of the connection pool.
-    Returns: (transport, client); the caller closes the client.
-    Raises: SystemExit when PSNC_API_KEY is not set.
-    Side Effects: reads the repository's .env through the lab's allowlisted loader; opens no
-        connection until the first call.
-    """
+    """Build a PSNC chat-completions transport over one shared client; stores no headers."""
     from iadopt_lab.configuration import load_runtime_secrets
 
     secrets = load_runtime_secrets(str(ROOT.parent / ".env"),
@@ -330,13 +235,7 @@ def psnc_transport(concurrency: int = CONCURRENCY) -> tuple[Transport, Any]:
                                                    max_keepalive_connections=concurrency))
 
     async def transport(body: Mapping[str, Any]) -> dict:
-        """Send one request; a failure comes back as data, never as an exception.
-
-        Args: body: the chat-completions request body.
-        Returns: {"ok", "status", "latency"}, plus answer, reasoning and tokens on success.
-        Raises: nothing.
-        Side Effects: one HTTPS request on the shared client.
-        """
+        """Send one request; a failure comes back as data, never as an exception."""
         started = time.monotonic()
         try:
             response = await client.post(url, headers=headers, json=body)
@@ -368,24 +267,12 @@ def psnc_transport(concurrency: int = CONCURRENCY) -> tuple[Transport, Any]:
 
 
 def now() -> str:
-    """Timestamp a call record.
-
-    Args: none.
-    Returns: the current UTC time, ISO 8601 with milliseconds.
-    Raises: nothing.
-    Side Effects: reads the clock. Operational only; never enters a hash.
-    """
+    """Timestamp a call record."""
     return datetime.now(UTC).isoformat(timespec="milliseconds")
 
 
 def list_price_usd(model: str, record: Mapping[str, Any]) -> float:
-    """Price one call at the hub's list price.
-
-    Args: model: model id; record: a call record with token counts.
-    Returns: US dollars; a missing token count counts as zero.
-    Raises: KeyError for a model without a price.
-    Side Effects: none. Deterministic.
-    """
+    """Price one call at the hub's list price."""
     price_in, price_out = LIST_PRICE_USD[model]
     return ((record.get("prompt_tokens") or 0) * price_in
             + (record.get("completion_tokens") or 0) * price_out) / 1e6
@@ -395,13 +282,7 @@ class Guard:
     """Stop rules, checked by every worker before every call."""
 
     def __init__(self) -> None:
-        """Start with no stop reason, no spend and no counts.
-
-        Args: none.
-        Returns: nothing.
-        Raises: nothing.
-        Side Effects: none.
-        """
+        """Start with no stop reason, no spend and no counts."""
         self.reasons: dict[str, str] = {}
         self.spend: dict[str, float] = defaultdict(float)
         self.calls: Counter = Counter()
@@ -409,36 +290,18 @@ class Guard:
         self.thinking: Counter = Counter()
 
     def blocked(self, model: str) -> str | None:
-        """Say why calls for this model must stop, if they must.
-
-        Args: model: model id.
-        Returns: the stop reason (one under "*" stops every model), or None.
-        Raises: nothing.
-        Side Effects: none.
-        """
+        """Say why calls for this model must stop, if they must."""
         return self.reasons.get("*") or self.reasons.get(model)
 
     def add_spend(self, model: str, record: Mapping[str, Any]) -> None:
-        """Add one call's list price and stop the model once its cap is passed.
-
-        Args: model: model id; record: a successful call record.
-        Returns: nothing.
-        Raises: KeyError for a model without a price or cap.
-        Side Effects: updates the spend; may set a stop reason.
-        """
+        """Add one call's list price and stop the model once its cap is passed."""
         self.spend[model] += list_price_usd(model, record)
         if self.spend[model] > SPEND_CAP_USD[model]:
             self.reasons.setdefault(model, f"list-price spend ${self.spend[model]:.2f} "
                                            f"passed the ${SPEND_CAP_USD[model]:.2f} cap")
 
     def record(self, model: str, result: Mapping[str, Any]) -> None:
-        """Apply the stop rules to one finished call.
-
-        Args: model: model id; result: the stored call record.
-        Returns: nothing.
-        Raises: nothing.
-        Side Effects: updates counts and spend; may stop the model, or every model on 401/403.
-        """
+        """Apply the stop rules to one finished call."""
         self.calls[model] += 1
         if result.get("status") in (401, 403):
             self.reasons.setdefault("*", f"credential refused (HTTP {result['status']})")
@@ -456,13 +319,7 @@ class Guard:
 
 
 def read_jsonl(path: Path) -> list[dict]:
-    """Read a JSON-lines file, skipping blank and torn lines.
-
-    Args: path: the file, which need not exist.
-    Returns: the parsed rows; empty when the file is absent.
-    Raises: OSError when the file exists but cannot be read; a malformed line is skipped.
-    Side Effects: reads the file.
-    """
+    """Read a JSON-lines file, skipping blank and torn lines."""
     if not path.exists():
         return []
     rows = []
@@ -476,24 +333,12 @@ def read_jsonl(path: Path) -> list[dict]:
 
 
 def call_key(record: Mapping[str, Any]) -> tuple:
-    """Identify one call of the grid.
-
-    Args: record: a call record.
-    Returns: (model, layout, repetition, variable_id).
-    Raises: KeyError when a field is missing.
-    Side Effects: none.
-    """
+    """Identify one call of the grid."""
     return (record["model"], record["format"], record["repetition"], record["variable_id"])
 
 
 def latest_records(path: Path) -> dict[tuple, dict]:
-    """Keep one record per call: the first successful one, else the last failure.
-
-    Args: path: the calls file.
-    Returns: {call key: record}.
-    Raises: as `read_jsonl`.
-    Side Effects: reads the file.
-    """
+    """Keep one record per call: the first successful one, else the last failure."""
     latest: dict[tuple, dict] = {}
     for record in read_jsonl(path):
         key = call_key(record)
@@ -507,16 +352,7 @@ def latest_records(path: Path) -> dict[tuple, dict]:
 async def run_grid(inputs: Mapping[str, Any], jobs: Sequence[tuple], transport: Transport,
                    calls_path: Path = CALLS, concurrency: int = CONCURRENCY,
                    max_calls: int | None = None, guard: Guard | None = None) -> dict:
-    """Issue every job not already answered, appending one record per call.
-
-    Args: inputs: from `load_inputs`; jobs: from `schedule`; transport: sends one request;
-        calls_path: the calls file; concurrency: workers; max_calls: cap on new calls;
-        guard: the stop rules, fresh by default.
-    Returns: {"issued", "skipped", "stopped", "spend_usd"}.
-    Raises: nothing from the provider; a failed call is recorded.
-    Side Effects: provider calls; appends to `calls_path`. Resumable: answered calls are not
-        repeated, failed ones are retried, and earlier spend counts toward the caps.
-    """
+    """Issue every job not already answered, appending one record per call."""
     calls_path.parent.mkdir(parents=True, exist_ok=True)
     guard = guard or Guard()
     answered = set()
@@ -534,13 +370,7 @@ async def run_grid(inputs: Mapping[str, Any], jobs: Sequence[tuple], transport: 
     budget = [max_calls if max_calls is not None else math.inf]
 
     async def worker() -> None:
-        """Take jobs until the queue is empty, honouring the stop rules and the call budget.
-
-        Args: none.
-        Returns: nothing.
-        Raises: nothing.
-        Side Effects: provider calls; appends records under the lock.
-        """
+        """Take jobs until the queue is empty, honouring the stop rules and the call budget."""
         while True:
             try:
                 model, fmt, repetition, variable_id = queue.get_nowait()
@@ -580,15 +410,7 @@ async def run_grid(inputs: Mapping[str, Any], jobs: Sequence[tuple], transport: 
 
 async def probe(inputs: Mapping[str, Any], models: Sequence[str], transport: Transport,
                 path: Path = PROBES) -> list[dict]:
-    """Check each model's reasoning switch on an invented target, before any grid call.
-
-    Args: inputs: from `load_inputs`; models: model ids; transport: sends one request;
-        path: the probe file.
-    Returns: one row per call: two switched calls per model (layouts A and B), plus one
-        unswitched call capped at 1,024 tokens for GLM-5.3, which the lab had not measured.
-    Raises: nothing from the provider.
-    Side Effects: provider calls; appends the rows to `path`.
-    """
+    """Check each model's reasoning switch on an invented target, before any grid call."""
     rows = []
     for model in models:
         variants = [("A", True), ("B", True)] + ([("A", False)] if model == "GLM-5.3" else [])
@@ -619,13 +441,7 @@ async def probe(inputs: Mapping[str, Any], models: Sequence[str], transport: Tra
 
 
 def probe_passed(rows: Sequence[Mapping[str, Any]], model: str) -> bool:
-    """Apply the gate: both switched calls succeed, with no reasoning and under 1,000 tokens.
-
-    Args: rows: from `probe`; model: model id.
-    Returns: True when the model may enter the grid.
-    Raises: nothing.
-    Side Effects: none.
-    """
+    """Apply the gate: both switched calls succeed, with no reasoning and under 1,000 tokens."""
     switched = [r for r in rows if r["model"] == model and r["switched"]]
     return len(switched) == 2 and all(
         r["ok"] and r["reasoning_chars"] == 0 and (r["completion_tokens"] or 0) < 1000
@@ -636,14 +452,7 @@ def probe_passed(rows: Sequence[Mapping[str, Any]], model: str) -> bool:
 
 def score_calls(inputs: Mapping[str, Any], calls_path: Path = CALLS,
                 scores_path: Path = SCORES) -> dict[tuple, dict]:
-    """Score every call's answer once; an unusable or missing answer scores as empty.
-
-    Args: inputs: from `load_inputs`; calls_path: the calls file; scores_path: the score cache.
-    Returns: {call key: {"key", "answer_sha256", "valid_prediction", "evaluation"}}.
-    Raises: nothing for a bad answer; it scores as `empty_prediction()`.
-    Side Effects: loads the local similarity model when an answer is new; appends new scores.
-        Same extraction, validation and scorer as the study's harness. Idempotent per answer.
-    """
+    """Score every call's answer once; an unusable or missing answer scores as empty."""
     from iadopt_eval import evaluate_item
     from iadopt_lab.cli import _configuration, _similarity_backend
     from iadopt_lab.generation.extractor import extract_json
@@ -680,13 +489,7 @@ def score_calls(inputs: Mapping[str, Any], calls_path: Path = CALLS,
 
 
 def welch(b: Sequence[float], a: Sequence[float]) -> dict[str, float]:
-    """Run Welch's two-sided t-test of mean(b) - mean(a), with a 95% confidence interval.
-
-    Args: b, a: per-repetition scores, at least two in each.
-    Returns: difference, t, df, p, ci_low, ci_high; p is 1 or 0 when both variances are zero.
-    Raises: statistics.StatisticsError with fewer than two values in either group.
-    Side Effects: none. Deterministic.
-    """
+    """Run Welch's two-sided t-test of mean(b) - mean(a), with a 95% confidence interval."""
     from scipy import stats
 
     diff = statistics.mean(b) - statistics.mean(a)
@@ -703,13 +506,7 @@ def welch(b: Sequence[float], a: Sequence[float]) -> dict[str, float]:
 
 
 def holm(pvalues: Mapping[str, float]) -> dict[str, float]:
-    """Adjust p-values with Holm's step-down correction.
-
-    Args: pvalues: {name: p}.
-    Returns: {name: adjusted p}, capped at 1 and monotone in rank.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Adjust p-values with Holm's step-down correction."""
     adjusted, running = {}, 0.0
     ordered = sorted(pvalues.items(), key=lambda item: item[1])
     for rank, (name, p) in enumerate(ordered):
@@ -720,14 +517,7 @@ def holm(pvalues: Mapping[str, float]) -> dict[str, float]:
 
 def _cell_rows(model: str, fmt: str, inputs: Mapping[str, Any], latest: Mapping[tuple, dict],
                scores: Mapping[tuple, dict]) -> tuple[list[dict], list[int]]:
-    """Score one model and layout per repetition; a repetition missing a call is left out.
-
-    Args: model, fmt: the cell; inputs: from `load_inputs`; latest: from `latest_records`;
-        scores: from `score_calls`.
-    Returns: (per-repetition rows, numbers of the incomplete repetitions).
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Score one model and layout per repetition; a repetition missing a call is left out."""
     rows, incomplete = [], []
     for repetition in range(1, REPETITIONS + 1):
         keys = [(model, fmt, repetition, v) for v in inputs["targets"]]
@@ -755,27 +545,14 @@ def _cell_rows(model: str, fmt: str, inputs: Mapping[str, Any], latest: Mapping[
 
 
 def _mean(values: Any) -> float | None:
-    """Average the values that are present.
-
-    Args: values: numbers, possibly with None among them.
-    Returns: the mean, or None when nothing is present.
-    Raises: nothing.
-    Side Effects: none.
-    """
+    """Average the values that are present."""
     present = [v for v in values if v is not None]
     return statistics.mean(present) if present else None
 
 
 def summarise(inputs: Mapping[str, Any], scores: Mapping[tuple, dict],
               calls_path: Path = CALLS) -> dict[str, Any]:
-    """Compute per-cell statistics and the pre-specified comparisons.
-
-    Args: inputs: from `load_inputs`; scores: from `score_calls`; calls_path: the calls file.
-    Returns: {"generated_at", "cells", "primary", "secondary"}: primary is B against A per
-        model with Holm over the models; secondary compares the models and checks drift.
-    Raises: nothing.
-    Side Effects: reads the calls file and, when present, the study's observations.
-    """
+    """Compute per-cell statistics and the pre-specified comparisons."""
     latest = latest_records(calls_path)
     cells: dict[str, Any] = {}
     for model in MODELS:
@@ -800,13 +577,7 @@ def summarise(inputs: Mapping[str, Any], scores: Mapping[tuple, dict],
             }
 
     def series(model: str, fmt: str) -> list[float]:
-        """Return one cell's per-repetition Close F1.
-
-        Args: model, fmt: the cell.
-        Returns: the scores; empty when the cell did not run.
-        Raises: nothing.
-        Side Effects: none.
-        """
+        """Return one cell's per-repetition Close F1."""
         cell = cells.get(f"{model}|{fmt}")
         return [r["close_f1_official"] for r in cell["per_repetition"]] if cell else []
 
@@ -835,13 +606,7 @@ def summarise(inputs: Mapping[str, Any], scores: Mapping[tuple, dict],
 # --- entry point -------------------------------------------------------------------------
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """Run one command-line mode: plan, probe, run or score.
-
-    Args: argv: command-line arguments; `sys.argv` when None.
-    Returns: the exit status, 0 on success.
-    Raises: SystemExit on bad arguments or a missing PSNC key.
-    Side Effects: --probe and --run call the provider; --run and --score write output files.
-    """
+    """Run one command-line mode: plan, probe, run or score."""
     parser = argparse.ArgumentParser(description="Example-layout test (exploratory).")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--plan-only", action="store_true")
@@ -879,13 +644,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     async def go() -> int:
-        """Open the transport, run the probe or the grid, and always close the client.
-
-        Args: none.
-        Returns: the exit status.
-        Raises: SystemExit when the PSNC key is missing.
-        Side Effects: provider calls and output files.
-        """
+        """Open the transport, run the probe or the grid, and always close the client."""
         transport, client = psnc_transport()
         try:
             if args.probe:

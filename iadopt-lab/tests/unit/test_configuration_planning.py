@@ -23,31 +23,18 @@ ARTIFACTS = {key: key + "-fixture-sha256" for key in ("corpus", "population", "p
 
 
 def _snapshot(data):
-    """Build an independent immutable in-memory test configuration.
-
-    Args: already schema-shaped fixture dictionary. Returns: Configuration.
-    Raises: canonicalization errors. Side effects: none.
-    """
+    """Build an independent immutable in-memory test configuration."""
     raw = canonical_json_bytes(data)
     return Configuration(raw, raw)
 
 
 def _targets(count=97):
-    """Generate unique explicitly artificial population identifiers.
-
-    Args: fixture population size. Returns: list of non-demo variable dictionaries.
-    Raises: no content errors. Side effects: none.
-    """
+    """Generate unique explicitly artificial population identifiers."""
     return [{"variable_id": f"fixture-variable-{number:03d}", "demonstration_position": None} for number in range(count)]
 
 
 def _full_grid_configuration(providers, controlled):
-    """Apply declared mock capabilities while preserving the user's scientific grid.
-
-    Args: selected providers and whether fixture models expose enabled/disabled control.
-    Returns: resolved six-model-or-selected-subset fixture configuration.
-    Raises: configuration validation errors. Side effects: reads public parameters only.
-    """
+    """Apply declared mock capabilities while preserving the user's scientific grid."""
     original = load_parameters(ROOT / "parameters.yml")
     data = original.data
     fixture = synthetic_configuration(original).data
@@ -95,12 +82,7 @@ _PSNC_MODELS, _OPENROUTER_MODELS, _CELL = 3, 6, 48 * 97
     (["psnc", "openrouter"], True, _CELL * (_PSNC_MODELS + _OPENROUTER_MODELS) * 2),
 ])
 def test_current_one_repetition_grid_counts(providers, controlled, expected_calls):
-    """Count each selected provider's own models with singleton runs at every temperature.
-
-    Args: provider selection, controlled reasoning fixture and hand-calculated calls.
-    Returns: None. Raises: AssertionError on grid/call multiplication regression.
-    Side effects: reads non-secret configuration; no model or database requests.
-    """
+    """Count each selected provider's own models with singleton runs at every temperature."""
     resolved = _full_grid_configuration(providers, controlled)
     plan = expand_campaign(resolved, _targets(), artifact_identities=ARTIFACTS)
     assert plan["counts"]["initial_calls"] == expected_calls
@@ -115,11 +97,7 @@ def test_current_one_repetition_grid_counts(providers, controlled, expected_call
 
 
 def test_draft_keeps_all_models_and_blocks_plan_without_capabilities():
-    """Retain unresolved selected models without inventing reasoning support or dropping work.
-
-    Args: none. Returns: None.
-    Raises: AssertionError on accidental readiness. Side effects: public YAML read only.
-    """
+    """Retain unresolved selected models without inventing reasoning support or dropping work."""
     original = load_parameters(ROOT / "parameters.yml")
     # Build a draft rather than assuming the live file is one: a frozen campaign
     # configuration is a legitimate state between runs, and this test is about how an
@@ -141,11 +119,7 @@ def test_draft_keeps_all_models_and_blocks_plan_without_capabilities():
 
 
 def test_provider_order_and_inactive_catalog_do_not_change_selected_identity():
-    """Canonicalize selection order and ignore inactive catalog changes in scientific identity.
-
-    Args: none. Returns: None.
-    Raises: AssertionError on order-sensitive hashes. Side effects: configuration reads only.
-    """
+    """Canonicalize selection order and ignore inactive catalog changes in scientific identity."""
     both = _full_grid_configuration(["psnc", "openrouter"], False)
     reversed_data = both.data
     reversed_data["campaign"]["providers"].reverse()
@@ -158,11 +132,7 @@ def test_provider_order_and_inactive_catalog_do_not_change_selected_identity():
 
 
 def test_same_model_name_at_two_providers_is_two_owned_runs():
-    """Allow a native model name reused across providers without merging execution identity.
-
-    Args: none. Returns: None.
-    Raises: AssertionError on provider identity collision. Side effects: YAML read only.
-    """
+    """Allow a native model name reused across providers without merging execution identity."""
     config = synthetic_configuration(load_parameters(ROOT / "parameters.yml"))
     plan = expand_campaign(config, _targets(3), artifact_identities=ARTIFACTS, mode="synthetic")
     assert len(plan["runs"]) == 2 and len(plan["tasks"]) == 6
@@ -173,11 +143,7 @@ def test_same_model_name_at_two_providers_is_two_owned_runs():
 
 @pytest.mark.parametrize("modification", ["no_modes", "foreign_mode", "identical_fields", "wrong_native", "not_applicable_fields", "duplicate_model"])
 def test_invalid_reasoning_or_model_ownership(modification):
-    """Reject inconsistent mode mappings and duplicate IDs before provider dispatch.
-
-    Args: invalid fixture mutation name. Returns: None.
-    Raises: AssertionError on accepted contradiction. Side effects: YAML read only.
-    """
+    """Reject inconsistent mode mappings and duplicate IDs before provider dispatch."""
     data = _full_grid_configuration(["psnc"], True).data
     model = data["providers"]["psnc"]["models"][0]
     if modification == "no_modes":
@@ -204,11 +170,7 @@ def test_invalid_reasoning_or_model_ownership(modification):
     "a: !!custom value\n", "[not, a, mapping]\n", "a: .nan\n",
 ])
 def test_unsafe_and_duplicate_yaml_rejected(tmp_path, payload):
-    """Reject unsafe YAML constructs before creating a usable configuration.
-
-    Args: isolated temporary directory and invalid YAML text. Returns: None.
-    Raises: AssertionError on accidental acceptance. Side effects: temporary test file only.
-    """
+    """Reject unsafe YAML constructs before creating a usable configuration."""
     path = tmp_path / "invalid.yml"
     path.write_text(payload, encoding="utf-8")
     with pytest.raises(ConfigurationError):
@@ -217,11 +179,7 @@ def test_unsafe_and_duplicate_yaml_rejected(tmp_path, payload):
 
 @pytest.mark.parametrize("selection", [[], ["psnc", "psnc"], ["other"]])
 def test_invalid_provider_selection_schema(tmp_path, selection):
-    """Reject empty, repeated and unknown provider selections through the public loader.
-
-    Args: temporary directory and invalid provider list. Returns: None.
-    Raises: AssertionError on schema regression. Side effects: temporary fixture file only.
-    """
+    """Reject empty, repeated and unknown provider selections through the public loader."""
     data = load_parameters(ROOT / "parameters.yml").data
     data["campaign"]["providers"] = selection
     path = tmp_path / "invalid.yml"
@@ -231,11 +189,7 @@ def test_invalid_provider_selection_schema(tmp_path, selection):
 
 
 def test_unknown_parameter_and_secret_values_are_not_echoed(tmp_path):
-    """Reject unknown secret-bearing configuration without reproducing the rejected value.
-
-    Args: isolated temporary directory. Returns: None.
-    Raises: AssertionError if rejection leaks fake secret text. Side effects: temporary fixture only.
-    """
+    """Reject unknown secret-bearing configuration without reproducing the rejected value."""
     data = load_parameters(ROOT / "parameters.yml").data
     marker = "not-a-real-secret-do-not-echo"
     data["api_key"] = marker
@@ -248,9 +202,6 @@ def test_unknown_parameter_and_secret_values_are_not_echoed(tmp_path):
 
 def test_literal_secret_loading_allowlist_precedence_and_nonserialization(tmp_path):
     """Load only selected literal settings without interpolation, shell execution or serialization.
-
-    Args: isolated temporary directory. Returns: None.
-    Raises: AssertionError on literal/allowlist/privacy regression. Side effects: temporary fake env file.
     """
     path = tmp_path / "fixture.env"
     path.write_text("OPENROUTER_API_KEY='${UNEXPANDED}'\nPSNC_API_KEY='$(echo not-executed)'\nUNRELATED='not-imported'\n", encoding="utf-8")
@@ -266,11 +217,7 @@ def test_literal_secret_loading_allowlist_precedence_and_nonserialization(tmp_pa
 
 
 def test_secret_loader_errors_are_private(tmp_path):
-    """Reject malformed/duplicate selected literals with value-free diagnostics.
-
-    Args: temporary fixture directory. Returns: None.
-    Raises: AssertionError on privacy regression. Side effects: fake env fixture writes.
-    """
+    """Reject malformed/duplicate selected literals with value-free diagnostics."""
     path = tmp_path / "fixture.env"
     for text in ("PSNC_API_KEY='PRIVATE_UNCLOSED", "PSNC_API_KEY=ONE\nPSNC_API_KEY=TWO\n"):
         path.write_text(text, encoding="utf-8")
@@ -281,11 +228,7 @@ def test_secret_loader_errors_are_private(tmp_path):
 
 
 def test_live_readiness_requires_separate_disclosure_and_authorization():
-    """Keep cost disclosure and execution authority separate even with complete injected facts.
-
-    Args: none. Returns: None.
-    Raises: AssertionError for a missing live gate. Side effects: YAML read; no dispatch.
-    """
+    """Keep cost disclosure and execution authority separate even with complete injected facts."""
     data = synthetic_configuration(load_parameters(ROOT / "parameters.yml")).data
     data["campaign"]["live_calls_enabled"] = True
     data["cost_accounting"]["price_card_manifest"] = "fixture-not-a-real-live-price-card"
@@ -300,9 +243,6 @@ def test_live_readiness_requires_separate_disclosure_and_authorization():
 
 def test_population_and_artifact_guards():
     """Reject incomplete/duplicate/demo-containing live populations and missing artifact evidence.
-
-    Args: none. Returns: None.
-    Raises: AssertionError if invalid plan scope is accepted. Side effects: YAML read only.
     """
     config = _full_grid_configuration(["psnc"], False)
     cases = [_targets(96), _targets(96) + [_targets(1)[0]], [{"variable_id": "demo", "demonstration_position": 1}] + _targets(96)]

@@ -29,11 +29,7 @@ iop:hasProperty <urn:test:p>; iop:hasObjectOfInterest <urn:test:o>.
 
 
 def test_all_pinned_records_and_categories():
-    """Check all102 immutable records and exact directory-derived classification.
-
-    Args: none. Returns: None.
-    Raises: AssertionError or verification errors on corruption. Side effects: corpus reads.
-    """
+    """Check all102 immutable records and exact directory-derived classification."""
     records = load_canonical_records(ROOT)
     assert len(records) == 102
     assert len({record["variable_id"] for record in records}) == 102
@@ -49,11 +45,7 @@ def test_all_pinned_records_and_categories():
 
 
 def test_complete_population_and_demo_order():
-    """Require all97 non-demonstration variables with exact fixed exclusions.
-
-    Args: none. Returns: None.
-    Raises: AssertionError for population drift. Side effects: corpus reads.
-    """
+    """Require all97 non-demonstration variables with exact fixed exclusions."""
     records = load_canonical_records(ROOT)
     population = build_evaluation_population(records)
     assert population["member_count"] == 97
@@ -66,11 +58,7 @@ def test_complete_population_and_demo_order():
 
 
 def test_preserved_definition_and_ambiguous_cardinality():
-    """Preserve original definition whitespace and reject multiple required RDF values.
-
-    Args: none. Returns: None.
-    Raises: AssertionError for lossy projection. Side effects: none.
-    """
+    """Preserve original definition whitespace and reject multiple required RDF values."""
     parsed = parse_variable(TTL)
     assert parsed["definition"] == "  Exact definition.\n "
     for suffix in ('<urn:test:v> rdfs:comment "second".',
@@ -81,11 +69,7 @@ def test_preserved_definition_and_ambiguous_cardinality():
 
 
 def test_unlabeled_whole_system_targets_are_stable():
-    """Resolve unlabeled RDF system targets without leaking random blank-node IDs.
-
-    Args: none. Returns: None.
-    Raises: AssertionError for unstable role or Constraint projection. Side effects: none.
-    """
+    """Resolve unlabeled RDF system targets without leaking random blank-node IDs."""
     ttl = TTL.replace('<urn:test:o> rdfs:label "water".', '''<urn:test:o> a iop:AsymmetricSystem;
     iop:hasNumerator _:a; iop:hasDenominator _:b.
     _:a rdfs:label "water". _:b rdfs:label "air".
@@ -99,21 +83,13 @@ def test_unlabeled_whole_system_targets_are_stable():
 
 
 def test_missing_constraint_target_is_not_invented():
-    """Reject constraints lacking explicit targets instead of using a legacy fallback.
-
-    Args: none. Returns: None.
-    Raises: AssertionError for accepted missing target. Side effects: none.
-    """
+    """Reject constraints lacking explicit targets instead of using a legacy fallback."""
     with pytest.raises(ValueError):
         parse_variable(TTL + '<urn:test:v> iop:hasConstraint _:c. _:c rdfs:label "wet".')
 
 
 def test_ingest_idempotent_offline_source_directory(tmp_path):
-    """Verify a fresh ordinary source directory and resume without Git or downloads.
-
-    Args: pytest temporary writable directory. Returns: None.
-    Raises: AssertionError on different identities or source mutation. Side effects: isolated fixture writes.
-    """
+    """Verify a fresh ordinary source directory and resume without Git or downloads."""
     shutil.copytree(ROOT / "schemas", tmp_path / "schemas")
     (tmp_path / "data/manifests").mkdir(parents=True)
     shutil.copyfile(ROOT / "data/manifests" / LOCK_NAME, tmp_path / "data/manifests" / LOCK_NAME)
@@ -125,11 +101,7 @@ def test_ingest_idempotent_offline_source_directory(tmp_path):
 
 
 def test_corrupt_source_fails_before_activation(tmp_path):
-    """Reject one altered source byte without publishing an active corpus manifest.
-
-    Args: pytest temporary directory. Returns: None.
-    Raises: AssertionError if corruption is accepted. Side effects: isolated fixture copies/one-byte mutation.
-    """
+    """Reject one altered source byte without publishing an active corpus manifest."""
     shutil.copytree(ROOT / "schemas", tmp_path / "schemas")
     shutil.copytree(CORPUS_DIR, tmp_path / "source")
     (tmp_path / "data/manifests").mkdir(parents=True)
@@ -142,12 +114,7 @@ def test_corrupt_source_fails_before_activation(tmp_path):
 
 
 def test_v201_gold_differences_are_present():
-    """Pin the four upstream gold changes that distinguish v2.0.1 from v2.0.0.
-
-    Args: none. Returns: None.
-    Raises: AssertionError if the corpus silently reverts to v2.0.0 content.
-    Side effects: corpus reads.
-    """
+    """Pin the four upstream gold changes that distinguish v2.0.1 from v2.0.0."""
     records = {record["source_path"]: record for record in load_canonical_records(ROOT)}
     habitat = records["Life Sciences/Ecology/C12_HabitatProbability.ttl"]["gold"]
     assert habitat["hasMatrix"] == "" and habitat["hasContextObject"] == "geographical area"
@@ -163,12 +130,7 @@ def test_v201_gold_differences_are_present():
 
 
 def test_derived_projections_match_their_canonical_parent():
-    """Require both derived views per variable to regenerate byte-identically.
-
-    Args: none. Returns: None.
-    Raises: AssertionError or ValueError for a missing or divergent projection.
-    Side effects: corpus reads.
-    """
+    """Require both derived views per variable to regenerate byte-identically."""
     records = load_canonical_records(ROOT)
     assert verify_derived_projections(ROOT, records) == 2 * len(records)
     readable = readable_projection(records[0])

@@ -2,8 +2,7 @@
 
 The stage ordering is a scientific guard, not a convenience: the confirmation set must never
 inform which candidates are selected, so the pipeline refuses to evaluate it before the final
-stage and refuses to let its observations reach finalist selection.
-"""
+stage and refuses to let its observations reach finalist selection."""
 
 from __future__ import annotations
 
@@ -28,13 +27,7 @@ CALL_CEILING = 120_000
 
 def planned_calls(n_subsets: int, search_reps: int, confirm_reps: int,
                   n_candidates: int, n_eval: int, n_confirm: int) -> int:
-    """Compute the provider calls a full run would issue, for the budget gate.
-
-    Args: stage sizes and the evaluation set sizes.
-    Returns: total planned provider calls across all four stages.
-    Raises: nothing.
-    Side Effects: none. Deterministic.
-    """
+    """Compute the provider calls a full run would issue, for the budget gate."""
     attribution = n_subsets * n_eval
     construct = n_candidates * search_reps * n_eval
     refine = REFINE_NEIGHBOURS * search_reps * n_eval
@@ -44,13 +37,7 @@ def planned_calls(n_subsets: int, search_reps: int, confirm_reps: int,
 
 async def stage_attribution(context: Any, split: Mapping[str, list[str]],
                             n_subsets: int = DEFAULT_SUBSETS) -> dict:
-    """Evaluate random subsets on E and fit the contribution model.
-
-    Args: context: harness context; split: the P/E/C partition; n_subsets: sample count.
-    Returns: the attribution fit plus the observations it was fitted on.
-    Raises: RuntimeError when the budget ceiling would be exceeded.
-    Side Effects: provider calls; appends observations. Resumable at call granularity.
-    """
+    """Evaluate random subsets on E and fit the contribution model."""
     pool, targets = split["P"], split["E"]
     _check_budget(n_subsets, len(targets), len(split["C"]),
                   search_reps=getattr(context, "search_reps", DEFAULT_SEARCH_REPS),
@@ -65,13 +52,7 @@ async def stage_attribution(context: Any, split: Mapping[str, list[str]],
 
 async def stage_construct(context: Any, split: Mapping[str, list[str]],
                           coefficients: Mapping[str, float], reps: int = DEFAULT_SEARCH_REPS) -> dict:
-    """Build finalists and baselines and evaluate each on E with repetitions.
-
-    Args: context: harness context; split: the partition; coefficients: fitted contributions; reps: repetitions.
-    Returns: {"candidates": {name: subset}, "scores": {name: [per-rep F1]}}.
-    Raises: RuntimeError on budget violation.
-    Side Effects: provider calls against E only; never touches C.
-    """
+    """Build finalists and baselines and evaluate each on E with repetitions."""
     pool, targets = split["P"], split["E"]
     candidates = {
         "top25": design.top_k_candidate(pool, coefficients),
@@ -90,13 +71,7 @@ async def stage_construct(context: Any, split: Mapping[str, list[str]],
 
 async def stage_refine(context: Any, split: Mapping[str, list[str]],
                        candidates: Mapping[str, Sequence[str]], reps: int = DEFAULT_SEARCH_REPS) -> dict:
-    """Run replicated swap search around the best constructed candidate.
-
-    Args: context: harness context; split: the partition; candidates: starting points; reps: repetitions per candidate.
-    Returns: {"best": subset, "trace": [...], "scores": {...}}.
-    Raises: RuntimeError on budget violation.
-    Side Effects: provider calls against E only.
-    """
+    """Run replicated swap search around the best constructed candidate."""
     pool, targets = split["P"], split["E"]
     start = max(candidates, key=lambda name: statistics.mean(candidates[name]["scores"])) \
         if candidates and isinstance(next(iter(candidates.values())), dict) else None
@@ -117,13 +92,7 @@ async def stage_refine(context: Any, split: Mapping[str, list[str]],
 async def stage_confirm(context: Any, split: Mapping[str, list[str]],
                         finalists: Mapping[str, Sequence[str]],
                         reps: int = DEFAULT_CONFIRM_REPS) -> dict:
-    """Evaluate finalists and baselines on the held-out C — the only headline evidence.
-
-    Args: context: harness context; split: the partition; finalists: named sets including baselines; reps: repetitions.
-    Returns: {name: {"mean": float, "sd": float, "ci": (lo, hi), "scores": [...]}}.
-    Raises: RuntimeError when an earlier stage is incomplete or C was already evaluated.
-    Side Effects: provider calls against C. This is the first and only stage that reads C.
-    """
+    """Evaluate finalists and baselines on the held-out C — the only headline evidence."""
     path = _observations_path(context)
     prior = _load_observations(path)
     if not any(row["stage"] == "attribution" for row in prior):
@@ -147,13 +116,7 @@ async def stage_confirm(context: Any, split: Mapping[str, list[str]],
 
 
 def write_report(path: Path, results: Mapping[str, Any]) -> None:
-    """Render the result: C comparison with CIs, falsification check, per-example table.
-
-    Args: path: output markdown path; results: the collected stage outputs.
-    Returns: None.
-    Raises: nothing.
-    Side Effects: writes `path`. Every E-derived figure is labelled selection-biased.
-    """
+    """Render the result: C comparison with CIs, falsification check, per-example table."""
     confirm = results.get("confirm", {})
     falsification = results.get("falsification", {})
     lines = [
@@ -222,15 +185,7 @@ def _load_observations(path: Path) -> list[dict]:
 
 async def _observe(context: Any, subset: Sequence[str], targets: Sequence[str], repetition: int,
                    stage: str, name: str, eval_set: str) -> dict:
-    """Evaluate one candidate and record the observation, reusing any prior identical one.
-
-    Args: context: harness context; subset: 25 ids; targets: eval ids; repetition: 1-based;
-        stage: which stage asked; name: candidate label; eval_set: "E" or "C".
-    Returns: the harness result mapping.
-    Raises: whatever `evaluate` raises.
-    Side Effects: provider calls for uncached targets; appends one observation line.
-        Idempotent per (candidate, repetition, eval_set).
-    """
+    """Evaluate one candidate and record the observation, reusing any prior identical one."""
     path = _observations_path(context)
     digest = candidate_hash(subset)
     # Memoised on the context: re-reading the whole JSONL per candidate made the lookup
@@ -256,11 +211,7 @@ async def _observe(context: Any, subset: Sequence[str], targets: Sequence[str], 
 def _check_budget(n_subsets: int, n_eval: int, n_confirm: int,
                   search_reps: int = DEFAULT_SEARCH_REPS,
                   confirm_reps: int = DEFAULT_CONFIRM_REPS) -> None:
-    """Refuse a plan that would exceed the declared call ceiling, before any dispatch.
-
-    The repetition counts are parameters, not constants: hardcoding the defaults let a caller
-    passing --reps 200 clear a gate that had only ever costed --reps 5 (OQ-1).
-    """
+    """Refuse a plan that would exceed the declared call ceiling, before any dispatch."""
     planned = planned_calls(n_subsets, search_reps, confirm_reps,
                             n_candidates=6, n_eval=n_eval, n_confirm=n_confirm)
     if planned > CALL_CEILING:

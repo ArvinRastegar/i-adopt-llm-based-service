@@ -1,17 +1,5 @@
 #!/usr/bin/env python
-"""Regenerate `best-configuration-session.md` from the corpus and the recorded run.
-
-The document embeds a 15 KB prompt and a raw model response verbatim. Transcribing either by
-hand would eventually drift from what was actually sent, so the record is generated instead:
-every figure in it is read from `output/example-selection-*.jsonl` or re-derived from the same
-functions the run used.
-
-    ./build_best_config_doc.py                 # regenerate with the default featured target
-    ./build_best_config_doc.py --target <id>   # feature a different confirmation-set variable
-
-EXPLORATORY side experiment. Reads the corpus and the recorded run; writes one markdown file.
-Issues no provider call, writes no database row, and touches nothing under `outputs/`.
-"""
+"""Regenerate `best-configuration-session.md` from the corpus and the recorded run."""
 
 from __future__ import annotations
 
@@ -49,12 +37,7 @@ DEFAULT_TARGET = "urn:iadopt-lab:variable:d8164cf2a4d4be23ca63fc588e2850efbb8041
 
 
 def item_f1(evaluation: dict) -> float:
-    """Micro Close F1 for one scored item, summed over its components.
-
-    Args: evaluation: one `evaluate_item` record.
-    Returns: F1 in [0, 1]; 0.0 when the item contributes no true positives.
-    Side Effects: none.
-    """
+    """Micro Close F1 for one scored item, summed over its components."""
     tp = fp = fn = 0.0
     for component in evaluation["close"]["components"].values():
         contributions = component["contributions"]
@@ -72,12 +55,7 @@ def load_observations() -> list[dict]:
 
 
 def load_candidate_calls(digest: str) -> list[dict]:
-    """Stream the 396 MB call log and keep only one candidate's calls.
-
-    Args: digest: the candidate hash to select.
-    Returns: every recorded call for that candidate, across all repetitions.
-    Side Effects: reads the call log line by line; never loads it whole.
-    """
+    """Stream the 396 MB call log and keep only one candidate's calls."""
     needle = f'"candidate_hash": "{digest}"'
     out = []
     with CALLS.open(encoding="utf-8") as handle:

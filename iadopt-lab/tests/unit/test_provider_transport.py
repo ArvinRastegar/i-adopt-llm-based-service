@@ -1,9 +1,4 @@
-"""One-exchange shared-SDK tests; all transport is local httpx.MockTransport.
-
-The official OpenAI Python reference documents max_retries=0 and raw response
-access: https://developers.openai.com/api/reference/python . These tests verify
-the pinned local SDK rather than assuming third-party provider capabilities.
-"""
+"""One-exchange shared-SDK tests; all transport is local httpx.MockTransport."""
 
 import asyncio
 import base64
@@ -24,19 +19,9 @@ RUN = {"model_id": "synthetic-fixture-model", "temperature": 0.5, "top_p": 1.0,
 
 
 def _exchange(provider, handler, body=None):
-    """Execute one isolated mocked SDK call and close its resources.
-
-    Args: provider ID, injected local HTTP handler and optional validated body.
-    Returns: ProviderResult plus captured SDK retry setting.
-    Raises: adapter/programmer errors; no real networking is configured.
-    Side effects: one in-process mocked exchange and local event-loop allocation.
-    """
+    """Execute one isolated mocked SDK call and close its resources."""
     async def run():
-        """Own the asynchronous client lifecycle for one local fixture.
-
-        Args: captured test inputs. Returns: (result,max_retries) pair.
-        Raises: transport/programmer errors. Side effects: closes the local mock client.
-        """
+        """Own the asynchronous client lifecycle for one local fixture."""
         profile = {"base_url": "https://openrouter.ai/api/v1", "default_base_url": "https://llm.hpc.psnc.pl/v1", "timeout_seconds": 1}
         factory = create_psnc if provider == "psnc" else create_openrouter
         adapter = factory(profile, "offline-fake-" + provider, transport=httpx.MockTransport(handler))
@@ -53,23 +38,14 @@ def _exchange(provider, handler, body=None):
     ("openrouter", "https://openrouter.ai/api/v1/chat/completions"),
 ])
 def test_endpoint_credentials_raw_envelope_usage_and_native_reasoning(provider, url):
-    """Retain exact native fields and complete raw evidence through one scoped endpoint.
-
-    Args: provider and expected complete URL. Returns: None.
-    Raises: AssertionError on extra requests, mutated evidence or leaked header values.
-    Side effects: one in-process mock HTTP exchange; no external requests or real keys.
-    """
+    """Retain exact native fields and complete raw evidence through one scoped endpoint."""
     seen = []
     envelope = {"id": "fixture-request", "model": "fixture-returned-model", "choices": [{"finish_reason": "stop", "message": {"role": "assistant", "content": "{}", "reasoning": "hidden fixture reasoning", "reasoning_details": [{"type": "fixture"}]}}], "usage": {"prompt_tokens": 300, "completion_tokens": 300, "completion_tokens_details": {"reasoning_tokens": 100}}, "provider_extra": "preserve-me"}
     raw = json.dumps(envelope, indent=1).encode("utf-8")
     body = build_request({**RUN, "reasoning_fields": {"chat_template_kwargs": {"enable_thinking": True}}}, MESSAGES)
 
     def handler(request):
-        """Capture one mocked wire request and supply untouched provider bytes.
-
-        Args: httpx request. Returns: local success response.
-        Raises: no provider errors. Side effects: appends request to fixture list only.
-        """
+        """Capture one mocked wire request and supply untouched provider bytes."""
         seen.append(request)
         return httpx.Response(200, content=raw, headers={"content-type": "application/json", "x-request-id": "header-request", "authorization": "must-not-return", "set-cookie": "must-not-return"})
 
@@ -100,21 +76,12 @@ def test_endpoint_credentials_raw_envelope_usage_and_native_reasoning(provider, 
     (408, "ambiguous_delivery", "ambiguous_delivery"),
 ])
 def test_status_errors_do_not_trigger_hidden_sdk_retries(provider, status, outcome, delivery):
-    """Prove 429/500 and other error responses consume exactly one adapter exchange.
-
-    Args: provider and expected status classification. Returns: None.
-    Raises: AssertionError on auto-retry or lost body/cooldown evidence.
-    Side effects: one in-process mocked HTTP exchange; no sleeps or network calls.
-    """
+    """Prove 429/500 and other error responses consume exactly one adapter exchange."""
     calls = []
     raw = b'{"error":{"message":"fixture error","type":"fixture"}}'
 
     def handler(request):
-        """Count and return one artificial rejected response.
-
-        Args: local request. Returns: fixture status/body/cooldown response.
-        Raises: none. Side effects: appends request to local list.
-        """
+        """Count and return one artificial rejected response."""
         calls.append(request)
         return httpx.Response(status, content=raw, headers={"retry-after": "7", "content-type": "application/json"})
 
@@ -132,20 +99,11 @@ def test_status_errors_do_not_trigger_hidden_sdk_retries(provider, status, outco
     (httpx.ConnectError, "classified_transient_provider_error", "not_dispatched"),
 ])
 def test_timeout_connection_delivery_and_no_retries(exception, outcome, delivery):
-    """Keep ambiguous read/write delivery distinct from known connect failures.
-
-    Args: local transport exception class and expected classification. Returns: None.
-    Raises: AssertionError on repeated requests or unsafe delivery certainty.
-    Side effects: one in-process mocked failure, no external requests.
-    """
+    """Keep ambiguous read/write delivery distinct from known connect failures."""
     calls = []
 
     def handler(request):
-        """Raise one synthetic transport failure after recording dispatch entry.
-
-        Args: mocked httpx request. Returns: never normally.
-        Raises: supplied transport exception. Side effects: local call-list append.
-        """
+        """Raise one synthetic transport failure after recording dispatch entry."""
         calls.append(request)
         raise exception("fixture failure", request=request)
 
@@ -162,11 +120,7 @@ def test_timeout_connection_delivery_and_no_retries(exception, outcome, delivery
     {"reasoning_effort": "none"}, {"reasoning_effort": "high"},
 ])
 def test_native_reasoning_mapping_preserved(fields):
-    """Pass frozen native reasoning controls unchanged, omitting them when not applicable.
-
-    Args: declared local profile mapping. Returns: None.
-    Raises: AssertionError on implicit defaults or field mutation. Side effects: none.
-    """
+    """Pass frozen native reasoning controls unchanged, omitting them when not applicable."""
     body = build_request({**RUN, "reasoning_fields": fields}, MESSAGES)
     for key, value in fields.items():
         assert body[key] == value
@@ -177,11 +131,7 @@ def test_native_reasoning_mapping_preserved(fields):
 
 
 def test_local_body_rejections_never_dispatch():
-    """Reject unsupported model overrides, malformed messages and nested secret keys locally.
-
-    Args: none. Returns: None.
-    Raises: AssertionError on accepted invalid request construction. Side effects: none.
-    """
+    """Reject unsupported model overrides, malformed messages and nested secret keys locally."""
     with pytest.raises(LabError):
         build_request({**RUN, "reasoning_fields": {"model": "override"}}, MESSAGES)
     with pytest.raises(LabError):
@@ -196,10 +146,6 @@ def test_local_body_rejections_never_dispatch():
 
 @pytest.mark.parametrize("url", ["http://example.invalid/v1", "https://user:password@example.invalid/v1", "not-a-url"])
 def test_unsafe_endpoint_rejected_without_transport(url):
-    """Require explicit HTTPS endpoints without credentials in their authority.
-
-    Args: invalid fixture URL. Returns: None.
-    Raises: AssertionError on constructor acceptance. Side effects: no client/network created.
-    """
+    """Require explicit HTTPS endpoints without credentials in their authority."""
     with pytest.raises(LabError):
         OpenAICompatibleAdapter("psnc", url, "fake", 1)

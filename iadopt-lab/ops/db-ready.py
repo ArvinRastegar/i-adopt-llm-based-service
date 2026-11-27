@@ -1,9 +1,4 @@
-"""Exit 0 when the lab database accepts a connection. Read-only; writes nothing.
-
-Used by the unattended supervisor to wait for Docker and PostgreSQL to come back
-after a reboot or a sleep/wake cycle, instead of letting the campaign fail-and-retry
-against a socket that is not listening yet.
-"""
+"""Exit 0 when the lab database accepts a connection. Read-only; writes nothing."""
 
 from __future__ import annotations
 

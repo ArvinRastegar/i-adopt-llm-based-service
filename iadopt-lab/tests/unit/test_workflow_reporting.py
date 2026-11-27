@@ -1,9 +1,4 @@
-"""Regressions for the execution/reporting boundaries fixed after the 2026-09-09 review.
-
-Each test pins one behaviour that previously failed silently: a broken transport being
-scored as a model answer, a report accepting the wrong scorer, a category claiming
-completeness from the rows it was handed, and a saved manifest escaping verification.
-"""
+"""Regressions for the execution/reporting boundaries fixed after the 2026-09-09 review."""
 
 import asyncio
 import contextlib
@@ -38,12 +33,7 @@ def _envelope(content, finish="stop"):
     (b'["a list, not an envelope"]', 200, "rejected", "unparsable_envelope"),
 ])
 def test_broken_transport_is_operational_not_model_content(body, status, delivery, outcome):
-    """An HTTP-200 body that is not a provider envelope must never reach content scoring.
-
-    Routing these into validation let three gateway error pages exhaust a task's three
-    attempts and be recorded as an explicit empty prediction, lowering a model's F1 on
-    infrastructure noise.
-    """
+    """An HTTP-200 body that is not a provider envelope must never reach content scoring."""
     result, _ = _exchange("openrouter", lambda request: httpx.Response(status, content=body))
     assert (result.delivery, result.outcome) == (delivery, outcome)
 
@@ -109,12 +99,7 @@ def test_category_completeness_needs_frozen_membership():
 
 
 def test_ranking_rejects_observations_scored_by_another_backend():
-    """A report must belong to the scorer its plan froze, not merely be self-consistent.
-
-    `_observations` only proves the evaluations agree with one another, so a campaign
-    scored end to end with a synthetic backend previously satisfied every check and
-    could be published as a scientific result.
-    """
+    """A report must belong to the scorer its plan froze, not merely be self-consistent."""
     from iadopt_lab.artifacts import collect_input_artifacts
     from iadopt_lab.configuration import load_parameters, resolve_configuration
     from iadopt_lab.planning import expand_campaign, synthetic_configuration
@@ -141,13 +126,7 @@ def test_ranking_rejects_observations_scored_by_another_backend():
 
 
 def _isolated_lab(tmp_path):
-    """Build a lab root that shares the real corpus but owns its manifests.
-
-    The corpus is large, so everything is symlinked except `data/manifests`, which is
-    copied and therefore writable. Tampering used to be done to the repository's own
-    manifest and undone in a `finally`; a killed process or a parallel run left the real
-    file short of a member, which is a corrupted checkout rather than a failed test.
-    """
+    """Build a lab root that shares the real corpus but owns its manifests."""
     root = tmp_path / "lab"
     root.mkdir()
     for entry in ROOT.iterdir():
@@ -194,9 +173,6 @@ def test_verify_detects_a_tampered_population_manifest(tmp_path):
 ])
 def test_only_a_well_formed_completion_reaches_content_scoring(envelope, expected_delivery, expected_outcome):
     """Everything a provider can return at HTTP 200 that is not the model's answer is operational.
-
-    Otherwise three gateway faults or three truncations exhaust a task's attempts and are
-    recorded as an empty prediction, lowering the measured score on infrastructure noise.
     """
     result, _ = _exchange("openrouter", lambda request: httpx.Response(200, json=envelope))
     assert (result.delivery, result.outcome) == (expected_delivery, expected_outcome)
@@ -298,11 +274,7 @@ def test_synthetic_artifacts_describe_the_planned_population():
     ({"content": ""}, ("response_received", "empty_response")),
 ])
 def test_a_message_object_is_not_itself_a_completion(message, expected):
-    """`{"message": {}}` is a missing completion structure, not an empty answer.
-
-    Treating any dictionary as well-formed meant three malformed envelopes exhausted a
-    task's three attempts and were scored as the model answering nothing.
-    """
+    """`{"message": {}}` is a missing completion structure, not an empty answer."""
     envelope = {"choices": [{"finish_reason": "stop", "message": message}]}
     result, _ = _exchange("psnc", lambda request: httpx.Response(200, json=envelope))
     assert (result.delivery, result.outcome) == expected
@@ -387,13 +359,7 @@ def test_scorer_hash_is_recomputed_from_source_not_copied_from_the_plan():
 
 
 def test_a_first_attempt_throttle_returns_the_task_to_the_queue():
-    """Admission runs before an attempt row exists, so a throttle there has no evidence.
-
-    Releasing such a task as `retry_pending` asserts a retry of an attempt that was never
-    made; the repository refuses it, and the resulting AttemptLimitError propagated out of
-    the worker into the campaign's cancel-everything path. Ordinary throttling then failed
-    the whole campaign and left unrelated in-flight requests as ambiguous deliveries.
-    """
+    """Admission runs before an attempt row exists, so a throttle there has no evidence."""
     from iadopt_lab.persistence import RateLimitError
     from iadopt_lab.workflow import _advance_task
 
@@ -430,15 +396,7 @@ def test_a_first_attempt_throttle_returns_the_task_to_the_queue():
 
 
 def test_finalization_proceeds_with_terminal_operational_failures():
-    """One truncation must not deny results for an entire campaign.
-
-    A response truncated at the output ceiling is an operational failure that is
-    deliberately not retryable — the same request would truncate again — and is
-    deliberately not scored as a model-quality zero. Its task therefore can never reach
-    `complete`. Refusing to finalize while any task is incomplete meant a single such
-    task discarded every result the campaign did produce; at temperature 2 that is not
-    hypothetical, it is routine.
-    """
+    """One truncation must not deny results for an entire campaign."""
     from iadopt_lab.workflow import _TERMINAL_TASK_STATES, finalize_campaign
 
     assert set(_TERMINAL_TASK_STATES) == {"complete", "operational_failed", "ambiguous_delivery"}
@@ -470,13 +428,7 @@ def test_finalization_proceeds_with_terminal_operational_failures():
 
 
 def test_a_provider_cooldown_returns_the_task_instead_of_failing_the_campaign():
-    """One transient blip must not cancel every other in-flight request.
-
-    A cooldown is set by whichever worker saw the blip, while the others are already past
-    the eligibility check. At concurrency 24 that is the normal case, not a rare race: the
-    next worker to allocate an attempt finds the provider ineligible. Letting that
-    propagate ended a 10,476-task campaign after one failure in 4,745 calls.
-    """
+    """One transient blip must not cancel every other in-flight request."""
     from iadopt_lab.persistence import ProviderIneligible
     from iadopt_lab.workflow import _advance_task
 
@@ -517,12 +469,7 @@ def test_a_provider_cooldown_returns_the_task_instead_of_failing_the_campaign():
 
 
 def test_an_exhausted_transient_error_fails_the_task_not_the_provider():
-    """A 429 that runs out of retries is that task's failure, not the deployment's.
-
-    Pausing the provider stops every queued task. One rate-limited task exhausting its
-    three attempts blocked 10,348 others; only a failure that says something is wrong with
-    the deployment itself should pause it.
-    """
+    """A 429 that runs out of retries is that task's failure, not the deployment's."""
     from iadopt_lab.workflow import _advance_task
 
     calls = []
@@ -575,11 +522,8 @@ def test_an_exhausted_transient_error_fails_the_task_not_the_provider():
 def test_an_empty_poll_does_not_abandon_queued_work(monkeypatch):
     """Queued tasks must survive a moment when nothing happens to be claimable.
 
-    A provider cooldown that expires between the claim attempt and the delay calculation
-    leaves no work to claim and no wait to report. Breaking on that first empty poll
-    abandoned 9,929 queued tasks mid-campaign. The loop must back off and look again, and
-    give up only after several consecutive polls find nothing.
-    """
+    The loop must back off and look again, and give up only after several consecutive polls find
+    nothing."""
     from iadopt_lab import workflow
     from iadopt_lab.workflow import _IDLE_POLLS_BEFORE_STOP, run_campaign
 
@@ -638,13 +582,7 @@ def test_an_empty_poll_does_not_abandon_queued_work(monkeypatch):
     ],
 )
 def test_only_a_deployment_failure_pauses_the_provider(outcome, status, should_pause):
-    """Pausing must follow the deployment's health, not one task's content.
-
-    `output_truncated` is an HTTP 200 whose only fault is that this prompt and model
-    reached the configured output ceiling: the deployment answered perfectly. Pausing
-    over it stopped a live campaign after 1,291 of 17,460 tasks and stranded the other
-    16,167, because nothing but this decision distinguishes the two cases.
-    """
+    """Pausing must follow the deployment's health, not one task's content."""
     from iadopt_lab.workflow import _advance_task
 
     calls = []
@@ -699,13 +637,7 @@ def test_only_a_deployment_failure_pauses_the_provider(outcome, status, should_p
 
 @pytest.mark.parametrize("error_type", [ValueError, TypeError, KeyError, ZeroDivisionError])
 def test_a_scorer_rejection_fails_the_task_not_the_campaign(error_type):
-    """A prediction the scorer refuses must not be able to abort the run.
-
-    The validator is meant to reject anything unscorable, so reaching the scorer with a
-    bad prediction is a defect - but it is still one task's. Letting the exception
-    propagate ended a live campaign at 995 of 17,460 tasks, and since the offending
-    response was already durable every resume replayed it and died at the same point.
-    """
+    """A prediction the scorer refuses must not be able to abort the run."""
     from iadopt_lab.workflow import _score
 
     calls = []

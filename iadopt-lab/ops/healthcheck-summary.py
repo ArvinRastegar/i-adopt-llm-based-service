@@ -1,9 +1,4 @@
-"""One compact line describing the campaign right now, for the health-check notification.
-
-Reads the current snapshot the checks just took, and uses the deliberately older
-baseline only to derive a rate. Reporting straight from the baseline made every
-notification lag by up to five minutes and understate progress.
-"""
+"""One compact line describing the campaign right now, for the health-check notification."""
 
 from __future__ import annotations
 

@@ -70,11 +70,7 @@ def test_different_seeds_differ(pool):
 
 
 def test_top_and_bottom_overlap_by_arithmetic(pool):
-    """AT-9: the two selections overlap by 2*size-len(pool) and differ in len(pool)-size (INV-9).
-
-    They cannot be disjoint: 25 + 25 exceeds a 40-member pool. The contract originally claimed
-    disjointness and this test is what caught it.
-    """
+    """AT-9: the two selections overlap by 2*size-len(pool) and differ in len(pool)-size (INV-9)."""
     coefficients = {v: float(i) for i, v in enumerate(sorted(pool))}
     top = top_k_candidate(pool, coefficients)
     bottom = top_k_candidate(pool, coefficients, invert=True)

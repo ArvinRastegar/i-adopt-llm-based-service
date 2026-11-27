@@ -1,9 +1,4 @@
-"""Read-only progress report for the live campaign. Safe to run at any time.
-
-Opens a read-only transaction, prints task states, permanent losses, spend against the
-cap and a throughput-based estimate. It writes nothing and takes no locks that could
-interfere with a running campaign.
-"""
+"""Read-only progress report for the live campaign. Safe to run at any time."""
 
 from __future__ import annotations
 

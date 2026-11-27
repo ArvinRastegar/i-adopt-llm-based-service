@@ -1,23 +1,10 @@
 """A chat-completions client for the PSNC gateway that holds its key privately and stores nothing secret.
 
-PSNC serves open-weight models behind an OpenAI-compatible ``/chat/completions`` endpoint (a LiteLLM
-gateway in front of vLLM). This module is the only place that talks to it. It keeps what the Jev
-client (``openrouter``) learned and closes the gaps its review found:
+The endpoint must be https on an allowlisted host, so a damaged settings file cannot send the key
+elsewhere.
 
-- the key is held in a private attribute, never in a repr, a setting, an exception or a stored
-  record, and is read only through the lab's allowlisted loader;
-- redirects are not followed (urllib would re-send ``Authorization`` to the redirect's target) and
-  proxies from the environment are ignored, as in the lab's own provider adapter;
-- the endpoint must be https on an allowlisted host, so a damaged settings file cannot send the key
-  elsewhere;
-- anything that may be stored is scrubbed of the key, bearer tokens, key-shaped strings, account ids
-  in any of the forms an error body takes, and the private addresses the gateway echoes;
-- response headers are never stored (the gateway's carry a backend address and the key's running
-  spend); only ``Retry-After`` is read.
-
-A request is retried only for transient statuses, a bounded number of times, and every retry is
-recorded in the returned ``Exchange``, which is the record format the Jev client uses.
-"""
+Response headers are never stored: the gateway's carry a backend address and the key's running
+spend."""
 
 from __future__ import annotations
 
@@ -61,13 +48,7 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
     """Refuse to follow a redirect, so the Authorization header never reaches another host."""
 
     def redirect_request(self, *args: Any, **kwargs: Any) -> None:
-        """Decline every redirect.
-
-        Args: the arguments urllib passes (ignored).
-        Returns: None, which makes urllib raise the 3xx response as an HTTPError.
-        Raises: None.
-        Side effects: none.
-        """
+        """Decline every redirect."""
         return None
 
 
@@ -76,14 +57,7 @@ _OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedire
 
 def secure_post(url: str, headers: Mapping[str, str], body: bytes,
                 timeout_s: float) -> tuple[int, Mapping[str, str], bytes]:
-    """Perform one POST that follows no redirect and uses no proxy.
-
-    Args: url: full URL; headers: request headers; body: request body; timeout_s: socket timeout.
-    Returns: status, lower-cased response headers and body bytes; HTTP error statuses, redirects
-    included, are returned, not raised.
-    Raises: OSError or http.client.HTTPException for connection-level failures.
-    Side effects: network I/O.
-    """
+    """Perform one POST that follows no redirect and uses no proxy."""
     request = urllib.request.Request(url, data=body, headers=dict(headers), method="POST")
     try:
         with _OPENER.open(request, timeout=timeout_s) as response:
@@ -94,15 +68,7 @@ def secure_post(url: str, headers: Mapping[str, str], body: bytes,
 
 
 def scrub(text: str, secrets: Sequence[str] = ()) -> str:
-    """Remove everything from a message that must not be stored.
-
-    Args: text: any message that may reach a file; secrets: literal secrets to remove first, so a
-    cut applied later can never leave half of one.
-    Returns: the text with each secret, bearer token, key-shaped string, account id and private
-    address replaced.
-    Raises: None.
-    Side effects: none.
-    """
+    """Remove everything from a message that must not be stored."""
     for secret in secrets:
         if secret:
             text = text.replace(secret, "<redacted>")
@@ -114,14 +80,7 @@ def scrub(text: str, secrets: Sequence[str] = ()) -> str:
 
 
 def checked_base_url(base_url: str) -> str:
-    """Accept only an https endpoint on an allowlisted host.
-
-    Args: base_url: the gateway's base URL, with its API version path.
-    Returns: the base URL without a trailing slash.
-    Raises: RunError (the message never contains the URL's credentials or query) unless the URL is
-    https, names an allowlisted host, and carries no userinfo, query or fragment.
-    Side effects: none.
-    """
+    """Accept only an https endpoint on an allowlisted host."""
     parts = urlparse(base_url)
     if (parts.scheme != "https" or parts.hostname not in ALLOWED_HOSTS or parts.username
             or parts.password or parts.query or parts.fragment):
@@ -131,15 +90,7 @@ def checked_base_url(base_url: str) -> str:
 
 
 def credentials_from(env_file: str | None, environ: Mapping[str, str]) -> tuple[str, str]:
-    """Read the PSNC key and base URL without ever showing them.
-
-    Args: env_file: credential file such as the repository's ``.env``, or None; environ: the
-    process environment, whose values win over the file's.
-    Returns: the key and the checked base URL (the default when none is set).
-    Raises: RunError, whose message never contains a setting, when the file cannot be read or
-    parsed, no key is set, or the base URL is not an allowed endpoint.
-    Side effects: reads the named file (only the two allowlisted settings are kept).
-    """
+    """Read the PSNC key and base URL without ever showing them."""
     try:
         secrets = load_runtime_secrets(env_file, [KEY_NAME, BASE_URL_NAME], environ)
     except (OSError, ConfigurationError) as exc:
@@ -159,17 +110,7 @@ class ChatClient:
                  backoff_s: Sequence[float] = (2.0, 6.0, 20.0), transport: Transport = secure_post,
                  clock: Callable[[], float] = time.monotonic,
                  sleep: Callable[[float], None] = time.sleep) -> None:
-        """Configure the client.
-
-        Args: api_key: the gateway key; base_url: the checked base URL; user_agent: sent on every
-        request; timeout_s: per-attempt timeout (the lab's owner-set value); max_attempts: hard cap
-        per logical request; backoff_s: waits between attempts; transport, clock and sleep:
-        injectable for tests.
-        Returns: None.
-        Raises: ValueError for an empty key or a non-positive attempt cap (the message never
-        includes the key); RunError for a base URL that is not an allowed endpoint.
-        Side effects: none.
-        """
+        """Configure the client."""
         if not api_key:
             raise ValueError("an API key is required")
         if max_attempts < 1:
@@ -186,34 +127,15 @@ class ChatClient:
         self._sleep = sleep
 
     def __repr__(self) -> str:
-        """Describe the client without the key.
-
-        Args: none.
-        Returns: fixed redacted text.
-        Raises: None.
-        Side effects: none.
-        """
+        """Describe the client without the key."""
         return "ChatClient(<redacted>)"
 
     def __reduce__(self) -> Any:
-        """Prevent accidental serialization of the key.
-
-        Args: none.
-        Returns: never returns.
-        Raises: TypeError always.
-        Side effects: none.
-        """
+        """Prevent accidental serialization of the key."""
         raise TypeError("A client that holds a credential cannot be serialized")
 
     def settings(self) -> dict[str, object]:
-        """Report how the client behaves, for the journal. Contains no credential.
-
-        Args: none.
-        Returns: gateway host and path, user agent, timeout, attempt cap, backoff, the Retry-After
-        cap, and the facts that redirects are not followed and proxies are ignored.
-        Raises: None.
-        Side effects: none.
-        """
+        """Report how the client behaves, for the journal. Contains no credential."""
         return {"host": urlparse(self._base).hostname, "path": CHAT_PATH,
                 "user_agent": self._user_agent, "timeout_s": self._timeout,
                 "max_attempts": self._max_attempts, "backoff_s": list(self._backoff),
@@ -223,24 +145,11 @@ class ChatClient:
     def _scrub(self, text: str) -> str:
         """Remove the key and every other secret-shaped string from text that may be stored.
 
-        Args: text: any message; scrubbing happens before truncating, so a cut can never leave half
-        a key.
-        Returns: the cleaned text.
-        Raises: None.
-        Side effects: none.
-        """
+        Scrubbing happens before truncating, so a cut can never leave half a key."""
         return scrub(text, (self.__key,))
 
     def post(self, body: Mapping[str, Any]) -> Exchange:
-        """Send one request, retrying transient failures at most ``max_attempts`` times.
-
-        Args: body: the request body, serialized exactly as ``jev.encode`` does.
-        Returns: an Exchange; status 200 with the response text on success, otherwise the last
-        status and an error that includes the start of the service's own explanation (scrubbed).
-        Never raises for network or HTTP problems.
-        Raises: TypeError or ValueError if the body cannot be serialized.
-        Side effects: network I/O; sleeps between attempts.
-        """
+        """Send one request, retrying transient failures at most ``max_attempts`` times."""
         payload = encode(body)
         headers = {"Authorization": f"Bearer {self.__key}", "Content-Type": "application/json",
                    "Accept": "application/json", "User-Agent": self._user_agent}

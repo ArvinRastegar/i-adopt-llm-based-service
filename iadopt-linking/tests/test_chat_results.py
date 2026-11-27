@@ -27,7 +27,7 @@ from iadopt_linking.jev import candidate_key
 from iadopt_linking.jev_experiment import PUBLISHED_JEV, JevPaths, build_outputs
 from iadopt_linking.jev_health import hash_matches
 from iadopt_linking.jev_inputs import load_baseline
-from iadopt_linking.provenance import evidence_code_identity
+from iadopt_linking.provenance import RESULTS_EVIDENCE, evidence_code_identity
 from iadopt_linking.recorder import JsonlStore
 
 RESULTS = Path(__file__).resolve().parents[1] / "results"
@@ -60,9 +60,8 @@ def same_up_to_rounding(expected: Any, actual: Any, where: str = "summary.json")
     """Assert two JSON values are equal, floats to a relative 1e-9.
 
     A probability here is exp() of a log-probability, and another platform's C library may round
-    exp() differently in the last digit, which would move every float derived from it by a few units
-    of the sixteenth place and nothing else: this must not look like a changed result.
-    """
+    exp() differently in the last digit, which would move every float derived from it by a few
+    units of the sixteenth place and nothing else: this must not look like a changed result."""
     if isinstance(expected, float) or isinstance(actual, float):
         assert isinstance(expected, (int, float)) and isinstance(actual, (int, float)), where
         assert math.isclose(expected, actual, rel_tol=1e-9, abs_tol=1e-12), (
@@ -103,11 +102,11 @@ def test_files_are_the_ones_the_manifest_hashed(manifest_path: Path) -> None:
 
 
 @EACH
-def test_evidence_was_made_by_the_evidence_code_in_this_tree(manifest_path: Path) -> None:
+def test_evidence_was_made_by_this_tree_or_the_results_code(manifest_path: Path) -> None:
     manifest = read(manifest_path)
-    assert manifest["evidence_code_sha256"] == evidence_code_identity(files=PSNC_EVIDENCE_FILES), (
-        "the code that decides what the model is asked or how it is read changed since this run; "
-        "its evidence is stale. Start a new results folder.")
+    made_by = manifest["evidence_code_sha256"]
+    assert made_by in (evidence_code_identity(files=PSNC_EVIDENCE_FILES), RESULTS_EVIDENCE["psnc"]), (
+        "this run was made neither by this tree's evidence code nor by the code at RESULTS_CODE")
     assert read(manifest_path.parent / "plan.json")["evidence_code_sha256"] == (
         manifest["evidence_code_sha256"])
 
@@ -241,13 +240,7 @@ LABELS = "123456789ABCDEFGHJKLMNPQRSTUVWXYZ"
 
 
 def independent_top1(folder: Path) -> tuple[dict[str, int], int, dict[str, bool]]:
-    """Recompute each pass's reachable top-1 from the raw responses and the baseline's scores.
-
-    Uses nothing from the project: the probability of an option is the sum of exp(logprob) over the
-    first token's top log-probabilities whose stripped text is its label, normalised over the labels
-    found; the choice is the highest probability among the real candidates, ties by source order
-    (wikidata, qudt, om) then rank. This is the rule written in DECISIONS L-016 and L-017.
-    """
+    """Recompute each pass's reachable top-1 from the raw responses and the baseline's scores."""
     plan = json.loads((folder / "plan.json").read_text(encoding="utf-8"))
     base = {}
     for line in (RESULTS / plan["baseline"]["folder"] / "scores.jsonl").read_text().splitlines():

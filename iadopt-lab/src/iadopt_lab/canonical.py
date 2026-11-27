@@ -15,13 +15,7 @@ JSON_CONTRACT = "canonical-json-v1"
 
 
 def _validate(value: Any) -> None:
-    """Check JSON primitives recursively without coercing scientific values.
-
-    Args: value: Candidate nested JSON value.
-    Returns: None on success.
-    Raises: TypeError for unsupported objects/keys; ValueError for non-finite values.
-    Side Effects: None; deterministic.
-    """
+    """Check JSON primitives recursively without coercing scientific values."""
     if value is None or isinstance(value, (str, bool, int)):
         return
     if isinstance(value, float):
@@ -44,13 +38,7 @@ def _validate(value: Any) -> None:
 
 
 def canonical_json_bytes(value: Any, contract: str = JSON_CONTRACT) -> bytes:
-    """Serialize explicit JSON primitives with sorted keys and preserved array order.
-
-    Args: value: JSON-compatible value; contract: exact serialization version.
-    Returns: Compact UTF-8 JSON bytes, retaining original Unicode strings.
-    Raises: ValueError for unknown contract/non-finite data; TypeError for unsupported data.
-    Side Effects: None. Identical inputs produce identical bytes under Python 3.12.
-    """
+    """Serialize explicit JSON primitives with sorted keys and preserved array order."""
     if contract != JSON_CONTRACT:
         raise ValueError("Unknown canonical JSON contract")
     _validate(value)
@@ -59,26 +47,14 @@ def canonical_json_bytes(value: Any, contract: str = JSON_CONTRACT) -> bytes:
 
 
 def sha256_bytes(data: bytes) -> str:
-    """Hash exact bytes without decoding or normalization.
-
-    Args: data: Immutable source bytes.
-    Returns: Lowercase SHA-256 hexadecimal digest.
-    Raises: TypeError if data is not bytes.
-    Side Effects: None; pure.
-    """
+    """Hash exact bytes without decoding or normalization."""
     if not isinstance(data, bytes):
         raise TypeError("SHA-256 input must be bytes")
     return hashlib.sha256(data).hexdigest()
 
 
 def content_hash(value: Any) -> str:
-    """Hash a canonical JSON value with the project's fixed serialization protocol.
-
-    Args: value: Supported JSON primitives.
-    Returns: SHA-256 digest of canonical bytes.
-    Raises: TypeError/ValueError if canonicalization fails.
-    Side Effects: None; deterministic.
-    """
+    """Hash a canonical JSON value with the project's fixed serialization protocol."""
     return sha256_bytes(canonical_json_bytes(value))
 
 
@@ -94,13 +70,7 @@ class ContentIdentity:
 
 
 def build_content_identity(kind: str, version: str, payload: Any) -> ContentIdentity:
-    """Build a versioned artifact envelope without persisting it.
-
-    Args: kind: Nonempty artifact kind; version: protocol version; payload: JSON value.
-    Returns: Immutable identity containing envelope bytes, length and hash.
-    Raises: ValueError for empty kind/version or invalid values; TypeError for non-JSON data.
-    Side Effects: None; deterministic, no timestamps or random identities are inserted.
-    """
+    """Build a versioned artifact envelope without persisting it."""
     if not kind or not version:
         raise ValueError("Artifact kind and version are required")
     data = canonical_json_bytes({"kind": kind, "version": version, "payload": payload})
@@ -108,13 +78,7 @@ def build_content_identity(kind: str, version: str, payload: Any) -> ContentIden
 
 
 def lexical_sort_key(text: str, policy: str = "unicode-nfc-casefold-v1") -> tuple[str, str]:
-    """Return a lexical ordering key without altering retained/scored source text.
-
-    Args: text: Original lexical label; policy: supported sort contract.
-    Returns: NFC/casefold comparison key and original-label tie-break.
-    Raises: TypeError for non-string labels; ValueError for an unsupported policy.
-    Side Effects: None; never used as scorer normalization.
-    """
+    """Return a lexical ordering key without altering retained/scored source text."""
     if not isinstance(text, str):
         raise TypeError("Lexical sort input must be text")
     if policy != "unicode-nfc-casefold-v1":
@@ -123,26 +87,14 @@ def lexical_sort_key(text: str, policy: str = "unicode-nfc-casefold-v1") -> tupl
 
 
 def sanitize_provider_request(request: Mapping[str, Any], policy: str = "request-allowlist-v1") -> dict:
-    """Validate a credential-free outgoing body against its explicit evidence allowlist.
-
-    Args: request: Chat-completions body before authentication; policy: redaction contract.
-    Returns: Independent JSON body containing every admitted scientific field.
-    Raises: ValueError for unknown fields/policy or secret-like field names; TypeError for non-JSON data.
-    Side Effects: None. Error messages never echo rejected values.
-    """
+    """Validate a credential-free outgoing body against its explicit evidence allowlist."""
     allowed = {"model", "messages", "temperature", "top_p", "max_tokens", "max_completion_tokens",
                "stream", "reasoning", "reasoning_effort", "enable_thinking", "chat_template_kwargs",
                "seed", "provider", "include_reasoning"}
     if policy != "request-allowlist-v1" or set(request) - allowed:
         raise ValueError("Request contains an unsupported evidence field")
     def check_keys(value: Any) -> None:
-        """Reject credential-named keys recursively while preserving message text.
-
-        Args: value: Nested request value.
-        Returns: None when credential key names are absent.
-        Raises: ValueError for prohibited keys, without revealing values.
-        Side Effects: None; message strings are not rewritten.
-        """
+        """Reject credential-named keys recursively while preserving message text."""
         if isinstance(value, Mapping):
             for key, item in value.items():
                 if any(token in key.lower() for token in ("api_key", "authorization", "password", "cookie", "database_url")):

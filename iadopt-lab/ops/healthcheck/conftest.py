@@ -1,13 +1,4 @@
-"""One consistent read of the live campaign, shared by every health check.
-
-These are not unit tests. They assert that a campaign running right now is behaving the
-way the two completed campaigns did, and they are deliberately outside `testpaths`
-(`tests/`) so a normal `pytest` run never collects them.
-
-Every threshold here is derived from stored evidence of campaigns `5cdc9417` (PSNC,
-10,476 tasks) and `844df00e` (OpenRouter, 10,332 tasks), never guessed, and each is set
-well outside the observed range: the job is to detect breakage, not to grade quality.
-"""
+"""One consistent read of the live campaign, shared by every health check."""
 
 from __future__ import annotations
 
@@ -200,12 +191,7 @@ def _load_previous(cid: str) -> dict | None:
 
 
 def _save(data: dict) -> None:
-    """Keep a baseline that is old enough to measure progress against.
-
-    Overwriting on every invocation meant an ad-hoc run reset the baseline to "now", so
-    the next scheduled run had nothing meaningful to compare with and the progress check
-    silently stopped doing its job.
-    """
+    """Keep a baseline that is old enough to measure progress against."""
     if os.environ.get("IADOPT_HEALTH_CAMPAIGN"):
         return  # a pinned diagnostic run must not disturb the live campaign's files
     current = {key: data[key] for key in

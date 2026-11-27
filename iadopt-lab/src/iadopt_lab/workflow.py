@@ -34,13 +34,7 @@ from .validation import empty_prediction, load_schema_bytes, validate_prediction
 
 
 def synthetic_similarity(left: str, right: str) -> float:
-    """Compare normalized labels in an explicitly non-scientific offline fixture.
-
-    Args: left/right: Evaluator-normalized labels.
-    Returns: 1.0 for equality, 0.0 otherwise; not MiniLM cosine similarity.
-    Raises: None.
-    Side Effects: None; no embedding loading or network.
-    """
+    """Compare normalized labels in an explicitly non-scientific offline fixture."""
     return float(left == right)
 
 
@@ -48,24 +42,12 @@ class SyntheticAdapter:
     """Three deterministic response cases, using fixture gold only in synthetic mode."""
 
     def __init__(self, task: dict, population: list[str]) -> None:
-        """Bind a labelled fixture to durable task/attempt identities.
-
-        Args: task: Synthetic leased task with gold; population: ordered three-target fixture.
-        Returns: None.
-        Raises: ValueError if target is not in the fixture population.
-        Side Effects: None; no real client/key is allocated.
-        """
+        """Bind a labelled fixture to durable task/attempt identities."""
         self.task = task
         self.case = population.index(task["variable"]["variable_id"]) % 3
 
     async def send_once(self, body: dict) -> ProviderResult:
-        """Return valid, corrected-on-attempt2, or always-invalid offline evidence.
-
-        Args: body: Full provider-neutral request whose evidence is retained unchanged.
-        Returns: Synthetic ProviderResult; raw envelope is a normal Chat Completions fixture.
-        Raises: None for a correctly planned fixture.
-        Side Effects: In-memory fixture evaluation only; zero HTTP requests and zero monetary cost.
-        """
+        """Return valid, corrected-on-attempt2, or always-invalid offline evidence."""
         number = self.task["attempt_count"]
         valid = self.case == 0 or (self.case == 1 and number >= 2)
         assistant = json.dumps(self.task["gold"], ensure_ascii=False) if valid else '{"invalid_fixture":true}'
@@ -86,13 +68,7 @@ class SlidingWindowGate:
     """Process-local conservative RPM/TPM accounting; database leases guard task ownership."""
 
     def __init__(self, requests: int, tokens: int, *, clock: Callable[[], float] = time.monotonic) -> None:
-        """Initialize a provider's rolling60-second request/token reservation window.
-
-        Args: requests/tokens: Positive frozen limits; clock: injectable monotonic clock.
-        Returns: None.
-        Raises: LabError for invalid limits.
-        Side Effects: Allocates local counters, never sleeps or accesses a database.
-        """
+        """Initialize a provider's rolling60-second request/token reservation window."""
         if requests < 1 or tokens < 1:
             raise LabError("Provider RPM and TPM must be positive")
         self.requests, self.tokens, self.clock = requests, tokens, clock
@@ -102,11 +78,7 @@ class SlidingWindowGate:
     def reserve(self, tokens: int) -> float:
         """Reserve one request now or return a delay without allocating an attempt.
 
-        Args: tokens: Conservative all-in request token bound.
-        Returns: Zero after reservation, otherwise nonnegative seconds until retrying this gate.
-        Raises: LabError when one request exceeds the provider's entire minute allowance.
-        Side Effects: Updates process-local quota receipts only; caller must release leases before waiting.
-        """
+        The caller must release leases before waiting."""
         if tokens < 0 or tokens > self.tokens:
             raise LabError("One request exceeds the frozen per-minute token allowance")
         now = self.clock()
@@ -140,36 +112,18 @@ class Services:
 
 
 async def _db(services: Services, method: str, *args: Any, **kwargs: Any) -> Any:
-    """Call one short synchronous repository transaction outside the async event loop.
-
-    Args: services: Injected repository; method: existing repository method; args/kwargs: its inputs.
-    Returns: Repository method result after its transaction commits.
-    Raises: Original repository errors; never retries a failed mutation automatically.
-    Side Effects: Only the named repository operation; no transaction spans an HTTP await.
-    """
+    """Call one short synchronous repository transaction outside the async event loop."""
     return await asyncio.to_thread(getattr(services.repository, method), *args, **kwargs)
 
 
 def _checkpoint(services: Services, stage: str, task: dict) -> None:
-    """Invoke an optional offline fault-injection hook after a durable boundary.
-
-    Args: services: Injected hook; stage: committed boundary name; task: durable task identity.
-    Returns: None.
-    Raises: Hook exception intentionally propagates to emulate process interruption.
-    Side Effects: Only explicitly injected test behavior; production hook is absent.
-    """
+    """Invoke an optional offline fault-injection hook after a durable boundary."""
     if services.checkpoint:
         services.checkpoint(stage, task)
 
 
 def _base_prompt(task: dict, services: Services) -> Any:
-    """Render one task from verified artifacts without exposing target gold.
-
-    Args: task: Leased run and canonical variable; services: frozen demos/root.
-    Returns: Original uncorrected one-user-message prompt.
-    Raises: Artifact or renderer errors if the frozen protocol is violated.
-    Side Effects: Read-only prompt/schema files; target gold is not passed to the renderer.
-    """
+    """Render one task from verified artifacts without exposing target gold."""
     return render_base_prompt(load_prompt_version(task["run"]["prompt_variant"], services.root),
         task["variable"]["definition"], load_schema_bytes(services.root),
         services.bundle["demonstrations"][:task["run"]["shot_count"]],
@@ -205,24 +159,11 @@ _COMMIT_BACKOFF_SECONDS = (0.0, 0.5, 2.0, 5.0, 10.0, 20.0, 40.0, 45.0)
 async def _commit_response(services: Services, attempt: dict, payload: dict) -> Any:
     """Commit exact provider evidence, retrying a transient storage failure.
 
-    A response that has reached this process may already have been paid for and cannot
-    be reproduced: re-sending would be a second provider request against a task whose
-    three-request budget is fixed. A single failed insert must therefore not discard it.
-    The commit is idempotent on attempt identity, so repeating it is safe.
+    A single failed insert must not discard a response: it may be paid for and cannot be re-sent.
 
-    The loop runs as a task registered on `services.preservation` and is awaited through
-    `asyncio.shield`, because the outage that fails a commit usually also fails the lease
-    heartbeat, and a failing heartbeat cancels this task's supervisor. Shielding only the
-    individual database await left the surrounding retry loop cancellable, so the process
-    could stop trying to store an answer it had already been charged for while waiting out
-    a recoverable outage. Cancelling the caller now stops further dispatch and leaves
-    preservation running; `run_campaign` waits for it before returning.
-
-    Args: services: injected repository; attempt: owning attempt row; payload: exact evidence.
-    Returns: The stored response record.
-    Raises: The final PersistenceError if every attempt to store the evidence fails.
-    Side effects: Retries the same durable write with linear backoff; never re-dispatches.
-    """
+    Shielding only the individual database await left the surrounding retry loop cancellable, so
+    the process could stop trying to store an answer it had already been charged for while
+    waiting out a recoverable outage."""
 
     async def preserve() -> Any:
         last: Exception | None = None
@@ -249,13 +190,7 @@ async def _commit_response(services: Services, attempt: dict, payload: dict) -> 
 
 
 async def _heartbeat(lease: dict, services: Services, stopped: asyncio.Event) -> None:
-    """Renew one active lease periodically while a single task operation runs.
-
-    Args: lease: Current fenced ownership; services: repository/config; stopped: completion signal.
-    Returns: None when stopped.
-    Raises: Lost-lease or database error, cancelling safe continuation at the wrapper boundary.
-    Side Effects: Short operational database writes only; no model requests or waiting transaction.
-    """
+    """Renew one active lease periodically while a single task operation runs."""
     config = services.bundle["configuration"]["execution"]
     while not stopped.is_set():
         try:
@@ -265,14 +200,7 @@ async def _heartbeat(lease: dict, services: Services, stopped: asyncio.Event) ->
 
 
 async def run_task(lease: dict, services: Services) -> dict:
-    """Advance a fenced task through local checkpoints and at most ONE provider request.
-
-    Args: lease: Claimed task record; services: explicit frozen/runtime boundaries.
-    Returns: Current durable task after release, preserving valid/invalid/operational distinctions.
-    Raises: Integrity/storage errors or injected interruption; no automatic fourth request exists.
-    Side Effects: Prompt/request, raw response, validation, prediction and score transactions;
-        zero or one authorized send. SDK retries are independently disabled.
-    """
+    """Advance a fenced task through local checkpoints and at most ONE provider request."""
     stopped = asyncio.Event()
     heartbeat = asyncio.create_task(_heartbeat(lease, services, stopped))
     work = asyncio.create_task(_advance_task(lease, services))
@@ -296,13 +224,7 @@ async def run_task(lease: dict, services: Services) -> dict:
 
 
 async def _advance_task(lease: dict, services: Services) -> dict:
-    """Execute one state-machine advancement under a wrapper-managed heartbeat.
-
-    Args: lease: Current token/fence and task evidence; services: injected dependencies.
-    Returns: Released next checkpoint. Invalid content is data, never an exception or silent repair.
-    Raises: LabError/integrity errors; cancellation records ambiguous dispatch when necessary.
-    Side Effects: Short repository writes and at most one send; raw commits before validation.
-    """
+    """Execute one state-machine advancement under a wrapper-managed heartbeat."""
     task = await _db(services, "get_task", lease["id"])
     if task["prediction"] is not None:
         return await _score(task, lease, services)
@@ -426,13 +348,7 @@ async def _advance_task(lease: dict, services: Services) -> dict:
 
 
 async def _validate_and_select(task: dict, lease: dict, services: Services) -> dict:
-    """Continue extraction/validation from the committed raw response without re-sending.
-
-    Args: task: Task with delivered response; lease: active ownership; services: schema/store.
-    Returns: Released retry/failed/complete task depending on all three-attempt evidence.
-    Raises: Integrity errors; ordinary JSON/schema errors are retained structured outcomes.
-    Side Effects: Local validation/prediction/evaluation writes only, never a provider request.
-    """
+    """Continue extraction/validation from the committed raw response without re-sending."""
     latest = task["attempts"][-1]
     if not latest["validation"]:
         extraction = extract_json(latest["response"]["assistant_text"] or "")
@@ -461,13 +377,7 @@ async def _validate_and_select(task: dict, lease: dict, services: Services) -> d
 
 
 async def _score(task: dict, lease: dict, services: Services) -> dict:
-    """Score one stored canonical prediction once and release its completed checkpoint.
-
-    Args: task: Prediction-ready task; lease: current token/fence; services: identified similarity/store.
-    Returns: Complete released task; existing score is reused unchanged.
-    Raises: Integrity errors only; a scorer rejection fails this task alone.
-    Side Effects: One immutable evaluation and normalized metric set; no provider calls.
-    """
+    """Score one stored canonical prediction once and release its completed checkpoint."""
     if not task["evaluation"]:
         try:
             result = await asyncio.to_thread(evaluate_item, task["gold"], task["prediction"]["canonical"],
@@ -495,14 +405,7 @@ async def _score(task: dict, lease: dict, services: Services) -> dict:
 
 
 def build_observations(tasks: list[dict]) -> list[dict[str, Any]]:
-    """Project stored task evidence into the rows the reporting layer consumes.
-
-    Args: tasks: full task records from the repository, in any order.
-    Returns: One observation per task carrying run/variable identity, category
-        provenance, terminal validity and its evaluation record.
-    Raises: KeyError if a task record is incomplete.
-    Side effects: None; this is a pure projection of already-durable evidence.
-    """
+    """Project stored task evidence into the rows the reporting layer consumes."""
     rows = []
     for task in tasks:
         variable = task["variable"]
@@ -522,18 +425,7 @@ def build_observations(tasks: list[dict]) -> list[dict[str, Any]]:
 
 
 def _attempt_projection(attempt: dict) -> dict[str, Any]:
-    """Reduce one stored attempt to the JSON-safe fields the reporting layer reads.
-
-    Database rows carry datetimes, Decimals and raw bytes, none of which survive the
-    canonical-JSON boundary that reporting validates against. Passing the row through
-    whole fails; this selects the outcome, usage, latency and validation errors that
-    the attempt summary actually consumes, and nothing else.
-
-    Args: attempt: stored attempt record including its response and validation rows.
-    Returns: JSON-compatible attempt projection.
-    Raises: None; absent evidence is represented as absent, never invented.
-    Side effects: None.
-    """
+    """Reduce one stored attempt to the JSON-safe fields the reporting layer reads."""
     response = attempt.get("response") or {}
     evidence = response.get("evidence") if isinstance(response.get("evidence"), dict) else {}
     validation = attempt.get("validation") or {}
@@ -550,21 +442,7 @@ def _attempt_projection(attempt: dict) -> dict[str, Any]:
 
 
 async def finalize_campaign(campaign_id: str, services: Services) -> dict[str, Any]:
-    """Rank the completed campaign, persist its evidence and mark it complete.
-
-    Finishing every task is not finishing the campaign: without this step the database
-    keeps a campaign whose tasks are all complete in the `running` state, with no stored
-    ranking and no report lineage, while the caller sees a successful exit.
-
-    Each step is idempotent, so an interruption during finalization is recovered by
-    running it again: repeating an identical ranking or report returns the existing row,
-    and completing an already complete campaign is safe.
-
-    Args: campaign_id: frozen campaign; services: verified bundle and repository;
-    Returns: Ranking summary with the stored identities and final campaign state.
-    Raises: LabError if tasks are incomplete; persistence errors on evidence conflict.
-    Side effects: Writes ranking, report and campaign state; optionally one export file.
-    """
+    """Rank the completed campaign, persist its evidence and mark it complete."""
     from .reporting import build_configuration_ranking, export_report
 
     plan = services.bundle["plan"]
@@ -634,14 +512,7 @@ async def finalize_campaign(campaign_id: str, services: Services) -> dict[str, A
 
 
 async def run_campaign(campaign_id: str, services: Services, *, stop_after: int | None = None) -> dict:
-    """Continue all selected providers through durable completion or an explicit safe stop.
-
-    Args: campaign_id: Explicit frozen campaign; services: verified bundle/adapters/store;
-        stop_after: Optional offline test limit on task advancements, never scientific parameters.
-    Returns: State counts, stop reason and cumulative call count. Reporting is a separate finalizer.
-    Raises: Integrity/runtime drift or shared storage failure. Live work requires stored authorization.
-    Side Effects: Provider-fair bounded task work, short DB transactions and interruptible cooldown waits.
-    """
+    """Continue all selected providers through durable completion or an explicit safe stop."""
     verify_bundle(services.root, services.bundle)
     mode = services.bundle["plan"]["mode"]
     if mode == "live" and (services.token_bound is None or services.cost_policy is None
@@ -680,12 +551,8 @@ async def run_campaign(campaign_id: str, services: Services, *, stop_after: int 
     async def reap(*, drain: bool) -> int:
         """Wait for in-flight work and release the slots it held.
 
-        Args: drain: wait for every in-flight task instead of the first to finish.
-        Returns: number of task advancements completed.
-        Raises: the original exception of any failed task. asyncio.wait would
-            otherwise discard it, turning a real failure into a silent stall.
-        Side effects: releases per-provider concurrency slots for finished tasks.
-        """
+        It re-raises the original exception of any failed task: asyncio.wait would otherwise
+        discard it, turning a real failure into a silent stall."""
         if not inflight:
             return 0
         mode = asyncio.ALL_COMPLETED if drain else asyncio.FIRST_COMPLETED

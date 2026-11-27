@@ -1,14 +1,4 @@
 """Render a scorer's run: the report, the head-to-head with Qwen3, and the tables for later analysis.
-
-Pure functions of the stored summary and outcomes, so a committed report can always be rebuilt from
-the evidence beside it. The report keeps the baseline's shape (result table, where misses come
-from, diagnostics, source confusion, thresholds, groups, examples, health) so the experiments
-read side by side, and adds what only a scorer that answers with probabilities has: passes and
-order, abstention, and what its confidence is worth.
-
-A ``Voice`` names the scorer and holds the few paragraphs that depend on what it is (how it was
-asked, what its own confidence means, where its cost comes from). ``JEV_VOICE`` is Jev's; the
-text it holds is what the committed Jev report says, word for word.
 """
 
 from __future__ import annotations
@@ -26,18 +16,7 @@ from .report import _examples, _table, _verdict, ratio, value
 
 @dataclass(frozen=True)
 class Voice:
-    """How one scorer is named and described in the files a run publishes.
-
-    ``key`` prefixes the published names of its fields, columns and signals; ``name`` is what the
-    prose calls it. ``own_confidence_word`` names the scorer's own confidence in a sentence,
-    ``own_confidence_short`` in a table heading and ``own_confidence_label`` in a table row. ``cost_sentence``, ``intro`` and ``confidence_notes``
-    write the paragraphs that depend on what the scorer is, ``reliability_note`` ends the
-    reliability table, ``attribution`` closes the report and ``extra`` adds sections (such as a
-    comparison with another run) after the paired table. ``pointwise`` says whether a pointwise
-    arm can exist, which decides whether its columns are written. ``post_hoc``,
-    ``term_level_note`` and ``term_heading`` say how the analyses Jev's report gained after its
-    first results are labelled: post hoc for Jev, exploratory for a run that planned them.
-    """
+    """How one scorer is named and described in the files a run publishes."""
 
     key: str
     name: str
@@ -57,14 +36,7 @@ class Voice:
 
 
 def outcome_columns(key: str, pointwise: bool) -> tuple[str, ...]:
-    """Name the columns of outcomes.csv.
-
-    Args: key: the scorer's key; pointwise: whether the pointwise columns are written.
-    Returns: the column names: the slot, the scorer's answer and signals, optionally the pointwise
-    arm, and the Qwen3 baseline's answer.
-    Raises: None.
-    Side effects: none.
-    """
+    """Name the columns of outcomes.csv."""
     return ("slot_id", "source_path", "role", "term", "query_key", "gold_vocabulary",
             "gold_local_id", "reachable", "pool_size", "gold_in_pool",
             f"{key}_category", f"{key}_correct", f"{key}_equivalent_correct",
@@ -78,13 +50,7 @@ def outcome_columns(key: str, pointwise: bool) -> tuple[str, ...]:
 
 
 def confidence_columns(key: str) -> tuple[str, ...]:
-    """Name the columns of confidence.csv.
-
-    Args: key: the scorer's key.
-    Returns: the column names: one row is a slot in a pass.
-    Raises: None.
-    Side effects: none.
-    """
+    """Name the columns of confidence.csv."""
     return ("slot_id", "pass", "arm", "term", "query_key", "gold_vocabulary", "gold_local_id",
             "reachable", "asked", "pool_size", "gold_in_pool", "category", "correct",
             "equivalent_correct", "selected_source", "selected_local_id", "selected_score",
@@ -92,13 +58,7 @@ def confidence_columns(key: str) -> tuple[str, ...]:
 
 
 def signal_labels(voice: Voice) -> dict[str, str]:
-    """Label the confidence signals for a table.
-
-    Args: voice: the scorer.
-    Returns: signal name -> label, the scorer's signals first and the baseline's after them.
-    Raises: None.
-    Side effects: none.
-    """
+    """Label the confidence signals for a table."""
     return {
         f"{voice.key}_selected_probability": f"{voice.name}: probability of the selected candidate",
         f"{voice.key}_confidence": voice.own_confidence_label,
@@ -115,13 +75,7 @@ PROBABILITY_COLUMNS = (
 
 
 def num(x: float | None) -> str:
-    """Write a number for a CSV cell: short, exact enough, empty for None.
-
-    Args: x: a float or None.
-    Returns: the number to six decimals without trailing zeros, or "".
-    Raises: None.
-    Side effects: none.
-    """
+    """Write a number for a CSV cell: short, exact enough, empty for None."""
     if x is None:
         return ""
     text = f"{x:.6f}".rstrip("0").rstrip(".")
@@ -129,24 +83,12 @@ def num(x: float | None) -> str:
 
 
 def _signed(receipt: Mapping[str, int]) -> str:
-    """Show a signed difference as a decimal.
-
-    Args: receipt: {"numerator", "denominator"}.
-    Returns: "+0.035" style text.
-    Raises: None.
-    Side effects: none.
-    """
+    """Show a signed difference as a decimal."""
     return f"{receipt['numerator'] / receipt['denominator']:+.3f}"
 
 
 def _terms(block: Mapping[str, Any] | None, name: str = "Jev", other: str = "Qwen3") -> str:
-    """Describe a comparison made once per term.
-
-    Args: block: paired.term_level output, or None; name: the first system; other: the second.
-    Returns: a sentence fragment with the terms won by each system and the sign-test p-value.
-    Raises: KeyError for a malformed block.
-    Side effects: none.
-    """
+    """Describe a comparison made once per term."""
     if block is None:
         return "no terms"
     mean = block["mean_difference"]
@@ -156,13 +98,7 @@ def _terms(block: Mapping[str, Any] | None, name: str = "Jev", other: str = "Qwe
 
 
 def _p(receipt: Mapping[str, int] | None) -> str:
-    """Show an exact p-value as a decimal.
-
-    Args: receipt: the p-value as a fraction, or None.
-    Returns: "0.0123", "<0.0001" or "-".
-    Raises: None.
-    Side effects: none.
-    """
+    """Show an exact p-value as a decimal."""
     if receipt is None:
         return "-"
     p = receipt["numerator"] / receipt["denominator"]
@@ -170,13 +106,7 @@ def _p(receipt: Mapping[str, int] | None) -> str:
 
 
 def _difference(block: Mapping[str, Any] | None) -> str:
-    """Show an accuracy difference with its interval.
-
-    Args: block: compare output.
-    Returns: "+0.035 (95% interval -0.012 to +0.080)", or "-" without a difference.
-    Raises: KeyError for a malformed block.
-    Side effects: none.
-    """
+    """Show an accuracy difference with its interval."""
     if block is None or block["difference"] is None:
         return "-"
     d = block["difference"]
@@ -189,16 +119,7 @@ def outcomes_csv(own: Sequence[Mapping[str, Any]], qwen: Sequence[Mapping[str, A
                  results: Mapping[str, Sequence[Mapping[str, Any]]],
                  agreement: Sequence[Fraction | None], slot_paths: Mapping[str, str],
                  specs: Mapping[str, Any], voice: Voice | None = None) -> str:
-    """Write one row per slot: the scorer's primary answer and signals beside Qwen3's.
-
-    Args: own, qwen: evaluate_slot outcomes for the same slots (the scorer's, the baseline's);
-    results: pass_results by pass name; agreement: per slot, the exact share of Choice passes that
-    agree with the primary selection; slot_paths: slot id -> source path; specs: pass name ->
-    PassSpec; voice: the scorer (Jev's by default).
-    Returns: CSV text, one row per slot in population order.
-    Raises: KeyError for a malformed outcome.
-    Side effects: none.
-    """
+    """Write one row per slot: the scorer's primary answer and signals beside Qwen3's."""
     voice = voice or JEV_VOICE
     primary = results[PRIMARY_PASS]
     pointwise = next((results[name] for name, spec in specs.items() if spec.arm == ARM_NOUL), None)
@@ -232,14 +153,7 @@ def outcomes_csv(own: Sequence[Mapping[str, Any]], qwen: Sequence[Mapping[str, A
 
 def confidence_csv(results: Mapping[str, Sequence[Mapping[str, Any]]],
                    specs: Mapping[str, Any], voice: Voice | None = None) -> str:
-    """Write one row per slot and pass with every number that says how sure the scorer was.
-
-    Args: results: pass_results by pass name; specs: pass name -> PassSpec; voice: the scorer
-    (Jev's by default).
-    Returns: CSV text, pass by pass in population order.
-    Raises: KeyError for a malformed result.
-    Side effects: none.
-    """
+    """Write one row per slot and pass with every number that says how sure the scorer was."""
     voice = voice or JEV_VOICE
     buffer = io.StringIO()
     writer = csv.writer(buffer, lineterminator="\n")
@@ -263,16 +177,7 @@ def confidence_csv(results: Mapping[str, Sequence[Mapping[str, Any]]],
 
 def probabilities_csv(results: Mapping[str, Sequence[Mapping[str, Any]]],
                       specs: Mapping[str, Any], records: Mapping[str, Mapping[str, Any]]) -> str:
-    """Write one row per slot, pass and candidate with the probability the scorer gave it.
-
-    Args: results: pass_results by pass name; specs: pass name -> PassSpec; records: the
-    baseline's scores records by slot id (they hold the candidates and the gold).
-    Returns: CSV text; ``position`` is where the candidate was shown, 1-based. For a Choice pass
-    ``probability`` is the option's probability, for a pointwise pass it is the probability of
-    yes.
-    Raises: KeyError for a malformed result.
-    Side effects: none.
-    """
+    """Write one row per slot, pass and candidate with the probability the scorer gave it."""
     buffer = io.StringIO()
     writer = csv.writer(buffer, lineterminator="\n")
     writer.writerow(PROBABILITY_COLUMNS)
@@ -292,13 +197,7 @@ def probabilities_csv(results: Mapping[str, Sequence[Mapping[str, Any]]],
 
 
 def _pass_phrase(spec: list[Any]) -> str:
-    """Describe one further pass in words.
-
-    Args: spec: [name, arm, order] as the plan lists it.
-    Returns: a short phrase.
-    Raises: None.
-    Side effects: none.
-    """
+    """Describe one further pass in words."""
     _, arm, order = spec
     if arm == ARM_NOUL:
         return "one yes/no question per candidate (TypeSafe's re-ranking pattern)"
@@ -308,13 +207,7 @@ def _pass_phrase(spec: list[Any]) -> str:
 
 
 def _jev_cost_sentence(manifest: Mapping[str, Any]) -> str:
-    """Say how many requests Jev answered and what OpenRouter reports they cost.
-
-    Args: manifest: run manifest.
-    Returns: the sentence that follows the period of the requests in the header.
-    Raises: KeyError if the manifest lacks a field.
-    Side effects: none.
-    """
+    """Say how many requests Jev answered and what OpenRouter reports they cost."""
     spend = manifest["spend"]
     return (f"{spend['requests']} requests answered ({spend['input_tokens']:,} input tokens), "
             f"${spend['cost_usd']} reported by OpenRouter in `usage.cost` for all "
@@ -323,13 +216,7 @@ def _jev_cost_sentence(manifest: Mapping[str, Any]) -> str:
 
 
 def _jev_intro(manifest: Mapping[str, Any]) -> str:
-    """Describe how Jev was asked and what the primary result is.
-
-    Args: manifest: run manifest.
-    Returns: the paragraph that follows the identity paragraph.
-    Raises: KeyError if the manifest lacks a field.
-    Side effects: none.
-    """
+    """Describe how Jev was asked and what the primary result is."""
     cap = manifest["prompt"]["max_description_chars"]
     others = [p for p in manifest["passes"] if p[0] != PRIMARY_PASS]
     again = ("The same pool was also asked, to see how much the result depends on order and on "
@@ -346,13 +233,7 @@ def _jev_intro(manifest: Mapping[str, Any]) -> str:
 
 
 def _header(manifest: Mapping[str, Any], voice: Voice) -> list[str]:
-    """Write the title and the identity paragraphs.
-
-    Args: manifest: run manifest; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError if the manifest lacks a field.
-    Side effects: none.
-    """
+    """Write the title and the identity paragraphs."""
     model, baseline = manifest["model"], manifest["baseline"]
     period = manifest["evidence_period"]
     return [
@@ -371,14 +252,7 @@ def _header(manifest: Mapping[str, Any], voice: Voice) -> list[str]:
 
 def _result(pops: Mapping[str, Any], base: Mapping[str, Any], analysis: Mapping[str, Any],
             voice: Voice) -> list[str]:
-    """Write the headline table with the baseline beside it.
-
-    Args: pops: the primary pass's summary populations; base: the baseline's summary populations;
-    analysis: the analysis block; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError if a population is missing.
-    Side effects: none.
-    """
+    """Write the headline table with the baseline beside it."""
     labels = (("reachable", "Gold in Wikidata, QUDT or OM (primary)"),
               ("all", "All controlled-vocabulary slots"), ("gold:wikidata", "Gold in Wikidata"),
               ("gold:qudt", "Gold in QUDT"), ("gold:om", "Gold in OM"))
@@ -408,13 +282,7 @@ def _result(pops: Mapping[str, Any], base: Mapping[str, Any], analysis: Mapping[
 
 
 def _paired(analysis: Mapping[str, Any], voice: Voice) -> list[str]:
-    """Write the paired table for the primary population.
-
-    Args: analysis: the analysis block; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError if the comparison is missing.
-    Side effects: none.
-    """
+    """Write the paired table for the primary population."""
     c = analysis["primary_vs_qwen3"]["reachable"]
     eq = analysis["primary_vs_qwen3_equivalence"]
     t, te = c["terms"], eq["terms"]
@@ -433,13 +301,7 @@ def _paired(analysis: Mapping[str, Any], voice: Voice) -> list[str]:
 
 
 def _misses(pops: Mapping[str, Any], base: Mapping[str, Any], voice: Voice) -> list[str]:
-    """Write where misses come from and the diagnostics, the scorer beside Qwen3.
-
-    Args: pops: the primary pass's summary populations; base: the baseline's; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError if the reachable population or a metric is missing.
-    Side effects: none.
-    """
+    """Write where misses come from and the diagnostics, the scorer beside Qwen3."""
     r, b = pops["reachable"], base["reachable"]
     n = r["n"]
     out = ["## Where the misses come from (reachable slots)", ""]
@@ -477,13 +339,7 @@ def _misses(pops: Mapping[str, Any], base: Mapping[str, Any], voice: Voice) -> l
 
 
 def _routing(summary: Mapping[str, Any], voice: Voice) -> list[str]:
-    """Write the source-confusion tables for both systems.
-
-    Args: summary: the run summary; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError for a malformed summary.
-    Side effects: none.
-    """
+    """Write the source-confusion tables for both systems."""
     sources = ("wikidata", "qudt", "om")
     out = ["", "## Which source wins (reachable slots with any candidate)", "",
            "Rows are the gold's source, columns the source of the selected candidate."]
@@ -497,13 +353,7 @@ def _routing(summary: Mapping[str, Any], voice: Voice) -> list[str]:
 
 
 def _passes(analysis: Mapping[str, Any], specs: Mapping[str, Any], voice: Voice) -> list[str]:
-    """Write the passes, repeatability, order effects and the pointwise arm.
-
-    Args: analysis: the analysis block; specs: pass name -> PassSpec; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError for a malformed analysis.
-    Side effects: none.
-    """
+    """Write the passes, repeatability, order effects and the pointwise arm."""
     versus = {PRIMARY_PASS: analysis["primary_vs_qwen3"]["reachable"],
               **analysis["passes_vs_qwen3"]}
     rows = []
@@ -563,13 +413,7 @@ def _passes(analysis: Mapping[str, Any], specs: Mapping[str, Any], voice: Voice)
 
 
 def _abstention(analysis: Mapping[str, Any], voice: Voice) -> list[str]:
-    """Write how the scorer used its own `none_of_these` option.
-
-    Args: analysis: the analysis block; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError for a malformed analysis.
-    Side effects: none.
-    """
+    """Write how the scorer used its own `none_of_these` option."""
     a = analysis["abstention"]
     refusals = a["forced_choice_correct_when_none_chosen"]["denominator"]
     name = voice.name
@@ -594,13 +438,7 @@ def _abstention(analysis: Mapping[str, Any], voice: Voice) -> list[str]:
 
 
 def _jev_confidence_notes(analysis: Mapping[str, Any]) -> list[str]:
-    """Say what Jev's own confidence value is, and what it measures when Jev refuses.
-
-    Args: analysis: the analysis block.
-    Returns: the paragraphs that follow the signals table, as Markdown lines.
-    Raises: KeyError for a malformed analysis.
-    Side effects: none.
-    """
+    """Say what Jev's own confidence value is, and what it measures when Jev refuses."""
     formula = analysis["confidence_formula"]
     a = analysis["abstention"]
     return ["", f"TypeSafe documents Jev's `confidence` as (p_max - 1/n) / (1 - 1/n) over its n options. "
@@ -616,13 +454,7 @@ def _jev_confidence_notes(analysis: Mapping[str, Any]) -> list[str]:
 
 
 def _confidence(analysis: Mapping[str, Any], voice: Voice) -> list[str]:
-    """Write what the confidence signals are worth.
-
-    Args: analysis: the analysis block; voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError for a malformed analysis.
-    Side effects: none.
-    """
+    """Write what the confidence signals are worth."""
     block = analysis["confidence"]
     out = ["## What the confidence is worth (reachable slots)", "",
            "Any number that says how much to trust a selection can decide when to hand a slot to a "
@@ -677,14 +509,7 @@ def _confidence(analysis: Mapping[str, Any], voice: Voice) -> list[str]:
 
 def _tables(pops: Mapping[str, Any], base: Mapping[str, Any], summary: Mapping[str, Any],
             voice: Voice) -> list[str]:
-    """Write the grouping and repetition tables.
-
-    Args: pops: the primary pass's populations; base: the baseline's; summary: the run summary;
-    voice: the scorer.
-    Returns: Markdown lines.
-    Raises: KeyError if a group lacks a metric.
-    Side effects: none.
-    """
+    """Write the grouping and repetition tables."""
     out = ["", "## By slot, role and term length", ""]
     rows = []
     for name in sorted(n for n in pops if n.startswith(("slot:", "role:", "words:"))):
@@ -706,15 +531,7 @@ def _tables(pops: Mapping[str, Any], base: Mapping[str, Any], summary: Mapping[s
 def render_report(manifest: Mapping[str, Any], summary: Mapping[str, Any],
                   outcomes: Sequence[Mapping[str, Any]], specs: Mapping[str, Any],
                   voice: Voice | None = None) -> str:
-    """Write the Markdown report of a finished run.
-
-    Args: manifest: run identity, configuration, health checks; summary: the run summary;
-    outcomes: the primary pass's evaluate_slot outcomes; specs: pass name -> PassSpec; voice: the
-    scorer (Jev's by default).
-    Returns: Markdown text.
-    Raises: KeyError if the summary lacks a population or block the report needs.
-    Side effects: none.
-    """
+    """Write the Markdown report of a finished run."""
     voice = voice or JEV_VOICE
     pops, base, analysis = (summary["primary"]["populations"], summary["baseline"]["populations"],
                             summary["analysis"])
@@ -737,13 +554,7 @@ def render_report(manifest: Mapping[str, Any], summary: Mapping[str, Any],
 
 def render_comparison(manifest: Mapping[str, Any], summary: Mapping[str, Any],
                       voice: Voice | None = None) -> str:
-    """Write the head-to-head of the primary pass and the Qwen3 baseline.
-
-    Args: manifest: run identity; summary: the run summary; voice: the scorer (Jev's by default).
-    Returns: Markdown text.
-    Raises: KeyError for a malformed summary.
-    Side effects: none.
-    """
+    """Write the head-to-head of the primary pass and the Qwen3 baseline."""
     voice = voice or JEV_VOICE
     scorer = voice.name
     analysis = summary["analysis"]
@@ -796,25 +607,12 @@ def render_comparison(manifest: Mapping[str, Any], summary: Mapping[str, Any],
 
 
 def _decimal(receipt: Mapping[str, int], digits: int) -> str:
-    """Show an exact fraction as a decimal.
-
-    Args: receipt: {"numerator", "denominator"}; digits: decimals to show.
-    Returns: the decimal text.
-    Raises: None.
-    Side effects: none.
-    """
+    """Show an exact fraction as a decimal."""
     return f"{receipt['numerator'] / receipt['denominator']:.{digits}f}"
 
 
 def _largest_difference(receipt: Mapping[str, int]) -> str:
-    """Show the largest probability difference between two identical requests so that it is seen.
-
-    Args: receipt: {"numerator", "denominator"}.
-    Returns: two decimals; four when the difference exists but is below 0.005, where two would
-    print 0.00 beside a count of slots that were not identical; "under 0.0001" below that.
-    Raises: None.
-    Side effects: none.
-    """
+    """Show the largest probability difference between two identical requests so that it is seen."""
     value = receipt["numerator"] / receipt["denominator"]
     digits = 4 if 0 < value < 0.005 else 2
     text = f"{value:.{digits}f}"
@@ -822,24 +620,12 @@ def _largest_difference(receipt: Mapping[str, int]) -> str:
 
 
 def _slots(n: int) -> str:
-    """Count slots in words.
-
-    Args: n: a number of slots.
-    Returns: "1 slot" or "n slots".
-    Raises: None.
-    Side effects: none.
-    """
+    """Count slots in words."""
     return f"{n} slot" if n == 1 else f"{n} slots"
 
 
 def _picked(view: Mapping[str, Any] | None) -> str:
-    """Describe a selection in one phrase.
-
-    Args: view: a selected candidate view or None.
-    Returns: "'label' (source:id, 0.93)" or "nothing".
-    Raises: KeyError for a malformed view.
-    Side effects: none.
-    """
+    """Describe a selection in one phrase."""
     if view is None:
         return "nothing"
     return f"{view['label']!r} ({view['source']}:{view['local_id']}, {view['score']:.2f})"

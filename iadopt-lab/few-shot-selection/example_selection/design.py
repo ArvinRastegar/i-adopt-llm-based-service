@@ -1,9 +1,4 @@
-"""Set construction for the example-selection optimization — see contracts/design.md.
-
-Pure and deterministic: every function here is a function of its arguments alone, performs no
-I/O, and touches no provider. The split in particular takes no seed, because a partition that
-could vary between runs would make two stages of the same experiment incomparable.
-"""
+"""Set construction for the example-selection optimization — see contracts/design.md."""
 
 from __future__ import annotations
 
@@ -17,13 +12,7 @@ SPLITS = ("P", "E", "C")
 
 
 def corpus_split(records: list[dict]) -> dict[str, list[str]]:
-    """Partition the corpus into candidate pool, search-eval and confirmation sets.
-
-    Args: records: all 102 canonical corpus rows.
-    Returns: {"P": [...], "E": [...], "C": [...]}, disjoint, each sorted, union = all ids.
-    Raises: ValueError when the corpus is not 102 rows or a domain cannot be allocated.
-    Side Effects: none. Deterministic and seedless, so it is identical on every machine.
-    """
+    """Partition the corpus into candidate pool, search-eval and confirmation sets."""
     if len(records) != 102:
         raise ValueError("design requires the complete 102-row corpus")
     by_domain = defaultdict(list)
@@ -45,13 +34,7 @@ def corpus_split(records: list[dict]) -> dict[str, list[str]]:
 
 def sample_subsets(pool: list[str], n_subsets: int, size: int = CANDIDATE_SIZE,
                    seed: int = 0) -> list[tuple[str, ...]]:
-    """Draw distinct sorted subsets of `pool`, reproducibly from `seed`.
-
-    Args: pool: candidate pool ids; n_subsets: how many; size: members per subset; seed: RNG seed.
-    Returns: `n_subsets` distinct sorted tuples, each a size-`size` subset of `pool`.
-    Raises: ValueError when `size` exceeds the pool or `n_subsets` exceeds what is obtainable.
-    Side Effects: none. Deterministic given `seed`.
-    """
+    """Draw distinct sorted subsets of `pool`, reproducibly from `seed`."""
     if size > len(pool):
         raise ValueError(f"cannot draw {size} from a pool of {len(pool)}")
     rng = random.Random(seed)
@@ -68,13 +51,7 @@ def sample_subsets(pool: list[str], n_subsets: int, size: int = CANDIDATE_SIZE,
 
 def top_k_candidate(pool: list[str], coefficients: Mapping[str, float],
                     size: int = CANDIDATE_SIZE, invert: bool = False) -> tuple[str, ...]:
-    """Select the highest- (or lowest-) scoring pool members by fitted coefficient.
-
-    Args: pool: candidate pool; coefficients: per-id contribution; size: how many; invert: take lowest.
-    Returns: sorted tuple of `size` ids.
-    Raises: ValueError when `coefficients` does not cover `pool`.
-    Side Effects: none. Ties break by sorted variable_id, so the result is deterministic.
-    """
+    """Select the highest- (or lowest-) scoring pool members by fitted coefficient."""
     missing = set(pool) - set(coefficients)
     if missing:
         raise ValueError(f"coefficients missing {len(missing)} pool members")
@@ -85,13 +62,7 @@ def top_k_candidate(pool: list[str], coefficients: Mapping[str, float],
 
 def stratified_baseline(records: list[dict], pool: list[str],
                         size: int = CANDIDATE_SIZE) -> tuple[str, ...]:
-    """Select a domain-proportional baseline from the pool.
-
-    Args: records: canonical rows, for the category of each id; pool: candidate pool; size: how many.
-    Returns: sorted tuple of `size` ids, domain proportions matching the pool to within one.
-    Raises: ValueError when a domain cannot supply its allocation.
-    Side Effects: none. Deterministic.
-    """
+    """Select a domain-proportional baseline from the pool."""
     category = {row["variable_id"]: row["category"] for row in records}
     by_domain = defaultdict(list)
     for variable_id in sorted(pool):
@@ -108,13 +79,7 @@ def stratified_baseline(records: list[dict], pool: list[str],
 
 def diversity_baseline(pool: list[str], embeddings: Mapping[str, Sequence[float]],
                        size: int = CANDIDATE_SIZE) -> tuple[str, ...]:
-    """Select a maximally covering baseline by facility-location greedy on embeddings.
-
-    Args: pool: candidate pool; embeddings: unit vectors per id; size: how many.
-    Returns: sorted tuple of `size` ids.
-    Raises: ValueError when `embeddings` does not cover `pool`.
-    Side Effects: none. Seeded at the medoid with ties by sorted id, so it is deterministic.
-    """
+    """Select a maximally covering baseline by facility-location greedy on embeddings."""
     missing = set(pool) - set(embeddings)
     if missing:
         raise ValueError(f"embeddings missing {len(missing)} pool members")
@@ -138,13 +103,7 @@ def diversity_baseline(pool: list[str], embeddings: Mapping[str, Sequence[float]
 
 def random_baselines(pool: list[str], n: int, size: int = CANDIDATE_SIZE,
                      seed: int = 0) -> list[tuple[str, ...]]:
-    """Draw independent random selections for the random-25 reference distribution.
-
-    Args: pool: candidate pool; n: how many baselines; size: members each; seed: RNG seed.
-    Returns: `n` sorted tuples; duplicates are permitted, unlike `sample_subsets`.
-    Raises: ValueError when `size` exceeds the pool.
-    Side Effects: none. Deterministic given `seed`.
-    """
+    """Draw independent random selections for the random-25 reference distribution."""
     if size > len(pool):
         raise ValueError(f"cannot draw {size} from a pool of {len(pool)}")
     rng = random.Random(seed)
@@ -153,13 +112,7 @@ def random_baselines(pool: list[str], n: int, size: int = CANDIDATE_SIZE,
 
 def perturb(candidate: Sequence[str], pool: list[str], n: int, swaps: int = 1,
             seed: int = 0) -> list[tuple[str, ...]]:
-    """Generate neighbours of `candidate` differing by exactly `swaps` members.
-
-    Args: candidate: the set to perturb; pool: legal members; n: how many; swaps: members exchanged; seed: RNG seed.
-    Returns: up to `n` distinct sorted tuples, each a size-|candidate| subset of `pool`.
-    Raises: ValueError when `candidate` is not a subset of `pool` or `swaps` is not feasible.
-    Side Effects: none. Deterministic given `seed`.
-    """
+    """Generate neighbours of `candidate` differing by exactly `swaps` members."""
     current = set(candidate)
     if not current <= set(pool):
         raise ValueError("candidate contains ids outside the pool")
@@ -186,13 +139,7 @@ _SPLIT_WEIGHTS = (40, 38, 24)
 
 
 def _apportion(total: int, weights: Sequence[int]) -> list[int]:
-    """Divide `total` across `weights` by largest remainder.
-
-    Args: total: units to hand out; weights: relative shares, at least one non-zero.
-    Returns: integer counts summing exactly to `total`, in the order of `weights`.
-    Raises: ValueError when every weight is zero.
-    Side Effects: none. Deterministic; ties resolve toward the earlier index.
-    """
+    """Divide `total` across `weights` by largest remainder."""
     if sum(weights) <= 0:
         raise ValueError("apportionment needs a positive weight")
     exact = [total * w / sum(weights) for w in weights]

@@ -16,24 +16,12 @@ CORRECTION_VERSION = "immediate-predecessor-v1"
 
 
 def _json(value: Any) -> str:
-    """Encode deterministic readable UTF-8 JSON with preserved array order.
-
-    Args: JSON primitives with finite numeric values.
-    Returns: compact sorted-key JSON string without ASCII folding.
-    Raises: TypeError/ValueError for non-JSON input.
-    Side effects: none.
-    """
+    """Encode deterministic readable UTF-8 JSON with preserved array order."""
     return json.dumps(value, ensure_ascii=False, sort_keys=True, allow_nan=False, separators=(",", ":"))
 
 
 def _hash(raw: bytes) -> str:
-    """Calculate a raw artifact hash.
-
-    Args: exact bytes, never an implicit file path.
-    Returns: SHA-256 hexadecimal digest.
-    Raises: TypeError for non-byte input.
-    Side effects: none.
-    """
+    """Calculate a raw artifact hash."""
     return hashlib.sha256(raw).hexdigest()
 
 
@@ -50,13 +38,7 @@ class PromptVersion:
     review_status: str
 
     def to_dict(self) -> dict[str, Any]:
-        """Return serializable template evidence.
-
-        Args: this immutable prompt version.
-        Returns: independent primitive dictionary.
-        Raises: no content errors.
-        Side effects: none.
-        """
+        """Return serializable template evidence."""
         return asdict(self)
 
 
@@ -70,27 +52,14 @@ class RenderedPrompt:
     sha256: str
 
     def to_dict(self) -> dict[str, Any]:
-        """Return JSON-compatible prompt evidence without changing model-visible bytes.
-
-        Args: this complete rendering.
-        Returns: dictionary whose messages are an ordered list.
-        Raises: no content errors.
-        Side effects: none.
-        """
+        """Return JSON-compatible prompt evidence without changing model-visible bytes."""
         result = asdict(self)
         result["messages"] = list(result["messages"])
         return result
 
 
 def load_prompt_version(prompt_id: str, project_root: Path | str | None = None) -> PromptVersion:
-    """Load and verify one exact registered prompt artifact and historical lineage.
-
-    Args: stable family ID, optionally suffixed ':v1', and optional iadopt-lab root.
-    Returns: PromptVersion with verified bytes/hash and accepted compatibility review.
-    Raises: ValueError for unknown ID, moved artifact, or invalid historical evidence;
-    OSError for missing files. Historical aliases do not resolve as active families.
-    Side effects: read-only template and registry filesystem access.
-    """
+    """Load and verify one exact registered prompt artifact and historical lineage."""
     root = Path(project_root) if project_root else Path(__file__).resolve().parents[3]
     registry = json.loads((root / "data/manifests/prompt-registry-v1.json").read_bytes())
     family = prompt_id.removesuffix(":v1")
@@ -113,13 +82,7 @@ def load_prompt_version(prompt_id: str, project_root: Path | str | None = None) 
 
 
 def select_demonstrations(pool: Iterable[dict[str, Any]], shot_count: int) -> tuple[dict[str, Any], ...]:
-    """Choose a fixed prefix after verifying the complete approved source pool.
-
-    Args: five ordered canonical records and shot count in 0,1,3,5.
-    Returns: immutable tuple of the requested prefix in unchanged order.
-    Raises: ValueError for wrong paths, duplicate IDs, invalid gold or shot count.
-    Side effects: reads schema during validation; no randomization or target-aware choice.
-    """
+    """Choose a fixed prefix after verifying the complete approved source pool."""
     examples = tuple(pool)
     if type(shot_count) is not int or shot_count not in (0, 1, 3, 5):
         raise ValueError("Shot count must be 0, 1, 3 or 5")
@@ -134,13 +97,7 @@ def select_demonstrations(pool: Iterable[dict[str, Any]], shot_count: int) -> tu
 
 
 def _rendered(content: str, metadata: dict[str, Any]) -> RenderedPrompt:
-    """Construct exact message evidence without adding provider-specific instructions.
-
-    Args: complete one-user-message content and scientific lineage metadata.
-    Returns: rendering with message-array hash and exact text/byte/character counts.
-    Raises: UnicodeError for content that cannot be represented as UTF-8.
-    Side effects: none.
-    """
+    """Construct exact message evidence without adding provider-specific instructions."""
     raw = content.encode("utf-8")
     messages = ({"role": "user", "content": content},)
     final_hash = _hash(_json(list(messages)).encode("utf-8"))
@@ -153,26 +110,7 @@ def render_base_prompt(template: PromptVersion, target_definition: str, schema: 
                        demonstrations: Iterable[dict[str, Any]] = (), *,
                        target_id: str | None = None,
                        control_suffix: str = "") -> RenderedPrompt:
-    """Render the exact frozen schema, approved examples and one target definition.
-
-    Args: verified template, exact target definition, exact runtime schema bytes,
-    zero/one/three/five ordered example records, optional non-model-visible target ID,
-    and an optional deployment control suffix.
-
-    The control suffix exists because not every reasoning switch is a request field. Qwen
-    models accept `/no_think` in the prompt itself, and on a routing gateway that is the
-    only channel that survives: OpenRouter forwards the message but drops
-    `chat_template_kwargs`, so the template-level switch never reaches the tokenizer. The
-    suffix is appended after the scientific content, never interleaved with it, and is
-    recorded in the metadata so the prompt hash covers it and no evidence shows a prompt
-    that differs from the bytes actually sent.
-    Actions: verify artifacts and prefix membership, insert each placeholder once,
-    retaining target text byte-for-byte and keeping all target gold/provenance out.
-    Returns: RenderedPrompt with one user message and component/final hashes.
-    Raises: ValueError for mismatch, invalid examples, overlap or unsupported shots;
-    UnicodeError for invalid text. Context capacity is enforced by caller preflight.
-    Side effects: none; no target record, model, tokenizer or database is consulted.
-    """
+    """Render the exact frozen schema, approved examples and one target definition."""
     if not isinstance(template, PromptVersion) or _hash(template.text.encode("utf-8")) != template.sha256:
         raise ValueError("Renderer requires an intact frozen PromptVersion")
     if not isinstance(target_definition, str) or not isinstance(schema, bytes):
@@ -213,14 +151,7 @@ def render_base_prompt(template: PromptVersion, target_definition: str, schema: 
 
 def render_correction(base: RenderedPrompt, raw_response: str, errors: Iterable[dict[str, Any]],
                       previous_attempt_number: int = 1) -> RenderedPrompt:
-    """Append only the immediately previous content-invalid response and full errors.
-
-    Args: untouched base rendering, exact assistant-visible raw response, ordered
-    extraction/schema/semantic errors and predecessor attempt number 1 or 2.
-    Returns: one-user-message rendering with base/correction/final hash lineage.
-    Raises: ValueError for modified/corrected base, invalid predecessor or empty errors.
-    Side effects: none; does not insert hidden reasoning or older failures.
-    """
+    """Append only the immediately previous content-invalid response and full errors."""
     if base.metadata.get("correction") is not None:
         raise ValueError("Corrections must be derived from the original base, not a prior correction")
     if _rendered(base.content, {}).sha256 != base.sha256:
@@ -244,11 +175,5 @@ def render_correction(base: RenderedPrompt, raw_response: str, errors: Iterable[
 
 
 def render_correction_prompt(base: RenderedPrompt, previous_attempt: dict[str, Any]) -> RenderedPrompt:
-    """Adapt a typed previous-attempt evidence mapping to the correction renderer.
-
-    Args: original base and mapping with raw_response, errors and attempt_number.
-    Returns: exact immediate-predecessor correction rendering.
-    Raises: KeyError for incomplete evidence or renderer validation errors.
-    Side effects: none; unknown provider fields and hidden reasoning are ignored.
-    """
+    """Adapt a typed previous-attempt evidence mapping to the correction renderer."""
     return render_correction(base, previous_attempt["raw_response"], previous_attempt["errors"], previous_attempt["attempt_number"])

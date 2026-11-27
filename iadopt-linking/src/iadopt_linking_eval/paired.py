@@ -1,14 +1,4 @@
-"""Paired comparison of two linkers judged on the same slots.
-
-Same contract as the rest of this package: standard library only, no file, service or clock.
-Counts and the McNemar p-value are exact fractions. The bootstrap interval is a simulation, so it
-is a float, and it is reproducible from its seed.
-
-Slots are not independent: a term that occurs in many variables is asked many times, usually with
-the same candidates and the same outcome. The bootstrap therefore resamples whole clusters (one per
-term), which is the honest unit of independent evidence; McNemar on slots is kept as the textbook
-test and over-states significance whenever clusters hold several slots.
-"""
+"""Paired comparison of two linkers judged on the same slots."""
 
 from __future__ import annotations
 
@@ -26,13 +16,7 @@ DEFAULT_LEVEL = Fraction(95, 100)
 
 
 def _length(*columns: Sequence[Any]) -> int:
-    """Check that parallel columns describe the same slots.
-
-    Args: columns: sequences that must have one entry per slot.
-    Returns: the common length.
-    Raises: ValueError if the lengths differ.
-    Side effects: none.
-    """
+    """Check that parallel columns describe the same slots."""
     lengths = {len(column) for column in columns}
     if len(lengths) != 1:
         raise ValueError(f"Columns describe different numbers of slots: {sorted(lengths)}")
@@ -40,13 +24,7 @@ def _length(*columns: Sequence[Any]) -> int:
 
 
 def paired_counts(first: Sequence[bool], second: Sequence[bool]) -> dict[str, int]:
-    """Cross-tabulate two systems' correctness on the same slots.
-
-    Args: first, second: whether each system was right, one entry per slot, in the same order.
-    Returns: n, both, only_first, only_second and neither (they sum to n).
-    Raises: ValueError if the columns differ in length.
-    Side effects: none.
-    """
+    """Cross-tabulate two systems' correctness on the same slots."""
     n = _length(first, second)
     both = sum(a and b for a, b in zip(first, second, strict=True))
     only_first = sum(a and not b for a, b in zip(first, second, strict=True))
@@ -56,15 +34,7 @@ def paired_counts(first: Sequence[bool], second: Sequence[bool]) -> dict[str, in
 
 
 def mcnemar_exact(only_first: int, only_second: int) -> Fraction:
-    """Two-sided exact McNemar p-value.
-
-    Args: only_first: slots only the first system got right; only_second: slots only the second
-    did.
-    Returns: min(1, 2 * P(X <= min(b, c))) for X ~ Binomial(b + c, 1/2), as an exact fraction; 1
-    when the systems never disagree.
-    Raises: ValueError for a negative count.
-    Side effects: none.
-    """
+    """Two-sided exact McNemar p-value."""
     if only_first < 0 or only_second < 0:
         raise ValueError("Discordant counts cannot be negative")
     n = only_first + only_second
@@ -78,18 +48,7 @@ def cluster_bootstrap_difference(
         first: Sequence[bool], second: Sequence[bool], clusters: Sequence[str], *,
         resamples: int = DEFAULT_RESAMPLES, seed: int = 0,
         level: Fraction = DEFAULT_LEVEL) -> dict[str, Any]:
-    """Estimate the accuracy difference (first minus second) and a percentile interval for it.
-
-    Args: first, second: correctness of each system per slot; clusters: the cluster of each slot
-    (for example its term); resamples: bootstrap replicates; seed: seed of the generator; level:
-    interval level strictly between 0 and 1.
-    Returns: n, clusters, the two correct counts, the exact difference as a reduced receipt, and
-    the interval {level, lower, upper, resamples, seed, method}; the bounds are floats.
-    Raises: ValueError for empty input, columns of different length, a level outside (0, 1) or
-    fewer than one resample.
-    Side effects: none; deterministic for a given seed (only ``random()`` is used, whose sequence
-    Python guarantees).
-    """
+    """Estimate the accuracy difference (first minus second) and a percentile interval for it."""
     n = _length(first, second, clusters)
     if n == 0:
         raise ValueError("Nothing to compare")
@@ -126,17 +85,7 @@ def cluster_bootstrap_difference(
 
 
 def term_level(first: Sequence[bool], second: Sequence[bool], clusters: Sequence[str]) -> dict[str, Any]:
-    """Compare two systems once per cluster, so that a term asked many times counts once.
-
-    Args: first, second: correctness of each system per slot; clusters: the cluster of each slot
-    (for example its term).
-    Returns: the number of clusters, how many the first system did better on, worse on and equal
-    on (by share of the cluster's slots correct), the exact two-sided sign-test p-value over the
-    clusters that differ, and the unweighted mean of the per-cluster differences, both as
-    receipts.
-    Raises: ValueError for empty input or columns of different length.
-    Side effects: none.
-    """
+    """Compare two systems once per cluster, so that a term asked many times counts once."""
     n = _length(first, second, clusters)
     if n == 0:
         raise ValueError("Nothing to compare")

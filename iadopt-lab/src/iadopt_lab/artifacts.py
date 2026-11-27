@@ -1,60 +1,19 @@
-"""Portable input/code/runtime receipts and atomic, confined derived artifacts."""
+"""Portable input/code/runtime receipts."""
 
 from __future__ import annotations
 
 import importlib.metadata
 import json
-import os
 import platform
-import tempfile
 from pathlib import Path
 
 from .canonical import canonical_json_bytes, content_hash, sha256_bytes
 from .domain import LabError
 
 
-def atomic_write(path: str | Path, content: bytes, *, root: str | Path, immutable: bool = True) -> dict:
-    """Write a confined artifact atomically and verify the resulting bytes.
-
-    Args: path: Explicit destination; content: complete bytes; root: allowed output subtree;
-        immutable: refuse different existing bytes when True, replace derivatives otherwise.
-    Returns: Relative path, exact SHA-256 and byte length.
-    Raises: LabError for escape/conflicting immutable output; OSError for I/O failures.
-    Side Effects: Creates parent directories and one file via fsync/atomic rename. No broad deletion.
-    """
-    boundary, destination = Path(root).resolve(), Path(path).resolve()
-    if not destination.is_relative_to(boundary) or destination == boundary:
-        raise LabError("Artifact destination must be inside its declared subtree")
-    if destination.exists() and immutable and destination.read_bytes() != content:
-        raise LabError("Immutable artifact already exists with different bytes")
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    if not destination.exists() or destination.read_bytes() != content:
-        descriptor, temporary = tempfile.mkstemp(prefix=".iadopt-", dir=destination.parent)
-        try:
-            with os.fdopen(descriptor, "wb") as stream:
-                stream.write(content)
-                stream.flush()
-                os.fsync(stream.fileno())
-            os.replace(temporary, destination)
-        finally:
-            if os.path.exists(temporary):
-                os.unlink(temporary)
-    if destination.read_bytes() != content:
-        raise LabError("Post-write artifact verification failed")
-    return {"path": destination.relative_to(boundary).as_posix(), "sha256": sha256_bytes(content),
-            "byte_length": len(content)}
-
-
 def collect_input_artifacts(project_root: str | Path, records: list[dict] | tuple[dict, ...],
                             population: list[dict] | tuple[dict, ...], similarity_identity: dict) -> dict:
-    """Read portable scientific artifacts and the exact implementation/runtime identity.
-
-    Args: project_root: Lab root; records: all canonical corpus rows; population: selected targets;
-        similarity_identity: Explicit scorer similarity identity, including synthetic status.
-    Returns: Artifact byte records plus hashes required by planning and runtime verification.
-    Raises: OSError for missing required files; LabError for an incomplete corpus or no source code.
-    Side Effects: Local file/package metadata reads only. Secrets, absolute paths and timestamps excluded.
-    """
+    """Read portable scientific artifacts and the exact implementation/runtime identity."""
     root = Path(project_root).resolve()
     if len(records) != 102 or not population:
         raise LabError("Artifacts require the complete 102-row corpus and a nonempty population")
@@ -98,19 +57,7 @@ def collect_input_artifacts(project_root: str | Path, records: list[dict] | tupl
 def scorer_identity_hash(project_root: str | Path, similarity_identity: dict) -> str:
     """Recompute the scorer artifact hash from current source and the loaded backend.
 
-    A report claims to be a particular plan's scientific result. Copying that plan's own
-    scorer hash and comparing it back to itself cannot support the claim: it holds whatever
-    the current checkout and backend are. Recomputing the hash here and comparing it to the
-    plan's frozen value is what actually detects a report produced by different evaluator
-    source or a different similarity backend from the one the plan froze.
-
-    Must stay byte-identical to the `scorer` identity in `collect_input_artifacts`.
-
-    Args: project_root: Lab root; similarity_identity: identity of the loaded backend.
-    Returns: The scorer artifact hash for this checkout and backend.
-    Raises: LabError when no evaluator source is present.
-    Side effects: Reads evaluator source files.
-    """
+    Must stay byte-identical to the `scorer` identity in `collect_input_artifacts`."""
     root = Path(project_root).resolve()
     source = {path.relative_to(root).as_posix(): sha256_bytes(path.read_bytes())
               for path in sorted((root / "src/iadopt_eval").rglob("*.py")) if path.is_file()}
@@ -120,13 +67,7 @@ def scorer_identity_hash(project_root: str | Path, similarity_identity: dict) ->
 
 
 def verify_bundle(project_root: str | Path, bundle: dict) -> None:
-    """Reject configuration, plan, input or implementation drift before continuation.
-
-    Args: project_root: Current lab root; bundle: frozen plan/configuration/artifact index.
-    Returns: None when every stored hash matches its canonical value and current source bytes.
-    Raises: LabError for any drift; OSError for missing files.
-    Side Effects: Read-only. It never upgrades or silently migrates scientific identity.
-    """
+    """Reject configuration, plan, input or implementation drift before continuation."""
     root = Path(project_root).resolve()
     plan = bundle["plan"]
     if content_hash({key: value for key, value in plan.items() if key != "sha256"}) != plan["sha256"]:

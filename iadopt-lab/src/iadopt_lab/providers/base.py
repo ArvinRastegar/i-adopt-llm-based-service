@@ -25,13 +25,7 @@ SAFE_HEADERS = {"content-type", "retry-after", "x-request-id", "request-id", "x-
 
 
 def build_request(run: dict, messages: list[dict]) -> dict:
-    """Map a resolved run and rendered messages to one explicit scientific request body.
-
-    Args: run: Model/sampling/native-reasoning record; messages: frozen one-user-message prompt.
-    Returns: Sanitized non-streaming Chat Completions body.
-    Raises: LabError for unresolved fields, invalid messages, or scientific-field override.
-    Side Effects: None; credentials and transport are not accessed.
-    """
+    """Map a resolved run and rendered messages to one explicit scientific request body."""
     if not run.get("model_id") or run.get("max_output_tokens") is None or run.get("top_p") is None:
         raise LabError("Provider request has unresolved model/sampling values")
     if len(messages) != 1 or messages[0].get("role") != "user" or not isinstance(messages[0].get("content"), str):
@@ -45,13 +39,7 @@ def build_request(run: dict, messages: list[dict]) -> dict:
 
 
 def _retry_after(value: str | None) -> float | None:
-    """Parse a provider cooldown hint without waiting or retrying.
-
-    Args: value: Retry-After seconds or HTTP date.
-    Returns: Nonnegative seconds, or None if absent/malformed.
-    Raises: None for malformed provider input.
-    Side Effects: Reads UTC only when parsing a date.
-    """
+    """Parse a provider cooldown hint without waiting or retrying."""
     if value is None:
         return None
     try:
@@ -70,14 +58,7 @@ class OpenAICompatibleAdapter:
 
     def __init__(self, provider: str, base_url: str, api_key: str, timeout: float,
                  *, transport: httpx.AsyncBaseTransport | None = None) -> None:
-        """Create an explicit isolated client with both retry layers disabled.
-
-        Args: provider: psnc/openrouter; base_url: SDK URL; api_key: private key;
-            timeout: positive seconds; transport: optional offline fixture transport.
-        Returns: None.
-        Raises: LabError for invalid provider/URL/key/timeout.
-        Side Effects: Allocates a connection pool; sends no network request.
-        """
+        """Create an explicit isolated client with both retry layers disabled."""
         parsed = urlparse(base_url)
         if provider not in {"psnc", "openrouter"} or parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password:
             raise LabError("Invalid provider or credential-bearing/non-HTTPS base URL")
@@ -90,23 +71,11 @@ class OpenAICompatibleAdapter:
                                    timeout=timeout, http_client=self._http)
 
     async def close(self) -> None:
-        """Release this adapter's HTTP resources.
-
-        Args: None beyond the adapter.
-        Returns: None.
-        Raises: Underlying transport errors during cleanup.
-        Side Effects: Closes sockets; no generation or retry.
-        """
+        """Release this adapter's HTTP resources."""
         await self._client.close()
 
     async def send_once(self, body: dict[str, Any]) -> ProviderResult:
-        """Send one request and preserve its full success/error response before parsing.
-
-        Args: body: Validated credential-free Chat Completions request.
-        Returns: Classified ProviderResult including raw bytes/text and all available usage.
-        Raises: ValueError for unsafe local body; unexpected programmer errors are not retried.
-        Side Effects: At most one HTTP request; no sleeping, persistence, or automatic resend.
-        """
+        """Send one request and preserve its full success/error response before parsing."""
         body = sanitize_provider_request(body)
         started = datetime.now(UTC).isoformat()
         start = time.monotonic()

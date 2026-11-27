@@ -14,11 +14,7 @@ def test_planned_calls_counts_every_stage():
 
 
 def test_budget_gate_costs_the_requested_repetitions():
-    """OQ-1: the gate must price the run the caller asked for, not the module defaults.
-
-    Hardcoding DEFAULT_SEARCH_REPS let `run.py --reps 200` clear a gate that had only ever
-    costed --reps 5, dispatching 188,400 calls against a 120,000 ceiling undetected.
-    """
+    """OQ-1: the gate must price the run the caller asked for, not the module defaults."""
     from pipeline import _check_budget
     _check_budget(600, 38, 24, search_reps=5, confirm_reps=15)          # within ceiling
     with pytest.raises(RuntimeError):

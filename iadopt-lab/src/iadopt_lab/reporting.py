@@ -24,17 +24,7 @@ EXPORT_VERSION = "safe-report-export-v1"
 
 
 def _fraction(receipt: Mapping[str, Any]) -> Fraction:
-    """Read a reduced metric receipt without consulting rounded presentation text.
-
-    Args:
-        receipt: Evaluator numerator/denominator mapping.
-    Returns:
-        Exact rational metric value.
-    Raises:
-        ValueError: Receipt integer types, sign, denominator, or reduction is invalid.
-    Side Effects:
-        None.
-    """
+    """Read a reduced metric receipt without consulting rounded presentation text."""
     numerator, denominator = receipt.get("numerator"), receipt.get("denominator")
     if type(numerator) is not int or type(denominator) is not int or numerator < 0 or denominator <= 0:
         raise ValueError("Invalid report fraction receipt")
@@ -45,34 +35,13 @@ def _fraction(receipt: Mapping[str, Any]) -> Fraction:
 
 
 def _receipt(value: Fraction | int) -> dict[str, int | float]:
-    """Render exact rational report values with non-authoritative display derivatives.
-
-    Args:
-        value: Exact rational or integer value.
-    Returns:
-        Reduced numerator/denominator and floating display value.
-    Raises:
-        OverflowError: An impractically large value cannot render as a float.
-    Side Effects:
-        None.
-    """
+    """Render exact rational report values with non-authoritative display derivatives."""
     rational = Fraction(value)
     return {"numerator": rational.numerator, "denominator": rational.denominator, "value": float(rational)}
 
 
 def _number(value: Any, name: str) -> Decimal:
-    """Parse a finite nonnegative usage, latency, or monetary quantity exactly.
-
-    Args:
-        value: Integer, finite float, or explicit decimal string.
-        name: Field name for a credential-free error message.
-    Returns:
-        Decimal parsed from the original textual representation.
-    Raises:
-        ValueError: Quantity is boolean, nonnumeric, negative, or non-finite.
-    Side Effects:
-        None.
-    """
+    """Parse a finite nonnegative usage, latency, or monetary quantity exactly."""
     try:
         result = Decimal(str(value))
     except InvalidOperation as exc:
@@ -83,20 +52,7 @@ def _number(value: Any, name: str) -> Decimal:
 
 
 def _observations(observations: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """Validate, detach, and canonically order explicit run-variable evidence.
-
-    Args:
-        observations: Rows with run_id, variable_id, evaluation or null,
-            terminal_invalid, exact category fields, and an attempts list.
-    Returns:
-        Detached rows sorted by run and variable identity.
-    Raises:
-        ValueError: Duplicate task, corrupt evaluation, missing identity/classification,
-            inconsistent gold/category provenance, or incompatible scorer backends.
-        TypeError: Evidence is not canonical-JSON-compatible.
-    Side Effects:
-        Consumes the input iterable once; no provider, database, or filesystem access.
-    """
+    """Validate, detach, and canonically order explicit run-variable evidence."""
     rows = json.loads(canonical_json_bytes(list(observations)))
     seen, lineage, backend = set(), {}, None
     for row in rows:
@@ -138,18 +94,7 @@ def _observations(observations: Iterable[Mapping[str, Any]]) -> list[dict[str, A
 
 
 def _attempt_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    """Summarize only evidenced calls, errors, usage, latency, and scoped money.
-
-    Args:
-        rows: Validated observations with full attempt evidence.
-    Returns:
-        Summary counts and values with observed/missing denominators; absent money
-        remains unavailable, and reasoning tokens are never added to completion tokens.
-    Raises:
-        ValueError: Available numeric evidence or a non-billed cost receipt is invalid.
-    Side Effects:
-        None; all original attempt records remain in the parent report.
-    """
+    """Summarize only evidenced calls, errors, usage, latency, and scoped money."""
     attempts = [attempt for row in rows for attempt in row["attempts"]]
     token_values = {name: [] for name in ("input_tokens", "output_tokens", "reasoning_tokens")}
     latencies, costs, unavailable_cost = [], {}, 0
@@ -218,18 +163,7 @@ def _attempt_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def _scope_summary(rows: list[dict[str, Any]], expected: list[str] | None = None) -> dict[str, Any]:
-    """Build an explicit complete or partial population summary from item receipts.
-
-    Args:
-        rows: Validated observations belonging to one run/slice.
-        expected: Optional immutable full expected population for this scope.
-    Returns:
-        Coverage, named micro aggregates, terminal-validity rates, and attempt summary.
-    Raises:
-        ValueError: Evaluator receipts or population membership are inconsistent.
-    Side Effects:
-        None.
-    """
+    """Build an explicit complete or partial population summary from item receipts."""
     scored = [row for row in rows if row["evaluation"] is not None]
     scored_ids = sorted(row["variable_id"] for row in scored)
     expected_ids = sorted(expected) if expected is not None else sorted(row["variable_id"] for row in rows)
@@ -247,20 +181,7 @@ def _scope_summary(rows: list[dict[str, Any]], expected: list[str] | None = None
 
 def build_category_summary(observations: Iterable[Mapping[str, Any]],
                            population_categories: Mapping[str, Mapping[str, str]] | None = None) -> list[dict[str, Any]]:
-    """Calculate exact source-category and subcategory micro slices within each run.
-
-    Args:
-        observations: Explicit run-variable rows accepted by the reporting boundary.
-            Optional provider/model/configuration/repetition context is retained;
-            build_configuration_ranking supplies it from the frozen plan.
-    Returns:
-        Canonically ordered category and subcategory rows with exact aggregates,
-        support/coverage, run identity, classification, and source lineage hashes.
-    Raises:
-        ValueError: Duplicate/incompatible items or ambiguous category provenance.
-    Side Effects:
-        None; the caller retrieves database evidence and persists results separately.
-    """
+    """Calculate exact source-category and subcategory micro slices within each run."""
     rows = _observations(observations)
     groups: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
     contexts: dict[str, dict[str, Any]] = {}
@@ -305,24 +226,7 @@ def build_category_summary(observations: Iterable[Mapping[str, Any]],
 def build_configuration_ranking(plan: Mapping[str, Any], observations: Iterable[Mapping[str, Any]],
                                 *, scorer_identity: Mapping[str, Any] | None = None,
                                 population_categories: Mapping[str, Mapping[str, str]] | None = None) -> dict[str, Any]:
-    """Rank every complete configuration by mean repetition micro Close F1.
-
-    Args:
-        plan: Hash-verified experiment-plan-v1 with explicit configurations, runs,
-            population and synthetic/live mode. Only live mode requires 97 variables.
-        observations: Every available planned task observation; unresolved tasks
-            may be absent or have evaluation=null and always block rankability.
-    Returns:
-        Hashed report with persistence-compatible policy_version/configurations,
-        exact primary receipts and shared competition ranks, every lower/incomplete
-        configuration, full observations, repetition metrics, and category summaries.
-    Raises:
-        ValueError: Corrupt plan/evaluation, unplanned/duplicate task, incompatible
-            provenance, invalid repetition membership, or incomplete live population.
-        TypeError: Input evidence is not JSON-compatible.
-    Side Effects:
-        None. No provider, database, clock, model, or filesystem access occurs.
-    """
+    """Rank every complete configuration by mean repetition micro Close F1."""
     frozen = json.loads(canonical_json_bytes(dict(plan)))
     if frozen.get("version") != "experiment-plan-v1" or frozen.get("mode") not in {"live", "synthetic"}:
         raise ValueError("Unknown experiment plan version or mode")
@@ -430,18 +334,7 @@ def build_configuration_ranking(plan: Mapping[str, Any], observations: Iterable[
 
 
 def _csv_cell(value: Any) -> str:
-    """Escape every potentially executable spreadsheet text cell conservatively.
-
-    Args:
-        value: Scalar or nested JSON cell value.
-    Returns:
-        Text with a leading apostrophe for formula/control-character prefixes;
-        nested evidence uses canonical JSON and numbers are never rounded here.
-    Raises:
-        TypeError: Nested evidence is not JSON-compatible.
-    Side Effects:
-        None.
-    """
+    """Escape every potentially executable spreadsheet text cell conservatively."""
     if value is None:
         text = ""
     elif isinstance(value, (dict, list)):
@@ -454,17 +347,7 @@ def _csv_cell(value: Any) -> str:
 
 
 def _render_csv(report: Mapping[str, Any]) -> tuple[bytes, list[str], int]:
-    """Render one complete source-preserving CSV row per configuration.
-
-    Args:
-        report: Validated configuration report including full observations.
-    Returns:
-        UTF-8 CSV bytes, stable column names, and data-row count.
-    Raises:
-        TypeError: A report cell cannot be canonically rendered.
-    Side Effects:
-        None; rendering uses an in-memory buffer only.
-    """
+    """Render one complete source-preserving CSV row per configuration."""
     columns = ["report_sha256", "plan_sha256", "mode", "configuration_id", "provider", "model_id",
                "reasoning_mode", "prompt_variant", "shot_count", "temperature", "rankable", "rank", "reason"]
     columns += [f"mean_repetition_micro_{mode}_{metric}_fraction" for mode in ("exact", "close") for metric in ("precision", "recall", "f1")]
@@ -485,19 +368,7 @@ def _render_csv(report: Mapping[str, Any]) -> tuple[bytes, list[str], int]:
 
 
 def _safe_destination(destination: Path | str, outputs_root: Path | str) -> tuple[Path, Path]:
-    """Resolve an explicit derivative file strictly beneath a non-symlink root.
-
-    Args:
-        destination: Absolute output filename or relative name under outputs_root.
-        outputs_root: Explicit permitted output directory, created if absent.
-    Returns:
-        Resolved safe destination and resolved root.
-    Raises:
-        ValueError: Path escapes the root, names a directory, or traverses a symlink.
-        OSError: The permitted output directories cannot be created.
-    Side Effects:
-        Creates only required directories beneath the explicit output root.
-    """
+    """Resolve an explicit derivative file strictly beneath a non-symlink root."""
     root = Path(outputs_root).absolute()
     if root.is_symlink():
         raise ValueError("Output root may not be a symlink")
@@ -523,20 +394,7 @@ def _safe_destination(destination: Path | str, outputs_root: Path | str) -> tupl
 
 
 def _atomic_write(path: Path, data: bytes) -> None:
-    """Publish an idempotent immutable derivative through a flushed temporary file.
-
-    Args:
-        path: Previously validated destination under the explicit outputs root.
-        data: Complete canonical bytes to publish.
-    Returns:
-        None after verifying stored bytes match the intended content.
-    Raises:
-        FileExistsError: A different derivative already occupies the destination.
-        OSError: Writing, atomic publication, synchronization, or verification fails.
-    Side Effects:
-        Writes the named derivative and a temporary sibling, removing only its
-        own temporary file. Existing different artifacts are never overwritten.
-    """
+    """Publish an idempotent immutable derivative through a flushed temporary file."""
     if path.exists():
         if path.read_bytes() == data:
             return
@@ -568,25 +426,7 @@ def _atomic_write(path: Path, data: bytes) -> None:
 
 def export_report(report: Mapping[str, Any], format: str, destination: Path | str,
                   *, outputs_root: Path | str) -> dict[str, Any]:
-    """Export canonical JSON or formula-safe CSV plus a deterministic byte manifest.
-
-    Args:
-        report: Complete hashed configuration-report-v1 from the pure builder;
-            incomplete configurations are valid report content and remain visible.
-        format: 'canonical-json' (or 'json') or 'csv'; XLSX is deliberately optional.
-        destination: Named derivative file constrained beneath outputs_root.
-        outputs_root: Explicit permitted output directory.
-    Returns:
-        Manifest with schema_version, kind, file hashes/lengths, source plan/report
-        identities, exporter code hash, stable columns, row count, and manifest path.
-    Raises:
-        ValueError: Unsupported format, corrupt report, or unsafe output path.
-        FileExistsError: Different artifact or manifest already exists at the target.
-        OSError: Atomic write or byte verification fails.
-    Side Effects:
-        Writes only the named derivative and sibling .manifest.json under outputs_root;
-        reads exporter source bytes for provenance. Never writes database evidence.
-    """
+    """Export canonical JSON or formula-safe CSV plus a deterministic byte manifest."""
     frozen = json.loads(canonical_json_bytes(dict(report)))
     if frozen.get("version") != REPORT_VERSION or frozen.get("policy_version") != POLICY_VERSION:
         raise ValueError("Unknown report or ranking policy version")

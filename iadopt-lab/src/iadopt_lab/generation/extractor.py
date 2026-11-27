@@ -28,13 +28,7 @@ class ExtractionResult:
     version: str = EXTRACTOR_VERSION
 
     def to_dict(self) -> dict[str, Any]:
-        """Serialize this result without exposing references to mutable evidence.
-
-        Args: self, containing a completed extraction outcome.
-        Returns: JSON-compatible dictionary with list-valued errors/candidates.
-        Raises: no content-validation exceptions.
-        Side effects: none; the original result is unchanged.
-        """
+        """Serialize this result without exposing references to mutable evidence."""
         value = asdict(self)
         value["errors"] = list(value["errors"])
         value["candidates"] = list(value["candidates"])
@@ -42,13 +36,7 @@ class ExtractionResult:
 
 
 def _unique_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
-    """Build an object without silently accepting duplicate JSON keys.
-
-    Args: ordered key/value pairs supplied by the JSON decoder.
-    Returns: the decoded object when all keys are unique.
-    Raises: ValueError for duplicate keys.
-    Side effects: none.
-    """
+    """Build an object without silently accepting duplicate JSON keys."""
     result: dict[str, Any] = {}
     for key, value in pairs:
         if key in result:
@@ -58,24 +46,12 @@ def _unique_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 
 def _reject_constant(value: str) -> None:
-    """Reject the decoder's non-standard NaN and infinity constants.
-
-    Args: decoder constant text.
-    Returns: never returns normally.
-    Raises: ValueError for every supplied constant.
-    Side effects: none.
-    """
+    """Reject the decoder's non-standard NaN and infinity constants."""
     raise ValueError("Non-finite JSON number is forbidden")
 
 
 def _check_depth(text: str, limit: int) -> None:
-    """Bound container nesting without counting braces inside JSON strings.
-
-    Args: candidate text and positive maximum nesting depth.
-    Returns: None when nesting does not exceed the limit; parsing checks syntax.
-    Raises: ValueError when the resource limit is exceeded.
-    Side effects: none.
-    """
+    """Bound container nesting without counting braces inside JSON strings."""
     depth, quoted, escaped = 0, False, False
     for char in text:
         if quoted:
@@ -96,13 +72,7 @@ def _check_depth(text: str, limit: int) -> None:
 
 
 def _strict_parse(text: str, max_depth: int) -> Any:
-    """Parse one strict JSON value after checking resource bounds.
-
-    Args: candidate text and nesting limit.
-    Returns: parsed JSON primitives with unique object keys and finite numbers.
-    Raises: ValueError, JSONDecodeError, or RecursionError for invalid content.
-    Side effects: none; no syntax or field repair occurs.
-    """
+    """Parse one strict JSON value after checking resource bounds."""
     _check_depth(text, max_depth)
     result = json.loads(text, object_pairs_hook=_unique_pairs, parse_constant=_reject_constant)
     # Very large exponent notation can decode to infinity without parse_constant.
@@ -111,13 +81,7 @@ def _strict_parse(text: str, max_depth: int) -> Any:
 
 
 def _balanced_spans(text: str, limit: int) -> list[tuple[int, int]]:
-    """Find complete outermost object spans using quote/escape-aware scanning.
-
-    Args: full response text and positive maximum candidate count.
-    Returns: character-offset half-open spans in source order.
-    Raises: ValueError if the candidate resource limit is exceeded.
-    Side effects: none. Unclosed spans are not repaired or returned.
-    """
+    """Find complete outermost object spans using quote/escape-aware scanning."""
     spans, start, depth, quoted, escaped = [], None, 0, False, False
     for index, char in enumerate(text):
         if quoted:
@@ -145,16 +109,7 @@ def _balanced_spans(text: str, limit: int) -> list[tuple[int, int]]:
 
 def extract_json(raw_text: str, *, max_bytes: int = 1_048_576, max_depth: int = 64,
                  max_fences: int = 64, max_candidates: int = 64) -> ExtractionResult:
-    """Extract a unique JSON object using the frozen ordered protocol.
-
-    Args: untouched assistant text; explicit byte, depth, fence and candidate limits.
-    Actions: parse whole response, unwrap one JSON string, try complete eligible
-    fences, then balanced outermost objects. Record every inspected candidate.
-    Returns: ExtractionResult; malformed output, ambiguity and limits are failures
-    represented as data, never permission to select the first answer or repair it.
-    Raises: TypeError for a non-string input; ValueError for invalid safety limits.
-    Side effects: none. Candidate offsets are UTF-8 bytes in the named coordinate space.
-    """
+    """Extract a unique JSON object using the frozen ordered protocol."""
     if not isinstance(raw_text, str):
         raise TypeError("raw_text must be a string")
     limits = {"max_bytes": max_bytes, "max_depth": max_depth,
@@ -170,13 +125,7 @@ def extract_json(raw_text: str, *, max_bytes: int = 1_048_576, max_depth: int = 
 
     def finish(code: str | None, candidate: Any = None, strategy: str | None = None,
                selected: str | None = None) -> ExtractionResult:
-        """Build one deterministic outcome from the current scan evidence.
-
-        Args: optional failure code, accepted object, method and exact selected text.
-        Returns: immutable extraction result.
-        Raises: no parser errors.
-        Side effects: none; captured evidence is copied to an immutable tuple.
-        """
+        """Build one deterministic outcome from the current scan evidence."""
         errors = () if code is None else ({"stage": "extraction", "code": code,
                                           "pointer": "", "message": code.replace("_", " ")},)
         digest = hashlib.sha256(selected.encode("utf-8")).hexdigest() if selected is not None else None
@@ -184,13 +133,7 @@ def extract_json(raw_text: str, *, max_bytes: int = 1_048_576, max_depth: int = 
                                 tuple(evidence), space, raw_hash, digest, limits)
 
     def inspect(start: int, end: int, strategy: str) -> tuple[bool, Any, str]:
-        """Strictly parse a span and append its complete diagnostic evidence.
-
-        Args: character start/end offsets and extraction strategy in current text.
-        Returns: (parsed-successfully, parsed-value-or-None, exact-candidate-text).
-        Raises: no model-controlled parser exceptions.
-        Side effects: appends one diagnostic record to this extraction's local list.
-        """
+        """Strictly parse a span and append its complete diagnostic evidence."""
         text = working[start:end]
         item = {"strategy": strategy, "coordinate_space": space,
                 "start_byte": len(working[:start].encode("utf-8", errors="surrogatepass")),

@@ -1,8 +1,4 @@
-"""Compare two runs of the baseline: how far the live services and the scores drifted apart.
-
-Live retrieval changes with the services, so a second run is a replication check as much as a
-repeat. The comparison reads only the stored evidence of both runs; it calls nothing.
-"""
+"""Compare two runs of the baseline: how far the live services and the scores drifted apart."""
 
 from __future__ import annotations
 
@@ -22,27 +18,14 @@ EVIDENCE = ("candidates.jsonl", "scores.jsonl")
 
 
 def _require_run(root: Path) -> None:
-    """Refuse a folder that does not hold a run's evidence.
-
-    Args: root: a results folder.
-    Returns: None.
-    Raises: UsageError naming the folder and the missing file.
-    Side effects: filesystem checks.
-    """
+    """Refuse a folder that does not hold a run's evidence."""
     for name in EVIDENCE:
         if not (root / name).is_file():
             raise UsageError(f"{root} is not a results folder: {name} is missing")
 
 
 def _retrievals(root: Path) -> dict[tuple[str, str], list[str] | None]:
-    """Load the ordered candidate IRIs of every retrieval.
-
-    Args: root: a results folder.
-    Returns: (source, query key) -> candidate IRIs in rank order, or None for a retrieval that
-    failed, so a failure is never mistaken for an empty result.
-    Raises: StoreError for a corrupt candidates file.
-    Side effects: filesystem read.
-    """
+    """Load the ordered candidate IRIs of every retrieval."""
     records = latest(JsonlStore(root / "candidates.jsonl").read(),
                      lambda r: (r["source"], r["query_key"]))
     return {key: [c["iri"] for c in r["candidates"]] if is_ok(r) else None
@@ -50,28 +33,13 @@ def _retrievals(root: Path) -> dict[tuple[str, str], list[str] | None]:
 
 
 def _selection(outcome: Mapping[str, Any]) -> tuple[str, str] | None:
-    """Name what a slot's selected candidate was.
-
-    Args: outcome: evaluate_slot result.
-    Returns: (source, local identifier), or None when nothing was selected.
-    Raises: None.
-    Side effects: none.
-    """
+    """Name what a slot's selected candidate was."""
     chosen = outcome["selected"]
     return None if chosen is None else (chosen["source"], chosen["local_id"])
 
 
 def compare_runs(first: Path | str, second: Path | str) -> dict[str, Any]:
-    """Measure how much two runs agree.
-
-    Args: first, second: results folders with candidates.jsonl and scores.jsonl.
-    Returns: per-source retrieval agreement, the headline correct counts of each run, the slots
-    whose selected candidate changed (with examples), and the score differences of candidates
-    present in both runs.
-    Raises: UsageError for a folder that is not a results folder; StoreError for a corrupt
-    evidence file.
-    Side effects: filesystem reads.
-    """
+    """Measure how much two runs agree."""
     a, b = Path(first), Path(second)
     _require_run(a)
     _require_run(b)
@@ -116,13 +84,7 @@ def compare_runs(first: Path | str, second: Path | str) -> dict[str, Any]:
 
 
 def render_comparison(result: Mapping[str, Any], names: Sequence[str] = ("first", "second")) -> str:
-    """Write the comparison as Markdown.
-
-    Args: result: compare_runs output; names: labels for the two runs.
-    Returns: Markdown text.
-    Raises: KeyError for a malformed result.
-    Side effects: none.
-    """
+    """Write the comparison as Markdown."""
     n = result["slots_compared"]
     lines = [f"# Comparison of {names[0]} and {names[1]}", "",
              f"{n} slots compared ({result['only_in_first']} only in {names[0]}, "

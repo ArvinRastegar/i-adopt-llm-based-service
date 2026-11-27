@@ -1,9 +1,8 @@
 """PostgreSQL 16 registries, immutable evidence, fenced leases, and accounting.
 
-The public API is synchronous and thread-safe. Each method borrows one connection
-for one short transaction; callers must release it before any external model work.
-Mappings are validated at each boundary and retained alongside normalized columns.
-"""
+Callers must release a borrowed connection before any external model work.
+
+The public API is synchronous and thread-safe."""
 
 from __future__ import annotations
 
@@ -68,34 +67,20 @@ class BudgetError(PersistenceError):
 
 
 class ProviderIneligible(PersistenceError):
-    """The provider is cooling down or paused, so no new attempt may be allocated.
-
-    Distinct from a generic persistence failure because it is expected and recoverable:
-    one worker setting a cooldown while others are mid-dispatch is normal at any
-    concurrency above one. The runner returns those tasks to the queue and waits, rather
-    than treating a few seconds of backoff as a campaign failure.
-    """
+    """The provider is cooling down or paused, so no new attempt may be allocated."""
 
 
 class RateLimitError(PersistenceError):
     """A shared provider rate window needs a persisted pre-dispatch cooldown."""
 
     def __init__(self, retry_after_seconds: float) -> None:
-        """Set a bounded nonnegative retry delay; expose no request or credential data.
-
-        Input is seconds until the oldest admission expires. Output is a typed
-        exception with retry_after_seconds; no attempt or other state is changed.
-        """
+        """Set a bounded nonnegative retry delay; expose no request or credential data."""
         self.retry_after_seconds = max(0.001, float(retry_after_seconds))
         super().__init__("Provider request/token window has no admission capacity")
 
 
 def _json_default(value: Any) -> Any:
-    """Convert supported exact metadata values to JSON; reject other objects.
-
-    Input is one value encountered by JSON encoding. Output is a lossless string
-    or rational mapping. Raises TypeError for unsupported values; no side effects.
-    """
+    """Convert supported exact metadata values to JSON; reject other objects."""
     if isinstance(value, (Decimal, uuid.UUID)):
         return str(value)
     if isinstance(value, datetime):
@@ -106,11 +91,7 @@ def _json_default(value: Any) -> Any:
 
 
 def _canonical(value: Any) -> bytes:
-    """Encode a JSON-compatible input deterministically as UTF-8 bytes.
-
-    Reject non-finite floats and unsupported types. Returns canonical bytes;
-    does not mutate the value or perform I/O.
-    """
+    """Encode a JSON-compatible input deterministically as UTF-8 bytes."""
     return json.dumps(
         value,
         ensure_ascii=False,
@@ -132,12 +113,7 @@ def _id(kind: str, fingerprint: str) -> str:
 
 
 def _clean(value: Any) -> Any:
-    """Validate and normalize non-secret JSON evidence without changing semantics.
-
-    Input is a mapping/list/scalar; output is its JSON-normalized copy. Prohibited
-    credential keys and connection strings raise PersistenceError. Raw response
-    bytes are stored separately and never passed through this metadata filter.
-    """
+    """Validate and normalize non-secret JSON evidence without changing semantics."""
     if isinstance(value, Mapping):
         for key, child in value.items():
             if str(key).lower() in _SECRET_KEYS:
@@ -160,16 +136,9 @@ _REDACTED = "[redacted: credential-shaped evidence]"
 def _redact(value: Any) -> tuple[Any, list[str]]:
     """Normalize provider-supplied evidence, replacing credential-shaped content in place.
 
-    `_clean` refuses evidence carrying a credential-shaped key or string. That is right for
-    material this project constructs, where such a key is a bug worth hearing about loudly.
-    It is wrong for metadata whose shape a provider chose: refusing rolled back the entire
-    transaction, so a response already received - and on a metered route already paid for -
-    was discarded because of the *name* of one field beside it. The offending value is
-    replaced and never stored, and every substitution is recorded so the redaction is itself
-    evidence rather than a silent edit.
-
-    Input is a mapping/list/scalar; output is (JSON-normalized copy, replaced paths).
-    """
+    Refusing, as `_clean` does, is wrong for metadata whose shape a provider chose: it rolled
+    back the whole transaction, so a response already received, and possibly paid for, was
+    discarded because of one field's name."""
     replaced: list[str] = []
 
     def walk(node: Any, path: str) -> Any:
@@ -202,11 +171,7 @@ def _require(record: Mapping[str, Any], *keys: str) -> None:
 
 
 def _money(value: Any, *, nullable: bool = False) -> Decimal | None:
-    """Validate one nonnegative finite monetary value, preserving exact decimals.
-
-    Return Decimal, or None only when nullable=True. Raise BudgetError for absent,
-    negative, malformed, or non-finite values. No state is changed.
-    """
+    """Validate one nonnegative finite monetary value, preserving exact decimals."""
     if value is None and nullable:
         return None
     try:
@@ -234,12 +199,7 @@ def _row(record: Mapping[str, Any] | None) -> dict[str, Any] | None:
 
 
 def _fraction(value: Any) -> Fraction:
-    """Decode an exact rational metric receipt; reject invalid/non-finite values.
-
-    Supports numerator/denominator mappings, Fraction, integers, and exact decimal
-    strings. Floats are interpreted from their serialized decimal source receipt,
-    never reconstructed from a rounded display field. Returns a reduced Fraction.
-    """
+    """Decode an exact rational metric receipt; reject invalid/non-finite values."""
     if isinstance(value, Mapping):
         if "numerator" in value and "denominator" in value:
             numerator, denominator = value["numerator"], value["denominator"]
@@ -264,13 +224,7 @@ def _fraction(value: Any) -> Fraction:
 
 
 def migrate(dsn: str, migrations_dir: str | Path | None = None) -> list[str]:
-    """Apply forward, hash-verified SQL migrations to an explicit PostgreSQL 16 DSN.
-
-    Inputs: a connection string kept only in memory and an optional migration
-    directory. Output: names newly applied, empty on an idempotent repeat. Raises
-    PersistenceError for major-version/hash drift; database errors roll back the
-    migration. Side effects: schema/DDL writes under an advisory transaction lock.
-    """
+    """Apply forward, hash-verified SQL migrations to an explicit PostgreSQL 16 DSN."""
     directory = (
         Path(migrations_dir)
         if migrations_dir
@@ -312,12 +266,7 @@ class Repository:
     """Thread-safe synchronous store for one dedicated PostgreSQL experiment DB."""
 
     def __init__(self, dsn: str, *, min_size: int = 1, max_size: int = 8) -> None:
-        """Open a bounded connection pool for an explicit DSN without persisting it.
-
-        Inputs include positive pool bounds. Output is an initialized repository;
-        raises connection/version errors. Side effects are database connections and
-        a read-only PostgreSQL version/migration check, never schema creation.
-        """
+        """Open a bounded connection pool for an explicit DSN without persisting it."""
         self.pool = ConnectionPool(
             dsn,
             min_size=min_size,
@@ -350,12 +299,7 @@ class Repository:
     def register_artifact(
         self, kind: str, content: bytes | str, metadata: Mapping[str, Any] | None = None
     ) -> dict[str, Any]:
-        """Persist exact protocol/source bytes and metadata idempotently.
-
-        Inputs are a nonempty kind, bytes or UTF-8 text, and non-secret provenance.
-        Output is the immutable artifact row. Same kind/hash with conflicting
-        metadata raises EvidenceConflict. Only PostgreSQL evidence is written.
-        """
+        """Persist exact protocol/source bytes and metadata idempotently."""
         if not kind:
             raise PersistenceError("Artifact kind is required")
         raw = content.encode("utf-8") if isinstance(content, str) else bytes(content)
@@ -380,14 +324,7 @@ class Repository:
     def register_corpus(
         self, snapshot: Mapping[str, Any], variables: Sequence[Mapping[str, Any]]
     ) -> dict[str, Any]:
-        """Atomically register corpus metadata and every supplied source/gold record.
-
-        Inputs: source snapshot metadata and nonempty, unique variable mappings.
-        Output: immutable snapshot ID and records. Required lexical/category/hash
-        fields are validated; optional exact source bytes are independently hashed.
-        Conflicts/cardinality/hash errors roll back the entire insertion. No files,
-        parsers, external services, or provider calls are used.
-        """
+        """Atomically register corpus metadata and every supplied source/gold record."""
         if not variables:
             raise PersistenceError("Corpus variables cannot be empty")
         meta = _clean(snapshot)
@@ -492,13 +429,7 @@ class Repository:
         mode: str = "synthetic",
         artifact_refs: Sequence[Any] | Mapping[str, Any] | None = None,
     ) -> str:
-        """Freeze one campaign, selected providers, and their owned enabled models.
-
-        Inputs: complete non-secret configuration, immutable synthetic/live mode,
-        optional existing artifact IDs. Output: deterministic campaign UUID string.
-        Validate ownership/billing/caps; conflicting evidence raises an error. This
-        writes registry rows only and does not authorize live dispatch or plan work.
-        """
+        """Freeze one campaign, selected providers, and their owned enabled models."""
         config = _clean(configuration)
         resolved = config.get("resolved", config.get("configuration", config))
         if mode not in {"synthetic", "live"}:
@@ -606,14 +537,7 @@ class Repository:
         runs: Sequence[Mapping[str, Any]],
         variables: Sequence[Mapping[str, Any] | str],
     ) -> dict[str, Any]:
-        """Atomically freeze every run/variable task in a campaign's complete union.
-
-        Inputs are the campaign ID, complete resolved-run list, and registered
-        variable records or database IDs. Output contains plan identity and per-
-        provider/combined counts. Reject duplicate, missing, demo, cross-provider,
-        mixed-corpus, or conflicting membership; live mode requires 97 variables.
-        Planning writes no partial dispatchable plan and makes zero provider calls.
-        """
+        """Atomically freeze every run/variable task in a campaign's complete union."""
         if not runs or not variables:
             raise PersistenceError("Planning requires runs and targets")
         clean_runs = [_clean(run) for run in runs]
@@ -790,10 +714,7 @@ class Repository:
 
     @staticmethod
     def _campaign(conn: psycopg.Connection, identity: str, *, lock: bool = False) -> dict[str, Any]:
-        """Read an explicit campaign inside the caller's transaction; optionally lock.
-
-        Returns the row; raises PersistenceError for an unknown ID. Does not commit.
-        """
+        """Read an explicit campaign inside the caller's transaction; optionally lock."""
         row = conn.execute(
             "SELECT * FROM campaign WHERE id=%s" + (" FOR UPDATE" if lock else ""), (identity,)
         ).fetchone()
@@ -839,11 +760,7 @@ class Repository:
 
     @staticmethod
     def _lease(conn: psycopg.Connection, lease: Mapping[str, Any]) -> dict[str, Any]:
-        """Lock and verify an unexpired lease's owner/token/fence in one transaction.
-
-        Input is a returned lease mapping. Output is current task row; stale or
-        missing ownership raises StaleLeaseError. This never extends a lease.
-        """
+        """Lock and verify an unexpired lease's owner/token/fence in one transaction."""
         _require(lease, "lease_token", "worker_id", "fence")
         task_id = lease.get("task_id", lease.get("id"))
         row = conn.execute(
@@ -868,14 +785,7 @@ class Repository:
         lease_seconds: int = 300,
         provider: str | None = None,
     ) -> list[dict[str, Any]]:
-        """Claim eligible tasks with SKIP LOCKED and fresh fencing tokens.
-
-        Inputs are campaign/worker IDs, positive claim/lease limits, optional owned
-        provider filter. Output leases include complete run/variable evidence.
-        Provider pauses block only new dispatch stages; durable local work remains
-        claimable. Contention returns fewer rows, never duplicate active owners.
-        This writes leases/events and commits before returning; no external I/O.
-        """
+        """Claim eligible tasks with SKIP LOCKED and fresh fencing tokens."""
         if not worker or limit < 1 or lease_seconds < 1:
             raise PersistenceError("Worker, claim limit, and lease duration must be valid")
         ids = []
@@ -960,15 +870,7 @@ class Repository:
         disclosure: Mapping[str, Any],
         authorization: Mapping[str, Any],
     ) -> dict[str, Any]:
-        """Retain a disclosed plan-bound estimate and separate explicit live approval.
-
-        Inputs are a planned live campaign and three immutable receipts. Estimate
-        requires plan_fingerprint, policy_version, usable=True, and price_evidence;
-        disclosure requires estimate_hash/disclosed_at; authorization requires
-        estimate_hash/plan_fingerprint/authorized_at/actor/explicit=True. Returns
-        the stored receipt. Missing/mismatched evidence raises PersistenceError.
-        This only records supplied authority; it never infers or requests approval.
-        """
+        """Retain a disclosed plan-bound estimate and separate explicit live approval."""
         est, dis, auth = _clean(estimate), _clean(disclosure), _clean(authorization)
         _require(est, "plan_fingerprint", "policy_version", "usable", "price_evidence")
         _require(dis, "estimate_hash", "disclosed_at")
@@ -1020,15 +922,7 @@ class Repository:
             )
 
     def start_attempt(self, lease: Mapping[str, Any], request: Mapping[str, Any]) -> dict[str, Any]:
-        """Commit one numbered request and its cost reservation before dispatch.
-
-        Inputs: current fenced lease; messages, prompt, sanitized body, optional
-        scientific_parameters/attempt_number/correction_parent, and cost receipt.
-        Live requests need bound authorization and price-supported reservation;
-        capped paid requests additionally need bounded=True. Return immutable
-        attempt plus transient lease context. Reject drift, stale leases, missing
-        lineage, cap overflow, or attempt four. Writes one short transaction only.
-        """
+        """Commit one numbered request and its cost reservation before dispatch."""
         evidence = _clean(request)
         _require(evidence, "messages", "prompt", "body")
         if (
@@ -1242,13 +1136,7 @@ class Repository:
         provider: Mapping[str, Any],
         request: Mapping[str, Any],
     ) -> None:
-        """Check shared rolling 60-second request/token admissions under provider lock.
-
-        Inputs are the caller's locked provider, task, and token_bound request.
-        Return None when capacity exists; RateLimitError gives a conservative wait
-        until the relevant old admissions expire. No row or attempt is allocated.
-        Unknown token bounds block a configured token limit, never assume zero.
-        """
+        """Check shared rolling 60-second request/token admissions under provider lock."""
         rpm = provider["profile"].get("requests_per_minute")
         tpm = provider["profile"].get("tokens_per_minute")
         if rpm is None and tpm is None:
@@ -1290,11 +1178,7 @@ class Repository:
     ) -> dict[str, Any]:
         """Record dispatch intent once immediately before a single external request.
 
-        Input is a stored attempt and current lease (embedded or explicit). Output
-        includes dispatch_allowed; an already-dispatched attempt returns False and
-        must never be sent again. Raises for stale ownership or inconsistent state.
-        Writes transport/state evidence only; this method never sends HTTP.
-        """
+        An already-dispatched attempt returns False and must never be sent again."""
         current_lease = lease or attempt.get("lease")
         if current_lease is None:
             raise StaleLeaseError("Dispatch requires current lease context")
@@ -1350,15 +1234,7 @@ class Repository:
     def store_response(
         self, attempt: Mapping[str, Any] | str, result: Mapping[str, Any]
     ) -> dict[str, Any]:
-        """Persist untouched raw response and metadata before parsing, exactly once.
-
-        Inputs: existing attempt ID/record and result with raw_body bytes/text,
-        assistant_text, delivery, optional envelope/usage/error/timing/cost. Output
-        is the immutable response row. Identical replay is safe; different bytes
-        or metadata raise EvidenceConflict. Late evidence may be retained after a
-        lease expires, but only its original fence may advance mutable task state.
-        Cost settlement and response commit are one transaction; no provider I/O.
-        """
+        """Persist untouched raw response and metadata before parsing, exactly once."""
         attempt_id = attempt if isinstance(attempt, str) else str(attempt["id"])
         metadata = dict(result)
         raw = metadata.pop("raw_body", metadata.pop("raw_response", None))
@@ -1538,13 +1414,7 @@ class Repository:
     def record_validation(
         self, attempt: Mapping[str, Any] | str, evidence: Mapping[str, Any]
     ) -> dict[str, Any]:
-        """Persist complete extraction/schema/semantic validity receipt idempotently.
-
-        Input contains valid bool, errors list, optional candidate, versions,
-        extraction details, and content_invalid. Output is immutable receipt.
-        Requires a delivered stored raw response. Conflicts or malformed validity
-        evidence raise; only PostgreSQL evidence/state is changed, never generation.
-        """
+        """Persist complete extraction/schema/semantic validity receipt idempotently."""
         attempt_id = attempt if isinstance(attempt, str) else str(attempt["id"])
         content = _clean(evidence)
         _require(content, "valid", "errors")
@@ -1604,13 +1474,7 @@ class Repository:
 
     @staticmethod
     def _evaluation_metrics(result: Mapping[str, Any]) -> list[tuple[str, str, str, Fraction]]:
-        """Validate exact evaluator receipts and flatten queryable metric rows.
-
-        Input is a complete evaluate_item result with six components in each mode.
-        Output contains mode/component/metric/reduced-rational tuples. Verify hash,
-        nonnegative confusion counts, component sums, and derived PRF arithmetic;
-        corruption raises EvidenceConflict without invoking an evaluator or model.
-        """
+        """Validate exact evaluator receipts and flatten queryable metric rows."""
         _require(
             result,
             "scorer_version",
@@ -1658,15 +1522,7 @@ class Repository:
     def store_evaluation(
         self, task: Mapping[str, Any] | str, result: Mapping[str, Any]
     ) -> dict[str, Any]:
-        """Retain an item evaluation and normalized exact metrics before completion.
-
-        Inputs: task ID/lease and the complete pure evaluator receipt. Output is an
-        immutable evaluation row. Validate gold/prediction lineage, result hash,
-        all six components, exact confusion sums and PRF arithmetic. A lease input
-        is fenced; an ID supports safe idempotent local scoring after a restart.
-        Different scorers create new namespaces; conflicting same-scorer results
-        fail. This writes evidence/metrics and task completion only, never scores.
-        """
+        """Retain an item evaluation and normalized exact metrics before completion."""
         task_id = task if isinstance(task, str) else task.get("task_id", task.get("id"))
         evidence = _clean(result)
         metrics = self._evaluation_metrics(evidence)
@@ -1748,12 +1604,7 @@ class Repository:
             )
 
     def heartbeat(self, lease: Mapping[str, Any], lease_seconds: int = 300) -> dict[str, Any]:
-        """Extend one still-current lease using database time and unchanged fencing.
-
-        Input is an active lease and positive duration. Return the renewed task
-        row; expired/superseded leases raise StaleLeaseError. Only coordination
-        timestamps/row version change; no attempt, prompt, or evidence is replaced.
-        """
+        """Extend one still-current lease using database time and unchanged fencing."""
         if lease_seconds < 1:
             raise PersistenceError("Lease extension must be positive")
         with self.pool.connection() as conn:
@@ -1771,13 +1622,7 @@ class Repository:
     def release(
         self, lease: Mapping[str, Any], state: str | None = None, reason: Any = None
     ) -> dict[str, Any]:
-        """Release a current lease at a validated durable checkpoint.
-
-        Inputs: current lease, optional next state and sanitized reason. Output is
-        the resulting task row. Retry-pending requires safe prior evidence and a
-        remaining attempt; complete requires evaluation. Stale/illegal transitions
-        raise and roll back. Only lease/state/events change, never attempt counters.
-        """
+        """Release a current lease at a validated durable checkpoint."""
         allowed = {
             "queued",
             "request_persisted",
@@ -1848,13 +1693,7 @@ class Repository:
         reason: Any = None,
         cooldown_until: datetime | str | None = None,
     ) -> dict[str, Any]:
-        """Persist one selected provider's dispatch pause or due-time cooldown.
-
-        Inputs identify campaign/provider, ready/cooldown/paused/failed, sanitized
-        reason and optional UTC due time. Output is the provider state row. Reject
-        unknown scope or cooldown without a due time. This writes state/audit only;
-        other providers and local response processing remain unaffected.
-        """
+        """Persist one selected provider's dispatch pause or due-time cooldown."""
         if state not in {"ready", "cooldown", "paused", "failed"} or (
             state == "cooldown" and cooldown_until is None
         ):
@@ -1874,12 +1713,7 @@ class Repository:
             return _row(row)
 
     def set_campaign_state(self, campaign_id: str, state: str) -> dict[str, Any]:
-        """Pause/fail or resume a registered campaign without changing its identity.
-
-        Inputs are explicit campaign ID and planned/running/paused/failed. Output is
-        the row. Completion uses complete_campaign instead; terminal campaigns may
-        not reopen. State writes do not modify selected models, caps, or evidence.
-        """
+        """Pause/fail or resume a registered campaign without changing its identity."""
         if state not in {"planned", "running", "paused", "failed"}:
             raise PersistenceError("Use completion verification for final campaign state")
         with self.pool.connection() as conn:
@@ -1898,12 +1732,7 @@ class Repository:
             )
 
     def get_campaign(self, campaign_id: str) -> dict[str, Any]:
-        """Read one explicit campaign with plan, providers, runs, costs and states.
-
-        Input is a UUID; output includes immutable configuration plus normalized
-        counts, all run evidence, authorization and report IDs. Unknown identity or
-        hash corruption raises. Uses read-only transactions and performs no dispatch.
-        """
+        """Read one explicit campaign with plan, providers, runs, costs and states."""
         with self.pool.connection() as conn:
             row = self._campaign(conn, campaign_id)
             plan = conn.execute(
@@ -1967,12 +1796,7 @@ class Repository:
     def get_campaign_artifact(
         self, campaign_id: str, kind: str = "experiment-bundle"
     ) -> dict[str, Any]:
-        """Read one bound artifact's exact verified bytes for self-contained resume.
-
-        Inputs are an explicit campaign ID and artifact kind. Output is the sole
-        immutable artifact row, including content bytes. Missing or ambiguous kind
-        and hash mismatch raise; no filesystem lookup or state changes occur.
-        """
+        """Read one bound artifact's exact verified bytes for self-contained resume."""
         with self.pool.connection() as conn:
             self._campaign(conn, campaign_id)
             rows = conn.execute(
@@ -1997,12 +1821,7 @@ class Repository:
             return _row(row)
 
     def get_task(self, task_id: str) -> dict[str, Any]:
-        """Read and hash-verify one task's complete durable resume evidence.
-
-        Input is an explicit task UUID. Output includes lease, run mapping, variable
-        mapping/gold/category/source facts, attempts, selected prediction, and all
-        evaluations. Unknown IDs or evidence drift raise; reads never mutate state.
-        """
+        """Read and hash-verify one task's complete durable resume evidence."""
         with self.pool.connection() as conn:
             row = conn.execute("SELECT * FROM task WHERE id=%s", (task_id,)).fetchone()
             if not row:
@@ -2063,12 +1882,7 @@ class Repository:
     def list_tasks(
         self, campaign_id: str, *, provider: str | None = None, state: str | None = None
     ) -> list[dict[str, Any]]:
-        """List full task evidence for an explicit campaign and optional visible filter.
-
-        Return canonical provider/fingerprint order. Filters only change this read;
-        completeness is always checked against the full stored plan. Unknown campaign
-        or hash failure raises; no implicit latest selection or evidence mutation.
-        """
+        """List full task evidence for an explicit campaign and optional visible filter."""
         with self.pool.connection() as conn:
             self._campaign(conn, campaign_id)
             ids = [
@@ -2082,11 +1896,7 @@ class Repository:
 
     @staticmethod
     def _attempts(conn: psycopg.Connection, task_id: str) -> list[dict[str, Any]]:
-        """Read hash-verified attempts/responses/validation using the caller connection.
-
-        Input is a task UUID. Return ordered immutable evidence and delivery state.
-        Any byte/hash conflict raises; no processing or mutation occurs.
-        """
+        """Read hash-verified attempts/responses/validation using the caller connection."""
         attempts = []
         for row in conn.execute(
             "SELECT a.*,s.delivery,s.dispatched_at,s.received_at FROM attempt a JOIN attempt_state s ON s.attempt_id=a.id WHERE a.task_id=%s ORDER BY a.attempt_number",
@@ -2121,22 +1931,12 @@ class Repository:
         return attempts
 
     def list_attempts(self, task_id: str) -> list[dict[str, Any]]:
-        """Return ordered hash-verified attempt/response/validation evidence for one task.
-
-        Input is a task UUID. Output is an empty list before generation; evidence
-        drift raises EvidenceConflict. This is a read-only recovery operation.
-        """
+        """Return ordered hash-verified attempt/response/validation evidence for one task."""
         with self.pool.connection() as conn:
             return self._attempts(conn, task_id)
 
     def reconcile(self, campaign_id: str) -> dict[str, Any]:
-        """Reconcile expired work from durable evidence without resetting requests.
-
-        Input is one campaign. Output is counts plus repaired task IDs and unresolved
-        ambiguity. Active unexpired leases remain untouched. A stored raw response
-        resumes local work; dispatch without a response becomes ambiguous, never a
-        fresh call. Completed evidence is retained. Hash conflicts roll back repairs.
-        """
+        """Reconcile expired work from durable evidence without resetting requests."""
         repaired, ambiguous, released = [], [], []
         with self.pool.connection() as conn:
             campaign = self._campaign(conn, campaign_id, lock=True)
@@ -2235,16 +2035,7 @@ class Repository:
         }
 
     def save_ranking(self, campaign_id: str, record: Mapping[str, Any]) -> dict[str, Any]:
-        """Verify and retain a complete configuration ranking from exact DB receipts.
-
-        Inputs: campaign ID and policy_version/configurations record. Each entry
-        names configuration_id/provider/model_id and has rank plus exact primary
-        fraction, or rank=None/reason for incomplete coverage. Output is immutable
-        ranking row. Validate all selected configurations, each repetition's micro
-        Close F1 and their arithmetic mean, and shared competition ranks. Missing
-        evidence, changed formula, or incorrect rank raises and rolls back. This
-        verifies arithmetic only and never invokes generation/evaluation.
-        """
+        """Verify and retain a complete configuration ranking from exact DB receipts."""
         evidence = _clean(record)
         _require(evidence, "policy_version", "configurations")
         if evidence["policy_version"] != "mean-repetition-micro-close-f1-v1" or not isinstance(
@@ -2356,12 +2147,7 @@ class Repository:
     def save_report(self, campaign_id: str, record: Mapping[str, Any]) -> dict[str, Any]:
         """Store a hash-identified derived report manifest without changing evidence.
 
-        Inputs: campaign ID and schema_version=1.0/campaign_id/kind/files/final
-        manifest. Each file names path, SHA-256, byte_length. Output is immutable
-        manifest row. Final manifests require all tasks complete and a verified
-        ranking; incomplete reports must explicitly set final=False. This writes
-        only PostgreSQL lineage, never output files or model calls.
-        """
+        Incomplete reports must explicitly set final=False."""
         evidence = _clean(record)
         _require(evidence, "schema_version", "campaign_id", "kind", "files", "final")
         if (
@@ -2398,12 +2184,7 @@ class Repository:
     def _verify_complete(
         conn: psycopg.Connection, campaign_id: str, *, require_report: bool
     ) -> None:
-        """Verify complete union coverage and final ranking/report in a transaction.
-
-        Input names one campaign and whether a final report is already required.
-        Return None on exact completeness; missing tasks/evaluations/ranks/reports
-        raise PersistenceError. No state changes or scientific recomputation occur.
-        """
+        """Verify complete union coverage and final ranking/report in a transaction."""
         plan = conn.execute(
             "SELECT * FROM campaign_plan WHERE campaign_id=%s", (campaign_id,)
         ).fetchone()
@@ -2440,12 +2221,7 @@ class Repository:
             raise PersistenceError("Complete campaign requires a durable final report manifest")
 
     def complete_campaign(self, campaign_id: str) -> dict[str, Any]:
-        """Mark complete only after all selected work, ranking and final reports exist.
-
-        Input is an explicit campaign ID. Output is its completed immutable-identity
-        row. Exact coverage and required evidence are checked in the same transaction;
-        gaps raise without changing state. Repeating successful completion is safe.
-        """
+        """Mark complete only after all selected work, ranking and final reports exist."""
         with self.pool.connection() as conn:
             self._campaign(conn, campaign_id, lock=True)
             self._verify_complete(conn, campaign_id, require_report=True)
@@ -2463,14 +2239,7 @@ class Repository:
         attempt: Mapping[str, Any] | str,
         terminal_invalid: bool = False,
     ) -> dict[str, Any]:
-        """Select one valid canonical prediction or a justified terminal empty result.
-
-        Inputs: active lease, six-field canonical mapping, owned source attempt, and
-        optional terminal_invalid=True. Output is the immutable prediction. Empty
-        terminal selection requires exactly three delivered content-invalid receipts;
-        ordinary selection requires validated content. Conflicting second selection
-        or stale ownership raises. The task advances to prediction_ready, not complete.
-        """
+        """Select one valid canonical prediction or a justified terminal empty result."""
         attempt_id = attempt if isinstance(attempt, str) else str(attempt["id"])
         canonical = _clean(prediction)
         if set(canonical) != _FIELDS:

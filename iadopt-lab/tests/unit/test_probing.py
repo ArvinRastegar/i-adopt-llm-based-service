@@ -1,15 +1,4 @@
-"""Guards for capability probing and the parameters.yml models-block rewrite.
-
-Two properties make the block rewrite safe, and both are pinned below: everything
-outside the targeted block survives byte-identically, and whatever is written
-still resolves under the real schema.
-
-The verdict tests exist because a probe that cannot tell a working switch from an
-absent one will write a configuration that sends no switch at all. The ordering
-they pin is the correctness argument: reasoning seen under the switch refutes the
-switch whatever the baseline did, and an unusable baseline leaves the question
-open rather than answering it in the model's favour.
-"""
+"""Guards for capability probing and the parameters.yml models-block rewrite."""
 
 import asyncio
 import json
@@ -37,12 +26,7 @@ PARAMS = re.sub(r"^  providers: \[.*\]$", "  providers: [psnc]", _LIVE_PARAMS, c
 
 def _run(*, baseline=None, switched=None, structured=None,
          params=("temperature", "top_p", "seed"), catalog=None):
-    """Drive one model through the probe with independently scripted responses.
-
-    The handler dispatches on the request body, not on call order, because the probe now
-    tries several candidate off-switches and stops at the first that works — so the number
-    of calls, and the position of the structured probe, both vary by scenario.
-    """
+    """Drive one model through the probe with independently scripted responses."""
     calls = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -226,12 +210,7 @@ def test_reasoning_off_fields_stay_within_the_permitted_native_set():
 
 
 def test_a_switch_that_hides_reasoning_without_stopping_it_is_refused():
-    """Suppressing the reasoning FIELD is not suppressing the billed generation.
-
-    `reasoning.exclude` on OpenRouter removes reasoning from the response while the model
-    still generates and bills those tokens. Counting reasoning characters alone would call
-    that a working off-switch and be wrong about both cost and latency.
-    """
+    """Suppressing the reasoning FIELD is not suppressing the billed generation."""
     result, _ = _run(baseline={"reasoning": 5000, "completion_tokens": 4000},
                      switched={"content": "ok", "completion_tokens": 4000})
     assert result["verdict"] == "reasoning_hidden_not_stopped"

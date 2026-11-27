@@ -9,13 +9,7 @@ from .domain import LabError
 
 
 def decimal_value(value: str | int | float | Decimal) -> Decimal:
-    """Validate a nonnegative finite decimal quantity without binary-float arithmetic.
-
-    Args: value: Explicit amount, rate or token estimate, preferably a decimal string.
-    Returns: Exact Decimal parsed from its textual representation.
-    Raises: LabError for boolean, negative, non-finite or malformed input.
-    Side Effects: None; deterministic.
-    """
+    """Validate a nonnegative finite decimal quantity without binary-float arithmetic."""
     try:
         result = Decimal(str(value))
     except (InvalidOperation, ValueError):
@@ -27,28 +21,7 @@ def decimal_value(value: str | int | float | Decimal) -> Decimal:
 
 def estimate_campaign_cost(plan: dict, prompt_artifacts: dict, billing_evidence: dict,
                            assumptions: dict) -> dict:
-    """Calculate expected and conditional three-attempt scenarios from frozen evidence.
-
-    Args:
-        plan: Expanded plan with per-model counts and SHA-256.
-        prompt_artifacts: plan_sha256, evidence and input_tokens_by_run mapping.
-            Each run's token list covers all rendered target prompts in population order.
-        billing_evidence: Reporting currency and model cards keyed provider/model_id.
-            Each card has mode/basis/provenance, input_per_million/output_per_million,
-            and fx_to_reporting. Unknown rates are not zero.
-        assumptions: expected_output_tokens, attempt2_fraction, attempt3_fraction,
-            correction_error_tokens, total_output_token_ceiling, ceiling_verified and
-            reasoning_accounting_evidence. Output includes billed reasoning tokens.
-    Returns:
-        Hashed estimate with provider/model totals, assumptions and readiness issues.
-        A conditional token bound requires an evidenced all-in output ceiling.
-        Fully evidenced non-billed plans may proceed with a disclosed ceiling warning:
-        zero monetary cost does not establish a token or runtime bound.
-    Raises:
-        LabError: Mismatched plan, invalid quantities or inconsistent retry fractions.
-    Side Effects:
-        None; no calibration, price fetch, persistence, approval or cap enforcement.
-    """
+    """Calculate expected and conditional three-attempt scenarios from frozen evidence."""
     if prompt_artifacts.get("plan_sha256") != plan["sha256"]:
         raise LabError("Prompt estimate is not bound to this plan")
     issues, rows, warnings = [], [], []

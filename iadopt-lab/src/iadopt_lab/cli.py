@@ -1,9 +1,4 @@
-"""Thin command entry point: parse arguments, delegate, and return an exit code.
-
-This module owns no experiment logic. It does not loop, call providers, decide
-retries, execute SQL, score predictions, or manage workers. Every command
-delegates to the component that owns the behaviour and prints its result.
-"""
+"""Thin command entry point: parse arguments, delegate, and return an exit code."""
 
 from __future__ import annotations
 
@@ -31,13 +26,7 @@ _SUCCESSFUL_STOPS = frozenset({"tasks_complete", "already_complete", "tasks_term
 
 
 def _root(value: str | None) -> Path:
-    """Resolve the lab root that owns parameters.yml.
-
-    Args: value: Explicit --root argument or None for the packaged project root.
-    Returns: Existing directory containing parameters.yml.
-    Raises: LabError when the directory does not hold the experiment configuration.
-    Side effects: Filesystem existence checks only.
-    """
+    """Resolve the lab root that owns parameters.yml."""
     root = Path(value).resolve() if value else Path(__file__).resolve().parents[2]
     if not (root / "parameters.yml").is_file():
         raise LabError(f"No parameters.yml under {root}; pass --root")
@@ -45,13 +34,7 @@ def _root(value: str | None) -> Path:
 
 
 def _emit(payload: Any, as_json: bool) -> None:
-    """Print a command result as canonical JSON or a short human summary.
-
-    Args: payload: JSON-compatible result mapping; as_json: whether to print raw JSON.
-    Returns: None.
-    Raises: TypeError for non-serializable payloads.
-    Side effects: Writes to stdout only.
-    """
+    """Print a command result as canonical JSON or a short human summary."""
     if as_json:
         print(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True))
         return
@@ -67,13 +50,7 @@ def _emit(payload: Any, as_json: bool) -> None:
 
 
 def _configuration(root: Path, *, synthetic: bool = False):
-    """Load and resolve the experiment configuration for one command.
-
-    Args: root: Lab root; synthetic: whether to derive the labelled offline fixture snapshot.
-    Returns: Resolved Configuration snapshot.
-    Raises: ConfigurationError for invalid YAML or schema violations.
-    Side effects: Reads parameters.yml and its schema.
-    """
+    """Load and resolve the experiment configuration for one command."""
     from .configuration import load_parameters, resolve_configuration
     from .planning import synthetic_configuration
 
@@ -82,13 +59,7 @@ def _configuration(root: Path, *, synthetic: bool = False):
 
 
 def cmd_preflight(args: argparse.Namespace) -> int:
-    """Report draft-readiness issues and, with --live, the full live-dispatch gate.
-
-    Args: args: Parsed namespace with root, live and json flags.
-    Returns: EXIT_OK when no blocking issue remains, otherwise EXIT_FAILED.
-    Raises: ConfigurationError for an unreadable or invalid configuration.
-    Side effects: Reads configuration; never contacts a provider or database.
-    """
+    """Report draft-readiness issues and, with --live, the full live-dispatch gate."""
     from .configuration import validate_live_readiness
 
     root = _root(args.root)
@@ -105,13 +76,7 @@ def cmd_preflight(args: argparse.Namespace) -> int:
 
 
 def cmd_ingest(args: argparse.Namespace) -> int:
-    """Materialize and verify the pinned corpus bundle from a read-only source.
-
-    Args: args: Namespace with root, optional --source-repository / --source-directory.
-    Returns: EXIT_OK after a complete verified bundle is written.
-    Raises: ValueError for any source, projection, or integrity conflict.
-    Side effects: Writes immutable corpus, canonical, derived, and manifest artifacts.
-    """
+    """Materialize and verify the pinned corpus bundle from a read-only source."""
     from .corpus.ingestion import SOURCE_TAG, ingest_corpus
 
     root = _root(args.root)
@@ -128,13 +93,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
 
 
 def cmd_verify(args: argparse.Namespace) -> int:
-    """Re-check every materialized corpus artifact against its stored identity.
-
-    Args: args: Namespace with root and json flags.
-    Returns: EXIT_OK when the full bundle verifies.
-    Raises: ValueError for corruption, hash mismatch, or an incomplete population.
-    Side effects: Filesystem reads only; no artifact is rewritten.
-    """
+    """Re-check every materialized corpus artifact against its stored identity."""
     from .corpus.ingestion import (
         SOURCE_TAG,
         load_canonical_records,
@@ -152,13 +111,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
 
 def cmd_plan(args: argparse.Namespace) -> int:
-    """Expand the frozen grid and report deterministic run, task, and call counts.
-
-    Args: args: Namespace with root, synthetic, out, and json flags.
-    Returns: EXIT_OK when a plan is expanded; EXIT_FAILED when the draft is unresolved.
-    Raises: ConfigurationError for unresolved settings or an invalid population.
-    Side effects: Reads corpus artifacts; writes the plan only when --out is given.
-    """
+    """Expand the frozen grid and report deterministic run, task, and call counts."""
     from .artifacts import collect_input_artifacts
     from .corpus.ingestion import load_canonical_records
     from .planning import expand_campaign
@@ -188,13 +141,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
 
 
 def cmd_estimate(args: argparse.Namespace) -> int:
-    """Calculate the pre-run cost estimate from an explicit evidence file.
-
-    Args: args: Namespace with root, plan, evidence, and json flags.
-    Returns: EXIT_OK when the estimate is produced.
-    Raises: LabError or ValueError for incomplete price, token, or assumption evidence.
-    Side effects: Reads the plan and evidence files; performs no provider call.
-    """
+    """Calculate the pre-run cost estimate from an explicit evidence file."""
     from .costing import estimate_campaign_cost
 
     _root(args.root)
@@ -207,13 +154,7 @@ def cmd_estimate(args: argparse.Namespace) -> int:
 
 
 def cmd_report(args: argparse.Namespace) -> int:
-    """Rank complete configurations from stored observations and export a derivative.
-
-    Args: args: Namespace with root, plan, observations, format, out, and json flags.
-    Returns: EXIT_OK when a ranking is produced.
-    Raises: ValueError for observations outside the frozen plan or inconsistent receipts.
-    Side effects: Reads plan/observation files; writes only beneath outputs/ when exporting.
-    """
+    """Rank complete configurations from stored observations and export a derivative."""
     from iadopt_eval.core import CLOSE_THRESHOLD, SCORER_VERSION
 
     from .artifacts import scorer_identity_hash
@@ -258,13 +199,7 @@ def cmd_report(args: argparse.Namespace) -> int:
 
 
 def cmd_database(args: argparse.Namespace) -> int:
-    """Prepare, start, initialize, or migrate the isolated local PostgreSQL instance.
-
-    Args: args: Namespace with root, action, image, and dsn flags.
-    Returns: EXIT_OK when the requested action completes.
-    Raises: LabError or subprocess errors when Docker or the server is unavailable.
-    Side effects: Container and database side effects for the named action only.
-    """
+    """Prepare, start, initialize, or migrate the isolated local PostgreSQL instance."""
     from .local_database import (
         initialize_local_roles,
         local_dsn,
@@ -288,13 +223,7 @@ def cmd_database(args: argparse.Namespace) -> int:
 
 
 def _database_url(root: Path, explicit: str | None) -> str:
-    """Resolve the PostgreSQL connection string for an execution command.
-
-    Args: root: Lab root; explicit: --dsn value, else DATABASE_URL, else the local app role.
-    Returns: A connection string; its secret is used immediately and never stored.
-    Raises: LabError when no local credential file exists and nothing was supplied.
-    Side effects: Reads the ignored local credential file only when no DSN is given.
-    """
+    """Resolve the PostgreSQL connection string for an execution command."""
     import os
 
     from .local_database import local_dsn
@@ -303,13 +232,7 @@ def _database_url(root: Path, explicit: str | None) -> str:
 
 
 def _corpus_rows(root: Path, records: list[dict]) -> list[dict]:
-    """Map canonical corpus records onto the persistence registration contract.
-
-    Args: root: Lab root holding the immutable source snapshot; records: canonical records.
-    Returns: One registration mapping per variable, carrying exact source bytes.
-    Raises: OSError when a source Turtle file is missing.
-    Side effects: Reads the pinned Turtle snapshot; writes nothing.
-    """
+    """Map canonical corpus records onto the persistence registration contract."""
     from .corpus.ingestion import _corpus_dir
 
     rows = []
@@ -328,17 +251,8 @@ def _corpus_rows(root: Path, records: list[dict]) -> list[dict]:
 def _similarity_backend(root: Path, evaluation: dict) -> Any:
     """Load the frozen local scoring backend by convention, never by download.
 
-    The manifest lives at ``data/manifests/scorer-model-v1.yml`` and the immutable
-    model bytes at ``data/embeddings/<model name>``. The revision recorded in
-    ``parameters.yml`` must equal the manifest revision, so a swapped artifact
-    cannot be scored under an unchanged configuration identity.
-
-    Args: root: Lab root; evaluation: resolved evaluation policy block.
-    Returns: Verified callable similarity backend exposing its frozen identity.
-    Raises: LabError when the manifest is absent or disagrees with the configuration;
-        ValueError when the artifact bytes fail verification.
-    Side effects: Reads and hashes local model files only.
-    """
+    The revision recorded in ``parameters.yml`` must equal the manifest revision, so a swapped
+    artifact cannot be scored under an unchanged configuration identity."""
     import yaml
 
     from iadopt_eval.embeddings import load_local_similarity
@@ -356,15 +270,7 @@ def _similarity_backend(root: Path, evaluation: dict) -> Any:
 
 
 def _live_services(root: Path, data: dict, plan: dict) -> tuple[Any, Any, Any]:
-    """Build the conservative token bound and price-backed cost policy for live dispatch.
-
-    Args: root: lab root; data: resolved configuration; plan: frozen expanded plan.
-    Returns: (token_bound, cost_policy, settlement_policy) callables. The first two run
-        before dispatch; the third normalizes provider usage into an accounting record
-        after the response returns.
-    Raises: LabError when the frozen price card cannot back a metered reservation.
-    Side effects: None; both callables are pure functions of the request body.
-    """
+    """Build the conservative token bound and price-backed cost policy for live dispatch."""
     from decimal import Decimal
 
     import yaml
@@ -391,27 +297,8 @@ def _live_services(root: Path, data: dict, plan: dict) -> tuple[Any, Any, Any]:
     def token_bound(task: dict, body: dict) -> int:
         """Bound one request's tokens from exact message bytes plus the output ceiling.
 
-        The ratio is one token per UTF-8 byte plus a fixed protocol overhead.
-
-        Conditions under which this is an upper bound, stated because a tokenizer-family
-        property alone does not establish a provider's request accounting:
-
-        1. The deployment uses a byte-level BPE tokenizer, where no token covers fewer
-           than one input byte, so token count cannot exceed byte count. Both currently
-           selected families (Qwen3, GLM) are byte-level BPE.
-        2. Chat-template and special-token overhead stays within
-           `_MESSAGE_OVERHEAD_TOKENS`, which is generous for a single user message.
-        3. The provider bills the request it was sent, without server-side expansion.
-
-        It is deliberately not the measured average. Qwen3 encodes these prompts at about
-        0.23 tokens per byte, but a correction prompt embeds arbitrary model output whose
-        density is unknown in advance, and PSNC publishes no tokenizer for its deployment.
-        An average is an expectation; admission control needs a ceiling. The headroom is
-        free here: the bound stays far inside both context windows and the token rate.
-
-        Adding a deployment that violates condition 1 (a character- or word-level
-        tokenizer) requires re-establishing this bound before it can be trusted.
-        """
+        Adding a deployment with a character- or word-level tokenizer requires re-establishing
+        this bound before it can be trusted."""
         raw = json.dumps(body.get("messages", []), ensure_ascii=False).encode("utf-8")
         return len(raw) + _MESSAGE_OVERHEAD_TOKENS + ceiling
 
@@ -436,19 +323,7 @@ def _live_services(root: Path, data: dict, plan: dict) -> tuple[Any, Any, Any]:
                 "currency": card.get("currency"), "fx_to_reporting": str(entry["fx_to_reporting"])}
 
     def settlement_policy(task: dict, response: dict) -> dict[str, Any]:
-        """Normalize provider usage into an accounting record after the call returns.
-
-        Without this the repository finds no `cost` key on the response payload and
-        records every metered call as `unavailable`, leaving its reservation unsettled.
-        Precedence is deliberate: a cost the provider itself reports is `actual`;
-        otherwise real token counts priced with the frozen card give `estimated`;
-        absent usage stays `unavailable` rather than being assumed free.
-
-        Args: task: leased task carrying provider/model identity; response: ProviderResult dict.
-        Returns: Settlement record for the persistence layer.
-        Raises: LabError when the frozen price card has no entry for the model.
-        Side effects: None; pricing comes from the frozen card, never a live lookup.
-        """
+        """Normalize provider usage into an accounting record after the call returns."""
         key = task["provider"] + "/" + task["run"]["model_id"]
         entry = card["models"].get(key)
         if not entry:
@@ -482,16 +357,7 @@ def _live_services(root: Path, data: dict, plan: dict) -> tuple[Any, Any, Any]:
 
 def _authorize(repository: Any, campaign_id: str, plan: dict, estimate: dict, actor: str,
                channel: str) -> str:
-    """Record the disclosed estimate and the operator's explicit live approval.
-
-    Args: repository: open repository; campaign_id: planned live campaign;
-        plan: frozen plan; estimate: a usable pre-run-estimate-v1 result; actor: approver;
-        channel: the exact invocation that carried the approval, recorded verbatim.
-    Returns: The stored authorization identifier.
-    Raises: LabError when the estimate is unusable; persistence errors on plan mismatch.
-    Side effects: Writes one immutable live_authorization row. It records approval; it
-        never infers or requests it.
-    """
+    """Record the disclosed estimate and the operator's explicit live approval."""
     from datetime import UTC, datetime
 
     from .canonical import content_hash
@@ -535,15 +401,8 @@ def _authorize(repository: Any, campaign_id: str, plan: dict, estimate: dict, ac
 def _similarity_for(root: Path, data: dict, synthetic: bool) -> tuple[Any, dict]:
     """Resolve the scorer callable and its identity for every command that plans.
 
-    Scorer identity is part of the plan fingerprint, so `plan`, `estimate` and `run`
-    must derive it the same way. Fabricating a descriptive identity in one command
-    and loading the real backend in another silently produces two different plans.
-
-    Args: root: Lab root; data: resolved configuration; synthetic: fixture mode.
-    Returns: (similarity callable, path-free identity mapping).
-    Raises: LabError when the frozen embedding artifact is unusable.
-    Side effects: Reads and hashes local model files in live mode only.
-    """
+    Scorer identity is part of the plan fingerprint, so `plan`, `estimate` and `run` must derive
+    it the same way."""
     from .workflow import synthetic_similarity
 
     if synthetic:
@@ -555,16 +414,7 @@ def _similarity_for(root: Path, data: dict, synthetic: bool) -> tuple[Any, dict]
 def _provider_endpoint(profile: dict, secrets: Any) -> str | None:
     """Resolve the one effective base URL for a provider, from its declared override.
 
-    Probing and generation must describe the same deployment. When they resolve the URL
-    differently, capability evidence can be measured against one endpoint and written into
-    a configuration that dispatches to another, and nothing downstream would notice.
-
-    Args: profile: Provider block from parameters.yml; secrets: loaded runtime secrets.
-    Returns: The override URL when one is configured and set, otherwise None so the
-        caller falls back to the frozen profile default.
-    Raises: Nothing.
-    Side effects: Reads an already-loaded secret value; never logs it.
-    """
+    Probing and generation must describe the same deployment."""
     name = profile.get("base_url_env")
     return (secrets.get(name) or None) if name else None
 
@@ -573,15 +423,7 @@ def _prepare_campaign(root: Path, *, synthetic: bool, dsn: str | None, env_file:
                       estimate: dict | None = None, actor: str | None = None,
                       channel: str | None = None,
                       expected_campaign: str | None = None) -> tuple[str, Any, Any]:
-    """Freeze one campaign end to end and return it ready to advance.
-
-    Args: root: Lab root; synthetic: labelled offline fixture mode; dsn: explicit database;
-        env_file: explicit credential file, required for live provider adapters.
-    Returns: (campaign_id, Services, plan). Nothing is dispatched by this function.
-    Raises: ConfigurationError for an unfrozen configuration; LabError for missing
-        credentials or an unusable scorer backend; persistence errors on conflict.
-    Side effects: Registers corpus, campaign and task rows; allocates provider clients.
-    """
+    """Freeze one campaign end to end and return it ready to advance."""
     from .artifacts import collect_input_artifacts
     from .configuration import load_runtime_secrets
     from .corpus.ingestion import load_canonical_records
@@ -684,13 +526,7 @@ def _prepare_campaign(root: Path, *, synthetic: bool, dsn: str | None, env_file:
 
 
 def _advance(campaign_id: str, services: Any, *, stop_after: int | None) -> dict[str, Any]:
-    """Run the campaign loop to completion or a safe stop.
-
-    Args: campaign_id: frozen campaign; services: assembled runtime; stop_after: offline limit.
-    Returns: Final state counts and stop reason from the workflow runner.
-    Raises: Whatever the runner raises; failures are never swallowed into a success.
-    Side effects: Provider requests in live mode; database writes throughout.
-    """
+    """Run the campaign loop to completion or a safe stop."""
     import asyncio
 
     from .workflow import finalize_campaign, run_campaign
@@ -698,10 +534,9 @@ def _advance(campaign_id: str, services: Any, *, stop_after: int | None) -> dict
     async def advance() -> dict[str, Any]:
         """Run the campaign, finalize it when every task is done, then close clients.
 
-        Finishing the tasks is not finishing the campaign: the ranking and report
-        evidence must be stored and the campaign marked complete, or the database keeps
-        a `running` campaign with no scientific result while the caller exits zero.
-        """
+        Finishing the tasks is not finishing the campaign: the ranking and report evidence must
+        be stored and the campaign marked complete, or the database keeps a `running` campaign
+        with no scientific result while the caller exits zero."""
         try:
             result = await run_campaign(campaign_id, services, stop_after=stop_after)
             # `already_complete` also finalizes: an interruption between the last task and
@@ -717,13 +552,7 @@ def _advance(campaign_id: str, services: Any, *, stop_after: int | None) -> dict
 
 
 def cmd_dry_run(args: argparse.Namespace) -> int:
-    """Execute a labelled synthetic campaign with no provider and no cost.
-
-    Args: args: Namespace with root, dsn, stop_after and json flags.
-    Returns: EXIT_OK when the fixture campaign reaches a terminal state.
-    Raises: LabError or persistence errors; a synthetic run never contacts a provider.
-    Side effects: Database writes only. Results are labelled synthetic and are not scientific.
-    """
+    """Execute a labelled synthetic campaign with no provider and no cost."""
     root = _root(args.root)
     campaign_id, services, plan = _prepare_campaign(root, synthetic=True, dsn=args.dsn, env_file=None)
     try:
@@ -737,13 +566,7 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    """Freeze and execute a live campaign against the selected providers.
-
-    Args: args: Namespace with root, dsn, env_file and json flags.
-    Returns: EXIT_OK when the runner stops; the stop reason states whether it completed.
-    Raises: LabError when the configuration, credentials, estimate or authorization is absent.
-    Side effects: Real provider requests that consume quota and money, plus database writes.
-    """
+    """Freeze and execute a live campaign against the selected providers."""
     root = _root(args.root)
     estimate = json.loads(Path(args.estimate).read_bytes()) if args.estimate else None
     if estimate is None:
@@ -772,13 +595,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def cmd_resume(args: argparse.Namespace) -> int:
-    """Continue an interrupted campaign from its durable checkpoints.
-
-    Args: args: Namespace with root, campaign, dsn, env_file, synthetic and json flags.
-    Returns: EXIT_OK when the runner stops having completed every task.
-    Raises: LabError on scientific drift between the stored campaign and the checkout.
-    Side effects: Same as the original run; completed work is never repeated.
-    """
+    """Continue an interrupted campaign from its durable checkpoints."""
     root = _root(args.root)
     campaign_id, services, plan = _prepare_campaign(root, synthetic=args.synthetic, dsn=args.dsn,
                                                     env_file=args.env_file,
@@ -796,19 +613,7 @@ def cmd_resume(args: argparse.Namespace) -> int:
 
 
 def cmd_probe_models(args: argparse.Namespace) -> int:
-    """Measure per-model capabilities against a live deployment and report the evidence.
-
-    parameters.yml refuses to infer capabilities from a model name, so the fields that
-    gate live execution have to come from observation. This command supplies them. It
-    sends three short throwaway probes per model, never a corpus prompt, and freezes
-    nothing; --write only edits the models block of the named provider.
-
-    Args: args: Namespace with root, provider, env_file, model, concurrency, timeout,
-        write and json flags.
-    Returns: EXIT_OK when at least one model can run with reasoning off.
-    Raises: LabError for a missing provider block, credentials, or an unreadable catalog.
-    Side effects: Three provider requests per model, and with --write one edit to parameters.yml.
-    """
+    """Measure per-model capabilities against a live deployment and report the evidence."""
     import asyncio
 
     from .configuration import load_parameters, load_runtime_secrets
@@ -880,19 +685,7 @@ def cmd_probe_models(args: argparse.Namespace) -> int:
 
 
 def cmd_evidence(args: argparse.Namespace) -> int:
-    """Derive the cost-estimate evidence document for a frozen plan.
-
-    Every prompt in the plan is rendered and tokenized, and billing comes from the frozen
-    price card the runner reserves against, so the estimate cannot report a campaign ready
-    on evidence execution lacks. The ceiling assertion is not derived: without
-    --ceiling-basis the estimate reports it unverified, which blocks a metered campaign and
-    leaves a fully evidenced non-billed one carrying a recorded warning instead.
-
-    Args: args: Namespace with root, plan, out, tokenizer, assumption and ceiling flags.
-    Returns: EXIT_OK when the document is written.
-    Raises: LabError for an unavailable tokenizer, a null ceiling, or underivable billing.
-    Side effects: Reads corpus/prompt/schema files and writes the evidence JSON. No network.
-    """
+    """Derive the cost-estimate evidence document for a frozen plan."""
     from .evidence import build_cost_evidence
 
     root = _root(args.root)
@@ -912,13 +705,7 @@ def cmd_evidence(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Define every command without executing any of them.
-
-    Args: None.
-    Returns: Configured argument parser whose defaults name a handler function.
-    Raises: None.
-    Side effects: None.
-    """
+    """Define every command without executing any of them."""
     parser = argparse.ArgumentParser(prog="iadopt-lab",
                                      description="Reproducible I-ADOPT lexical decomposition experiments.")
     parser.add_argument("--root", help="Lab directory containing parameters.yml")
@@ -1013,13 +800,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Parse arguments, dispatch one command, and translate failures into exit codes.
-
-    Args: argv: Optional explicit argument list; defaults to sys.argv[1:].
-    Returns: Process exit code. Usage errors return 2; handled failures return 1.
-    Raises: Nothing for an expected experiment error; unexpected exceptions propagate.
-    Side effects: Only those of the dispatched command; writes diagnostics to stderr.
-    """
+    """Parse arguments, dispatch one command, and translate failures into exit codes."""
     parser = build_parser()
     args = parser.parse_args(argv)
     if not getattr(args, "handler", None):

@@ -18,76 +18,36 @@ POLICY_VERSION = "lexical-cross-reference-v1"
 
 
 def _bytes(value: Any) -> bytes:
-    """Serialize a JSON-compatible candidate deterministically.
-
-    Args: finite JSON primitives with ordered arrays.
-    Returns: sorted-key compact UTF-8 bytes.
-    Raises: TypeError or ValueError for unsupported/non-finite values.
-    Side effects: none.
-    """
+    """Serialize a JSON-compatible candidate deterministically."""
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
 
 
 def _key(text: str) -> str:
-    """Build the frozen lexical cross-reference key.
-
-    Args: original lexical text.
-    Returns: NFC-normalized, stripped, case-folded comparison string.
-    Raises: TypeError for nontext input.
-    Side effects: none; retained scoreable text is not changed.
-    """
+    """Build the frozen lexical cross-reference key."""
     return unicodedata.normalize("NFC", text).strip().casefold()
 
 
 def lexical_order(text: str) -> tuple[str, str]:
-    """Build a stable comparison key for set-like lexical collections.
-
-    Args: preserved lexical text.
-    Returns: NFC/casefold key and original-text tie-break tuple.
-    Raises: TypeError for nontext input.
-    Side effects: none; asymmetric roles are never ordered with this function.
-    """
+    """Build a stable comparison key for set-like lexical collections."""
     return unicodedata.normalize("NFC", text).casefold(), text
 
 
 def load_schema_bytes(project_root: Path | str | None = None) -> bytes:
-    """Read the exact shared prompt/runtime lexical schema.
-
-    Args: optional iadopt-lab root; defaults to this installed source tree's root.
-    Returns: original schema bytes without reserialization.
-    Raises: OSError for missing or unreadable schema.
-    Side effects: read-only filesystem access.
-    """
+    """Read the exact shared prompt/runtime lexical schema."""
     root = Path(project_root) if project_root else Path(__file__).resolve().parents[3]
     return (root / "schemas/lexical-decomposition.schema.json").read_bytes()
 
 
 def empty_prediction() -> dict[str, Any]:
-    """Create the explicit six-field empty representation.
-
-    Args: none.
-    Returns: new dictionary with empty scalar/entity strings and empty constraints.
-    Raises: no content-validation exceptions.
-    Side effects: none. The caller separately records valid-empty or failure provenance.
-    """
+    """Create the explicit six-field empty representation."""
     return {field: [] if field == "hasConstraint" else "" for field in FIELDS}
 
 
 def readable_prediction(prediction: dict[str, Any], *, label: str, definition: str) -> dict[str, Any]:
     """Build the human-readable view of a scored prediction (D-031).
 
-    The label and definition are copied from the target's canonical corpus record.
-    The model is never asked for them: it has not seen the label, so a generated one
-    would be invented, and re-emitting the definition costs output tokens on every
-    task for a field that carries no score. Neither value is evaluated.
-
-    Args: prediction: canonical six-field prediction; label/definition: exact corpus values.
-    Returns: new mapping with label, definition and the six fields in canonical order.
-    Raises: ValueError when the prediction is not exactly the six lexical fields, which
-    keeps this presentation helper from silently accepting evaluator-invalid input.
-    Side effects: none. The supplied prediction is copied, never modified, and this
-    result must not reach the evaluator, a prediction hash, or any metric.
-    """
+    The supplied prediction is copied, never modified, and this result must not reach the
+    evaluator, a prediction hash, or any metric."""
     if set(prediction) != set(FIELDS):
         raise ValueError("A readable prediction is built from exactly the six lexical fields")
     if not isinstance(label, str) or not isinstance(definition, str):
@@ -97,13 +57,7 @@ def readable_prediction(prediction: dict[str, Any], *, label: str, definition: s
 
 
 def system_display_label(system: dict[str, Any]) -> str:
-    """Derive an unscored stable display label from system members.
-
-    Args: schema-valid symmetric or asymmetric system mapping.
-    Returns: sorted-part, source/target or numerator/denominator display string.
-    Raises: KeyError or TypeError for programmer-supplied invalid shape.
-    Side effects: none; original member text and asymmetric roles are preserved.
-    """
+    """Derive an unscored stable display label from system members."""
     if "SymmetricSystem" in system:
         return " + ".join(sorted(system["hasPart"], key=lexical_order))
     if "hasNumerator" in system:
@@ -123,37 +77,19 @@ class ValidationResult:
     policy_version: str = POLICY_VERSION
 
     def to_dict(self) -> dict[str, Any]:
-        """Expose complete independent validation evidence.
-
-        Args: this completed validation result.
-        Returns: JSON-compatible deep dictionary with list-valued errors.
-        Raises: no content-validation exceptions.
-        Side effects: none; does not mutate the original candidate/result.
-        """
+        """Expose complete independent validation evidence."""
         result = asdict(self)
         result["errors"] = list(result["errors"])
         return result
 
 
 def _pointer(parts: Any) -> str:
-    """Convert an error's path to a JSON Pointer.
-
-    Args: iterable string or integer path components.
-    Returns: RFC6901 escaped pointer string; root is the empty string.
-    Raises: TypeError for noniterable programmer input.
-    Side effects: none.
-    """
+    """Convert an error's path to a JSON Pointer."""
     return "".join("/" + str(part).replace("~", "~0").replace("/", "~1") for part in parts)
 
 
 def _targets(candidate: dict[str, Any]) -> dict[str, set[str]]:
-    """Index all allowed component and whole-system Constraint targets.
-
-    Args: a schema-valid six-field candidate.
-    Returns: normalized alias-to-distinct-preserved-label set mapping.
-    Raises: KeyError for malformed programmer input.
-    Side effects: none; container strings are aliases, never scoreable system members.
-    """
+    """Index all allowed component and whole-system Constraint targets."""
     result: dict[str, set[str]] = {}
     for field in FIELDS[:-1]:
         value = candidate[field]
@@ -175,13 +111,7 @@ def _targets(candidate: dict[str, Any]) -> dict[str, set[str]]:
 
 
 def _canonicalize(candidate: dict[str, Any], targets: dict[str, set[str]]) -> dict[str, Any]:
-    """Derive canonical metadata only after representation validation.
-
-    Args: valid candidate and its unambiguous target index.
-    Returns: deep copy with derived system labels/sorted parts and resolved targets.
-    Raises: KeyError for an internal post-validation invariant violation.
-    Side effects: none; original candidate and Constraint array order remain unchanged.
-    """
+    """Derive canonical metadata only after representation validation."""
     result = copy.deepcopy(candidate)
     for field in ENTITY_FIELDS:
         value = result[field]
@@ -199,15 +129,7 @@ def _canonicalize(candidate: dict[str, Any], targets: dict[str, set[str]]) -> di
 
 
 def validate_prediction(candidate: Any, schema_bytes: bytes | None = None) -> ValidationResult:
-    """Validate JSON candidate without gold or repair and return complete ordered evidence.
-
-    Args: arbitrary JSON value and optional exact lexical schema bytes.
-    Actions: enforce schema, unique symmetric parts and resolvable Constraint targets;
-    derive unscored system metadata only after success.
-    Returns: ValidationResult with canonical prediction only after validation succeeds.
-    Raises: schema corruption or filesystem errors; ordinary invalid content is returned.
-    Side effects: read packaged schema when not supplied; never mutates the candidate.
-    """
+    """Validate JSON candidate without gold or repair and return complete ordered evidence."""
     schema_raw = load_schema_bytes() if schema_bytes is None else schema_bytes
     schema = json.loads(schema_raw)
     Draft202012Validator.check_schema(schema)
@@ -253,24 +175,12 @@ def validate_prediction(candidate: Any, schema_bytes: bytes | None = None) -> Va
 
 
 def validate_candidate(candidate: Any, schema_bytes: bytes | None = None) -> ValidationResult:
-    """Provide the component-contract alias for prediction validation.
-
-    Args: JSON candidate and optional exact schema bytes.
-    Returns: ValidationResult from the same gold-independent validation path.
-    Raises: schema-artifact errors, not ordinary model-content failures.
-    Side effects: reads packaged schema only when bytes are not supplied.
-    """
+    """Provide the component-contract alias for prediction validation."""
     return validate_prediction(candidate, schema_bytes)
 
 
 def canonicalize_prediction(candidate: Any, schema_bytes: bytes | None = None) -> dict[str, Any]:
-    """Require successful validation before exposing evaluator input.
-
-    Args: candidate JSON value and optional exact schema bytes.
-    Returns: independent canonical six-field prediction.
-    Raises: ValueError for invalid model content; schema/filesystem errors propagate.
-    Side effects: reads packaged schema only when not supplied; no content repair.
-    """
+    """Require successful validation before exposing evaluator input."""
     result = validate_prediction(candidate, schema_bytes)
     if not result.valid:
         raise ValueError("Cannot canonicalize invalid prediction: " + json.dumps(result.errors))

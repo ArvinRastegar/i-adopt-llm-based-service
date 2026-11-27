@@ -1,45 +1,5 @@
 #!/usr/bin/env python
-"""Shot-count ablation — an EXPLORATORY side analysis, not part of the official experiment.
-
-Question: with everything else held at each model's best known reasoning-off configuration,
-how does performance change as the number of few-shot examples goes 0, 1, 3, 5, 7, 10?
-
-Why this does not use the official campaign machinery
------------------------------------------------------
-It cannot, without contaminating the official experiment. Three guards block it, and every
-way around them changes something the official plans are hashed against:
-
-* `select_demonstrations` rejects any shot count outside (0, 1, 3, 5).
-* `render_base_prompt` requires the exact official five-variable demonstration prefix.
-* The frozen demonstration pool has five members; this needs ten.
-
-Relaxing those means editing `src/`, `prompts/` or `data/manifests/`, all of which feed the
-official `implementation` artifact hash. Changing it invalidates every official plan and
-would force ~21,000 completed, paid tasks to be re-run. So this is a standalone runner that
-reuses the official renderer and scorer as libraries while writing nowhere the official
-experiment reads.
-
-Isolation
----------
-* Lives in `few-shot-selection/`, which no artifact collector walks.
-* Reads `parameters.yml` for nothing; the configuration is fixed in this file.
-* Writes only `few-shot-selection/output/`. It never touches the campaign database, `outputs/`,
-  or any manifest.
-* Results carry no campaign, run or task identity, so they cannot enter official rankings.
-
-Reproducibility
----------------
-The shot pool and its nesting are deterministic: the five official demonstrations in their
-official order, then five more chosen by sorted `variable_id`. Lower shot counts are
-prefixes of that same ordering, never independently resampled, so the only thing that
-changes between conditions is how many examples the prompt carries.
-
-Resumability
-------------
-Every scored evaluation is appended to a JSONL file as it completes. Re-running skips any
-(model, shot count, variable) triple already present, so an interruption costs nothing and
-no provider call is repeated.
-"""
+"""Shot-count ablation — an EXPLORATORY side analysis, not part of the official experiment."""
 
 from __future__ import annotations
 
@@ -93,13 +53,7 @@ TIMEOUT = 120.0      # reasoning is off, so calls never approach this
 
 
 def shot_pool(records):
-    """Freeze the ten shot examples and their nesting order, deterministically.
-
-    The five official demonstrations come first, in their official order, so the 1-, 3- and
-    5-shot conditions use exactly the examples the official experiment used and the 5-shot
-    point stays comparable to it. The remaining five are chosen by sorted `variable_id`,
-    which is reproducible and independent of anything measured.
-    """
+    """Freeze the ten shot examples and their nesting order, deterministically."""
     by_path = {row["source_path"]: row for row in records}
     official = [by_path[path] for path in DEMONSTRATION_PATHS]
     rest = sorted((row for row in records if not row["demonstration_position"]),
@@ -114,12 +68,7 @@ def evaluation_set(records, pool):
 
 
 def render(template, schema_text, examples, definition):
-    """Rebuild the official prompt exactly, minus the 0/1/3/5 prefix guard.
-
-    Mirrors `render_base_prompt`: same template, same canonical JSON for the demonstration
-    payload, same single substitution pass. Only the guard is absent, because this
-    experiment deliberately uses shot counts and examples the official grid forbids.
-    """
+    """Rebuild the official prompt exactly, minus the 0/1/3/5 prefix guard."""
     payload = [{"demonstration": position, "definition": example["definition"],
                 "decomposition": example["gold"]}
                for position, example in enumerate(examples, 1)]

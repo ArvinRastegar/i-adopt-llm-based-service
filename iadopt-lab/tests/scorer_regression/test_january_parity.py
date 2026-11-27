@@ -1,8 +1,4 @@
-"""Execute only hash-verified January scoring AST nodes, never the legacy runner.
-
-Provider initialization, prompts, filesystem setup, logging, and model downloads
-are excluded before compilation. Cosines are deterministic offline fixtures.
-"""
+"""Execute only hash-verified January scoring AST nodes, never the legacy runner."""
 
 import __future__
 
@@ -23,34 +19,12 @@ REFERENCE_SHA256 = "2d4a6271fd86a076127dfb3f85589391cff9744efdfdee8ec570b52c7492
 
 
 def lexical(**values):
-    """Construct six-field lexical fixtures independent of the production validator.
-
-    Args:
-        values: Original component overrides.
-    Returns:
-        Six-field mapping with explicit empties.
-    Raises:
-        None.
-    Side Effects:
-        None.
-    """
+    """Construct six-field lexical fixtures independent of the production validator."""
     return {**{key: [] if key == "hasConstraint" else "" for key in COMPONENTS}, **values}
 
 
 def offline_cosine(left, right, model_name=None):
-    """Supply stable threshold and negative examples without an embedding model.
-
-    Args:
-        left: Normalized first string.
-        right: Normalized second string.
-        model_name: Ignored January compatibility argument.
-    Returns:
-        Fixed finite fixture cosine, not an estimate from scientific embeddings.
-    Raises:
-        None.
-    Side Effects:
-        None.
-    """
+    """Supply stable threshold and negative examples without an embedding model."""
     if {left, right} == {"water", "liquid"}:
         return 0.8
     if {left, right} == {"air", "atmosphere"}:
@@ -62,20 +36,7 @@ def offline_cosine(left, right, model_name=None):
 
 @pytest.fixture
 def january():
-    """Load isolated scorer definitions from the retained hash-verified source copy.
-
-    Args:
-        None; the reference path is inside this standalone experiment directory.
-    Returns:
-        Namespace of original scoring functions with a deterministic cosine fixture.
-    Raises:
-        AssertionError: Historical bytes do not match the accepted source hash.
-        OSError: The retained historical reference file cannot be read.
-        SyntaxError: Historical definitions cannot compile under the test interpreter.
-    Side Effects:
-        Reads one retained source file and compiles selected pure AST definitions;
-        no legacy module imports, logging setup, writes, provider calls, or downloads.
-    """
+    """Load isolated scorer definitions from the retained hash-verified source copy."""
     project = Path(__file__).resolve().parents[2]
     source = (project / "reference/january/randomShotsPhaseOne.py.txt").read_bytes()
     assert hashlib.sha256(source).hexdigest() == REFERENCE_SHA256
@@ -104,19 +65,7 @@ def january():
     ("a", "b"), ("Daily maximum", "daily   maximum"),
 ])
 def test_scalar_and_empty_contributions_equal_january(january, gold, prediction):
-    """Compare all unchanged scalar/empty contribution floats with original code.
-
-    Args:
-        january: Isolated hash-verified historical function namespace.
-        gold: Parameterized original gold text.
-        prediction: Parameterized predicted text.
-    Returns:
-        None.
-    Raises:
-        AssertionError: Any original scalar contribution differs exactly.
-    Side Effects:
-        Calls only deterministic offline cosine fixtures.
-    """
+    """Compare all unchanged scalar/empty contribution floats with original code."""
     current = evaluate_item(lexical(hasProperty=gold), lexical(hasProperty=prediction), offline_cosine,
                             similarity_identity="january-regression-offline-cosines")
     for mode, close in (("exact", False), ("close", True)):
@@ -128,19 +77,7 @@ def test_scalar_and_empty_contributions_equal_january(january, gold, prediction)
 @pytest.mark.parametrize("n_gold", range(8))
 @pytest.mark.parametrize("n_prediction", range(8))
 def test_constraints_match_original_numpy_greedy_and_float_correction(january, n_gold, n_prediction):
-    """Compare real January NumPy matching and float correction over 128 mode cases.
-
-    Args:
-        january: Isolated historical function namespace with actual NumPy.
-        n_gold: Number of original ordered gold Constraints.
-        n_prediction: Number of predicted Constraints.
-    Returns:
-        None.
-    Raises:
-        AssertionError: Any finalized historical TP/FP/FN/TN float differs.
-    Side Effects:
-        Uses a locally seeded test generator only; no global random state changes.
-    """
+    """Compare real January NumPy matching and float correction over 128 mode cases."""
     generator = random.Random(n_gold * 100 + n_prediction)
     labels = ["a", "b", "water", "liquid", "air", "atmosphere", " daily   Maximum "]
     targets = ["a", "b", "water", "liquid", " hasProperty: Water ", "HasProperty: water"]
@@ -155,17 +92,7 @@ def test_constraints_match_original_numpy_greedy_and_float_correction(january, n
 
 
 def test_constraint_row_major_tie_fixture_preserves_original_order_sensitivity(january):
-    """Retain the historical greedy tie choice rather than silently optimizing it.
-
-    Args:
-        january: Isolated hash-verified original scoring namespace.
-    Returns:
-        None.
-    Raises:
-        AssertionError: Selected original row-major pair or contribution differs.
-    Side Effects:
-        None outside local fixtures.
-    """
+    """Retain the historical greedy tie choice rather than silently optimizing it."""
     gold = [{"label": "a", "on": "a"}, {"label": "a", "on": "b"}]
     first_prediction = [{"label": "a", "on": "c"}, {"label": "b", "on": "a"}]
     records = []
@@ -190,21 +117,7 @@ def test_constraint_row_major_tie_fixture_preserves_original_order_sensitivity(j
      {"AsymmetricSystem": "two", "hasSource": "water", "hasTarget": "soil"}, (0, 1, 0, 0), (1 / 3, 1 / 3, 1 / 3, 0)),
 ])
 def test_approved_correction_has_explicit_before_after_receipts(january, gold, prediction, old, new):
-    """Demonstrate each approved difference instead of claiming unchanged parity.
-
-    Args:
-        january: Isolated original function namespace.
-        gold: Original system/scalar fixture.
-        prediction: Original paired prediction.
-        old: Hand-calculated historical whole-component contributions.
-        new: Hand-calculated D-022 fraction display derivatives.
-    Returns:
-        None.
-    Raises:
-        AssertionError: The before/after correction boundary differs from approval.
-    Side Effects:
-        Calls only offline cosine fixtures for historical mixed representations.
-    """
+    """Demonstrate each approved difference instead of claiming unchanged parity."""
     current = evaluate_item(lexical(hasObjectOfInterest=gold), lexical(hasObjectOfInterest=prediction), offline_cosine)
     for mode, close in (("exact", False), ("close", True)):
         assert january["confusion"](gold, prediction, close) == old

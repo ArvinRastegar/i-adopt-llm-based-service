@@ -1,9 +1,4 @@
-"""The evaluation population: gold slots whose IRI names a controlled-vocabulary term.
-
-A slot is one linked node of one variable. Slots without an IRI (label only) and slots whose
-IRI is not a vocabulary (placeholder, repository) have no gold identifier to score and are
-counted, not silently dropped.
-"""
+"""The evaluation population: gold slots whose IRI names a controlled-vocabulary term."""
 
 from __future__ import annotations
 
@@ -42,37 +37,18 @@ class Slot:
 
 
 def normalise_term(term: str) -> str:
-    """Make a corpus term safe to send to a search service.
-
-    Args: term: slot text as the corpus writes it.
-    Returns: NFKC text with dash variants unified, whitespace collapsed and ends stripped.
-    Raises: None.
-    Side effects: none; case is preserved.
-    """
+    """Make a corpus term safe to send to a search service."""
     text = unicodedata.normalize("NFKC", term).translate(_DASHES)
     return re.sub(r"\s+", " ", text).strip()
 
 
 def query_key(term: str) -> str:
-    """Name the retrieval query a term shares with every identical term.
-
-    Args: term: slot text as the corpus writes it.
-    Returns: the normalised term in lower case.
-    Raises: None.
-    Side effects: none.
-    """
+    """Name the retrieval query a term shares with every identical term."""
     return normalise_term(term).lower()
 
 
 def build_population(variables: Iterable[GoldVariable]) -> tuple[tuple[Slot, ...], dict[str, int]]:
-    """Select the slots whose gold is a controlled-vocabulary IRI.
-
-    Args: variables: gold variables from iadopt_linking.gold.load_gold_links.
-    Returns: the slots in corpus order and a count of every link seen, kept, and left out by
-    reason (label only, non-vocabulary IRI), plus how many gold IRIs needed repair or a variant.
-    Raises: ValueError for an IRI that is not an IRI at all.
-    Side effects: none; deterministic.
-    """
+    """Select the slots whose gold is a controlled-vocabulary IRI."""
     slots: list[Slot] = []
     counts: Counter[str] = Counter()
     for variable in variables:

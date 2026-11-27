@@ -1,10 +1,4 @@
-"""Retrieve candidates for every query key from every source, recording each response.
-
-Bounded by construction: one pass over keys x sources, each request capped by the client's
-attempt limit, an optional wall-clock deadline, and a resume rule that skips only records that
-succeeded. A failure is written as a failure and counted; it is never turned into an empty list.
-The raw response text is stored beside its hash, so the hash can be checked from the file alone.
-"""
+"""Retrieve candidates for every query key from every source, recording each response."""
 
 from __future__ import annotations
 
@@ -26,25 +20,13 @@ class RetrievalTimeout(RuntimeError):
 
 
 def is_ok(record: Mapping[str, Any] | None) -> bool:
-    """Say whether a stored retrieval succeeded and parsed.
-
-    Args: record: stored retrieval record, or None.
-    Returns: True only when there is no error, no parse error and a candidate list.
-    Raises: None.
-    Side effects: none.
-    """
+    """Say whether a stored retrieval succeeded and parsed."""
     return bool(record) and (record["error"] is None and record["parse_error"] is None
                              and record["candidates"] is not None)
 
 
 def response_hash_matches(record: Mapping[str, Any]) -> bool:
-    """Check a record's stored response text against its stored hash.
-
-    Args: record: stored retrieval record.
-    Returns: True when there is no response (a skipped key) or the hash of the text matches.
-    Raises: None.
-    Side effects: none.
-    """
+    """Check a record's stored response text against its stored hash."""
     text = record.get("response_text")
     if text is None:
         return record.get("response_sha256") is None
@@ -52,13 +34,7 @@ def response_hash_matches(record: Mapping[str, Any]) -> bool:
 
 
 def _utc_now() -> str:
-    """Timestamp for a retrieval record.
-
-    Args: none.
-    Returns: UTC time to the second, ISO 8601.
-    Raises: None.
-    Side effects: reads the clock.
-    """
+    """Timestamp for a retrieval record."""
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
@@ -66,15 +42,7 @@ def retrieve(keys: Sequence[str], sources: Mapping[str, Any], client: PoliteClie
              store: JsonlStore, *, deadline: float | None = None,
              clock: Callable[[], float] = time.monotonic, now: Callable[[], str] = _utc_now,
              progress: Callable[[int, int, dict[str, Any]], None] | None = None) -> Counter[str]:
-    """Ask every source about every key that has no successful record yet.
-
-    Args: keys: query keys; sources: name -> source with request() and parse(); client: HTTP
-    client; store: retrieval JSONL; deadline: clock() value after which to stop; progress:
-    callback(done, total, record) after each request.
-    Returns: counters: requested, skipped, ok:<source>, failed:<source>, empty:<source>.
-    Raises: RetrievalTimeout when the deadline passes with requests left.
-    Side effects: network I/O; one appended, fsynced line per request.
-    """
+    """Ask every source about every key that has no successful record yet."""
     recorded = latest(store.read(), lambda record: (record["source"], record["query_key"]))
     pending = [(key, name) for key in keys for name in sources
                if not is_ok(recorded.get((name, key)))]
