@@ -31,6 +31,7 @@ from .http import PoliteClient
 from .population import Slot, build_population
 from .provenance import (
     EVIDENCE_FILES,
+    RESULTS_EVIDENCE,
     begin_invocation,
     corpus_identity,
     evidence_code_identity,
@@ -161,6 +162,26 @@ def bind_to_run(paths: Paths, *, evidence_sha256: str, only: Sequence[str] | Non
     plan = {**expected, "counts": dict(counts), "slots": counts.get("slots", 0)}
     write_json(path, plan)
     return plan
+
+
+def rebuild_identity(paths: Paths, slots: Sequence[Slot], keys: Sequence[str],
+                     current: str) -> str:
+    """The evidence identity a finished folder binds to: its own if RESULTS_CODE's code made it.
+
+    A folder made at RESULTS_CODE may be rebuilt, never extended: with a retrieval or a score
+    missing it must bind to this tree's code, which refuses it."""
+    try:
+        made_by = json.loads(paths.named("plan.json").read_text(encoding="utf-8"))
+        made_by = made_by["evidence_code_sha256"]
+    except (OSError, json.JSONDecodeError, KeyError, TypeError):
+        return current
+    if made_by != RESULTS_EVIDENCE["baseline"]:
+        return current
+    retrieved = latest(JsonlStore(paths.candidates).read(), lambda r: (r["source"], r["query_key"]))
+    scored = latest(JsonlStore(paths.scores).read(), lambda r: r["slot_id"])
+    finished = (all(is_ok(retrieved.get((name, key))) for key in keys for name in SOURCES)
+                and all(slot.slot_id in scored for slot in slots))
+    return made_by if finished else current
 
 
 def save_journal(paths: Paths, journal: Mapping[str, Any]) -> None:
@@ -382,7 +403,7 @@ def run(out_dir: Path | str, *, lab_root: Path | str | None = None,
     root = resolve_lab_root(lab_root)
     _, slots, counts = load_population(root, only)
     keys = query_keys(slots)
-    evidence_sha256 = evidence_code_identity()
+    evidence_sha256 = rebuild_identity(paths, slots, keys, evidence_code_identity())
     plan = bind_to_run(paths, evidence_sha256=evidence_sha256, only=only, keys=keys, counts=counts,
                        config=run_config(max_description_chars), corpus=corpus_identity(root))
     journal = load_journal(paths.named("provenance.json"), evidence_exists=paths.has_evidence())

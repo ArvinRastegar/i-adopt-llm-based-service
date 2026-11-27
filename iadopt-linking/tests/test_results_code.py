@@ -1,10 +1,11 @@
-"""The code that made the committed results: pinned hashes, unchanged logic, no extension."""
+"""The code that made the committed results: pinned hashes, same logic, rebuilt, never extended."""
 
 from __future__ import annotations
 
 import ast
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -12,12 +13,16 @@ from typing import Any
 
 import pytest
 
+from iadopt_linking.artifacts import file_sha256
 from iadopt_linking.chat_experiment import PSNC_EVIDENCE_FILES
 from iadopt_linking.errors import RunError
+from iadopt_linking.experiment import USER_AGENT, run
+from iadopt_linking.http import PoliteClient
 from iadopt_linking.jev_experiment import JEV_EVIDENCE_FILES, run_jev
 from iadopt_linking.provenance import EVIDENCE_FILES, PROJECT_ROOT, RESULTS_CODE, RESULTS_EVIDENCE
 
 RESULTS = PROJECT_ROOT / "results"
+BASELINE = RESULTS / "baseline-20261014"
 ALL_EVIDENCE = sorted({*EVIDENCE_FILES, *JEV_EVIDENCE_FILES, *PSNC_EVIDENCE_FILES})
 EXEMPT = {"iadopt_linking/jev_inputs.py": {"_verify_manifest"}}  # the guard that accepts RESULTS_CODE
 
@@ -93,3 +98,54 @@ def test_a_results_code_folder_with_a_request_pending_is_refused(tmp_path: Path)
         run_jev(copy, baseline_dir=RESULTS / plan["baseline"]["folder"],
                 max_cost_usd=manifest["spend"]["cap_usd"], only=plan["only"],
                 client_factory=NoRequestsAllowed())
+
+
+def no_transport(*_args: Any, **_kwargs: Any) -> Any:
+    raise AssertionError("a rebuild must not send a request")
+
+
+def no_scorer(*_args: Any) -> Any:
+    raise AssertionError("a rebuild must not load a scorer")
+
+
+def without_time_or_code(report: str) -> str:
+    """Blank what a rebuild changes in a report: when it was built and the hash of all code."""
+    report = re.sub(r"report built \d{4}-\d{2}-\d{2}T[\d:+\-]+", "report built <time>", report)
+    return re.sub(r"all code `[0-9a-f]+`", "all code <hash>", report)
+
+
+def rebuild_baseline(copy: Path) -> None:
+    plan = read(BASELINE / "plan.json")
+    run(copy, only=plan["only"], max_description_chars=plan["config"]["max_description_chars"],
+        client_factory=lambda: PoliteClient(USER_AGENT, transport=no_transport),
+        scorer_factory=no_scorer)
+
+
+def test_the_committed_baseline_rebuilds_in_place_without_a_request(tmp_path: Path) -> None:
+    """Its report may be rebuilt by this tree's code; its evidence and numbers stay as they are."""
+    copy = tmp_path / BASELINE.name
+    shutil.copytree(BASELINE, copy)
+    rebuild_baseline(copy)
+    for name in ("candidates.jsonl", "scores.jsonl", "plan.json", "outcomes.csv"):
+        assert file_sha256(copy / name) == file_sha256(BASELINE / name), name
+    assert read(copy / "summary.json") == read(BASELINE / "summary.json")
+    assert without_time_or_code((copy / "report.md").read_text(encoding="utf-8")) == (
+        without_time_or_code((BASELINE / "report.md").read_text(encoding="utf-8")))
+    rebuilt, committed = read(copy / "manifest.json"), read(BASELINE / "manifest.json")
+    assert rebuilt["evidence_code_sha256"] == RESULTS_EVIDENCE["baseline"]
+    assert rebuilt["checks"] == committed["checks"]
+
+
+@pytest.mark.parametrize("name, fields", [("scores.jsonl", ("slot_id",)),
+                                          ("candidates.jsonl", ("source", "query_key"))])
+def test_a_results_code_baseline_with_work_pending_is_refused(tmp_path: Path, name: str,
+                                                              fields: tuple[str, ...]) -> None:
+    """A missing score or retrieval would be made by this tree's code, so the folder is refused."""
+    copy = tmp_path / BASELINE.name
+    shutil.copytree(BASELINE, copy)
+    lines = (copy / name).read_text(encoding="utf-8").splitlines(keepends=True)
+    gone = [json.loads(lines[0])[field] for field in fields]
+    kept = [line for line in lines if [json.loads(line)[field] for field in fields] != gone]
+    (copy / name).write_text("".join(kept), encoding="utf-8")
+    with pytest.raises(RunError, match="different evidence-producing code"):
+        rebuild_baseline(copy)
