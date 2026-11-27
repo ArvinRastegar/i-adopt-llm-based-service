@@ -1,0 +1,139 @@
+{
+ "about": "The plain categories of the user-question draft (docs/tracking/USER_QUESTION_DRAFT_20261127.md, 2026-11-27): each with the help text a person sees and the I-ADOPT constraint types behind it (the completed table's names). Every type is in exactly one category.",
+ "categories": [
+  {
+   "name": "conditions",
+   "help": "Under what conditions it is measured or counted: at 25 °C, at normal air pressure, under an ISO test method, free of pests.",
+   "types": [
+    "condition"
+   ]
+  },
+  {
+   "name": "state or form",
+   "help": "The state or form of the thing: dissolved, dry, frozen, stagnant, as snow or ice, resting.",
+   "types": [
+    "state",
+    "physical form",
+    "locomotion state"
+   ]
+  },
+  {
+   "name": "part or layer",
+   "help": "A part or layer of the thing: its surface, its upper layer, its leaves, a thin film of it.",
+   "types": [
+    "part",
+    "thickness"
+   ]
+  },
+  {
+   "name": "measured from or towards",
+   "help": "A point it is measured from, or a direction: above ground, relative to north, relative to the sensor, northward, downward.",
+   "types": [
+    "reference",
+    "direction"
+   ]
+  },
+  {
+   "name": "place or area",
+   "help": "A place or area it is limited to: near the coast, in the European Union, within 5 m of a road.",
+   "types": [
+    "location",
+    "region",
+    "vicinity",
+    "spatial extent",
+    "spatial distribution"
+   ]
+  },
+  {
+   "name": "time or period",
+   "help": "A time or period: currently, at night, over the survey period, chronic.",
+   "types": [
+    "time",
+    "temporal extent",
+    "temporal reference"
+   ]
+  },
+  {
+   "name": "rate (per something)",
+   "help": "Per something: per hour, per person, per district, per square metre.",
+   "types": [
+    "normalization"
+   ]
+  },
+  {
+   "name": "how often",
+   "help": "How often it is measured or reported: daily, hourly, monthly.",
+   "types": [
+    "reporting frequency",
+    "sampling frequency"
+   ]
+  },
+  {
+   "name": "cause",
+   "help": "What causes it: due to fire, due to heat, caused by flooding.",
+   "types": [
+    "cause"
+   ]
+  },
+  {
+   "name": "process or event",
+   "help": "A process or event during which it is measured: during digestion, during photosynthesis, a 50-year storm, the latest test.",
+   "types": [
+    "process",
+    "event"
+   ]
+  },
+  {
+   "name": "where it comes from",
+   "help": "Its source or origin: from road traffic, from a power plant, from the air.",
+   "types": [
+    "source"
+   ]
+  },
+  {
+   "name": "rule, limit, rank or rating",
+   "help": "A rule that picks which value counts, a limit, a rank or a rating: the highest, above a detection limit, primary, five star, between 1 and 10.",
+   "types": [
+    "criterion",
+    "threshold",
+    "order",
+    "rating",
+    "range"
+   ]
+  },
+  {
+   "name": "about the person",
+   "help": "About the people involved: their role (patient, tenant), age, education, relationship (mother).",
+   "types": [
+    "role",
+    "age",
+    "education",
+    "relationship"
+   ]
+  },
+  {
+   "name": "who did it, or what for",
+   "help": "Who carried it out, or what it is for: by an accredited laboratory, for influenza screening.",
+   "types": [
+    "agent",
+    "purpose"
+   ]
+  },
+  {
+   "name": "about the sample or material",
+   "help": "About the sample or material: its purity, its resistivity (deionized water), its volume, its size or diameter, a wavelength range, a minimum temperature, its material, what it is made of, its quantity, its class.",
+   "types": [
+    "purity",
+    "resistivity",
+    "volume",
+    "diameter",
+    "wavelength",
+    "min temperature",
+    "material type",
+    "composition",
+    "quantity",
+    "classification"
+   ]
+  }
+ ]
+}

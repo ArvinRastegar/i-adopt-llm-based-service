@@ -1,0 +1,20 @@
+{
+ "about": "Completes the constraint-type table for the conventions test (2026-11-27). The experts' tags on the examples repository use three constraint types the rulebook table lacks, and name two numbers differently. The added definitions are drafts written for this test, not upstream text; the experts should confirm them. The table data/constraint_types.json itself is not changed.",
+ "rename": [
+  {"number": 69, "from": "layer", "name": "thickness",
+   "definition": "the thickness of the layer or film of the constrained component on which the variable is measured"},
+  {"number": 203, "from": "temperature", "name": "min temperature",
+   "definition": "a minimum temperature that the constrained component must reach for it to count"}
+ ],
+ "add": [
+  {"number": 63, "name": "volume", "category": "value", "observation": "quantitative",
+   "targets": ["object of interest", "matrix"],
+   "definition": "the volume of the sample or portion of the constrained component on which the value is measured"},
+  {"number": 86, "name": "composition", "category": "nature", "observation": "qualitative",
+   "targets": ["object of interest", "matrix"],
+   "definition": "what the constrained component consists of: its constituents or the mixture it is"},
+  {"number": 93, "name": "purpose", "category": "context", "observation": "qualitative",
+   "targets": ["object of interest"],
+   "definition": "the purpose for which the constrained component is made, carried out or used"}
+ ]
+}

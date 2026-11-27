@@ -10,20 +10,29 @@ How well can language models describe scientific variables? This repository meas
 
 ```mermaid
 flowchart LR
-  s1["Variable definition"]
-  s2["Find the 25 most similar<br/>variables that experts<br/>already decomposed"]
-  s3["Prompt with those 25 as<br/>worked examples"]
-  s4["Language model (Qwen3.8-27B)"]
-  s5["The six I-ADOPT parts"]
-  s1 --> s2 --> s3 --> s4 --> s5
+  d["Variable description"]
+  f["Finder call<br/>is there a matrix,<br/>and which kind?"]
+  r["Find the 25 most similar<br/>variables experts<br/>already decomposed"]
+  p["Prompt: rules + 25 worked<br/>examples + matrix hint"]
+  a["Answer A"]
+  b["Answer B"]
+  c["Answer C"]
+  k["Keep the answer that<br/>agrees most with<br/>the other two"]
+  o["The six I-ADOPT parts"]
+  d --> f --> p
+  d --> r --> p
+  p --> a & b & c
+  a & b & c --> k --> o
 ```
 
 | Pipeline | Close F1 |
 |---|---:|
-| Before: one fixed set of 25 examples | 0.59 |
-| **Best so far: 25 most similar examples** | **0.68** |
+| Before: one fixed set of 25 examples | 0.590 |
+| 25 most similar examples | 0.675 |
+| + a first call that states the matrix | 0.684 |
+| **Best so far: + three answers, keep the most typical** | **0.694** |
 
-Gain +0.08 (95% interval +0.05 to +0.12) on 102 variables, same model (`qwen/qwen3.8-27b`) and scorer, 10 runs each. No other way of choosing the examples does reliably better, and asking an unusable answer again once adds only +0.004. Exploratory: tuned on these 102 variables, so a new variable may score lower. Data: [`results/pattern-retrieval.csv`](results/pattern-retrieval.csv), code: [`iadopt-lab/few-shot-selection/guided/rag_tuning.py`](iadopt-lab/few-shot-selection/guided/rag_tuning.py).
+Same model (Qwen3.8-27B on PSNC), scorer and 102 variables. Each step's gain held when the variables were resampled: +0.08 for the similar examples, +0.016 for the matrix hint (measured on OpenRouter with the same model), +0.009 for keeping the most typical of three answers. The rows come from separate runs on PSNC. About 11 s per variable, and under 30 s for every variable measured. Exploratory: tuned on these 102 variables, so a new variable may score lower. Code: [`rag_tuning.py`](iadopt-lab/few-shot-selection/guided/rag_tuning.py) (the similar examples), [`answer_form_check.py`](iadopt-lab/few-shot-selection/guided/answer_form_check.py) (the matrix hint), [`fill_levers_test.py`](iadopt-lab/few-shot-selection/guided/fill_levers_test.py) (the three answers and the vote).
 
 <!-- best-pipeline:end -->
 
